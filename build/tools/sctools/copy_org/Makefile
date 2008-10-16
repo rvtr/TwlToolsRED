@@ -46,6 +46,7 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				liblcfg$(TWL_LIBSUFFIX).a  \
 				libshr$(TWL_LIBSUFFIX).a   \
 				libnhttp.nssl$(TWL_LIBSUFFIX).a	\
+				libnssl$(TWL_LIBSUFFIX).a	\
 				libnuc$(TWL_LIBSUFFIX).a	\
 				libnup$(TWL_LIBSUFFIX).a	\
 				libnam$(TWL_LIBSUFFIX).a   \

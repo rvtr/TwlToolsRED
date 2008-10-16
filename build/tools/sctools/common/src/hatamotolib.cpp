@@ -10,7 +10,8 @@
 #endif
 
 #include <NitroWiFi/nhttp.h>
-#include <NitroWiFi/nssl.h>
+#include "nssl.h"
+
 
 #include "netconnect.h"
 #include "sitedefs.h"

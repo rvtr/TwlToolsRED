@@ -45,6 +45,7 @@ LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib
 LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				liblcfg$(TWL_LIBSUFFIX).a  \
 				libnhttp.nssl$(TWL_LIBSUFFIX).a	\
+				libnssl$(TWL_LIBSUFFIX).a	\
 				libshr$(TWL_LIBSUFFIX).a   \
 				libnuc$(TWL_LIBSUFFIX).a	\
 				libnup$(TWL_LIBSUFFIX).a	\

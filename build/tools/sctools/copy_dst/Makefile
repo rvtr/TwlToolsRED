@@ -39,7 +39,7 @@ ES_ROOT			=	$(ES_LATEST)
 LINCLUDES           = 	$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include ../common/src \
 			$(ES_ROOT)/twl/include	$(ES_ROOT)/common/lib/ec/include
 
-LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE)
+LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib
 
 
 LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \

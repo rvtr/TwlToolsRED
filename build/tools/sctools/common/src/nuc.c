@@ -1,7 +1,7 @@
 #include <twl.h>
 #include <twl/sea.h>
 #include <twl/na.h>
-#include <TwlWiFi/nuc.h>
+// #include <TwlWiFi/nuc.h>
 
 #include "netconnect.h"
 #include "sitedefs.h"

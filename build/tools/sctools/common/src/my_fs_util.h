@@ -30,7 +30,7 @@ void PrintDirEntryListForward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd);
 
-BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path );
+int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path );
 BOOL RestoreDirEntryList( char *path );
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp );
 void write_debug_data(void);
@@ -38,7 +38,9 @@ BOOL SDCardValidation(void);
 BOOL CheckShopRecord(FSFile *log_fd);
 BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
 BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
-void GetDirEntryList( MY_DIR_ENTRY_LIST *head, void **pBuffer, int *size);
+void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size);
+BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd);
+BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd);
 
 #ifdef __cplusplus
 }

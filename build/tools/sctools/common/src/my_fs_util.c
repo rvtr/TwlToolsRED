@@ -564,6 +564,7 @@ static BOOL CheckSystemApp(char path[])
   char c;
   int num;
   /*
+
     No. 0 0003000f484e4c41
     No. 1 0003000f484e4841
     No. 2 0003000f484e4341 
@@ -573,10 +574,17 @@ static BOOL CheckSystemApp(char path[])
                  | ここの最下位ビットが１のやつがシステムアプリ
                  | 
 		 システムアプリはダウンロード対象外
+
+ 012345678901234567890123456789
+ nand:/title/00030017/484e4141 は ランチャー
+
   */
   c = path[19];
   if( ('a' <= c) && (c <= 'f') ) {
     num = (int)( c - 'a' + 10 );
+  }
+  if( ('A' <= c) && (c <= 'F') ) {
+    num = (int)( c - 'A' + 10 );
   }
   else if( ('0' <= c) && (c <= '9') ) {
     num = (int)( c - '0' );
@@ -595,32 +603,42 @@ static BOOL CheckSystemApp(char path[])
   }
 }
 
-void GetDirEntryList( MY_DIR_ENTRY_LIST *head, void **pBuffer, int *size)
+#define MYDEBUG 1
+
+void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 {
   int i;
   int count = 0;
   MY_DIR_ENTRY_LIST *list_temp;
-  char *buf;
-
+  u64 *buf;
+  char c;
+  u8 hex;
 
   if( head == NULL ) {
   }
   else {
     for( list_temp = head ; list_temp->next != NULL ; list_temp = list_temp->next ) {
       if( list_temp->src_path ) {
+#ifdef MYDEBUG
 	if( FALSE == CheckSystemApp( list_temp->src_path) ) {
 	  count++;
 	}
+#else
+	count++;
+#endif
       }
     }
+
+    OS_TPrintf("User App. count1 = %d\n", count);    
+
     if( count ) {
-      buf = (char *)OS_Alloc( (u32)(count * 16) );
-      STD_MemSet((void *)buf, 0, sizeof(count * 16));
+      buf = (u64 *)OS_Alloc( (u32)(count * sizeof(u64)) );
+      STD_MemSet((void *)buf, 0, count * sizeof(u64));
     }
     else {
       buf = NULL;
     }
-    *pBuffer = (void *)buf;
+    *pBuffer = buf;
     *size = count;
 
 
@@ -638,18 +656,59 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, void **pBuffer, int *size)
                        | 
 	  システムアプリはダウンロード対象外
 	*/
+#ifdef MYDEBUG
 	if( FALSE == CheckSystemApp( list_temp->src_path ) ) {
+#endif
 	  count++;
+
 	  /* User App. */
 	  for( i =  0 ; i < 8 ; i++ ) {
-	    *buf++ = list_temp->src_path[12 + i];
+	    c = list_temp->src_path[12 + i];
+	    hex = 0;
+	    if( ('a' <= c) && (c <= 'f') ) {
+	      hex = (u8)( c - 'a' + 10 );
+	    }
+	    else if( ('A' <= c) && (c <= 'F') ) {
+	      hex = (u8)( c - 'A' + 10 );
+	    }
+	    else if( ('0' <= c) && (c <= '9') ) {
+	      hex = (u8)(c - '0');
+	    }
+	    else {
+	      /* error! */
+	      count--;
+	      return;
+	    }
+	    *buf |= (((u64)hex) << ((7-i)*4 + 32 ));
 	  }
+
 	  for( i =  0 ; i < 8 ; i++ ) {
-	    *buf++ = list_temp->src_path[21 + i];
+	    c = list_temp->src_path[21 + i];
+	    hex = 0;
+	    if( ('a' <= c) && (c <= 'f') ) {
+	      hex = (u8)( c - 'a' + 10 );
+	    }
+	    else if( ('A' <= c) && (c <= 'F') ) {
+	      hex = (u8)( c - 'A' + 10 );
+	    }
+	    else if( ('0' <= c) && (c <= '9') ) {
+	      hex = (u8)(c - '0');
+	    }
+	    else {
+	      /* error! */
+	      count--;
+	      return;
+	    }
+	    *buf |= (((u64)hex) << ((7-i)*4 ));
 	  }
+	  buf++;
+	  OS_TPrintf("User App. count2 = %d\n", count);
+
+#ifdef MYDEBUG
 	}
-	OS_TPrintf("User App. count = %d\n", count);
+#endif
 	/*
+	  012345678901234567890123456789
 	  nand:/title/00030017/484e4141 は ランチャー
 	  nand:/title/00030015/484e4641 は shop
 	  nand:/title/00030015/484e4241 は 本体設定
@@ -689,7 +748,7 @@ void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd)
 
 
 
-BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
+int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
 {
   FSFile f;
   FSFile f_src;
@@ -700,36 +759,39 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
   MY_DIR_ENTRY_LIST *list_temp;
   int list_count = 0;
   
-  FSFile log_fd;
+  FSFile log_fd_real;
+  FSFile *log_fd;
   BOOL log_active = FALSE;
   //  char *log_file_name = "sdmc:/miya/save_dir_entry_log.txt";
   char *log_file_name = NULL;
 
-  /* ここでSDカードがあるかどうか調べる */
+  log_fd = &log_fd_real;
 
-  log_active = Log_File_Open( &log_fd, log_file_name );
+  /* ここでSDカードがあるかどうか調べる */
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
 
   /* 最初にSD側のルートディレクトリのデータを消しとくべきか？
      せっかくファイルリストに記録してるのでもったいない→必要ない */
   FS_InitFile(&f);
   FS_InitFile(&f_src);
   FS_InitFile(&f_dst);
-  
   if( path == NULL ) {
-    miya_log_fprintf(&log_fd, "%s %d not specify entry save file\n",__FUNCTION__,__LINE__ );
-    return FALSE;
+    miya_log_fprintf(log_fd, "%s %d not specify entry save file\n",__FUNCTION__,__LINE__ );
+    return -1;
   }
   FS_CreateFileAuto(path, (FS_PERMIT_R|FS_PERMIT_W));
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if (bSuccess == FALSE) {
     fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(&log_fd, "Failed create file - dir entry list file:%d\n", fsResult );
-    return FALSE;
+    miya_log_fprintf(log_fd, "Failed create file - dir entry list file:%d\n", fsResult );
+    return -1;
   }
-
   fsResult = FS_SetFileLength(&f, 0);
   if( fsResult != FS_RESULT_SUCCESS ) {
-    miya_log_fprintf(&log_fd, "Failed set file len - dir entry list file:%d\n", fsResult );
+    miya_log_fprintf(log_fd, "Failed set file len - dir entry list file:%d\n", fsResult );
   }
 
   /* バックワードでファイルに保存 */
@@ -743,14 +805,14 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
       // OS_TPrintf( "name = %s\n", list_temp->src_path );
       /* SDにログを残す場合 */
       if( log_active ) {
-	miya_log_fprintf(&log_fd, "%s\n", list_temp->src_path);
+	miya_log_fprintf(log_fd, "%s\n", list_temp->src_path);
       }
 
       writtenSize = FS_WriteFile(&f, (void *)list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
       if( writtenSize != sizeof(MY_DIR_ENTRY_LIST) ) {
-	miya_log_fprintf(&log_fd, "%s %d: Failed write file\n", __FUNCTION__ , __LINE__ );
-	miya_log_fprintf(&log_fd, " %s\n", path);
-	miya_log_fprintf(&log_fd, " entry count %d\n", list_count );
+	miya_log_fprintf(log_fd, "%s %d: Failed write file\n", __FUNCTION__ , __LINE__ );
+	miya_log_fprintf(log_fd, " %s\n", path);
+	miya_log_fprintf(log_fd, " entry count %d\n", list_count );
       }
       
       /* SD側にディレクトリの作成とファイルのコピー */
@@ -761,10 +823,10 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
 	if(!bSuccess) {
 	  fsResult = FS_GetArchiveResultCode(list_temp->dst_path);
 	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
-	    miya_log_fprintf(&log_fd, "%s %d: Failed Create DST Directory\n", __FUNCTION__ , __LINE__ );
-	    miya_log_fprintf(&log_fd, " %s\n", list_temp->dst_path);
-	    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	    return FALSE;
+	    miya_log_fprintf(log_fd, "%s %d: Failed Create DST Directory\n", __FUNCTION__ , __LINE__ );
+	    miya_log_fprintf(log_fd, " %s\n", list_temp->dst_path);
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    return -1;
 	  }
 	}
       }
@@ -776,7 +838,7 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
 	else {
 	  /* NANDからSDにコピーする */
 	  // CopyFile( dst <= src );
-	  CopyFile(list_temp->dst_path, list_temp->src_path, &log_fd );
+	  CopyFile(list_temp->dst_path, list_temp->src_path, log_fd );
 	}
       }
       list_count++;
@@ -786,16 +848,18 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
   FS_FlushFile(&f);
 
   if( FS_CloseFile(&f) == FALSE) {
-    miya_log_fprintf(&log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ) );
+    miya_log_fprintf(log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ) );
   }
-  miya_log_fprintf(NULL, "write etnry list count %d\n", list_count);
-  
   if( log_active ) {
-    Log_File_Close(&log_fd);
+    miya_log_fprintf(log_fd, "write entry list count %d\n", list_count);
   }
-  return TRUE;
+
+  if( log_active ) {
+    Log_File_Close(log_fd);
+  }
+  return list_count;
 }
 
 /********************************************
@@ -1102,11 +1166,11 @@ BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
 
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if( ! bSuccess ) {
-    FS_CreateFileAuto( path, FS_PERMIT_W);
+    FS_CreateFileAuto( path, FS_PERMIT_W|FS_PERMIT_R);
     bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
     if( ! bSuccess ) {
       res = FS_GetArchiveResultCode( path );
-      miya_log_fprintf(NULL, "log file open error %s\n", path );
+      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
       miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
       return FALSE;
     }
@@ -1127,6 +1191,125 @@ BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
   }
   return TRUE;
 }
+
+
+BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd)
+{
+  FSFile f;
+  BOOL bSuccess;
+  //  u32 fileSize;
+  s32 readSize = 0;
+  int id_count= 0;
+  int size;
+
+  FS_InitFile(&f);
+  
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
+    return FALSE;
+  }
+
+  if( sizeof(int) != FS_ReadFile(&f, &id_count, (s32)sizeof(int)) ) {
+    miya_log_fprintf(log_fd, "Failed Read File %s\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
+    return FALSE;
+  } 
+
+
+  *count = id_count;
+  size = (int)sizeof(u64) * id_count;
+
+  *pBuffer = (u64 *)OS_Alloc( (u32)size );
+  if( *pBuffer == NULL ) {
+    return FALSE;
+  }
+
+  readSize = FS_ReadFile(&f, *pBuffer, (s32)size );
+  if( readSize != size ) {
+    miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
+  }
+  bSuccess = FS_CloseFile(&f);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Close File\n");
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
+  }
+  
+  return TRUE;
+
+}
+
+BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
+{
+#pragma unused(log_fd)
+
+  FSFile f;
+  BOOL bSuccess;
+  FSResult res;
+  FSResult fsResult;
+  //  s32 writtenSize;
+
+  FS_InitFile(&f);
+
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
+  if( ! bSuccess ) {
+    FS_CreateFileAuto( path, FS_PERMIT_W|FS_PERMIT_R);
+    bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
+    if( ! bSuccess ) {
+      res = FS_GetArchiveResultCode( path );
+      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
+      return FALSE;
+    }
+  }
+
+  fsResult = FS_SetFileLength(&f, 0);
+  if( fsResult != FS_RESULT_SUCCESS ) {
+    res = FS_GetArchiveResultCode( path );
+    miya_log_fprintf(NULL, "%s file length error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(NULL, " Failed file lenght :%s\n", my_fs_util_get_fs_result_word( res ));
+    return FALSE;
+  }
+
+  if( sizeof(int) != FS_WriteFile(&f, &count, (s32)sizeof(int)) ) {
+    res = FS_GetArchiveResultCode( path );
+    miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+    return FALSE;
+  }
+
+  /*
+    nand:/title/00030005/484e4541
+    nand:/title/00030005/484e4441
+    nand:/title/0003000f/484e4c4a
+    nand:/title/0003000f/484e4841
+    nand:/title/0003000f/484e4341
+    nand:/title/00030015/484e424a
+    nand:/title/00030017/484e414a
+  */
+
+    /* 16文字だから */
+  if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+    res = FS_GetArchiveResultCode( path );
+    miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+    return FALSE;
+  }
+
+  FS_FlushFile(&f);
+  bSuccess = FS_CloseFile(&f);
+  if( bSuccess ) {
+      
+  }
+  return TRUE;
+}
+
+
+
+
 
 /* SDカードがあるかどうか */
 BOOL SDCardValidation(void)

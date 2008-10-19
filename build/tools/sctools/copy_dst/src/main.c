@@ -413,6 +413,7 @@ void TwlMain(void)
 	    int count;
 	    int i,j;
 	    char *ptr;
+#if 0
 	    GetDirEntryList( dir_entry_list_head, &pBuffer, &count);
 	    OS_TPrintf("count = %d\n", count );
 	    ptr = (char *)pBuffer;
@@ -428,6 +429,8 @@ void TwlMain(void)
 	      }
 	      OS_Free(pBuffer);
 	    }
+#endif
+
 	  }
 	  
 

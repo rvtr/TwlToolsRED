@@ -249,7 +249,7 @@ BOOL LoadWlanConfigFile(char *path)
 	    }
 	    else if( ('A' <= c) && (c <= 'F') ) {
 	      if( lo_hi == 0 ) {
-		hex = (u8)(( c - 'a' + 10 ) * 16);
+		hex = (u8)(( c - 'A' + 10 ) * 16);
 	      }
 	      else {
 		hex += (u8)( c - 'a' + 10 );

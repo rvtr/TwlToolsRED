@@ -18,6 +18,9 @@
 #define NVRAM_INTERNAL_BUF_SIZE 0x100
 static u8 nvram_buffer[NVRAM_INTERNAL_BUF_SIZE] ATTRIBUTE_ALIGN(32);
 
+//static char nor_file_path[FS_FILE_NAME_MAX];
+
+
 static BOOL my_nvram_read( u32 offset, u32 size, void *buf)
 {
   u32 internal_size = size;
@@ -102,16 +105,33 @@ static const char  * const fs_result_strings[] =
     "FS_RESULT_ALREADY_DONE",
     "FS_RESULT_PERMISSION_DENIED",
     "FS_RESULT_MEDIA_FATAL",
+    "FS_RESULT_NO_ENTRY",
+    "FS_RESULT_MEDIA_NOTHING",
+    "FS_RESULT_MEDIA_UNKNOWN",
+    "FS_RESULT_BAD_FORMAT"
 };
+
+
+
+
+
+
+
+
 static const size_t fs_result_string_max = sizeof(fs_result_strings) / sizeof(*fs_result_strings);
 
 static void ReportLastErrorPath(const char *path)
 {
     FSResult    result = FS_GetArchiveResultCode(path);
+    if( (result >= 0) && (result < fs_result_string_max)) {
+      OS_TPrintf("FS error:    \"%s\"    %s\n", path, fs_result_strings[result]);
+      mprintf("FS error:    \"%s\"    %s\n",  path, fs_result_strings[result]);
+    }
+    else {
+      OS_TPrintf("FS error: unknown\n");
+      mprintf("FS error:\n  unknown\n");
+    }
 
-    SDK_ASSERT((result >= 0) && (result < fs_result_string_max));
-    mprintf("FS error:\n    \"%s\"\n    %s\n",
-               path, fs_result_strings[result]);
 }
 
 BOOL nvram_backup(char *path)
@@ -121,20 +141,19 @@ BOOL nvram_backup(char *path)
   u16 offset;
   u32 vol;
   int len;
-  char nor_file_path[FS_FILE_NAME_MAX];
 #define BUF_SIZE 0x100
   u8 nor_buf[BUF_SIZE];
-
+  char *nor_file_path = path;
 
   FS_InitFile(&nor_fd);
-  //  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), "sdmc:/twl_nor.bin");
-  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), path );
+
+  //  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), path );
   bSuccess = FS_OpenFileEx(&nor_fd, nor_file_path, (FS_FILEMODE_R|FS_FILEMODE_W));
   if( ! bSuccess )
     {
-      if( !FS_CreateFile(nor_file_path, FS_PERMIT_R | FS_PERMIT_W)) {
+      if( !FS_CreateFileAuto(nor_file_path, FS_PERMIT_R | FS_PERMIT_W)) {
         ReportLastErrorPath(nor_file_path);
-        OS_TWarning("2 FS_CreateFile(%s) failed.", nor_file_path);
+        OS_TPrintf("2 FS_CreateFileAuto(%s) failed.", nor_file_path);
 	return FALSE;
       }
       bSuccess = FS_OpenFileEx(&nor_fd, nor_file_path, (FS_FILEMODE_R|FS_FILEMODE_W));
@@ -143,14 +162,13 @@ BOOL nvram_backup(char *path)
 	return FALSE;
       }
     }
-
   if( TRUE !=  my_nvram_read( NVRAM_PERSONAL_DATA_OFFSET , sizeof(u16), (void* )&offset) ) {
     OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
   }
   else {
     OS_TPrintf( "nvram success: offset = 0x%02x\n", offset);
   }
- 
+
   if( offset == 0 ) {
     OS_TPrintf( "nvram error: offset = 0x%02x\n", offset);
     return FALSE;
@@ -158,7 +176,7 @@ BOOL nvram_backup(char *path)
 
   offset *= 8;
   offset -= 0xA00;
-  
+
   for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
     OS_TPrintf(".");
     if( TRUE !=  my_nvram_read( offset+vol , BUF_SIZE, (void* )nor_buf) ) {
@@ -168,7 +186,7 @@ BOOL nvram_backup(char *path)
       len = FS_WriteFile(&nor_fd, nor_buf, BUF_SIZE);
       if (len != BUF_SIZE)
 	{
-	  OS_TWarning("FS_WriteFile() failed.");
+	  OS_TPrintf("FS_WriteFile() failed.");
 	  break;
 	}
     }
@@ -190,12 +208,14 @@ BOOL nvram_restore(char *path)
   u16 offset;
   u32 vol;
   int len;
-  char nor_file_path[FS_FILE_NAME_MAX];
+  //  char nor_file_path[FS_FILE_NAME_MAX];
+  char *nor_file_path = path;
+
 #define BUF_SIZE 0x100
   u8 nor_buf[BUF_SIZE];
 
   FS_InitFile(&nor_fd);
-  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), path );
+  //  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), path );
   bSuccess = FS_OpenFileEx(&nor_fd, nor_file_path, FS_FILEMODE_R);
   if( ! bSuccess ) {
     OS_TPrintf("error %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
@@ -223,7 +243,7 @@ BOOL nvram_restore(char *path)
 
     len = FS_ReadFile(&nor_fd, nor_buf, BUF_SIZE);
     if (len != BUF_SIZE) {
-      OS_TWarning("FS_ReadFile() failed.");
+      OS_TPrintf("FS_ReadFile() failed.");
       break;
     }
 

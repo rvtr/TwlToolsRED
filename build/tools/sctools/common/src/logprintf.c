@@ -66,7 +66,7 @@ static void *proutPrintf(void *fd, const char *buf, size_t n)
 
   for (i = 0; i < n; i++) {
     OS_PutChar( buf[i] );
-    m_putchar( (void *)tc[0], buf[i] );
+    //    m_putchar( (void *)tc[0], buf[i] );
   }
 
   if( fd != NULL ) {

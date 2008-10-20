@@ -216,7 +216,10 @@ void MFILER_DisplayDir(TEXT_CTRL *tc, MY_ENTRY_LIST **headp, int mode )
   int list_count = 0;
   int backslash_count = 0;
 
-  mfprintf(tc, "page %d entry no. %d/%d mode=%d\n\n", display_offset_y, cursor_pos_y , list_count_max , mode);
+  mfprintf(tc, "page %d entry no. %d/%d\n", display_offset_y, cursor_pos_y , list_count_max);
+  m_set_palette(tc, 0x4);	/* yellow  */
+  mfprintf(tc,"-------------------------------\n");
+  m_set_palette(tc, 0xF);	/* white */
 
   if( cursor_pos_y > list_count_max ) {
     cursor_pos_y = 0;
@@ -228,7 +231,7 @@ void MFILER_DisplayDir(TEXT_CTRL *tc, MY_ENTRY_LIST **headp, int mode )
     for( list_temp = *headp ; list_temp != NULL ; list_temp = list_temp->next ) {
       if( (display_offset_y <= list_count) && (list_count < (display_offset_y + DISPLAY_Y_MAX) )) {
 	if( list_count ==  cursor_pos_y ) {
-	  m_set_palette( tc, 2 );
+	  m_set_palette(tc, 0x4);	/* yellow  */
 	  m_putchar( tc, '*');
 	  m_set_palette(tc, 0xF);	/* white */
 	}

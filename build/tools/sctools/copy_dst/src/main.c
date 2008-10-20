@@ -96,17 +96,73 @@ static void start_my_thread(void)
 #if 0
 static BOOL RestoreFromSDCard1(void)
 {
-  mprintf("global info. data restore ");
-  if( TRUE == MydataSave( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
+  /* 基本的にこいつらの逆をやる(Get -> Set, Save->Loadなど) */
+  // static BOOL SDBackupToSDCard8(void)
+  if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
+    mprintf("rtc read date error.\n");
+  }
+  if( RTC_RESULT_SUCCESS != RTC_GetTime( &rtc_time ) ) {
+    mprintf("rtc read time error.\n");
+  }
+
+  STD_CopyMemory( (void *)(mydata.movableUniqueID), (void *)hwn_info.movableUniqueID,
+		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
+
+  if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
+  }
+
+  /* hws_info.serialNoは戻せない */
+  /*  */
+
+  // static BOOL SDBackupToSDCard7(void)
+  if( mydata.shop_record_flag == FALSE ) {
+    /* ネットワークにつながなくていいか？ */
+    OS_TPrintf("no shop record\n - you don't have to connect the network.\n");
+    mprintf("no shop record\n");
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
+    mprintf("User title list backup ");
+    OS_TPrintf("User title list backup \n");
+
+    // (void)TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL);
+
+    nuc_main();	/* ネットワーク接続 */
+    /* nand:/ticketはチケット同期でダウンロード */
+
   }
-  m_set_palette(tc[0], 0xF);	/* white */
-  return TRUE;
+
+  // static BOOL SDBackupToSDCard6(void)
+  mprintf("App. save data backup ");
+  if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetAppDataSaveDirName(), "nand:/title",
+				 &save_dir_info, MyFile_GetAppDataLogFileName(),0 ) ) {
+  }
+
+  // static BOOL SDBackupToSDCard5(void)
+  mprintf("Photo files backup ");
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , "nand2:/photo" , MyFile_GetPhotoLogFileName(),0 ) ) {
+  }
+
+  // static BOOL SDBackupToSDCard4(void)
+  mprintf("App. shared files backup ");
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , "nand:/shared2" , MyFile_GetAppSharedLogFileName(), 0) ) {
+  }
+
+  // static BOOL SDBackupToSDCard3(void)
+  mprintf("User setting param. backup ");
+  if( TRUE == MiyaBackupTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
+  }
+
+  // static BOOL SDBackupToSDCard2(void)
+  mprintf("WirelessLAN param. backup ");
+  if( TRUE == nvram_backup( MyFile_GetWifiParamFileName() ) ) {
+  }
+
+  // static BOOL SDBackupToSDCard1(void)
+  mprintf("Unique ID backup ");
+  if( TRUE == MiyaBackupHWNormalInfo( MyFile_GetUniqueIDFileName() ) ) {
+  }
+
+
 }
 #endif
 
@@ -178,6 +234,8 @@ static void MyThreadProc(void *arg)
   OSMessage message;
   while( 1 ) {
     (void)OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK);
+
+    /* MydataLoadはすでにやっているのでいらない。 */
     for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
       (void)(function_table[function_counter])();
     }
@@ -395,6 +453,10 @@ void TwlMain(void)
 	    MyFile_AddPathBase((const char *)MFILER_GetCursorEntryPath( &mfiler_list_head ) );
 	    MyFile_AddPathBase("/");
 	    if(TRUE == MydataLoad( MyFile_GetGlobalInformationFileName(), &mydata, sizeof(MyData), NULL) ) {
+	      mprintf("global info. data restore ");
+	      m_set_palette(tc[0], 0x2);	/* green  */
+	      mprintf("OK.\n");
+	      m_set_palette(tc[0], 0xF);	/* white */
 	      start_my_thread();
 	    }
 	    else {
@@ -456,7 +518,7 @@ void TwlMain(void)
 	   rtc_date.year + 2000, rtc_date.month , rtc_date.day,
 	   rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
-    mfprintf(tc[1], "cwd = %s\n\n", MFILER_Get_CurrentDir());
+    //    mfprintf(tc[1], "cwd = %s\n\n", MFILER_Get_CurrentDir());
 
     MFILER_ClearDir(&mfiler_list_head);
     MFILER_ReadDir(&mfiler_list_head, MFILER_Get_CurrentDir());

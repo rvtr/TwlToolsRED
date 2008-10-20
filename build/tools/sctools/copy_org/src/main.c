@@ -31,7 +31,10 @@
 #include        "hatamotolib.h"
 #include        "ecdl.h"
 #include        "mywlan.h"
+#include        "mydata.h"
 #include        "nuc.h"
+
+#include        "myfilename.h"
 
 //================================================================================
 
@@ -53,25 +56,17 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
   }
 }
 
-typedef struct {
-  RTCDate rtc_date;
-  RTCTime rtc_time;
-  BOOL shop_record_flag;
-  int num_of_user_download_app;
-  int num_of_app_save_data;
-  int num_of_photo_files;
-  int num_of_shared2_files;
-  u8 movableUniqueID[ LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ]; // 移行可能なユニークID 16byte
-} MyData;
 
 static MyData mydata;
 
 static int vram_num_main = 1;
 static int vram_num_sub = 0;
 
+#if 0
 static  char path_base[256];
 static  char path_log[256];
 static  char path[256];
+#endif
 static  LCFGTWLHWNormalInfo hwn_info;
 static  LCFGTWLHWSecureInfo hws_info;
 
@@ -104,32 +99,12 @@ static void start_my_thread(void)
 }
 
 
-static void BackupToSDCard(void)
+
+static BOOL SDBackupToSDCard1(void)
 {
-  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
-  RTCDate rtc_date;
-  RTCTime rtc_time;
-  int save_dir_info = 0;
-  u64 *pBuffer;
-  int count;
-  int j;
-  u64 *ptr;
-
-
-  //miya   mprintf("BACKUP to SD Card\n");
-  /************************************/
-  STD_StrCpy( path_base , "sdmc:/" );
-  STD_StrCat( path_base , (const char *)hws_info.serialNo );
-  STD_StrCat( path_base , "/" );
-
-	
-
   /* nand:/sysディレクトリまわりの保存 */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "twl_ninfo.dat" );
-  // mprintf("HWInfo Normal backup ");
   mprintf("Unique ID backup ");
-  if( TRUE == MiyaBackupHWNormalInfo( path ) ) {
+  if( TRUE == MiyaBackupHWNormalInfo( MyFile_GetUniqueIDFileName() ) ) {
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -138,13 +113,15 @@ static void BackupToSDCard(void)
     mprintf("NG.\n");
   }
   m_set_palette(tc[0], 0xF);	/* white */
+  return TRUE;
+}
 
 
+static BOOL SDBackupToSDCard2(void)
+{
   /* Wifi設定の保存 */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "twl_nor.bin" );
   mprintf("WirelessLAN param. backup ");
-  if( TRUE == nvram_backup( path ) ) {
+  if( TRUE == nvram_backup( MyFile_GetWifiParamFileName() ) ) {
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -153,13 +130,15 @@ static void BackupToSDCard(void)
     mprintf("NG.\n");
   }
   m_set_palette(tc[0], 0xF);	/* white */
+  return TRUE;
+}
+
+static BOOL SDBackupToSDCard3(void)
+{
 
   /* nand:/shared1ディレクトリまわりの保存 */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "twl_cfg.dat" );
-  //mprintf("TWL CFG backup ");
   mprintf("User setting param. backup ");
-  if( TRUE == MiyaBackupTWLSettings( path ) ) {
+  if( TRUE == MiyaBackupTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -168,24 +147,23 @@ static void BackupToSDCard(void)
     mprintf("NG.\n");
   }
   m_set_palette(tc[0], 0xF);	/* white */
+  return TRUE;
+}
 
-
+static BOOL SDBackupToSDCard4(void)
+{
+  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
+  int save_dir_info = 0;
 
   /*
     nand:/shared2ディレクトリまわりの保存
     内容はアプリケーション共有ファイル
     nand:/shared2/*
   */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "shared2" );
-  STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , "shared2.txt" );
   mprintf("App. shared files backup ");
-  if( 0 == copy_r( &dir_entry_list_head, path, "nand:/shared2" , path_log ) ) {
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , "nand:/shared2" , MyFile_GetAppSharedLogFileName(), 0) ) {
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    STD_StrCpy( path , path_base );
-    STD_StrCat( path , "shared2.lst" );
-    mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, path );
+    mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName() );
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -195,24 +173,23 @@ static void BackupToSDCard(void)
   }
   m_set_palette(tc[0], 0xF);	/* white */
   (void)ClearDirEntryList( &dir_entry_list_head );
+  return TRUE;
+}
 
+static BOOL SDBackupToSDCard5(void)
+{
+  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
+  int save_dir_info = 0;
 
   /* 
      nand2:/photoディレクトリまわりの保存
      内容は写真長のJPEGファイル
      nand2:/photo/*.*
    */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "photo" );
-  STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , "photolog.txt" );
-  // mprintf("copy_r photo completed.\n");
   mprintf("Photo files backup ");
-  if( 0 == copy_r( &dir_entry_list_head, path , "nand2:/photo" , path_log ) ) {
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , "nand2:/photo" , MyFile_GetPhotoLogFileName(),0 ) ) {
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    STD_StrCpy( path , path_base );
-    STD_StrCat( path , "photo.lst" );
-    mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, path );
+    mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName() );
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -224,27 +201,30 @@ static void BackupToSDCard(void)
   (void)ClearDirEntryList( &dir_entry_list_head );
 
 
-  /* nand:/ticketはチケット同期？でうまいこと合わせてくれるんでバックアップ不要 */
+  return TRUE;
+}
 
+static BOOL SDBackupToSDCard6(void)
+{
+  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
+  int save_dir_info = 0;
+
+  /* nand:/ticketはチケット同期？でうまいこと合わせてくれるんでバックアップ不要 */
 
   /* 
      nand:/titleディレクトリまわりの保存
      nand:/title/*.savファイルをすべてバックアップ
   */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "title" );
-  STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , "titlelog.txt" );
-  // mprintf("find_title_save_data completed.\n");
+
   mprintf("App. save data backup ");
-  if( 0 == find_title_save_data( &dir_entry_list_head, path , "nand:/title", &save_dir_info, path_log ) ) {
-    // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    STD_StrCpy( path , path_base );
-    STD_StrCat( path , "title.lst" );
-    mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , path );
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
+  if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetAppDataSaveDirName(), "nand:/title",
+				 &save_dir_info, MyFile_GetAppDataLogFileName(),0 ) )
+    {
+      // PrintDirEntryListBackward( dir_entry_list_head, NULL );
+      mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , MyFile_GetAppDataListFileName() );
+      m_set_palette(tc[0], 0x2);	/* green  */
+      mprintf("OK.\n");
+    }
   else {
     m_set_palette(tc[0], 0x1);	/* red  */
     mprintf("NG.\n");
@@ -252,7 +232,17 @@ static void BackupToSDCard(void)
   m_set_palette(tc[0], 0xF);	/* white */
   (void)ClearDirEntryList( &dir_entry_list_head );
 
+  return TRUE;
+}
 
+static BOOL SDBackupToSDCard7(void)
+{
+  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
+  int save_dir_info = 0;
+  u64 *pBuffer;
+  int count;
+  int j;
+  u64 *ptr;
 
   /* タイトルリストの生成 */
   /* 
@@ -277,38 +267,46 @@ static void BackupToSDCard(void)
      | 
      システムアプリはダウンロード対象外
   */
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "title_id.dat" );
-  STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , "title2log.txt" );
-  if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, path_log ) ) {
-    mprintf("get_title_id completed.\n");
-    OS_TPrintf("get_title_id completed.\n");
+  mprintf("User title list backup ");
+  OS_TPrintf("User title list backup \n");
+  if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
 
     GetDirEntryList( dir_entry_list_head, &pBuffer, &count);
-    OS_TPrintf("count = %d\n", count );
+
+    OS_TPrintf("title id count = %d\n", count );
     ptr = pBuffer;
     mydata.num_of_user_download_app = count;
     
     if( ptr != NULL && count != 0 )  {
       for( j = 0 ; j < count ; j++ ) {
-	OS_TPrintf("No. %d ",j);
-	mfprintf(tc[2],"No. %d ",j);
-	
-	OS_TPrintf("%llx\n", *ptr);
-	mfprintf(tc[2],"%llx\n", *ptr);
-	  ptr++;
+	OS_TPrintf("No. %d %llx\n",j,*ptr);
+	mfprintf(tc[2],"No. %d %llx\n",j,*ptr);
+	ptr++;
       }
-      OS_Free(pBuffer);
     }
-    // (void)TitleIDSave(path, u64 *pData, count, NULL);
+    (void)TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL);
+    OS_Free(pBuffer);
     PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
+    m_set_palette(tc[0], 0x2);	/* green  */
+    mprintf("OK.\n");
   }
+  else {
+    m_set_palette(tc[0], 0x1);	/* red  */
+    mprintf("NG.\n");
+  }
+  m_set_palette(tc[0], 0xF);	/* white */
+
   (void)ClearDirEntryList( &dir_entry_list_head );
 
+  return TRUE;
+}
 
+static BOOL SDBackupToSDCard8(void)
+{
+  RTCDate rtc_date;
+  RTCTime rtc_time;
 
-  /* オリジナルのグローバルデータのバックアップ */
+  /* オリジナルのデータのバックアップ */
   if( TRUE == CheckShopRecord(NULL) ) {
     mydata.shop_record_flag = TRUE;
     OS_TPrintf("shop record exist - you don't have to connect the network.\n");
@@ -320,8 +318,6 @@ static void BackupToSDCard(void)
     mprintf("no shop record\n");
   }
 
-  STD_StrCpy( path , path_base );
-  STD_StrCat( path , "twl_rtc.dat" );
   if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
     mprintf("rtc read date error.\n");
   }
@@ -334,7 +330,7 @@ static void BackupToSDCard(void)
   STD_CopyMemory( (void *)(mydata.movableUniqueID), (void *)hwn_info.movableUniqueID,
 		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
   mprintf("org. data backup ");
-  if( TRUE == MydataSave(path, (void *)&mydata, sizeof(MyData), NULL) ) {
+  if( TRUE == MydataSave( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
   }
@@ -343,8 +339,27 @@ static void BackupToSDCard(void)
     mprintf("NG.\n");
   }
   m_set_palette(tc[0], 0xF);	/* white */
-
+  return TRUE;
 }
+
+
+typedef BOOL (*function_ptr)(void);
+
+static function_ptr function_table[] =
+{
+  SDBackupToSDCard1,
+  SDBackupToSDCard2,
+  SDBackupToSDCard3,
+  SDBackupToSDCard4,
+  SDBackupToSDCard5,
+  SDBackupToSDCard6,
+  SDBackupToSDCard7,
+  SDBackupToSDCard8
+};
+
+static int function_table_max = sizeof(function_table) / sizeof(*function_table);
+static int function_counter = 0;
+
 
 static void MyThreadProc(void *arg)
 {
@@ -352,7 +367,12 @@ static void MyThreadProc(void *arg)
   OSMessage message;
   while( 1 ) {
     (void)OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK);
-    BackupToSDCard();
+    MyFile_SetPathBase("sdmc:/");
+    MyFile_AddPathBase((const char *)hws_info.serialNo );
+    MyFile_AddPathBase("/");
+    for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
+      (void)(function_table[function_counter])();
+    }
   }
 }
 
@@ -367,8 +387,6 @@ void TwlMain(void)
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   RTCDate rtc_date;
   RTCTime rtc_time;
-  //  LCFGTWLHWNormalInfo hwn_info;
-  //  LCFGTWLHWSecureInfo hws_info;
   int i;
   int n;
   u8 macAddress[6];
@@ -548,11 +566,9 @@ void TwlMain(void)
 
   init_my_thread();
 
-#if 1 // miya あとでコメントアウトはずす
   if( sd_card_flag == TRUE ) {
     start_my_thread();
   }
-#endif
 
   while( 1 ) {
     OS_WaitVBlankIntr();
@@ -683,10 +699,8 @@ void TwlMain(void)
     mfprintf(tc[1], "press A -> Store to SD Card\n");
     mfprintf(tc[1], "press B -> Load to NAND Flash\n");
     mfprintf(tc[1], "\n");
+    mfprintf(tc[1], "function no.%d/%d\n", function_counter, function_table_max);
     
-
-    
-
     loop_counter++;
 
   }

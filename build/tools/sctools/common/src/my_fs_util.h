@@ -19,12 +19,12 @@ extern "C" {
 char *my_fs_util_get_fs_result_word( FSResult res );
 
 int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, 
-			 const char *path_src, int *save_dir_info, char *log_file_name );
+			 const char *path_src, int *save_dir_info, char *log_file_name , int level);
 int find_copy( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src,
-	       char *extension, int level, int *save_info, char *log_file_name );
-int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name );
+	       char *extension, int max_level, int *save_info, char *log_file_name , int level);
+int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name, int level );
 int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, 
-		 int *save_parent_dir_info_flag, char *log_file_name );
+		 int *save_parent_dir_info_flag, char *log_file_name, int level );
 
 void PrintDirEntryListForward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );

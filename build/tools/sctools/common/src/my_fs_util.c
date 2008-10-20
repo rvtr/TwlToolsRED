@@ -603,28 +603,29 @@ static BOOL CheckSystemApp(char path[])
   }
 }
 
-#define MYDEBUG 1
 
 void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 {
   int i;
   int count = 0;
   MY_DIR_ENTRY_LIST *list_temp;
-  u64 *buf;
+  u64 *buf = NULL;
   char c;
   u8 hex;
 
   if( head == NULL ) {
+    *pBuffer = buf;
+    *size = count;
   }
   else {
     for( list_temp = head ; list_temp->next != NULL ; list_temp = list_temp->next ) {
       if( list_temp->src_path ) {
 #ifdef MYDEBUG
+	count++;
+#else
 	if( FALSE == CheckSystemApp( list_temp->src_path) ) {
 	  count++;
 	}
-#else
-	count++;
 #endif
       }
     }
@@ -636,7 +637,7 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
       STD_MemSet((void *)buf, 0, count * sizeof(u64));
     }
     else {
-      buf = NULL;
+
     }
     *pBuffer = buf;
     *size = count;
@@ -656,7 +657,7 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
                        | 
 	  システムアプリはダウンロード対象外
 	*/
-#ifdef MYDEBUG
+#ifndef MYDEBUG
 	if( FALSE == CheckSystemApp( list_temp->src_path ) ) {
 #endif
 	  count++;
@@ -704,7 +705,7 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	  buf++;
 	  OS_TPrintf("User App. count2 = %d\n", count);
 
-#ifdef MYDEBUG
+#ifndef MYDEBUG
 	}
 #endif
 	/*
@@ -1309,8 +1310,6 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
 
 
 
-
-
 /* SDカードがあるかどうか */
 BOOL SDCardValidation(void)
 {
@@ -1374,13 +1373,10 @@ BOOL CheckShopRecord(FSFile *log_fd)
 
 }
 
-
-int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name )
+int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name, int level )
 {
-  static int recursive_count = 0;
   static FSFile log_fd;
   static BOOL log_active = FALSE;
-  //  static char *log_file_name = "sdmc:/miya/nandinfo_find_title_save_data.txt";
 
   FSFile f_src;
   FSDirectoryEntryInfo entry_src;
@@ -1394,16 +1390,16 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 
   /* ここでSDカードがあるかどうか調べる */
 
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     log_active = Log_File_Open( &log_fd, log_file_name );
   }
 
-  recursive_count++;
+  level++;
 
-  // recursive_count         1      2        3       4
-  //                 nand:/title 
-  //                 nand:/title/00000000/00000000/data/*.sav
-  if( recursive_count >  4 ) {
+  // level         1      2        3       4
+  //             nand:/title 
+  //             nand:/title/00000000/00000000/data/*.sav
+  if( level >  4 ) {
     ret_value = 0;
     goto end_process;
   }
@@ -1428,19 +1424,20 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
     ret_value = -1;
     goto end_process;
   }
+
   path_src_full = (char *)OS_Alloc( FILE_PATH_LEN );
   if( path_src_full == NULL ) {
     miya_log_fprintf(&log_fd, "Error: alloc error src_full\n");
     ret_value = -1;
     goto end_process;
   }
+
   STD_MemSet((void *)path_src_dir, 0, FILE_PATH_LEN);
   STD_MemSet((void *)path_src_full, 0, FILE_PATH_LEN);
   STD_StrCpy(path_src_dir, path_src);
   STD_StrCat(path_src_dir, "/");
 
   while( FS_ReadDirectory(&f_src, &entry_src) ) {
-
     if( STD_StrCmp(entry_src.longname, ".") == 0 ) {
       /* とりあえずカレントディレクトリエントリを残しておく */
       STD_CopyMemory( (void *)&entry_current_dir, (void *)&entry_src ,sizeof(FSDirectoryEntryInfo) );
@@ -1460,30 +1457,30 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
-	// recursive_count         1      2        3       4
-	//                 nand:/title 
-	//                 nand:/title/00000000/00000000/data/*.sav
-	if( recursive_count == 1 ) {
+	// level        1      2        3       4
+	//             nand:/title 
+	//             nand:/title/00000000/00000000/data/*.sav
+	if( level == 1 ) {
 	  if( my_fs_is_Title_Hi_dir_name( entry_src.longname ) == TRUE ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
-	if( recursive_count == 2 ) {
+	if( level == 2 ) {
 	  if( my_fs_is_Title_Lo_dir_name( entry_src.longname ) == TRUE ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
-	else if( (recursive_count == 3) ) {
+	else if( (level == 3) ) {
 	  if( !STD_StrCmp( entry_src.longname, "content" ) ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
       }	
       else {
-	// recursive_count         1      2        3       4
-	//                 nand:/title 
-	//                 nand:/title/00000000/00000000/content/title.tmd
-	if( (recursive_count == 4) ) {
+	// level        1      2        3       4
+	//             nand:/title 
+	//             nand:/title/00000000/00000000/content/title.tmd
+	if( (level == 4) ) {
 	  if( !STD_StrCmp( entry_src.longname, "title.tmd" ) ) {
 	    /* 目的のファイルを見つけた。 */
 #if 0
@@ -1498,7 +1495,7 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 
   if( save_parent_dir_info_flag_temp == 1 ) {
     // OS_TPrintf("save dir info = %s\n\n",path_src);
-    if( recursive_count == 3 ) {
+    if( level == 3 ) {
       my_fs_add_list( headp, &entry_current_dir, path_src, NULL, &log_fd);
     }
     else {
@@ -1524,9 +1521,9 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
     OS_Free(path_src_full);
   }
 
-  recursive_count--;
+  level--;
 
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     if( log_active ) {
       Log_File_Close(&log_fd);
     }
@@ -1537,9 +1534,8 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 
 
 
-int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name )
+int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name,  int level )
 {
-  static int recursive_count = 0;
   static FSFile log_fd;
   static BOOL log_active = FALSE;
   //  static char *log_file_name = "sdmc:/miya/nandinfo_find_title_save_data.txt";
@@ -1558,16 +1554,16 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 
   /* ここでSDカードがあるかどうか調べる */
 
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     log_active = Log_File_Open( &log_fd, log_file_name );
   }
 
-  recursive_count++;
+  level++;
 
-  // recursive_count         1      2        3       4
+  // level         1      2        3       4
   //                 nand:/title 
   //                 nand:/title/00000000/00000000/data/*.sav
-  if( recursive_count >  4 ) {
+  if( level >  4 ) {
     ret_value = 0;
     goto end_process;
   }
@@ -1616,30 +1612,30 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
-	// recursive_count         1      2        3       4
+	// level         1      2        3       4
 	//                 nand:/title 
 	//                 nand:/title/00000000/00000000/data/*.sav
-	if( recursive_count == 1 ) {
+	if( level == 1 ) {
 	  if( my_fs_is_Title_Hi_dir_name( entry_src.longname ) == TRUE ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name , level );
 	  }
 	}
-	if( recursive_count == 2 ) {
+	if( level == 2 ) {
 	  if( my_fs_is_Title_Lo_dir_name( entry_src.longname ) == TRUE ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
-	else if( (recursive_count == 3) ) {
+	else if( (level == 3) ) {
 	  if( !STD_StrCmp( entry_src.longname, "data" ) ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name );
+	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
       }	
       else {
-	// recursive_count         1      2        3       4
+	// level         1      2        3       4
 	//                 nand:/title 
 	//                 nand:/title/00000000/00000000/data/*.sav
-	if( (recursive_count == 4) ) {
+	if( (level == 4) ) {
 	  if( !STD_StrCmp( entry_src.longname, "public.sav" ) ) {
 	    /* 目的のファイルを見つけた。 */
 	    my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
@@ -1679,9 +1675,9 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 
   Path_Buffers_Clean( path_src_dir, path_src_full, path_dst_dir, path_dst_full );
 
-  recursive_count--;
+  level--;
 
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     if( log_active ) {
       Log_File_Close(&log_fd);
     }
@@ -1692,9 +1688,8 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 
 
 int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, 
-	      char *extension, int max_recursive_count, int *save_parent_dir_info_flag, char *log_file_name )
+	      char *extension, int max_level, int *save_parent_dir_info_flag, char *log_file_name, int level )
 {
-  static int recursive_count = 0;
   static FSFile log_fd;
   static BOOL log_active = FALSE;
   //  static char *log_file_name = "sdmc:/miya/nandinfo_find_copy.txt";
@@ -1713,16 +1708,16 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
 
   /* ここでSDカードがあるかどうか調べる */
 
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     log_active = Log_File_Open( &log_fd, log_file_name );
   }
 
-  if( recursive_count > max_recursive_count ) {
+  if( level > max_level ) {
     ret_value = 0;
     goto end_process;
   }
 
-  recursive_count++;
+  level++;
 
   /* ソースディレクトリオープン */
   FS_InitFile(&f_src);
@@ -1764,7 +1759,7 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
       }
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
-	find_copy( headp, path_dst_full, path_src_full , extension, max_recursive_count, &save_parent_dir_info_flag_temp , log_file_name);
+	find_copy( headp, path_dst_full, path_src_full , extension, max_level, &save_parent_dir_info_flag_temp , log_file_name, level);
       }	
       else {
 	/* ここで拡張子比較 */
@@ -1809,8 +1804,8 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
 
   Path_Buffers_Clean( path_src_dir, path_src_full, path_dst_dir, path_dst_full );
 
-  recursive_count--;
-  if( recursive_count == 0 ) {
+  level--;
+  if( level == 0 ) {
     if( log_active ) {
       Log_File_Close(&log_fd);
     }
@@ -1820,9 +1815,8 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
 }
 
 
-int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name )
+int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name, int level )
 {
-  static int recursive_count = 0;
   static FSFile log_fd;
   static BOOL log_active = FALSE;
   //  static char *log_file_name = "sdmc:/nandinfo_copy_r.txt";
@@ -1838,11 +1832,11 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
   char *path_dst_full = NULL;
 
   /* ここでSDカードがあるかどうか調べる */
-  if( recursive_count == 0 ) {
+  if( level == 0 ) {
     log_active = Log_File_Open( &log_fd, log_file_name );
   }
 
-  recursive_count++;
+  level++;
 
   /* ソースディレクトリオープン */
   FS_InitFile(&f_src);
@@ -1886,7 +1880,7 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
       }
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
-	copy_r( headp, path_dst_full, path_src_full, log_file_name );
+	copy_r( headp, path_dst_full, path_src_full, log_file_name, level );
       }	
       else {
 	my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
@@ -1912,8 +1906,8 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 
   Path_Buffers_Clean( path_src_dir, path_src_full, path_dst_dir, path_dst_full );
 
-  recursive_count--;
-  if( recursive_count == 0 ) {
+  level--;
+  if( level == 0 ) {
     if( log_active ) {
       Log_File_Close(&log_fd);
     }

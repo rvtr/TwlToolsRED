@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*
-  Project:  TWLSDK - demos - MI - ndma-1
+  Project:  
   File:     main.c
 
   Copyright 2007 Nintendo.  All rights reserved.
@@ -26,21 +26,12 @@
 #include        "key.h"
 #include        "my_fs_util.h"
 #include        "mynvram.h"
-
 #include        "stream.h"
-
 #include        "hwi.h"
-
 #include        "hatamotolib.h"
 #include        "ecdl.h"
-
 #include        "mywlan.h"
-
-#include "nuc.h"
-
-
-
-//#define  DEBUG_PRINT 1
+#include        "nuc.h"
 
 //================================================================================
 
@@ -86,6 +77,33 @@ static  LCFGTWLHWSecureInfo hws_info;
 
 
 
+#define	MY_STACK_SIZE  (1024*16) /* でかいほうがいい */
+#define	MY_THREAD_PRIO        20
+static OSThread MyThread;
+static u64 MyStack[MY_STACK_SIZE / sizeof(u64)];
+static void MyThreadProc(void *arg);
+
+static OSMessage MyMesgBuffer[1];
+static OSMessageQueue MyMesgQueue;
+
+
+static void init_my_thread(void)
+{
+
+  OS_InitMessageQueue(&MyMesgQueue, &MyMesgBuffer[0], 1);
+
+  OS_CreateThread(&MyThread, MyThreadProc,
+		  NULL, MyStack + MY_STACK_SIZE / sizeof(u64),
+		  MY_STACK_SIZE, MY_THREAD_PRIO);
+  OS_WakeupThreadDirect(&MyThread);
+}
+
+static void start_my_thread(void)
+{
+  (void)OS_SendMessage(&MyMesgQueue, (OSMessage)0, OS_MESSAGE_NOBLOCK);
+}
+
+
 static void BackupToSDCard(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
@@ -94,7 +112,7 @@ static void BackupToSDCard(void)
   int save_dir_info = 0;
   u64 *pBuffer;
   int count;
-  int i,j;
+  int j;
   u64 *ptr;
 
 
@@ -328,7 +346,15 @@ static void BackupToSDCard(void)
 
 }
 
-
+static void MyThreadProc(void *arg)
+{
+#pragma unused(arg)
+  OSMessage message;
+  while( 1 ) {
+    (void)OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK);
+    BackupToSDCard();
+  }
+}
 
 
 void TwlMain(void)
@@ -375,6 +401,7 @@ void TwlMain(void)
   hHeap = OS_CreateHeap(OS_ARENA_MAIN, OS_GetMainArenaLo(), OS_GetMainArenaHi());
   OS_SetCurrentHeap(OS_ARENA_MAIN, hHeap);
 
+  Gfx_Init();
 
   RTC_Init();
 
@@ -386,7 +413,6 @@ void TwlMain(void)
   stream_main();
 
 
-  Gfx_Init();
 
   /*
      0 -> black
@@ -519,9 +545,12 @@ void TwlMain(void)
 
   FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
+
+  init_my_thread();
+
 #if 1 // miya あとでコメントアウトはずす
   if( sd_card_flag == TRUE ) {
-    BackupToSDCard();
+    start_my_thread();
   }
 #endif
 
@@ -556,7 +585,7 @@ void TwlMain(void)
     else if ( keyData & PAD_BUTTON_A ) {
       /* ユーザーデータ吸出しモード */
       if( sd_card_flag == TRUE ) {
-	BackupToSDCard();
+	start_my_thread();
       }
       else {
 	mprintf("insert SD card\n");

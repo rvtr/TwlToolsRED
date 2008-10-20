@@ -22,7 +22,7 @@ TWL_ARCHGEN		:= LIMITED
 
 SRCDIR			=	../common/src ./src 
 
-SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
+SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
 				gfx.c hwi.c mynvram.c my_fs_util.c \
 				kpsc.cpp ecdl.cpp hatamotolib.cpp \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \

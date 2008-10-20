@@ -35,6 +35,7 @@
 #include        "nuc.h"
 
 #include        "myfilename.h"
+#include        "mfiler.h"
 
 //================================================================================
 
@@ -76,7 +77,6 @@ static void MyThreadProc(void *arg);
 static OSMessage MyMesgBuffer[1];
 static OSMessageQueue MyMesgQueue;
 
-
 static void init_my_thread(void)
 {
 
@@ -93,8 +93,24 @@ static void start_my_thread(void)
   (void)OS_SendMessage(&MyMesgQueue, (OSMessage)0, OS_MESSAGE_NOBLOCK);
 }
 
+#if 0
+static BOOL RestoreFromSDCard1(void)
+{
+  mprintf("global info. data restore ");
+  if( TRUE == MydataSave( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
+    m_set_palette(tc[0], 0x2);	/* green  */
+    mprintf("OK.\n");
+  }
+  else {
+    m_set_palette(tc[0], 0x1);	/* red  */
+    mprintf("NG.\n");
+  }
+  m_set_palette(tc[0], 0xF);	/* white */
+  return TRUE;
+}
+#endif
 
-static void RestoreFromSDCard(void)
+static BOOL RestoreFromSDCard(void)
 {
   /* ユーザーデータ書き込みモード */
   if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
@@ -142,217 +158,19 @@ static void RestoreFromSDCard(void)
     OS_TPrintf("Invalid wlan cfg file\n");
   }
   nuc_main();
+  return TRUE;
 }
 
-static void BackupToSDCard(void)
+typedef BOOL (*function_ptr)(void);
+
+static function_ptr function_table[] =
 {
-  MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
-  RTCDate rtc_date;
-  RTCTime rtc_time;
-  int save_dir_info = 0;
-  u64 *pBuffer;
-  int count;
-  int j;
-  u64 *ptr;
+  RestoreFromSDCard
+};
 
+static int function_table_max = sizeof(function_table) / sizeof(*function_table);
+static int function_counter = 0;
 
-  //miya   mprintf("BACKUP to SD Card\n");
-  /************************************/
-  MyFile_SetPathBase("sdmc:/");
-  MyFile_AddPathBase((const char *)hws_info.serialNo );
-  MyFile_AddPathBase("/");
-
-	
-  /* nand:/sysディレクトリまわりの保存 */
-  mprintf("Unique ID backup ");
-  if( TRUE == MiyaBackupHWNormalInfo( MyFile_GetUniqueIDFileName() ) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-
-
-  /* Wifi設定の保存 */
-  mprintf("WirelessLAN param. backup ");
-  if( TRUE == nvram_backup( MyFile_GetWifiParamFileName() ) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-
-  /* nand:/shared1ディレクトリまわりの保存 */
-  mprintf("User setting param. backup ");
-  if( TRUE == MiyaBackupTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-
-
-  /*
-    nand:/shared2ディレクトリまわりの保存
-    内容はアプリケーション共有ファイル
-    nand:/shared2/*
-  */
-  mprintf("App. shared files backup ");
-  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , "nand:/shared2" , MyFile_GetAppSharedLogFileName(),0 ) ) {
-    // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName() );
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-  (void)ClearDirEntryList( &dir_entry_list_head );
-
-
-  /* 
-     nand2:/photoディレクトリまわりの保存
-     内容は写真長のJPEGファイル
-     nand2:/photo/*.*
-   */
-  mprintf("Photo files backup ");
-  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , "nand2:/photo" , MyFile_GetPhotoLogFileName(), 0 ) ) {
-    // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName() );
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-  (void)ClearDirEntryList( &dir_entry_list_head );
-
-
-  /* nand:/ticketはチケット同期？でうまいこと合わせてくれるんでバックアップ不要 */
-
-  /* 
-     nand:/titleディレクトリまわりの保存
-     nand:/title/*.savファイルをすべてバックアップ
-  */
-
-  mprintf("App. save data backup ");
-  if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetAppDataSaveDirName(), "nand:/title",
-				 &save_dir_info, MyFile_GetAppDataLogFileName(), 0 ) )
-    {
-      // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-      mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , MyFile_GetAppDataListFileName() );
-      m_set_palette(tc[0], 0x2);	/* green  */
-      mprintf("OK.\n");
-    }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-  (void)ClearDirEntryList( &dir_entry_list_head );
-
-
-
-  /* タイトルリストの生成 */
-  /* 
-     nand:/title/00030004/
-
-     nand:/title/00030004/34626241/content/title.tmd
-     nand:/title/00030004/34626241/content/00000000.app
-     nand:/title/00030004/34626241/data/
-
-     nand:/title/00030017/484e4141 は ランチャー
-     nand:/title/00030015/484e4641 は shop
-     nand:/title/00030015/484e4241 は 本体設定
-
-
-     No. 0 0003000f484e4c41
-     No. 1 0003000f484e4841
-     No. 2 0003000f484e4341 
-     No. 3 00030015484e4241 
-     No. 4 00030017484e4141 launcher
-     ^
-     | ここの最下位ビットが１のやつがシステムアプリ
-     | 
-     システムアプリはダウンロード対象外
-  */
-  //  STD_StrCpy( path , path_base );
-  //  STD_StrCat( path , MY_FILE_NAME_DOWNLOAD_TITLE_ID_DATA );
-  if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
-    mprintf("get_title_id completed.\n");
-    OS_TPrintf("get_title_id completed.\n");
-
-    GetDirEntryList( dir_entry_list_head, &pBuffer, &count);
-    OS_TPrintf("count = %d\n", count );
-    ptr = pBuffer;
-    mydata.num_of_user_download_app = count;
-    
-    if( ptr != NULL && count != 0 )  {
-      for( j = 0 ; j < count ; j++ ) {
-	OS_TPrintf("No. %d ",j);
-	mfprintf(tc[2],"No. %d ",j);
-	
-	OS_TPrintf("%llx\n", *ptr);
-	mfprintf(tc[2],"%llx\n", *ptr);
-	  ptr++;
-      }
-      OS_Free(pBuffer);
-    }
-    // (void)TitleIDSave( MyFile_GetDownloadTitleIDFileName(), u64 *pData, count, NULL);
-    PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
-  }
-  (void)ClearDirEntryList( &dir_entry_list_head );
-
-
-
-  /* オリジナルのデータのバックアップ */
-  if( TRUE == CheckShopRecord(NULL) ) {
-    mydata.shop_record_flag = TRUE;
-    OS_TPrintf("shop record exist - you don't have to connect the network.\n");
-    mprintf("shop record exist\n");
-  }
-  else {
-    mydata.shop_record_flag = FALSE;
-    OS_TPrintf("no shop record\n - you don't have to connect the network.\n");
-    mprintf("no shop record\n");
-  }
-
-  if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
-    mprintf("rtc read date error.\n");
-  }
-  if( RTC_RESULT_SUCCESS != RTC_GetTime( &rtc_time ) ) {
-    mprintf("rtc read time error.\n");
-  }
-
-  STD_CopyMemory( (void *)&(mydata.rtc_date), (void *)&rtc_date, sizeof(RTCDate) );
-  STD_CopyMemory( (void *)&(mydata.rtc_time), (void *)&rtc_time, sizeof(RTCTime) );
-  STD_CopyMemory( (void *)(mydata.movableUniqueID), (void *)hwn_info.movableUniqueID,
-		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
-  mprintf("org. data backup ");
-  if( TRUE == MydataSave( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-  }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
-  }
-  m_set_palette(tc[0], 0xF);	/* white */
-
-}
 
 static void MyThreadProc(void *arg)
 {
@@ -360,8 +178,13 @@ static void MyThreadProc(void *arg)
   OSMessage message;
   while( 1 ) {
     (void)OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK);
-    //RestoreFromSDCard();
-    BackupToSDCard();
+    for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
+      (void)(function_table[function_counter])();
+    }
+    if( TRUE == stream_is_play1_end() ) {
+      OS_TPrintf("stream play\n"); 
+      stream_play1();
+    }
   }
 }
 
@@ -376,11 +199,10 @@ void TwlMain(void)
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   RTCDate rtc_date;
   RTCTime rtc_time;
-  //  LCFGTWLHWNormalInfo hwn_info;
-  //  LCFGTWLHWSecureInfo hws_info;
   int i;
   int n;
   u8 macAddress[6];
+  MY_ENTRY_LIST *mfiler_list_head = NULL;
 
   OS_Init();
   OS_InitThread();
@@ -485,9 +307,9 @@ void TwlMain(void)
     mprintf("\n");
     //    mprintf(" RTC Adjust data = 0x%02x\n", hwn_info.rtcAdjust );
   }
-  mprintf("\n");
+  mprintf("\n");  
 
-  
+
   //  mprintf("HW Secure Info. read ");
   mprintf("Serial No. read ");
   if( FALSE == MiyaReadHWSecureInfo( &hws_info ) ) {
@@ -499,16 +321,16 @@ void TwlMain(void)
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], 0xF);	/* white */
-    mprintf(" %s\n\n", hws_info.serialNo);
+    mprintf(" %s\n", hws_info.serialNo);
   }
+  mprintf("\n");
   
   OS_GetMacAddress( macAddress );
   mprintf("MAC Address 0x");
   for ( i = 0 ; i < 6 ; i++ ) {
     mprintf("%02X", macAddress[i]);
   }
-  mprintf("\n\n");
-
+  mprintf("\n");
 
 
   if( FALSE == SDCardValidation() ) {
@@ -521,22 +343,24 @@ void TwlMain(void)
     sd_card_flag = TRUE;
   }
 
-  // miya あとで消す。
-  //  sd_card_flag = FALSE;
-  
+#if 0
+    mprintf("\n\n");
+    mprintf( "function no.%d/%d\n", function_counter, function_table_max);
+    mprintf("\n\n");
+#endif
+
 
   FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
   init_my_thread();
 
-  if( sd_card_flag == TRUE ) {
-    start_my_thread();
-  }
 
+  MFILER_CurrentDir_Init();
 
   while( 1 ) {
-    OS_WaitVBlankIntr();
     Gfx_Render( vram_num_main , vram_num_sub );
+    OS_WaitVBlankIntr();
+    (void)RTC_GetDate( &rtc_date );
     (void)RTC_GetTime( &rtc_time );
 
     keyData = m_get_key_trigger();
@@ -560,12 +384,28 @@ void TwlMain(void)
 	vram_num_main = (MAX_VRAM_NUM-1);
       }
     }
-
-
     else if ( keyData & PAD_BUTTON_A ) {
       /* ユーザーデータ吸出しモード */
       if( sd_card_flag == TRUE ) {
-	start_my_thread();
+	if( vram_num_main != 1 ) {
+	}
+	else {
+	  if( TRUE == MFILER_Is_Cursor_Dir( &mfiler_list_head ) ) {
+	    MyFile_SetPathBase("sdmc:/");
+	    MyFile_AddPathBase((const char *)MFILER_GetCursorEntryPath( &mfiler_list_head ) );
+	    MyFile_AddPathBase("/");
+	    if(TRUE == MydataLoad( MyFile_GetGlobalInformationFileName(), &mydata, sizeof(MyData), NULL) ) {
+	      start_my_thread();
+	    }
+	    else {
+	      mprintf("Not a backup data directory\n");
+	    }
+	  }
+	  else {
+	    mprintf("Not a backup data directory\n");
+	    // mprintf("global info. read failed(Not dir.)\n");
+	  }
+	}
       }
       else {
 	mprintf("insert SD card\n");
@@ -578,22 +418,28 @@ void TwlMain(void)
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {
-      OS_TPrintf("stream on\n");
-      if( TRUE == stream_is_play1_end() ) {
-	stream_play1();
-      }
     }
     else if ( keyData & PAD_BUTTON_Y ) {
     }
     else if ( keyData & PAD_KEY_UP ) {
-      n = m_get_display_offset_y(tc[0]);
-      n++;
-      m_set_display_offset_y(tc[0], n);
+      if( vram_num_main != 1 ) {
+	n = m_get_display_offset_y(tc[0]);
+	n++;
+	m_set_display_offset_y(tc[0], n);
+      }
+      else {
+	MFILER_CursorY_Up();
+      }
     }
     else if ( keyData & PAD_KEY_DOWN ) {
-      n = m_get_display_offset_y(tc[0]);
-      n--;
-      m_set_display_offset_y(tc[0], n);
+      if( vram_num_main != 1 ) {
+	n = m_get_display_offset_y(tc[0]);
+	n--;
+	m_set_display_offset_y(tc[0], n);
+      }
+      else {
+	MFILER_CursorY_Down();
+      }
     }
     else if ( keyData & PAD_KEY_RIGHT ) {
       n = m_get_display_offset_x(tc[0]);
@@ -606,18 +452,15 @@ void TwlMain(void)
       m_set_display_offset_x(tc[0], n);
     }
 
+    mfprintf(tc[1], "\f%4d/%02d/%02d %02d:%02d:%02d\n\n", 
+	   rtc_date.year + 2000, rtc_date.month , rtc_date.day,
+	   rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
-    //    mfprintf(tc[1], "\f\ncounter = %d\n\n", loop_counter);
-    mfprintf(tc[1], "\f\n%4d/%02d/%02d %02d:%02d:%02d\n\n", 
-	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
-	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
+    mfprintf(tc[1], "cwd = %s\n\n", MFILER_Get_CurrentDir());
 
-    mfprintf(tc[1], "press A -> Store to SD Card\n");
-    mfprintf(tc[1], "press B -> Load to NAND Flash\n");
-    mfprintf(tc[1], "\n");
-    
-
-    
+    MFILER_ClearDir(&mfiler_list_head);
+    MFILER_ReadDir(&mfiler_list_head, MFILER_Get_CurrentDir());
+    MFILER_DisplayDir(tc[1], &mfiler_list_head, 0 );
 
     loop_counter++;
 

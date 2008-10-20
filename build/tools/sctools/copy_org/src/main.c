@@ -373,6 +373,10 @@ static void MyThreadProc(void *arg)
     for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
       (void)(function_table[function_counter])();
     }
+    OS_TPrintf("stream on\n");
+    if( TRUE == stream_is_play1_end() ) {
+      stream_play1();
+    }
   }
 }
 
@@ -662,10 +666,6 @@ void TwlMain(void)
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {
-      OS_TPrintf("stream on\n");
-      if( TRUE == stream_is_play1_end() ) {
-	stream_play1();
-      }
     }
     else if ( keyData & PAD_BUTTON_Y ) {
     }
@@ -696,9 +696,7 @@ void TwlMain(void)
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
 	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
-    mfprintf(tc[1], "press A -> Store to SD Card\n");
-    mfprintf(tc[1], "press B -> Load to NAND Flash\n");
-    mfprintf(tc[1], "\n");
+
     mfprintf(tc[1], "function no.%d/%d\n", function_counter, function_table_max);
     
     loop_counter++;

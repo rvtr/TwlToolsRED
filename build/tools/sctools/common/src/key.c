@@ -3,7 +3,7 @@
 
 static u16 old_keydata = 0;
 #define REPEAT_ON 1
-#define REPEAT_COUNT 60
+#define REPEAT_COUNT 20
 static int repeat_counter[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 u16 m_get_key_trigger(void)

@@ -383,7 +383,7 @@ void text_buf_to_vram(TEXT_CTRL *tc)
 
   put_char_vram(tc, '\f', (u16)0);
 
-  for(line_no = 0 ; line_no < (*tb->num_y + 1) ; line_no++ ){
+  for(line_no = 0 ; line_no < *tb->num_y ; line_no++ ){
     //miya    x_line = 0;
     x_line = tb->display_offset_x;
 
@@ -410,7 +410,7 @@ void text_buf_to_vram(TEXT_CTRL *tc)
     lb = lb->next;
   }
 
-  for(  ; line_no <= *tb->num_y ; line_no++ ) {
+  for(  ; line_no < *tb->num_y ; line_no++ ) {
     put_char_vram(tc, '\n', (u16)0);
   }
 }

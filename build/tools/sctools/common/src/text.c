@@ -174,7 +174,13 @@ int m_get_display_offset_x(TEXT_CTRL *tc)
 void m_set_display_offset_y(TEXT_CTRL *tc, int offset)
 {
   TEXT_BUF *tb = &(tc->text_buf);
-  if( ( offset >= 0 ) && (offset < tb->virtual_y) ) {
+  LINE_BUF *lb = tb->cur;
+  int line_count = 0;
+  while( lb != NULL ) {
+    line_count++;
+    lb = lb->prev;
+  }
+  if( ( offset >= 0 ) && (offset < line_count - Y_LINE_MAX ) ) {
     tb->display_offset_y = offset;
   }
 }

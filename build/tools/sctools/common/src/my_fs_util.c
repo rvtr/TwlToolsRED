@@ -583,7 +583,7 @@ static BOOL CheckSystemApp(char path[])
   if( ('a' <= c) && (c <= 'f') ) {
     num = (int)( c - 'a' + 10 );
   }
-  if( ('A' <= c) && (c <= 'F') ) {
+  else if( ('A' <= c) && (c <= 'F') ) {
     num = (int)( c - 'A' + 10 );
   }
   else if( ('0' <= c) && (c <= '9') ) {
@@ -612,25 +612,21 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
   u64 *buf = NULL;
   char c;
   u8 hex;
-
+  
   if( head == NULL ) {
-    *pBuffer = buf;
-    *size = count;
+    *pBuffer = NULL;
+    *size = 0;
   }
   else {
-    for( list_temp = head ; list_temp->next != NULL ; list_temp = list_temp->next ) {
+    for( list_temp = head ; list_temp != NULL ; list_temp = list_temp->next ) {
       if( list_temp->src_path ) {
-#ifdef MYDEBUG
-	count++;
-#else
 	if( FALSE == CheckSystemApp( list_temp->src_path) ) {
 	  count++;
 	}
-#endif
       }
     }
-
     OS_TPrintf("User App. count1 = %d\n", count);    
+    // mprintf("\nUser App. count1 = %d\n", count); 
 
     if( count ) {
       buf = (u64 *)OS_Alloc( (u32)(count * sizeof(u64)) );
@@ -642,9 +638,9 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
     *pBuffer = buf;
     *size = count;
 
-
     count = 0;
-    for(  ; list_temp != NULL ; list_temp = list_temp->prev ) {
+
+    for( list_temp = head ; list_temp != NULL ; list_temp = list_temp->next ) {
       if( list_temp->src_path ) {
 	/*
 	  No. 0 0003000f484e4c41
@@ -657,11 +653,10 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
                        | 
 	  システムアプリはダウンロード対象外
 	*/
-#ifndef MYDEBUG
 	if( FALSE == CheckSystemApp( list_temp->src_path ) ) {
-#endif
+	  /* koko-made */
 	  count++;
-
+	  
 	  /* User App. */
 	  for( i =  0 ; i < 8 ; i++ ) {
 	    c = list_temp->src_path[12 + i];
@@ -677,7 +672,7 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	    }
 	    else {
 	      /* error! */
-	      count--;
+	      //  count--;
 	      return;
 	    }
 	    *buf |= (((u64)hex) << ((7-i)*4 + 32 ));
@@ -697,17 +692,15 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	    }
 	    else {
 	      /* error! */
-	      count--;
+	      // count--;
 	      return;
 	    }
 	    *buf |= (((u64)hex) << ((7-i)*4 ));
 	  }
 	  buf++;
-	  OS_TPrintf("User App. count2 = %d\n", count);
+	  //  OS_TPrintf("User App. count2 = %d\n", count);
 
-#ifndef MYDEBUG
 	}
-#endif
 	/*
 	  012345678901234567890123456789
 	  nand:/title/00030017/484e4141 は ランチャー
@@ -1292,12 +1285,14 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
     nand:/title/00030017/484e414a
   */
 
+  if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16文字だから */
-  if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
-    res = FS_GetArchiveResultCode( path );
-    miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
-    miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
-    return FALSE;
+    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+      res = FS_GetArchiveResultCode( path );
+      miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+      return FALSE;
+    }
   }
 
   FS_FlushFile(&f);

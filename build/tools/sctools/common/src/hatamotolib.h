@@ -9,17 +9,13 @@ void PrintDeviceInfo(void);
 void SetupShopTitleId(void);
 void SetupUserInfo(void);
 void SetupVerData(void);
-void NetworkAutoConnect_DWC(void);
-void NetworkShutdown_DWC(void);
 void SetupNSSL(void);
 BOOL SetupNHTTP(void);
-void SetupEC(void);
-BOOL WaitEC(ECOpId opId);
+BOOL SetupEC(void);
 void DeleteECDirectory(void);
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds);
 
-BOOL hatamotolib_main(void);
-
+BOOL hatamotolib_main(u64 *title_id_buf, u32 num_title);
 
 #ifdef __cplusplus
 }

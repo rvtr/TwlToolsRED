@@ -101,7 +101,7 @@ static void PlayStream(StreamInfo * strm, const char *filename)
     u32     alarmPeriod;
 
     // Ä¶’†‚Å‚ ‚ê‚Î’âŽ~‚·‚é
-OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+    // OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
 
 
     if (strm->isPlay)

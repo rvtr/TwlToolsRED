@@ -31,8 +31,8 @@
 extern "C" {
 #endif
 
-void ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);
-void KPSClient();
+BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);
+BOOL KPSClient();
 BOOL WaitEC(ECOpId opId);
 
 

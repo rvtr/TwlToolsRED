@@ -15,6 +15,11 @@
 
 #include "hatamotolib.h"
 
+#include        "text.h"
+#include        "mprintf.h"
+#include        "logprintf.h"
+
+
 
 #ifdef SDK_DEBUG
 #define ECDL_LOG(msg)   OS_TPrintf("----\nECDL-LOG: %s\n----\n", msg);
@@ -72,7 +77,7 @@ static void PrintBytes(const void* pv, u32 size)
 {
   const u8* p = reinterpret_cast<const u8*>(pv);
   
-  for( u32 i = 0; i < size; ++i )
+  for( u32 i = 0; i < size; i++ )
     {
       OS_TPrintf("%02X", p[i]);
     }
@@ -270,10 +275,16 @@ void PrintDeviceInfo(void)
 
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
-  for( u32 i = 0; i < numTitleIds; ++i )
+  NAMTitleId tid;
+
+  //  OS_TPrintf("%s %d num=%d\n",__FUNCTION__,__LINE__,numTitleIds);
+
+  for( u32 i = 0; i < numTitleIds; i++ )
     {
-      NAMTitleId tid = pTitleIds[i];
+      tid = pTitleIds[i];
+      //      OS_TPrintf("%s %d 0x%016X\n",__FUNCTION__,__LINE__,(u64)tid);
       NAM_SetupTitleDataFile(tid);
+      //OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     }
 }
 
@@ -402,7 +413,7 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
 }
 
 
-void SetupEC(void)
+BOOL SetupEC(void)
 {
   static u32 logLevel, clientCertSize, clientKeySize;
   static char deviceCode[17];
@@ -435,16 +446,30 @@ void SetupEC(void)
   const u32 nInitArgs = sizeof(initArgs) / sizeof(initArgs[0]);
   
   rv = EC_Init(initArgs, nInitArgs);
-  SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to initialize EC, rv=%d\n", rv);
-  
+  // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to initialize EC, rv=%d\n", rv);
+  if( rv != EC_ERROR_OK ) {
+    OS_TPrintf("Failed to initialize EC, rv=%d\n", rv);
+    return FALSE;
+  } 
+
   rv = EC_SetWebSvcUrls( "https://ecs.t.shop.nintendowifi.net/ecs/services/ECommerceSOAP",
 			 "https://ias.t.shop.nintendowifi.net/ias/services/IdentityAuthenticationSOAP",
 			 "https://cas.t.shop.nintendowifi.net/cas/services/CatalogingSOAP" );
-  SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
+  // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
+  if( rv != EC_ERROR_OK ) {
+    OS_TPrintf("Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
+    return FALSE;
+  } 
   
   rv = EC_SetContentUrls( "http://ccs.t.shop.nintendowifi.net/ccs/download",
 			  "http://ccs.t.shop.nintendowifi.net/ccs/download" );
-  SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetContentUrls, rv=%d\n", rv);
+  // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetContentUrls, rv=%d\n", rv);
+  if( rv != EC_ERROR_OK ) {
+    OS_TPrintf("Failed to EC_SetContentUrls, rv=%d\n", rv);
+    return FALSE;
+  } 
+
+  return TRUE;
 }
 
 
@@ -465,7 +490,6 @@ BOOL WaitEC(ECOpId opId)
   for(;;)
     {
       result = EC_GetProgress(opId, &progress);
-      
       if( (result != EC_ERROR_OK) && (result != EC_ERROR_NOT_DONE) )
         {
 	  if( result == EC_ERROR_NOT_ACTIVE )
@@ -473,9 +497,11 @@ BOOL WaitEC(ECOpId opId)
 	      OS_TPrintf("opId=%d\n", opId);
             }
 	  OS_TPrintf("Failed to EC_GetProgress, result=%d %s\n", result, GetECErrorString(result));
+	  mprintf("EC_GetProgress failed %d\n %s\n", result, GetECErrorString(result));
 	  return FALSE;
         }
 
+#if 0
       //#ifdef SDK_DEBUG
       if( MI_CpuComp8(&progress_prev, &progress, sizeof(progress)) != 0 )
         {
@@ -492,6 +518,7 @@ BOOL WaitEC(ECOpId opId)
 	  progress_prev = progress;
         }
       //#endif
+#endif
       if( progress.phase == EC_PHASE_Done )
         {
 	  break;
@@ -515,7 +542,9 @@ namespace
 
         ECDL_LOG("check registeration");
         progress = EC_CheckRegistration();
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return '\0'; // 微妙・・
+	}
 
         ecError = EC_GetDeviceInfo(&di);
         SDK_ASSERT( ecError == EC_ERROR_OK );
@@ -557,205 +586,372 @@ namespace
         return di.registrationStatus[0];
     }
 
-    void GetChallenge(char* challenge)
+    BOOL GetChallenge(char* challenge)
     {
         s32 progress;
         ECError ecError;
 
         ECDL_LOG("get challenge");
         progress = EC_SendChallengeReq();
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return FALSE;
+	}
 
         ecError = EC_GetChallengeResp(challenge);
         SDK_ASSERT( ecError == EC_ERROR_OK );
+	return TRUE;
     }
 
-    void SyncRegistration(const char* challenge)
+    BOOL SyncRegistration(const char* challenge)
     {
         s32 progress;
 
         ECDL_LOG("sync registration");
         progress = EC_SyncRegistration(challenge);
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return FALSE;
+	}
+	return TRUE;
     }
 
-    void Register(const char* challenge)
+    BOOL Register(const char* challenge)
     {
         s32 progress;
 
         ECDL_LOG("register");
         progress = EC_Register(challenge, NULL, NULL);
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return FALSE;
+	}
+	return TRUE;
     }
 
-    void Transfer(const char* challenge)
+    BOOL Transfer(const char* challenge)
     {
         s32 progress;
 
         ECDL_LOG("transfer");
         progress = EC_Transfer(challenge);
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return FALSE;
+	}
+	return TRUE;
     }
     
-    void SyncTickets()
+    BOOL SyncTickets()
     {
         s32 progress;
 
         ECDL_LOG("sync tickets");
         progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
-        WaitEC(progress);
+        if( FALSE == WaitEC(progress) ) {
+	  return FALSE;
+	}
+	return TRUE;
     }
 
-    void DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
+    BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
     {
         s32 progress;
 
         ECDL_LOG("download");
-        for( u32 i = 0; i < numTitleIds; ++i )
+        for( u32 i = 0; i < numTitleIds; i++ )
         {
             NAMTitleId tid = pTitleIds[i];
-
-            OS_TPrintf("download %08X %08X\n", (u32)(tid >> 32), (u32)tid);
             progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
-            WaitEC(progress);
+	    if( FALSE == WaitEC(progress) ) {
+	      return FALSE;
+	    }
         }
+	return TRUE;
     }
+
 }
 
 
-void
-ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
+BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
     char challenge[EC_CHALLENGE_BUF_SIZE];
     char status;
 
+    //    mprintf("-CheckRegistration..\n");
     status = CheckRegistration();
     // U  unregistered
     // R  registered
     // P  pending
     // T  transfered
+#if 0
     SDK_ASSERTMSG(status != 'U', "acount not transfered yet.");
     SDK_ASSERTMSG(status != 'R', "already registered. please delete acount.");
     SDK_ASSERTMSG( (status == 'P') || (status == 'T'), "invalid registration status '%c'", status );
+#else
+    if( status == 'U') {
+      mprintf(" acount not transfered yet.\n");
+      return FALSE;
+    }
+    if( status == 'R') {
+      mprintf(" already registered. please delete acount.\n");
+      return FALSE;
+    }
+    if( (status != 'P') && (status != 'T') ) {
+      mprintf(" invalid registration status '%c'\n", status );
+      return FALSE;
+    }
+    //    mprintf(" succeeded.");
+#endif
 
-    GetChallenge(challenge);
-    Transfer(challenge);
+    mprintf("-get challenge1 ");
+    if( FALSE == GetChallenge(challenge) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
 
-    GetChallenge(challenge);
-    SyncRegistration(challenge);
 
-    SyncTickets();
-    DownloadTitles(pTitleIds, numTitleIds);
+    mprintf("-transfer  ");
+    if( FALSE == Transfer(challenge) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+    mprintf("-get challenge2 ");
+    if( FALSE == GetChallenge(challenge) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+
+    mprintf("-sync registration  ");
+    if( FALSE == SyncRegistration(challenge) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+    mprintf("-sync tickets  ");
+    if( FALSE == SyncTickets() ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+
+    mprintf("-download titles  ");
+    if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+    return TRUE;
 }
 
 
-void
-KPSClient()
+BOOL KPSClient()
 {
     s32 progress;
 
     OS_TPrintf("generate key pair\n");
+    mprintf("-generate key pair ");
     progress = EC_GenerateKeyPair();
+    if( FALSE == WaitEC(progress) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
 
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-
-    WaitEC(progress);
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
 
     OS_TPrintf("confirm key pair\n");
+    mprintf("-confirm key pair ");
     progress = EC_ConfirmKeyPair();
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+    if( FALSE ==  WaitEC(progress) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
 
-    WaitEC(progress);
-
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-
+    return TRUE;
 }
 
 
-BOOL hatamotolib_main(void)
+BOOL hatamotolib_main(u64 *title_id_buf, u32 num_title)
 {
+  ECError rv = EC_ERROR_OK;
+
     // 不要：デバイス情報の表示
     PrintDeviceInfo();
 
     OS_TPrintf("--------------------------------\n");
 
     // setup
-    {
-        // 必須：タイトル ID の偽装
-        SetupShopTitleId();
+    // 必須：タイトル ID の偽装
+    SetupShopTitleId();
+    
+    // ？：ユーザ設定がされていないと接続できないので適当に設定
+    SetupUserInfo();
+    
+    // 必須：バージョンデータのマウント
+    SetupVerData();
+    
+    // 必須：ネットワークへの接続
+    NcStart(SITEDEFS_DEFAULTCLASS);
+    
+    /******** ネットワークにつないだ *************/
 
-        // ？：ユーザ設定がされていないと接続できないので適当に設定
-        SetupUserInfo();
-
-        // 必須：バージョンデータのマウント
-        SetupVerData();
-
-        // 必須：ネットワークへの接続
-        OS_TPrintf("connecting to AP....\n");
-
-	NcStart(SITEDEFS_DEFAULTCLASS);
-	
-
-        OS_TPrintf("connected\n");
-
-        // 必須：HTTP と SSL の初期化
-        OS_TPrintf("start NHTTP\n");
-        SetupNSSL();
-        if( FALSE == SetupNHTTP() ) {
-	  return FALSE;
-	}
-
-        // 必須：EC の初期化
-        OS_TPrintf("start EC\n");
-        SetupEC();
+    // 必須：HTTP と SSL の初期化
+    OS_TPrintf("start NHTTP\n");
+    mprintf("-start NHTTP ");
+    SetupNSSL();
+    if( FALSE == SetupNHTTP() ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     }
 
-    // body
-    {
-        // ダウンロードすべきタイトルの指定
-        NAMTitleId tids[] =
-        {
-            0x00030004346b6141ull,
-//            0x0003000434616141ull,
-//            0x0003000434616241ull,
-//            0x000300043461644aull,
-//            0x0003000434616741ull,
-//            0x0003000434616a41ull,
-//            0x0003000434617441ull,
-//            0x0003000434626141ull,
-//            0x0003000434626341ull,
-//            0x0003000434626641ull,
-//            0x0003000434626841ull,
-//            0x0003000434626941ull,
-//            0x0003000434636341ull,
-//            0x00030004346b6141ull,
-//            0x00030004346b6241ull,
-//            0x00030004346b6341ull,
-        };
+    /******** NHTTP & NSSLにつないだ *************/
+    
+    // 必須：EC の初期化
+    OS_TPrintf("start EC\n");
+    mprintf("-start EC ");
+    if( FALSE == SetupEC() ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
 
-        // 必須：デバイス証明書の発行
-        KPSClient();
+    // 必須：デバイス証明書の発行
+    if( FALSE == KPSClient() ) {
+      return FALSE;
+    }
 
-        // 必須：指定タイトルをダウンロード
-        ECDownload(tids, sizeof(tids)/sizeof(*tids));
+    // 必須：指定タイトルをダウンロード
+    // ダウンロードすべきタイトルの指定
+    //     0x00030004346b6141ull,
+    //     0x0003000434616141ull,
+    //            0x0003000434616241ull,
+    //            0x000300043461644aull,
+    //            0x0003000434616741ull,
+    //            0x0003000434616a41ull,
+    //            0x0003000434617441ull,
+    //            0x0003000434626141ull,
+    //            0x0003000434626341ull,
+    //            0x0003000434626641ull,
+    //            0x0003000434626841ull,
+    //            0x0003000434626941ull,
+    //            0x0003000434636341ull,
+    //            0x00030004346b6141ull,
+    //            0x00030004346b6241ull,
+    //            0x00030004346b6341ull,
 
-        // 不要：セーブデータ領域を作成
-        SetupTitlesDataFile(tids, sizeof(tids)/sizeof(*tids));
+    if( FALSE == ECDownload((NAMTitleId *)title_id_buf , num_title) ) {
+      return FALSE;
+    }
+
+    // 不要：セーブデータ領域を作成
+    // NAM_Init を忘れてた
+    SetupTitlesDataFile((NAMTitleId *)title_id_buf , num_title);
+
+    if( title_id_buf != NULL && num_title != 0 ) {
+      OS_Free( title_id_buf );
     }
 
     // cleanup
-    {
-        ECError rv = EC_ERROR_OK;
-
-        // EC の終了処理
-        rv = EC_Shutdown();
-        SDK_WARNING(rv == EC_ERROR_OK, "Failed to shutdown EC, rv=%d\n", rv);
-
-        // ネットワークからの切断
-	NcFinish();
+    // EC の終了処理
+    mprintf("-EC_Shutdown.. ");
+    rv = EC_Shutdown();
+    // SDK_WARNING(rv == EC_ERROR_OK, "Failed to shutdown EC, rv=%d\n", rv);
+    if( rv != EC_ERROR_OK ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+    }
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
+    
+
+    
+    // ネットワークからの切断
+    OS_TPrintf("Disconnecting ..\n");
+    mprintf("-Disconnecting... ");
+
+    NHTTP_Cleanup();
+    // int NSSL_Finish( void )
+    NSSL_Finish();
+
+
+    NcFinish();
+    // つなぎっぱなしにするならいらない。
+    TerminateWcmControl();
+
+    OS_TPrintf("Done.\n");
+    mprintf("Done.\n");
+    
     // EC が自分の Title ID のディレクトリを作成してしまうため、削除する
     DeleteECDirectory();
     return TRUE;

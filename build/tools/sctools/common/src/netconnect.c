@@ -23,6 +23,11 @@
 #include "netconnect.h"
 #include "mywlan.h"
 
+#include        "text.h"
+#include        "mprintf.h"
+#include        "logprintf.h"
+
+
 /*---------------------------------------------------------------------------*
    初期化
  *---------------------------------------------------------------------------*/
@@ -250,13 +255,15 @@ static void ncFinishInet(void)
  *---------------------------------------------------------------------------*/
 void NcStart(const char* apClass)
 {
+  int counter = 0;
+  s32 wcm_phase;
 
-    SiteDefs_Init();
+  SiteDefs_Init();
 
-    
     if( FALSE == ENV_SetBinary("WiFi.LAN.1.AP.1.WEP.KEY", (void *)GetWlanKEYSTR()) ) {
       OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
     }
+
     if( FALSE == ENV_SetString("WiFi.LAN.1.AP.1.ESSID", GetWlanSSID()) ) {
       OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
     }
@@ -270,31 +277,75 @@ void NcStart(const char* apClass)
         OS_Panic("Invalid AP Class....");
     }
 
-    while (WCM_GetPhase() != WCM_PHASE_NULL)
-    {
-        OS_Sleep(100);
+    while (1) {
+      wcm_phase = WCM_GetPhase();
+      if( wcm_phase == WCM_PHASE_NULL) {
+	break;
+      }
+      // OS_TPrintf("%s %d phase = %d\n", __FUNCTION__,__LINE__,wcm_phase);
+      OS_Sleep(100);
     }
 
     InitWcmControlByApInfoEx(&apInfo, g_deviceId);
 
     OS_TPrintf("LINK UP....\n");
+    mprintf("-LINK UP");
+    while ( 1 ) {
+      wcm_phase = WCM_GetPhase();
+      if( wcm_phase == WCM_PHASE_DCF ) {
+	break;
+      }
+#if 0
+#define WCM_PHASE_NULL              0               // 初期化前
+#define WCM_PHASE_WAIT              1               // 初期化直後の状態( 要求待ち )
+#define WCM_PHASE_WAIT_TO_IDLE      2               // 初期化直後の状態 から 無線機能の起動シーケンス中
+#define WCM_PHASE_IDLE              3               // 無線機能アイドル状態
+#define WCM_PHASE_IDLE_TO_WAIT      4               // アイドル状態 から 無線機能の停止シーケンス中
+#define WCM_PHASE_IDLE_TO_SEARCH    5               // アイドル状態 から AP 自動探索状態への移行シーケンス中
+#define WCM_PHASE_SEARCH            6               // AP 自動探索状態
+#define WCM_PHASE_SEARCH_TO_IDLE    7               // AP 自動探索状態 から アイドル状態への移行シーケンス中
+#define WCM_PHASE_IDLE_TO_DCF       8               // アイドル状態 から AP への無線接続シーケンス中
+#define WCM_PHASE_DCF               9               // AP と無線接続された DCF 通信可能状態
+#define WCM_PHASE_DCF_TO_IDLE       10              // DCF 通信状態 から 無線接続を切断するシーケンス中
+#define WCM_PHASE_FATAL_ERROR       11              // 復旧不可能なエラーが発生し、全ての処理が受け付けられない状態
+#define WCM_PHASE_IRREGULAR         12              // 状態遷移シーケンスの途中で問題が発生した状態
+#define WCM_PHASE_TERMINATING       13              // WCM ライブラリの強制停止シーケンス中
+#endif
 
-    while (WCM_GetPhase() != WCM_PHASE_DCF)
-    {
-        OS_Sleep(100);
+      switch( counter ) {
+      case 0:
+	mprintf("\r-LINK UP.     ");
+	break;
+      case 1:
+	mprintf("\r-LINK UP..    ");
+	break;
+      case 2:
+	mprintf("\r-LINK UP...   ");
+	break;
+      case 3:
+	mprintf("\r-LINK UP....  ");
+	break;
+      case 5:
+	mprintf("\r-LINK UP..... ");
+	break;
+      case 6:
+	mprintf("\r-LINK UP......");
+	counter = -1;
+	break;
+      }
+      OS_Sleep(100);
+      counter++;
     }
 
+    OS_TPrintf("connected\n");
+    mprintf(" connected\n");
 
 #ifndef SDK_WIFI_INET
-OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-
     ncStartWiFi();
-
 #else // SDK_WIFI_INET
-OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-
     ncStartInet();
 #endif // SDK_WIFI_INET
+
 }
 
 void NcFinish()

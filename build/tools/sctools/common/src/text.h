@@ -9,6 +9,24 @@
 
 #define DEFAULT_TEXT_PALETTE_NO 0x0f
 
+#define M_TEXT_COLOR_BLACK          0
+#define M_TEXT_COLOR_RED            1
+#define M_TEXT_COLOR_GREEN          2
+#define M_TEXT_COLOR_BLUE           3
+#define M_TEXT_COLOR_YELLOW         4
+#define M_TEXT_COLOR_PURPLE         5
+#define M_TEXT_COLOR_LIGHTBLUE      6
+#define M_TEXT_COLOR_DRAKRED        7
+#define M_TEXT_COLOR_DARKGREEN      8
+#define M_TEXT_COLOR_DRAKBLUE       9
+#define M_TEXT_COLOR_DARKYELLOW     0xa
+#define M_TEXT_COLOR_DARKPURPLE     0xb
+#define M_TEXT_COLOR_DARKLIGHTBLUE  0xc
+#define M_TEXT_COLOR_GRAY           0xd
+#define M_TEXT_COLOR_DARKGRAY       0xe
+#define M_TEXT_COLOR_WHITE          0x0f
+
+
 typedef struct LINE_BUF_s {
   int buf[LINE_BUF_X_SIZE];
   u16 col[LINE_BUF_X_SIZE];

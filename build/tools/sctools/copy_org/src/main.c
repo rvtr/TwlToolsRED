@@ -269,7 +269,8 @@ static BOOL SDBackupToSDCard7(void)
   */
   mprintf("User title list backup ");
   OS_TPrintf("User title list backup \n");
-  if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
+  if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, 
+			 MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
 
     GetDirEntryList( dir_entry_list_head, &pBuffer, &count);
 
@@ -284,11 +285,17 @@ static BOOL SDBackupToSDCard7(void)
 	ptr++;
       }
     }
-    (void)TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL);
+    if( TRUE == TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL) ) {
+      //MyFile_GetDownloadTitleIDLogFileName() 
+      m_set_palette(tc[0], 0x2);	/* green  */
+      mprintf("OK.\n");
+    }
+    else {
+      m_set_palette(tc[0], 0x1);	/* red  */
+      mprintf("NG.\n");
+    }
     OS_Free(pBuffer);
     PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
   }
   else {
     m_set_palette(tc[0], 0x1);	/* red  */
@@ -612,54 +619,6 @@ void TwlMain(void)
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
-      /* ユーザーデータ書き込みモード */
-      if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
-	OS_TPrintf("SSID = %s\n", GetWlanSSID()); 
-	OS_TPrintf("MODE = "); 
-	switch( GetWlanMode() ) {
-	case 1:
-	  OS_TPrintf("OPEN\n");
-	  break;
-	case 2:
-	  OS_TPrintf("WEP128\n");
-	  break;
-	case 3:
-	  OS_TPrintf("WPA-TKIP\n");
-	  break;
-	case 4:
-	  OS_TPrintf("WPA2-TKIP\n");
-	  break;
-	case 5:
-	  OS_TPrintf("WPA-AES\n");
-	  break;
-	case 6:
-	  OS_TPrintf("WPA2-AES\n");
-	  break;
-	defalut:
-	  OS_TPrintf("Unknow mode..\n");
-	  break;
-	}
-	OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
-	{
-	  u8 buf[256];
-	  int len;
-	  int i;
-	  len = GetWlanKEYBIN(buf);
-	  if( len ) {
-	    OS_TPrintf("KEY BIN = 0x");
-	    for( i = 0 ; i < len ; i++ ) {
-	      OS_TPrintf("%02X",buf[i]);
-	    }
-	    OS_TPrintf("\n");
-	  }
-	}
-      }
-      else {
-	OS_TPrintf("Invalid wlan cfg file\n");
-      }
-      nuc_main();
-
-
     }
     else if ( keyData & PAD_BUTTON_START ) {
     }

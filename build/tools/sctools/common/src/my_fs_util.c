@@ -866,7 +866,7 @@ int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
 /********************************************
  * NANDにディレクトリエントリとファイルを復活させる。
 *********************************************/
-BOOL RestoreDirEntryList( char *path )
+BOOL RestoreDirEntryList( char *path , char *log_file_name)
 {
   FSFile f;
   FSFile f_dir;
@@ -880,7 +880,7 @@ BOOL RestoreDirEntryList( char *path )
 
   FSFile log_fd;
   BOOL log_active = FALSE;
-  char *log_file_name = "sdmc:/miya/restore_dir_entry_log.txt";
+  
 
   /* ここでSDカードがあるかどうか調べる */
 

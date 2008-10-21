@@ -50,6 +50,13 @@ char *MyFile_GetAppSharedLogFileName(void)
   return path_log;
 }
 
+char *MyFile_GetAppSharedRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_APP_SHARED_RESTORE_LOG );  
+  return path_log;
+}
+
 char *MyFile_GetAppSharedListFileName(void)
 {
   STD_StrCpy( path , path_base );
@@ -63,10 +70,18 @@ char *MyFile_GetPhotoSaveDirName(void)
   STD_StrCat( path , MY_DIR_NAME_PHOTO );
   return path;
 }
+
 char *MyFile_GetPhotoLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
   STD_StrCat( path_log , MY_FILE_NAME_PHOTO_LOG );
+  return path_log;
+}
+
+char *MyFile_GetPhotoRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_PHOTO_RESTORE_LOG );
   return path_log;
 }
 
@@ -83,12 +98,21 @@ char *MyFile_GetAppDataSaveDirName(void)
   STD_StrCat( path , MY_DIR_NAME_TITLE );
   return path;
 }
+
 char *MyFile_GetAppDataLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
   STD_StrCat( path_log , MY_FILE_NAME_TITLE_LOG );
   return path_log;
 }
+
+char *MyFile_GetAppDataRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_TITLE_RESTORE_LOG );
+  return path_log;
+}
+
 char *MyFile_GetAppDataListFileName(void)
 {
   STD_StrCpy( path , path_base );
@@ -102,6 +126,14 @@ char *MyFile_GetDownloadTitleIDLogFileName(void)
   STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_LOG );
   return path_log;
 }
+
+char *MyFile_GetDownloadTitleIDRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG );
+  return path_log;
+}
+
 char *MyFile_GetDownloadTitleIDFileName(void)
 {
   STD_StrCpy( path , path_base );
@@ -113,6 +145,20 @@ char *MyFile_GetGlobalInformationFileName(void)
 {
   STD_StrCpy( path , path_base );
   STD_StrCat( path , MY_FILE_NAME_ORG_DATA );
+  return path;
+}
+
+char *MyFile_GetGlobalInformationLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_ORG_LOG );
+  return path;
+}
+
+char *MyFile_GetGlobalInformationRestoreFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_ORG_RESTORE_LOG );
   return path;
 }
 

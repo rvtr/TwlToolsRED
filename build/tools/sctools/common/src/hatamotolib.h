@@ -12,13 +12,13 @@ void SetupVerData(void);
 void NetworkAutoConnect_DWC(void);
 void NetworkShutdown_DWC(void);
 void SetupNSSL(void);
-void SetupNHTTP(void);
+BOOL SetupNHTTP(void);
 void SetupEC(void);
-void WaitEC(ECOpId opId);
+BOOL WaitEC(ECOpId opId);
 void DeleteECDirectory(void);
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds);
 
-void hatamotolib_main(void);
+BOOL hatamotolib_main(void);
 
 
 #ifdef __cplusplus

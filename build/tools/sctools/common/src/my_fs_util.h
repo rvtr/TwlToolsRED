@@ -31,7 +31,7 @@ void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd);
 
 int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path );
-BOOL RestoreDirEntryList( char *path );
+BOOL RestoreDirEntryList( char *path, char *log_file_name);
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp );
 void write_debug_data(void);
 BOOL SDCardValidation(void);

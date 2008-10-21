@@ -4,10 +4,6 @@
 #include <twl/na.h>
 #include <twl/nam.h>
 
-#ifdef USE_DWC
-#include <dwc.h>
-#include <ac/dwc_ac.h>
-#endif
 
 #include <NitroWiFi/nhttp.h>
 #include "nssl.h"
@@ -18,6 +14,16 @@
 #include "wcm_control.h"
 
 #include "hatamotolib.h"
+
+
+#ifdef SDK_DEBUG
+#define ECDL_LOG(msg)   OS_TPrintf("----\nECDL-LOG: %s\n----\n", msg);
+#endif
+#ifdef SDK_RELEASE
+#define ECDL_LOG(msg)   OS_TPrintf("ECDL-LOG: %s\n", msg);
+#endif
+
+
 
 static void *Alloc(size_t size)
 {
@@ -37,17 +43,6 @@ static void Free(void* ptr)
     }
 }
 
-#ifdef USE_DWC
-static void*   AllocForDWC(DWCAllocType name, u32 size, int align)
-{ 
-  SDK_ASSERT(align <= 32);(void)name;(void)align; return Alloc(static_cast<u32>(size));
-}
-
-static void    FreeForDWC(DWCAllocType name, void* ptr, u32 size)
-{ 
-  (void)name;(void)size; Free(ptr);
-}
-#endif
 
 static void*   AllocForNHTTP(u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
 static void*   AllocForEC   (u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
@@ -142,20 +137,6 @@ GetECOpPhaseString(ECOpPhase phase)
   return FindString(STRING_MAP, phase);
 }
 
-
-#ifdef USE_DWC
-static const char*
-GetDWCApInfoTypeString(DWCApInfoType type)
-{
-  static const StringMap STRING_MAP[] =
-    {
-#include "string_map_dwc_apinfo_type.inc"
-      { 0, NULL }
-    };
-  
-  return FindString(STRING_MAP, type);
-}
-#endif
 
 
 static const char*
@@ -313,122 +294,6 @@ void SetupShopTitleId(void)
 }
 
 
-#ifdef USE_DWC
-static u8 sDwcWork[ DWC_INIT_WORK_SIZE ]    ATTRIBUTE_ALIGN(32);
-static DWCInetControl sDwcInetCtrl;
-
-static void PollConnection_DWC()
-{
-  int errCode;
-  int counter = 0;
-  while( ! DWC_CheckInet() )
-    {
-      DWC_ProcessInet();
-      OS_Sleep(16);
-      OS_TPrintf("*** %s %d %d\n",__FUNCTION__, __LINE__, counter);
-      counter++;
-    }
-
-  OS_TPrintf("*** %s %d\n",__FUNCTION__, __LINE__);
-  
-  switch ( DWC_GetInetStatus() )
-    {
-    case DWC_CONNECTINET_STATE_NOT_INITIALIZED:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_NOT_INITIALIZED\n" );
-      break;
-    case DWC_CONNECTINET_STATE_IDLE:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_IDLE           \n" );
-      break;
-    case DWC_CONNECTINET_STATE_OPERATING:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_OPERATING      \n" );
-      break;
-    case DWC_CONNECTINET_STATE_OPERATED:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_OPERATED       \n" );
-      break;
-    case DWC_CONNECTINET_STATE_CONNECTED:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_CONNECTED      \n" );
-      break;
-    case DWC_CONNECTINET_STATE_DISCONNECTING:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_DISCONNECTING  \n" );
-      break;
-    case DWC_CONNECTINET_STATE_DISCONNECTED:
-      OS_TPrintf("   DWC_CONNECTINET_STATE_DISCONNECTED %d\n");
-      break;
-    case DWC_CONNECTINET_STATE_ERROR:
-      DWC_GetLastError(&errCode);
-      OS_Panic("   DWC_CONNECTINET_STATE_ERROR        %d\n", errCode );
-      break;
-    case DWC_CONNECTINET_STATE_FATAL_ERROR:
-      DWC_GetLastError(&errCode);
-      OS_Panic("   DWC_CONNECTINET_STATE_FATAL_ERROR  %d\n", errCode );
-      break;
-    default:
-      DWC_GetLastError(&errCode);
-      OS_Panic("   DWC_CONNECTINET_STATE_UNKNOWN_ERROR  %d\n", errCode );
-    }
-}
-
-static bool ConnectionResult_DWC()
-{
-  DWCApInfo apinfo;
-  
-  if ( DWC_GetApInfo( &apinfo ) == TRUE )
-    {
-      OS_TPrintf("   AP type: %s\n", GetDWCApInfoTypeString(apinfo.aptype));
-      OS_TPrintf("   ESSID  : %s\n", &apinfo.essid);
-      return true;
-    }
-  else
-    {
-      DWCError     error;
-      int          errorCode;
-      DWCErrorType errorType;
-      // 接続失敗のエラーコード表示
-      error = DWC_GetLastErrorEx( &errorCode, &errorType );
-      OS_TPrintf("   error point : %d\n", error );
-      OS_TPrintf("   error no    : %d\n", -errorCode );
-      OS_TPrintf("   error type  : %d\n", errorType );
-      
-      return false;
-    }
-}
-
-
-
-void NetworkAutoConnect_DWC(void)
-{
-
-  DWC_SetReportLevel(DWC_REPORTFLAG_ALL);
-  
-  int result = DWC_Init(sDwcWork);
-
-  if ( result == DWC_INIT_RESULT_DESTROY_OTHER_SETTING )
-    {
-      OS_TPrintf( "Wi-Fi setting might be broken.\n" );
-    }
-  
-  DWC_SetMemFunc( &AllocForDWC, &FreeForDWC );
-
-  DWC_InitInet( &sDwcInetCtrl );
-
-  DWC_SetDisableEulaCheck();
-
-  DWC_ConnectInetAsync();
-
-
-  PollConnection_DWC();
-
-  if( ! ConnectionResult_DWC() )
-    {
-      OS_Panic("auto connect failed");
-    }
-}
-
-void NetworkShutdown_DWC(void)
-{
-  DWC_CleanupInet();
-}
-#endif
 
 void SetupNSSL(void)
 {
@@ -442,7 +307,7 @@ void SetupNSSL(void)
   NSSL_Init(&conf);
 }
 
-void SetupNHTTP(void)
+BOOL SetupNHTTP(void)
 {
   int rv;
   
@@ -451,8 +316,10 @@ void SetupNHTTP(void)
   
   if (rv != NHTTP_ERROR_NONE)
     {
-      OS_Panic("Failed to start NHTTP, rv=%d\n", rv);
+      OS_TPrintf("Failed to start NHTTP, rv=%d\n", rv);
+      return FALSE;
     }
+  return TRUE;
 }
 
 
@@ -482,7 +349,7 @@ Dummy_WWW_AddJSPlugin()
 {
 }
 
-static void
+static BOOL
 LoadCert(void** ppCert, u32* pSize, const char* name)
 {
   FSFile f;
@@ -501,20 +368,23 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   bSuccess = FS_OpenFile(&f, path);
   if( ! bSuccess )
     {
-      OS_Panic("Cannot open %s\n", path);
+      OS_TPrintf("Cannot open %s\n", path);
+      return FALSE;
     }
 
   certSize = FS_GetFileLength(&f);
   pCert = OS_Alloc(certSize);
   if ( pCert == NULL )
     {
-      OS_Panic("Cannot allocate work memroy\n");
+      OS_TPrintf("Cannot allocate work memroy\n");
+      return FALSE;
     }
 
   readSize = FS_ReadFile(&f, pCert, static_cast<s32>(certSize));
   if( readSize != certSize )
     {
-      OS_Panic("fail to read file\n");
+      OS_TPrintf("fail to read file\n");
+      return FALSE;
     }
 
   FS_CloseFile(&f);
@@ -522,11 +392,13 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   result = NA_DecodeVersionData(pCert, certSize, pCert, certSize);
   if( result <= 0 )
     {
-      OS_Panic("fail to decode version info %d\n", result);
+      OS_TPrintf("fail to decode version info %d\n", result);
+      return FALSE;
     }
 
   *ppCert = pCert;
   *pSize  = certSize;
+  return TRUE;
 }
 
 
@@ -576,7 +448,7 @@ void SetupEC(void)
 }
 
 
-void WaitEC(ECOpId opId)
+BOOL WaitEC(ECOpId opId)
 {
   ECError result;
   ECProgress progress;
@@ -584,7 +456,8 @@ void WaitEC(ECOpId opId)
   
   if( opId < 0 )
     {
-      OS_TPanic("error %d %s\n", opId, GetECErrorString(opId));
+      OS_TPrintf("error %d %s\n", opId, GetECErrorString(opId));
+      return FALSE;
     }
   
   MI_CpuClear(&progress_prev, sizeof(progress_prev));
@@ -599,7 +472,8 @@ void WaitEC(ECOpId opId)
             {
 	      OS_TPrintf("opId=%d\n", opId);
             }
-	  OS_TPanic("Failed to EC_GetProgress, result=%d %s\n", result, GetECErrorString(result));
+	  OS_TPrintf("Failed to EC_GetProgress, result=%d %s\n", result, GetECErrorString(result));
+	  return FALSE;
         }
 
       //#ifdef SDK_DEBUG
@@ -625,11 +499,181 @@ void WaitEC(ECOpId opId)
 
       OS_Sleep(300);
     }
+  return TRUE;;
 }
 
 
 
-void hatamotolib_main(void)
+
+namespace
+{
+    char CheckRegistration()
+    {
+        s32 progress;
+        ECError ecError;
+        ECDeviceInfo di;
+
+        ECDL_LOG("check registeration");
+        progress = EC_CheckRegistration();
+        WaitEC(progress);
+
+        ecError = EC_GetDeviceInfo(&di);
+        SDK_ASSERT( ecError == EC_ERROR_OK );
+
+#ifdef SDK_DEBUG
+#define ECDL_DI_FMT "%-30s"
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "serial", di.serial);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountId", di.accountId);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "registrationStatus", di.registrationStatus);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "extAccountId", di.extAccountId);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "country", di.country);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountCountry", di.accountCountry);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "region", di.region);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "language", di.language);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "blockSize", di.blockSize);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "usedBlocks", di.usedBlocks);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "totalBlocks", di.totalBlocks);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "netContentRestrictions", di.netContentRestrictions);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "userAge", di.userAge);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlFlags", di.parentalControlFlags);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlOgn", di.parentalControlOgn);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "isParentalControlEnabled", di.isParentalControlEnabled);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSync", di.isNeedTicketSync);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "lastTicketSyncTime", di.lastTicketSyncTime);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "wirelessMACAddr", di.wirelessMACAddr);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "bluetoothMACAddr", di.bluetoothMACAddr);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "titleId", di.titleId);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "freeChannelAppCount", di.freeChannelAppCount);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "usedUserInodes", di.usedUserInodes);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "maxUserInodes", di.maxUserInodes);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "deviceCode", di.deviceCode);
+        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountDeviceCode", di.accountDeviceCode);
+        OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
+#endif
+
+        return di.registrationStatus[0];
+    }
+
+    void GetChallenge(char* challenge)
+    {
+        s32 progress;
+        ECError ecError;
+
+        ECDL_LOG("get challenge");
+        progress = EC_SendChallengeReq();
+        WaitEC(progress);
+
+        ecError = EC_GetChallengeResp(challenge);
+        SDK_ASSERT( ecError == EC_ERROR_OK );
+    }
+
+    void SyncRegistration(const char* challenge)
+    {
+        s32 progress;
+
+        ECDL_LOG("sync registration");
+        progress = EC_SyncRegistration(challenge);
+        WaitEC(progress);
+    }
+
+    void Register(const char* challenge)
+    {
+        s32 progress;
+
+        ECDL_LOG("register");
+        progress = EC_Register(challenge, NULL, NULL);
+        WaitEC(progress);
+    }
+
+    void Transfer(const char* challenge)
+    {
+        s32 progress;
+
+        ECDL_LOG("transfer");
+        progress = EC_Transfer(challenge);
+        WaitEC(progress);
+    }
+    
+    void SyncTickets()
+    {
+        s32 progress;
+
+        ECDL_LOG("sync tickets");
+        progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
+        WaitEC(progress);
+    }
+
+    void DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
+    {
+        s32 progress;
+
+        ECDL_LOG("download");
+        for( u32 i = 0; i < numTitleIds; ++i )
+        {
+            NAMTitleId tid = pTitleIds[i];
+
+            OS_TPrintf("download %08X %08X\n", (u32)(tid >> 32), (u32)tid);
+            progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
+            WaitEC(progress);
+        }
+    }
+}
+
+
+void
+ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
+{
+    char challenge[EC_CHALLENGE_BUF_SIZE];
+    char status;
+
+    status = CheckRegistration();
+    // U  unregistered
+    // R  registered
+    // P  pending
+    // T  transfered
+    SDK_ASSERTMSG(status != 'U', "acount not transfered yet.");
+    SDK_ASSERTMSG(status != 'R', "already registered. please delete acount.");
+    SDK_ASSERTMSG( (status == 'P') || (status == 'T'), "invalid registration status '%c'", status );
+
+    GetChallenge(challenge);
+    Transfer(challenge);
+
+    GetChallenge(challenge);
+    SyncRegistration(challenge);
+
+    SyncTickets();
+    DownloadTitles(pTitleIds, numTitleIds);
+}
+
+
+void
+KPSClient()
+{
+    s32 progress;
+
+    OS_TPrintf("generate key pair\n");
+    progress = EC_GenerateKeyPair();
+
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+
+    WaitEC(progress);
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+
+    OS_TPrintf("confirm key pair\n");
+    progress = EC_ConfirmKeyPair();
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+
+    WaitEC(progress);
+
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+
+}
+
+
+BOOL hatamotolib_main(void)
 {
     // 不要：デバイス情報の表示
     PrintDeviceInfo();
@@ -649,15 +693,18 @@ void hatamotolib_main(void)
 
         // 必須：ネットワークへの接続
         OS_TPrintf("connecting to AP....\n");
-#ifdef USE_DWC
-        NetworkAutoConnect_DWC();
-#endif
+
+	NcStart(SITEDEFS_DEFAULTCLASS);
+	
+
         OS_TPrintf("connected\n");
 
         // 必須：HTTP と SSL の初期化
         OS_TPrintf("start NHTTP\n");
         SetupNSSL();
-        SetupNHTTP();
+        if( FALSE == SetupNHTTP() ) {
+	  return FALSE;
+	}
 
         // 必須：EC の初期化
         OS_TPrintf("start EC\n");
@@ -706,13 +753,11 @@ void hatamotolib_main(void)
         SDK_WARNING(rv == EC_ERROR_OK, "Failed to shutdown EC, rv=%d\n", rv);
 
         // ネットワークからの切断
-#ifdef USE_DWC
-        NetworkShutdown_DWC();
-#endif
+	NcFinish();
     }
 
     // EC が自分の Title ID のディレクトリを作成してしまうため、削除する
     DeleteECDirectory();
-
+    return TRUE;
 }
 

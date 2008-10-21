@@ -33,7 +33,7 @@ extern "C" {
 
 void ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);
 void KPSClient();
-void WaitEC(ECOpId opId);
+BOOL WaitEC(ECOpId opId);
 
 
 #ifdef __cplusplus

@@ -24,7 +24,7 @@ SRCDIR			=	../common/src ./src
 
 SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
 				gfx.c hwi.c mynvram.c my_fs_util.c \
-				kpsc.cpp ecdl.cpp hatamotolib.cpp \
+				hatamotolib.cpp \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
 				nuc.c nuc_error_msg.c stream.c myfilename.c
 

@@ -257,7 +257,7 @@ BOOL nvram_restore(char *path)
   OS_TPrintf("\n");
   bSuccess = FS_CloseFile(&nor_fd);
 
-  mprintf("nvram write completed.\n");
+  //  mprintf("nvram write completed.\n");
   OS_TPrintf( "nvram write completed.\n");
 
   return TRUE;

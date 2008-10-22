@@ -257,7 +257,7 @@ void NcStart(const char* apClass)
 {
   int counter = 0;
   s32 wcm_phase;
-  int i;
+
 
   SiteDefs_Init();
 

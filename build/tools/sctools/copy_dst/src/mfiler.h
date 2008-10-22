@@ -1,6 +1,10 @@
 #ifndef	_MFILER_H_
 #define	_MFILER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef struct _MY_ENTRY_LIST {
   struct _MY_ENTRY_LIST *prev;
@@ -8,7 +12,6 @@ typedef struct _MY_ENTRY_LIST {
   FSDirectoryEntryInfo content;
   char src_path[ 512 ];
 } MY_ENTRY_LIST;
-
 
 void MFILER_CurrentDir_Init(void);
 char *MFILER_Get_CurrentDir(void);
@@ -28,5 +31,10 @@ char *MFILER_GetCursorFullPath(MY_ENTRY_LIST **headp);
 char *MFILER_GetCursorEntryPath(MY_ENTRY_LIST **headp);
 BOOL MFILER_Is_Cursor_Dir(MY_ENTRY_LIST **headp);
 BOOL MFILER_Is_Cursor_TextFile(MY_ENTRY_LIST **headp);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* _MFILER_H_ */

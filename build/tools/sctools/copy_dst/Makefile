@@ -26,7 +26,7 @@ SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
 				gfx.c hwi.c mynvram.c my_fs_util.c \
 				hatamotolib.cpp \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
-				nuc.c nuc_error_msg.c stream.c myfilename.c
+				mynuc.c nuc_error_msg.c stream.c myfilename.c
 
 TARGET_BIN		=	copy_dst.srl
 ROM_SPEC		=	copy_dst.rsf
@@ -40,6 +40,7 @@ LINCLUDES           = 	$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include ../c
 			$(ES_ROOT)/twl/include	$(ES_ROOT)/common/lib/ec/include
 
 LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib
+# LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE)
 
 
 LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \

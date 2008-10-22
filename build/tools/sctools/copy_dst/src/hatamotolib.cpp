@@ -532,428 +532,289 @@ BOOL WaitEC(ECOpId opId)
 
 
 
-namespace
+static char CheckRegistration()
 {
-    char CheckRegistration()
-    {
-        s32 progress;
-        ECError ecError;
-        ECDeviceInfo di;
+  s32 progress;
+  ECError ecError;
+  ECDeviceInfo di;
 
-        ECDL_LOG("check registeration");
-        progress = EC_CheckRegistration();
-        if( FALSE == WaitEC(progress) ) {
-	  return '\0'; // 微妙・・
-	}
+  ECDL_LOG("check registeration");
+  progress = EC_CheckRegistration();
+  if( FALSE == WaitEC(progress) ) {
+    return '\0'; // 微妙・・
+  }
 
-        ecError = EC_GetDeviceInfo(&di);
-        SDK_ASSERT( ecError == EC_ERROR_OK );
+  ecError = EC_GetDeviceInfo(&di);
+  SDK_ASSERT( ecError == EC_ERROR_OK );
 
 #ifdef SDK_DEBUG
 #define ECDL_DI_FMT "%-30s"
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "serial", di.serial);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountId", di.accountId);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "registrationStatus", di.registrationStatus);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "extAccountId", di.extAccountId);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "country", di.country);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountCountry", di.accountCountry);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "region", di.region);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "language", di.language);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "blockSize", di.blockSize);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "usedBlocks", di.usedBlocks);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "totalBlocks", di.totalBlocks);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "netContentRestrictions", di.netContentRestrictions);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "userAge", di.userAge);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlFlags", di.parentalControlFlags);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlOgn", di.parentalControlOgn);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "isParentalControlEnabled", di.isParentalControlEnabled);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSync", di.isNeedTicketSync);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "lastTicketSyncTime", di.lastTicketSyncTime);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "wirelessMACAddr", di.wirelessMACAddr);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "bluetoothMACAddr", di.bluetoothMACAddr);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "titleId", di.titleId);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "freeChannelAppCount", di.freeChannelAppCount);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "usedUserInodes", di.usedUserInodes);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "maxUserInodes", di.maxUserInodes);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "deviceCode", di.deviceCode);
-        OS_TPrintf(ECDL_DI_FMT " %s\n", "accountDeviceCode", di.accountDeviceCode);
-        OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "serial", di.serial);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountId", di.accountId);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "registrationStatus", di.registrationStatus);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "extAccountId", di.extAccountId);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "country", di.country);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountCountry", di.accountCountry);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "region", di.region);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "language", di.language);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "blockSize", di.blockSize);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "usedBlocks", di.usedBlocks);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "totalBlocks", di.totalBlocks);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "netContentRestrictions", di.netContentRestrictions);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "userAge", di.userAge);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlFlags", di.parentalControlFlags);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlOgn", di.parentalControlOgn);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "isParentalControlEnabled", di.isParentalControlEnabled);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSync", di.isNeedTicketSync);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "lastTicketSyncTime", di.lastTicketSyncTime);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "wirelessMACAddr", di.wirelessMACAddr);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "bluetoothMACAddr", di.bluetoothMACAddr);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "titleId", di.titleId);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "freeChannelAppCount", di.freeChannelAppCount);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "usedUserInodes", di.usedUserInodes);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "maxUserInodes", di.maxUserInodes);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "deviceCode", di.deviceCode);
+  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountDeviceCode", di.accountDeviceCode);
+  OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
 #endif
 
-        return di.registrationStatus[0];
-    }
-
-    BOOL GetChallenge(char* challenge)
-    {
-        s32 progress;
-        ECError ecError;
-
-        ECDL_LOG("get challenge");
-        progress = EC_SendChallengeReq();
-        if( FALSE == WaitEC(progress) ) {
-	  return FALSE;
-	}
-
-        ecError = EC_GetChallengeResp(challenge);
-        SDK_ASSERT( ecError == EC_ERROR_OK );
-	return TRUE;
-    }
-
-    BOOL SyncRegistration(const char* challenge)
-    {
-        s32 progress;
-
-        ECDL_LOG("sync registration");
-        progress = EC_SyncRegistration(challenge);
-        if( FALSE == WaitEC(progress) ) {
-	  return FALSE;
-	}
-	return TRUE;
-    }
-
-    BOOL Register(const char* challenge)
-    {
-        s32 progress;
-
-        ECDL_LOG("register");
-        progress = EC_Register(challenge, NULL, NULL);
-        if( FALSE == WaitEC(progress) ) {
-	  return FALSE;
-	}
-	return TRUE;
-    }
-
-    BOOL Transfer(const char* challenge)
-    {
-        s32 progress;
-
-        ECDL_LOG("transfer");
-        progress = EC_Transfer(challenge);
-        if( FALSE == WaitEC(progress) ) {
-	  return FALSE;
-	}
-	return TRUE;
-    }
-    
-    BOOL SyncTickets()
-    {
-        s32 progress;
-
-        ECDL_LOG("sync tickets");
-        progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
-        if( FALSE == WaitEC(progress) ) {
-	  return FALSE;
-	}
-	return TRUE;
-    }
-
-    BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
-    {
-        s32 progress;
-
-        ECDL_LOG("download");
-        for( u32 i = 0; i < numTitleIds; i++ )
-        {
-            NAMTitleId tid = pTitleIds[i];
-            progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
-	    if( FALSE == WaitEC(progress) ) {
-	      return FALSE;
-	    }
-        }
-	return TRUE;
-    }
-
+  return di.registrationStatus[0];
 }
 
+static    BOOL GetChallenge(char* challenge)
+{
+  s32 progress;
+  ECError ecError;
+
+  ECDL_LOG("get challenge");
+  progress = EC_SendChallengeReq();
+  if( FALSE == WaitEC(progress) ) {
+    return FALSE;
+  }
+
+  ecError = EC_GetChallengeResp(challenge);
+  SDK_ASSERT( ecError == EC_ERROR_OK );
+  return TRUE;
+}
+
+static BOOL SyncRegistration(const char* challenge)
+{
+  s32 progress;
+
+  ECDL_LOG("sync registration");
+  progress = EC_SyncRegistration(challenge);
+  if( FALSE == WaitEC(progress) ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+static BOOL Register(const char* challenge)
+{
+  s32 progress;
+
+  ECDL_LOG("register");
+  progress = EC_Register(challenge, NULL, NULL);
+  if( FALSE == WaitEC(progress) ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+static BOOL Transfer(const char* challenge)
+{
+  s32 progress;
+
+  ECDL_LOG("transfer");
+  progress = EC_Transfer(challenge);
+  if( FALSE == WaitEC(progress) ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+    
+static BOOL SyncTickets()
+{
+  s32 progress;
+
+  ECDL_LOG("sync tickets");
+  progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
+  if( FALSE == WaitEC(progress) ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
+{
+  s32 progress;
+
+  ECDL_LOG("download");
+  for( u32 i = 0; i < numTitleIds; i++ )
+    {
+      NAMTitleId tid = pTitleIds[i];
+      progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
+      if( FALSE == WaitEC(progress) ) {
+	return FALSE;
+      }
+    }
+  return TRUE;
+}
 
 BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
-    char challenge[EC_CHALLENGE_BUF_SIZE];
-    char status;
+  char challenge[EC_CHALLENGE_BUF_SIZE];
+  char status;
 
-    //    mprintf("-CheckRegistration..\n");
-    status = CheckRegistration();
-    // U  unregistered
-    // R  registered
-    // P  pending
-    // T  transfered
+  //    mprintf("-CheckRegistration..\n");
+  status = CheckRegistration();
+  // U  unregistered
+  // R  registered
+  // P  pending
+  // T  transfered
 #if 0
-    SDK_ASSERTMSG(status != 'U', "acount not transfered yet.");
-    SDK_ASSERTMSG(status != 'R', "already registered. please delete acount.");
-    SDK_ASSERTMSG( (status == 'P') || (status == 'T'), "invalid registration status '%c'", status );
+  SDK_ASSERTMSG(status != 'U', "acount not transfered yet.");
+  SDK_ASSERTMSG(status != 'R', "already registered. please delete acount.");
+  SDK_ASSERTMSG( (status == 'P') || (status == 'T'), "invalid registration status '%c'", status );
 #else
-    if( status == 'U') {
-      mprintf(" acount not transfered yet.\n");
-      return FALSE;
-    }
-    if( status == 'R') {
-      mprintf(" already registered. please delete acount.\n");
-      return FALSE;
-    }
-    if( (status != 'P') && (status != 'T') ) {
-      mprintf(" invalid registration status '%c'\n", status );
-      return FALSE;
-    }
-    //    mprintf(" succeeded.");
+  if( status == 'U') {
+    mprintf(" acount not transfered yet.\n");
+    return FALSE;
+  }
+  if( status == 'R') {
+    mprintf(" already registered. please delete acount.\n");
+    return FALSE;
+  }
+  if( (status != 'P') && (status != 'T') ) {
+    mprintf(" invalid registration status '%c'\n", status );
+    return FALSE;
+  }
+  //    mprintf(" succeeded.");
 #endif
 
-    mprintf("-get challenge1 ");
-    if( FALSE == GetChallenge(challenge) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
+  mprintf("-get challenge1              ");
+  if( FALSE == GetChallenge(challenge) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  mprintf("-transfer                    ");
+  if( FALSE == Transfer(challenge) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  mprintf("-get challenge2              ");
+  if( FALSE == GetChallenge(challenge) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
 
-    mprintf("-transfer  ");
-    if( FALSE == Transfer(challenge) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
+  mprintf("-sync registration           ");
+  if( FALSE == SyncRegistration(challenge) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
-    mprintf("-get challenge2 ");
-    if( FALSE == GetChallenge(challenge) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
+  mprintf("-sync tickets                ");
+  if( FALSE == SyncTickets() ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
+  mprintf("-download titles             ");
+  if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
-    mprintf("-sync registration  ");
-    if( FALSE == SyncRegistration(challenge) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-    mprintf("-sync tickets  ");
-    if( FALSE == SyncTickets() ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-
-    mprintf("-download titles  ");
-    if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-    return TRUE;
+  return TRUE;
 }
 
 
 BOOL KPSClient()
 {
-    s32 progress;
+  s32 progress;
 
-    OS_TPrintf("generate key pair\n");
-    mprintf("-generate key pair ");
-    progress = EC_GenerateKeyPair();
-    if( FALSE == WaitEC(progress) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-
-    OS_TPrintf("confirm key pair\n");
-    mprintf("-confirm key pair ");
-    progress = EC_ConfirmKeyPair();
-    if( FALSE ==  WaitEC(progress) ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-    return TRUE;
-}
-
-
-BOOL hatamotolib_main(u64 *title_id_buf, u32 num_title)
-{
-  ECError rv = EC_ERROR_OK;
-
-    // 不要：デバイス情報の表示
-    PrintDeviceInfo();
-
-    OS_TPrintf("--------------------------------\n");
-
-    // setup
-    // 必須：タイトル ID の偽装
-    SetupShopTitleId();
-    
-    // ？：ユーザ設定がされていないと接続できないので適当に設定
-    SetupUserInfo();
-    
-    // 必須：バージョンデータのマウント
-    SetupVerData();
-    
-    // 必須：ネットワークへの接続
-    NcStart(SITEDEFS_DEFAULTCLASS);
-    
-    /******** ネットワークにつないだ *************/
-
-    // 必須：HTTP と SSL の初期化
-    OS_TPrintf("start NHTTP\n");
-    mprintf("-start NHTTP ");
-    SetupNSSL();
-    if( FALSE == SetupNHTTP() ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-    /******** NHTTP & NSSLにつないだ *************/
-    
-    // 必須：EC の初期化
-    OS_TPrintf("start EC\n");
-    mprintf("-start EC ");
-    if( FALSE == SetupEC() ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      return FALSE;
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-
-    // 必須：デバイス証明書の発行
-    if( FALSE == KPSClient() ) {
-      return FALSE;
-    }
-
-    // 必須：指定タイトルをダウンロード
-    // ダウンロードすべきタイトルの指定
-    //     0x00030004346b6141ull,
-    //     0x0003000434616141ull,
-    //            0x0003000434616241ull,
-    //            0x000300043461644aull,
-    //            0x0003000434616741ull,
-    //            0x0003000434616a41ull,
-    //            0x0003000434617441ull,
-    //            0x0003000434626141ull,
-    //            0x0003000434626341ull,
-    //            0x0003000434626641ull,
-    //            0x0003000434626841ull,
-    //            0x0003000434626941ull,
-    //            0x0003000434636341ull,
-    //            0x00030004346b6141ull,
-    //            0x00030004346b6241ull,
-    //            0x00030004346b6341ull,
-
-    if( FALSE == ECDownload((NAMTitleId *)title_id_buf , num_title) ) {
-      return FALSE;
-    }
-
-    // 不要：セーブデータ領域を作成
-    // NAM_Init を忘れてた
-    SetupTitlesDataFile((NAMTitleId *)title_id_buf , num_title);
-
-    if( title_id_buf != NULL && num_title != 0 ) {
-      OS_Free( title_id_buf );
-    }
-
-    // cleanup
-    // EC の終了処理
-    mprintf("-EC_Shutdown.. ");
-    rv = EC_Shutdown();
-    // SDK_WARNING(rv == EC_ERROR_OK, "Failed to shutdown EC, rv=%d\n", rv);
-    if( rv != EC_ERROR_OK ) {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-      mprintf("OK.\n");
-    }
+  OS_TPrintf("generate key pair\n");
+  mprintf("-generate key pair           ");
+  progress = EC_GenerateKeyPair();
+  if( FALSE == WaitEC(progress) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
-    
-
-    
-    // ネットワークからの切断
-    OS_TPrintf("Disconnecting ..\n");
-    mprintf("-Disconnecting... ");
-
-    NHTTP_Cleanup();
-    // int NSSL_Finish( void )
-    NSSL_Finish();
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
 
-    NcFinish();
-    // つなぎっぱなしにするならいらない。
-    TerminateWcmControl();
+  OS_TPrintf("confirm key pair\n");
+  mprintf("-confirm key pair            ");
+  progress = EC_ConfirmKeyPair();
+  if( FALSE ==  WaitEC(progress) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
-    OS_TPrintf("Done.\n");
-    mprintf("Done.\n");
-    
-    // EC が自分の Title ID のディレクトリを作成してしまうため、削除する
-    DeleteECDirectory();
-    return TRUE;
+  return TRUE;
 }
+
+
 

@@ -257,6 +257,7 @@ void NcStart(const char* apClass)
 {
   int counter = 0;
   s32 wcm_phase;
+  int i;
 
   SiteDefs_Init();
 
@@ -312,6 +313,16 @@ void NcStart(const char* apClass)
 #define WCM_PHASE_TERMINATING       13              // WCM ライブラリの強制停止シーケンス中
 #endif
 
+#if 0
+      mprintf("\r-LINK UP.     ");
+      for( i = 0 ; i < counter ; i++ ) {
+	m_putchar(tc[0], '.');
+      }
+      for(   ; i < 6 ; i++ ) {
+	m_putchar(tc[0], ' ');
+      }
+      i %= 6;
+#else
       switch( counter ) {
       case 0:
 	mprintf("\r-LINK UP.     ");
@@ -333,7 +344,8 @@ void NcStart(const char* apClass)
 	counter = -1;
 	break;
       }
-      OS_Sleep(100);
+#endif
+      OS_Sleep(200);
       counter++;
     }
 

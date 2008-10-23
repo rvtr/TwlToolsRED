@@ -34,6 +34,7 @@
 #include        "nuc.h"
 
 #include        "myfilename.h"
+#include        "menu_version.h"
 
 //================================================================================
 
@@ -57,6 +58,7 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
     mprintf("SD card:inserted!\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mprintf("push A button to start BACKUP\n");
   }
 }
 
@@ -104,14 +106,16 @@ static BOOL SDBackupToSDCard2(void)
   /* Wifi設定の保存 */
   mprintf("WirelessLAN param. backup    ");
   if( TRUE == nvram_backup( MyFile_GetWifiParamFileName() ) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   return TRUE;
 }
 
@@ -121,14 +125,16 @@ static BOOL SDBackupToSDCard3(void)
   /* nand:/shared1ディレクトリまわりの保存 */
   mprintf("User setting param. backup   ");
   if( TRUE == MiyaBackupTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   return TRUE;
 }
 
@@ -150,12 +156,14 @@ static BOOL SDBackupToSDCard4(void)
     mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName() );
     m_set_palette(tc[0], 0x2);	/* green  */
     mprintf("OK.\n");
+    m_set_palette(tc[0], 0xF);	/* white */
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   (void)ClearDirEntryList( &dir_entry_list_head );
   return TRUE;
 }
@@ -164,7 +172,6 @@ static BOOL SDBackupToSDCard5(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   int save_dir_info = 0;
-
   /* 
      nand2:/photoディレクトリまわりの保存
      内容は写真長のJPEGファイル
@@ -176,16 +183,17 @@ static BOOL SDBackupToSDCard5(void)
 
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
     mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName() );
-    m_set_palette(tc[0], 0x2);	/* green  */
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   (void)ClearDirEntryList( &dir_entry_list_head );
-
 
   return TRUE;
 }
@@ -204,18 +212,20 @@ static BOOL SDBackupToSDCard6(void)
 
   mprintf("App. save data backup        ");
   if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetAppDataSaveDirName(), "nand:/title",
-				 &save_dir_info, MyFile_GetAppDataLogFileName(),0 ) )
-    {
-      // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-      mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , MyFile_GetAppDataListFileName() );
-      m_set_palette(tc[0], 0x2);	/* green  */
-      mprintf("OK.\n");
-    }
-  else {
-    m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.\n");
+				 &save_dir_info, MyFile_GetAppDataLogFileName(),0 ) ) {
+    // PrintDirEntryListBackward( dir_entry_list_head, NULL );
+    mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , MyFile_GetAppDataListFileName() );
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
-  m_set_palette(tc[0], 0xF);	/* white */
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
+  }
+
   (void)ClearDirEntryList( &dir_entry_list_head );
 
   return TRUE;
@@ -229,6 +239,7 @@ static BOOL SDBackupToSDCard7(void)
   int count;
   int j;
   u64 *ptr;
+  BOOL flag = TRUE;
 
   /* タイトルリストの生成 */
   /* 
@@ -274,12 +285,16 @@ static BOOL SDBackupToSDCard7(void)
 
     if( TRUE == TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL) ) {
       //MyFile_GetDownloadTitleIDLogFileName() 
-      m_set_palette(tc[0], 0x2);	/* green  */
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
       mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     }
     else {
-      m_set_palette(tc[0], 0x1);	/* red  */
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("NG.(save ids)\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      flag = FALSE;
+      // return FALSE;
     }
     if( pBuffer ) {
       OS_Free(pBuffer);
@@ -288,11 +303,13 @@ static BOOL SDBackupToSDCard7(void)
   else {
     m_set_palette(tc[0], 0x1);	/* red  */
     mprintf("NG.(get ids)\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    flag = FALSE;
+    // return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   (void)ClearDirEntryList( &dir_entry_list_head );
 
-  return TRUE;
+  return flag;
 }
 
 static BOOL SDBackupToSDCard8(void)
@@ -325,15 +342,17 @@ static BOOL SDBackupToSDCard8(void)
 		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
 
   mprintf("Personal data backup         ");
-  if( TRUE == MydataSave( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
-    m_set_palette(tc[0], 0x2);	/* green  */
+  if( TRUE == MydataSaveEncrypt( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
   else {
-    m_set_palette(tc[0], 0x1);	/* red  */
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  m_set_palette(tc[0], 0xF);	/* white */
   return TRUE;
 }
 
@@ -404,6 +423,8 @@ void TwlMain(void)
   int i;
   int n;
   u8 macAddress[6];
+  u16 s_major, s_minor;
+  u32 s_timestamp;
 
   OS_Init();
   OS_InitThread();
@@ -447,6 +468,22 @@ void TwlMain(void)
 
   // 必須；SEA の初期化
   SEA_Init();
+
+  m_set_palette(tc[0], M_TEXT_COLOR_LIGHTBLUE );
+  mprintf( "Sys-menu ver." );
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( TRUE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
+    mprintf( "%d.%d", s_major, s_minor );
+    mprintf( " (%08x)\n", s_timestamp );
+  }
+  else {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf( "read error!\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+  mprintf( "\n");
+
+
 
   // 不要：NAM の初期化
   //  NAM_Init(&AllocForNAM, &FreeForNAM);

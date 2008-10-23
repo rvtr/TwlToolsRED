@@ -1,4 +1,5 @@
 #include <twl.h>
+#include <twl/na.h>
 #include "menu_version.h"
 
 
@@ -28,6 +29,8 @@ typedef struct SystemMenuVersion {
   u16		str[ TWL_SYSMENU_VER_STR_LEN / sizeof(u16) ];
 } SystemMenuVersion;
 
+static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
+
 BOOL Read_SystemMenuVersion(u16 *major, u16 *minor, u32 *ts)
 {
 
@@ -44,6 +47,13 @@ BOOL Read_SystemMenuVersion(u16 *major, u16 *minor, u32 *ts)
   }
   //	STD_MemSet((void *)s_version, 0, sizeof(TWL_SYSMENU_VER_STR_LEN);
   STD_MemSet((void *)str_ver, 0, TWL_SYSMENU_VER_STR_LEN);
+
+  
+  if (!NA_LoadVersionDataArchive(WorkForNA, NA_VERSION_DATA_WORK_SIZE)) {
+    OS_TPrintf("NA load error\n");
+    return FALSE;
+  }
+
   
   FS_InitFile(&file);
   
@@ -83,6 +93,8 @@ BOOL Read_SystemMenuVersion(u16 *major, u16 *minor, u32 *ts)
   }
   
   FS_CloseFile(&file);
+  
+  (void)NA_UnloadVersionDataArchive();
 
   return retval;
 }

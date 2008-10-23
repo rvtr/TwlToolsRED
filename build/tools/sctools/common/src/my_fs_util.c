@@ -1,4 +1,5 @@
 #include <twl.h>
+#include <nitro/crypto.h>
 #include        "text.h"
 #include        "mprintf.h"
 #include        "my_fs_util.h"
@@ -1115,6 +1116,155 @@ static void Path_Buffers_Clean( char *path_src_dir, char *path_src_full,
   }
 }
 
+
+
+
+
+/*
+  void CRYPTO_RC4Encrypt(CRYPTORC4Context* context, const void* in, u32 length, void* out);
+
+  context - CRYPTO_RC4Init() で予め鍵を設定した CRYPTORC4Context 型の構造体を指定します。 
+  in      - RC4 アルゴリズムによる暗号化/復号を行う対象のデータへのポインタを指定します。 
+  length  - in で指定したデータの長さを指定します。 
+  out     - 暗号化/復号を行った結果を格納する先のポインタを指定します。 
+  
+*/
+static u32 my_fs_GetStringLength(char* str)
+{
+  u32 i;
+  for (i = 0; ; i++) {
+    if (*(str++) == '\0') {
+      return i;
+    }
+  }
+}
+
+static char *my_fs_key = "twl-repair-tool";
+
+
+s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size)
+{
+  s32 readSize;
+  CRYPTORC4FastContext context;
+  u8 *crypt_buf;
+
+  crypt_buf = (u8 *)OS_Alloc( (u32)size );
+  if(crypt_buf == NULL ) {
+    return -1;
+  }
+
+  readSize = FS_ReadFile(f, (void *)crypt_buf, size);
+  if( readSize != size ) {
+    /* error! */
+    goto end;
+  }
+  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+  CRYPTO_RC4FastEncrypt(&context, (char *)crypt_buf, (u32)size, ptr);
+
+ end:  
+  if( crypt_buf != NULL ) {
+    OS_Free(crypt_buf);
+  }
+  return readSize;
+}
+
+s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size)
+{
+  s32 writtenSize;
+  CRYPTORC4FastContext context;
+  u8 *crypt_buf;
+
+  crypt_buf = (u8 *)OS_Alloc( (u32)size );
+  if(crypt_buf == NULL ) {
+    return -1;
+  }
+
+  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+  CRYPTO_RC4FastEncrypt(&context, (char *)ptr, (u32)size, crypt_buf);
+
+  writtenSize = FS_WriteFile(f, crypt_buf, size);
+  if( writtenSize != size ) {
+    /* error */
+  }
+
+  if( crypt_buf != NULL ) {
+    OS_Free(crypt_buf);
+  }
+  return writtenSize; 
+}
+
+BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd)
+{
+  FSFile f;
+  BOOL bSuccess;
+  //  u32 fileSize;
+  s32 readSize = 0;
+  
+  FS_InitFile(&f);
+  
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
+    return FALSE;
+  }
+  readSize = my_fs_crypto_read(&f, pBuffer, (s32)size);
+  if( readSize != size ) {
+    miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
+  }
+  bSuccess = FS_CloseFile(&f);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Close File\n");
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
+  }
+  return TRUE;
+ }
+
+
+BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
+{
+#pragma unused(log_fd)
+  FSFile f;
+  //  BOOL flag;
+  BOOL bSuccess;
+  FSResult res;
+  FSResult fsResult;
+  s32 writtenSize;
+
+  FS_InitFile(&f);
+
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
+  if( ! bSuccess ) {
+    FS_CreateFileAuto( path, FS_PERMIT_W|FS_PERMIT_R);
+    bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
+    if( ! bSuccess ) {
+      res = FS_GetArchiveResultCode( path );
+      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
+      return FALSE;
+    }
+  }
+
+  fsResult = FS_SetFileLength(&f, 0);
+  if( fsResult != FS_RESULT_SUCCESS ) {
+  }
+
+  writtenSize = my_fs_crypto_write(&f, pData, (s32)size);
+  if( writtenSize != size ) {
+    return FALSE;
+  }
+
+  FS_FlushFile(&f);
+  bSuccess = FS_CloseFile(&f);
+  if( bSuccess ) {
+      
+  }
+  return TRUE;
+}
+
+
+
 BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd)
 {
   FSFile f;
@@ -1176,6 +1326,7 @@ BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
 
   writtenSize = FS_WriteFile(&f, pData, (s32)size);
   if( writtenSize != size ) {
+    return FALSE;
   }
 
   FS_FlushFile(&f);

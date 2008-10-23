@@ -6,6 +6,7 @@
 #include        "text.h"
 #include        "mprintf.h"
 #include        "mynvram.h"
+#include        "my_fs_util.h"
 
 
 #define NVRAM_PERSONAL_DATA_OFFSET 0x20
@@ -17,8 +18,6 @@
 
 #define NVRAM_INTERNAL_BUF_SIZE 0x100
 static u8 nvram_buffer[NVRAM_INTERNAL_BUF_SIZE] ATTRIBUTE_ALIGN(32);
-
-//static char nor_file_path[FS_FILE_NAME_MAX];
 
 
 static BOOL my_nvram_read( u32 offset, u32 size, void *buf)
@@ -138,7 +137,7 @@ BOOL nvram_backup(char *path)
 {
   BOOL bSuccess;
   FSFile nor_fd;
-  u16 offset;
+  u32 offset;
   u32 vol;
   int len;
 #define BUF_SIZE 0x100
@@ -177,13 +176,19 @@ BOOL nvram_backup(char *path)
   offset *= 8;
   offset -= 0xA00;
 
+  OS_TPrintf( "nvram %d: offset = 0x%02x\n",__LINE__, offset);
+
   for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
-    OS_TPrintf(".");
     if( TRUE !=  my_nvram_read( offset+vol , BUF_SIZE, (void* )nor_buf) ) {
       OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
     }
     else {
+      OS_TPrintf( " --: offset = 0x%02x\n", offset+vol);
+#if 0
       len = FS_WriteFile(&nor_fd, nor_buf, BUF_SIZE);
+#else
+      len = my_fs_crypto_write(&nor_fd, nor_buf, BUF_SIZE);
+#endif
       if (len != BUF_SIZE)
 	{
 	  OS_TPrintf("FS_WriteFile() failed.");
@@ -205,7 +210,7 @@ BOOL nvram_restore(char *path)
 {
   BOOL bSuccess;
   FSFile nor_fd;
-  u16 offset;
+  u32 offset;
   u32 vol;
   int len;
   //  char nor_file_path[FS_FILE_NAME_MAX];
@@ -241,7 +246,11 @@ BOOL nvram_restore(char *path)
   for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
     OS_TPrintf(".");
 
+#if 0
     len = FS_ReadFile(&nor_fd, nor_buf, BUF_SIZE);
+#else
+    len = my_fs_crypto_read(&nor_fd, nor_buf, BUF_SIZE);
+#endif
     if (len != BUF_SIZE) {
       OS_TPrintf("FS_ReadFile() failed.");
       break;
@@ -257,10 +266,8 @@ BOOL nvram_restore(char *path)
   OS_TPrintf("\n");
   bSuccess = FS_CloseFile(&nor_fd);
 
-  //  mprintf("nvram write completed.\n");
   OS_TPrintf( "nvram write completed.\n");
 
   return TRUE;
 }
-
 

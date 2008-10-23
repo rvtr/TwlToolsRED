@@ -17,6 +17,8 @@ extern "C" {
 #endif
 
 char *my_fs_util_get_fs_result_word( FSResult res );
+s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size);
+s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size);
 
 int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, 
 			 const char *path_src, int *save_dir_info, char *log_file_name , int level);
@@ -38,6 +40,10 @@ BOOL SDCardValidation(void);
 BOOL CheckShopRecord(u8 region, FSFile *log_fd);
 BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
 BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
+
+BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd);
+BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
+
 void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size);
 BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd);
 BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd);

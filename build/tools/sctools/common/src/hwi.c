@@ -22,6 +22,7 @@
 #include        "font.h"
 #include        "text.h"
 #include        "mprintf.h"
+#include        "my_fs_util.h"
 
 
 /*
@@ -111,7 +112,12 @@ BOOL MiyaBackupTWLSettings(const char *path)
     return FALSE;
   }
 
+#if 0
   writtenSize = FS_WriteFile(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
+#else
+  writtenSize = my_fs_crypto_write(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
+#endif
+
   if( writtenSize != sizeof(LCFGTWLSettingsData) ) {
     fsResult = FS_GetArchiveResultCode(path);
     mprintf("Failed write file 1 - HWNormal Info.:%d\n", fsResult );
@@ -156,7 +162,12 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     mprintf("Failed open file 2 - HWNormal Info.:%d\n", fsResult );
     return FALSE;
   }
+#if 0
   readSize = FS_ReadFile(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
+#else
+  readSize = my_fs_crypto_read(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
+#endif
+
   if( readSize != sizeof(LCFGTWLSettingsData) ) {
     fsResult = FS_GetArchiveResultCode(path);
     mprintf("Failed read file 2 - HWNormal Info.:%d\n", fsResult );
@@ -170,15 +181,10 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     return FALSE;
   }
 
-
-
-
-
   /* 実際に書き出し */
   if( FALSE == WriteTWLSettings( &cfg_data ) ) {
     return FALSE;
   }
-
 
   return TRUE;
 }
@@ -194,8 +200,8 @@ BOOL MiyaReadHWSecureInfo( LCFGTWLHWSecureInfo *Info )
   
   retval = LCFGi_THW_ReadSecureInfo();
   if( retval != LCFG_TSF_READ_RESULT_SUCCEEDED ) {
-    OS_TPrintf( "HW Normal Info read failed.\n" );
-    mprintf( "HW Normal Info read failed.\n" );
+    OS_TPrintf( "HW Secure Info read failed.\n" );
+    mprintf( "HW Secure Info read failed.\n" );
     return FALSE;
   }
 
@@ -236,162 +242,5 @@ BOOL MiyaReadHWNormalInfo( LCFGTWLHWNormalInfo *Info )
   OS_TPrintf( "HW Normal Info read succeeded.\n" );
   return TRUE;
 }
-
-
-
-/*---------------------------------------------------------------------------*
-  Name:         HWI_WriteHWNormalInfoFile
-
-  Description:  HWノーマルInfoファイルのライト
-
-  Arguments:
-
-  Returns:      None.
- *---------------------------------------------------------------------------*/
-static BOOL MiyaWriteHWNormalInfoFile( LCFGTWLHWNormalInfo *Info )
-{
-  /* 
-     
-     typedef struct LCFGTWLHWNormalInfo {
-     u8  rtcAdjust; // RTC調整値
-     u8  rsv[ 3 ];
-     u8  movableUniqueID[ LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ]; // 移行可能なユニークID
-     } LCFGTWLHWNormalInfo;  // 20byte
-  */
-  
-  if (!LCFGi_THW_WriteNormalInfoDirect( Info )) {
-    OS_TPrintf( "HW Normal Info Write failed.\n" );
-    mprintf( "HW Normal Info Write failed.\n" );
-    return FALSE;
-  }
-  return TRUE;
-}
-
-
-
-
-BOOL MiyaBackupHWNormalInfo(const char *path)
-{
-  FSFile f;
-  BOOL bSuccess;
-  FSResult fsResult;
-  s32 writtenSize;
-
-  LCFGTWLHWNormalInfo info;
-
-  if( FALSE == MiyaReadHWNormalInfo( &info ) ) {
-    return FALSE;
-  }
-
-  FS_InitFile(&f);
-
-  FS_CreateFileAuto(path, (FS_PERMIT_R|FS_PERMIT_W));
-  bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R|FS_FILEMODE_W));
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed open file 1 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-
-  writtenSize = FS_WriteFile(&f, (void *)&info, (s32)sizeof(LCFGTWLHWNormalInfo) );
-  if( writtenSize != sizeof(LCFGTWLHWNormalInfo) ) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed write file 1 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-  bSuccess = FS_CloseFile(&f);
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed close file 1 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-BOOL MiyaReadHWNormalInfo_From_SD(const char *path,   LCFGTWLHWNormalInfo *info)
-{
-  FSFile f;
-  BOOL bSuccess;
-  FSResult fsResult;
-  s32 readSize;
-
-  if( info == NULL ) {
-    return FALSE;
-  }
-
-  FS_InitFile(&f);
-  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed open file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-  readSize = FS_ReadFile(&f, (void *)info, (s32)sizeof(LCFGTWLHWNormalInfo) );
-  if( readSize != sizeof(LCFGTWLHWNormalInfo) ) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed read file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-  bSuccess = FS_CloseFile(&f);
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed close file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-
-BOOL MiyaRestoreHWNormalInfo(const char *path)
-{
-  FSFile f;
-  BOOL bSuccess;
-  FSResult fsResult;
-  s32 readSize;
-
-  LCFGTWLHWNormalInfo info;
-  LCFGTWLHWNormalInfo info_temp;
-
-  FS_InitFile(&f);
-  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed open file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-  readSize = FS_ReadFile(&f, (void *)&info, (s32)sizeof(LCFGTWLHWNormalInfo) );
-  if( readSize != sizeof(LCFGTWLHWNormalInfo) ) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed read file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-  bSuccess = FS_CloseFile(&f);
-  if (bSuccess == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    mprintf("Failed close file 2 - HWNormal Info.:%d\n", fsResult );
-    return FALSE;
-  }
-
-
-  /* RTCの補正値だけはそのまま使う */
-  if( FALSE == MiyaReadHWNormalInfo( &info_temp ) ) {
-    return FALSE;
-  }
-  info.rtcAdjust = info_temp.rtcAdjust;
-
-  /* 実際に書き出し */
-  if( FALSE == MiyaWriteHWNormalInfoFile( &info ) ) {
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
 
 

@@ -35,7 +35,7 @@ BOOL RestoreDirEntryList( char *path, char *log_file_name);
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp );
 void write_debug_data(void);
 BOOL SDCardValidation(void);
-BOOL CheckShopRecord(FSFile *log_fd);
+BOOL CheckShopRecord(u8 region, FSFile *log_fd);
 BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
 BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
 void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size);

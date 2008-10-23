@@ -42,6 +42,7 @@
 
 #include        "myfilename.h"
 #include        "mfiler.h"
+#include        "menu_version.h"
 
 
 //================================================================================
@@ -50,6 +51,9 @@ static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 
 static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
+
+
+
 
 static void SDEvents(void *userdata, FSEvent event, void *arg)
 {
@@ -703,6 +707,20 @@ void TwlMain(void)
       mprintf("NA load error\n");
     }
     else {
+      
+      {
+	u16 s_major, s_minor;
+	u32 s_timestamp;
+	if( TRUE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
+	  OS_TPrintf( "SystemMenuVersionData\n" );
+	  // ï∂éöóÒ
+	  // êîíl
+	  OS_TPrintf( "  Version(num)       : %d.%d\n", s_major, s_minor );
+	  //	  OS_TPrintf( "  Version(str)       : %s\n", s_version.str_ver );
+	  OS_TPrintf( "  Timestamp          : %08x\n", s_timestamp );
+	}
+      }
+
       if (!NUC_LoadCert()) {
 	// WRAMÇ…ÉçÅ[Éh
 	OS_TPrintf("Client cert load error\n");

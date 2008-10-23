@@ -1322,8 +1322,27 @@ BOOL SDCardValidation(void)
 }
 
 
-/* 過去にショップに接続したかどうか */
-BOOL CheckShopRecord(FSFile *log_fd)
+
+
+
+/* 
+   過去にショップに接続したかどうか
+   リージョンコードは以下のファイルで定義
+   c:/twlsdk/include/twl/os/common/ownerInfoEx.h
+   typedef enum OSTWLRegionCode
+   {
+   OS_TWL_REGION_JAPAN     = 0,
+   OS_TWL_REGION_AMERICA   = 1,
+   OS_TWL_REGION_EUROPE    = 2,
+   OS_TWL_REGION_AUSTRALIA = 3,
+   OS_TWL_REGION_CHINA     = 4,
+   OS_TWL_REGION_KOREA     = 5,
+   OS_TWL_REGION_MAX
+   } OSTWLRegion;
+*/
+
+
+BOOL CheckShopRecord(u8 region, FSFile *log_fd)
 {
 #pragma unused(log_fd)
 
@@ -1338,6 +1357,7 @@ BOOL CheckShopRecord(FSFile *log_fd)
   if( ! bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
     }
+    /* キーペアファイルがない */
     return FALSE;
   }
   (void)FS_CloseFile(&f);
@@ -1353,19 +1373,58 @@ BOOL CheckShopRecord(FSFile *log_fd)
   (void)FS_CloseFile(&f);
 #endif
 
-  //  STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg"); /* ショップアカウント情報 */
-  STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg"); /* ショップアカウント情報 */
+  // STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg"); /* ショップアカウント情報 */
+  /* 海外だと変わってくる・・ */
+  /* リージョンコードと合わせる-> リージョンコードは変えられないから。 */
+  /*
+    J(0x4a) - Japan
+    E(0x45) - America    
+    P(0x50) - Europe
+    U(0x41) - Australia
+    C(0x43) - China
+    K(0x4b) - Korea
+  */
+
+  //  STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg");
+  switch( region ) {
+  case OS_TWL_REGION_JAPAN:
+    /* J(0x4a) - Japan */
+    STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg");
+    break;
+  case OS_TWL_REGION_AMERICA:
+    /* E(0x45) - America  */   
+    STD_StrCpy(path, "nand:/title/00030015/484e4645/data/ec.cfg");
+    break;
+  case OS_TWL_REGION_EUROPE:
+    /* P(0x50) - Europe */
+    STD_StrCpy(path, "nand:/title/00030015/484e4650/data/ec.cfg");
+    break;
+  case OS_TWL_REGION_AUSTRALIA:
+    /* U(0x41) - Australia */
+    STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg");
+    break;
+  case OS_TWL_REGION_CHINA:
+    /* C(0x43) - China */
+    STD_StrCpy(path, "nand:/title/00030015/484e4643/data/ec.cfg");
+    break;
+  case OS_TWL_REGION_KOREA:
+    /* K(0x4b) - Korea */
+    STD_StrCpy(path, "nand:/title/00030015/484e464b/data/ec.cfg");
+    break;
+  default:
+    return FALSE;
+  }
+
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
   if( ! bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
     }
+    /* ショップアカウント情報ファイルがない */
     return FALSE;
   }
   (void)FS_CloseFile(&f);
 
-
   return TRUE;
-
 }
 
 int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name, int level )
@@ -1914,44 +1973,40 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 void write_debug_data(void)
 {
   // CopyFile( dst <= src );
-  CopyFile("nand:/tmp/m00.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m01.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m02.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m03.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m04.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m05.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m06.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m07.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m08.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m09.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m10.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m11.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m12.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m13.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m14.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m15.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m16.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m17.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m18.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m19.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m20.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m22.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m23.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m24.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m25.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m26.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m27.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m28.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m29.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m30.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m31.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m32.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m33.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/tmp/m34.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("nand:/sys/miya.log", "sdmc:/miya.log", NULL);
-  CopyFile("nand:/shared1/miya.log", "sdmc:/miya.log", NULL);
-
-
+  CopyFile("sdmc:/m00.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m01.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m02.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m03.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m04.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m05.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m06.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m07.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m08.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m09.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m10.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m11.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m12.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m13.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m14.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m15.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m16.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m17.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m18.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m19.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m20.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m22.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m23.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m24.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m25.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m26.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m27.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m28.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m29.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m30.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m31.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m32.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m33.sav" , "nand:/sys/log/sysmenu.log", NULL);
+  CopyFile("sdmc:/m34.sav" , "nand:/sys/log/sysmenu.log", NULL);
 
   /*
     PrintDirEntryListBackword-----Start

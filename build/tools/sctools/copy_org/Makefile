@@ -25,7 +25,7 @@ SRCDIR			=	../common/src ./src
 SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
 				gfx.c hwi.c mynvram.c my_fs_util.c \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
-				nuc_error_msg.c stream.c myfilename.c
+				stream.c myfilename.c menu_version.c
 
 TARGET_BIN		=	copy_org.srl
 ROM_SPEC		=	copy_org.rsf

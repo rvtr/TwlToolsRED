@@ -28,7 +28,6 @@
 #include        "mynvram.h"
 #include        "stream.h"
 #include        "hwi.h"
-// #include        "hatamotolib.h"
 #include        "ecdl.h"
 #include        "mywlan.h"
 #include        "mydata.h"
@@ -144,7 +143,9 @@ static BOOL SDBackupToSDCard4(void)
     nand:/shared2/*
   */
   mprintf("App. shared files backup     ");
-  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , "nand:/shared2" , MyFile_GetAppSharedLogFileName(), 0) ) {
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , 
+		   "nand:/shared2" , MyFile_GetAppSharedLogFileName(), 0) ) {
+
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
     mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName() );
     m_set_palette(tc[0], 0x2);	/* green  */
@@ -170,7 +171,9 @@ static BOOL SDBackupToSDCard5(void)
      nand2:/photo/*.*
    */
   mprintf("Photo files backup           ");
-  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , "nand2:/photo" , MyFile_GetPhotoLogFileName(),0 ) ) {
+  if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , 
+		   "nand2:/photo" , MyFile_GetPhotoLogFileName(),0 ) ) {
+
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
     mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName() );
     m_set_palette(tc[0], 0x2);	/* green  */
@@ -298,7 +301,7 @@ static BOOL SDBackupToSDCard8(void)
   RTCTime rtc_time;
 
   /* オリジナルのデータのバックアップ */
-  if( TRUE == CheckShopRecord(NULL) ) {
+  if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
     mydata.shop_record_flag = TRUE;
     OS_TPrintf("shop record exist - you don't have to connect the network.\n");
     mprintf(" (--shop record exist--)\n");

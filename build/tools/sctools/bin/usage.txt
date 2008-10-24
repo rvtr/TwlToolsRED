@@ -1,0 +1,4 @@
+./FakeRomHeader.secure.exe -c ../copy_org/bin/ARM9-TS.LTD/Release/copy_org.srl copy_org_auto.srl
+
+./FakeRomHeader.secure.exe -c ../copy_dst/bin/ARM9-TS.LTD/Release/copy_dst.srl copy_dst_auto.srl
+

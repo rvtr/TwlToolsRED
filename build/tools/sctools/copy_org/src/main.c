@@ -37,7 +37,9 @@
 #include        "menu_version.h"
 
 //================================================================================
+#define LCD_UPPER_LOWER_FLIP 1
 
+static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 
@@ -55,23 +57,28 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
   }
   else if (event == FS_EVENT_MEDIA_INSERTED) {
     sd_card_flag = TRUE;
-    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-    mprintf("SD card:inserted!\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    mprintf("push A button to start BACKUP\n");
+    if( completed_flag == FALSE ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+      mprintf("SD card:inserted!\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      mprintf("press A button to start BACKUP\n");
+    }
   }
 }
 
 
 static MyData mydata;
 
+#ifdef LCD_UPPER_LOWER_FLIP
 static int vram_num_main = 1;
 static int vram_num_sub = 0;
+#else
+static int vram_num_main = 1;
+static int vram_num_sub = 0;
+#endif
 
 static  LCFGTWLHWNormalInfo hwn_info;
 static  LCFGTWLHWSecureInfo hws_info;
-
-
 
 #define	MY_STACK_SIZE  (1024*16) /* でかいほうがいい */
 #define	MY_THREAD_PRIO        20
@@ -79,14 +86,16 @@ static OSThread MyThread;
 static u64 MyStack[MY_STACK_SIZE / sizeof(u64)];
 static void MyThreadProc(void *arg);
 
-static OSMessage MyMesgBuffer[1];
-static OSMessageQueue MyMesgQueue;
-
+static OSMessage MyMesgBuffer_request[1];
+static OSMessage MyMesgBuffer_response[1];
+static OSMessageQueue MyMesgQueue_request;
+static OSMessageQueue MyMesgQueue_response;
 
 static void init_my_thread(void)
 {
 
-  OS_InitMessageQueue(&MyMesgQueue, &MyMesgBuffer[0], 1);
+  OS_InitMessageQueue(&MyMesgQueue_request, &MyMesgBuffer_request[0], 1);
+  OS_InitMessageQueue(&MyMesgQueue_response, &MyMesgBuffer_response[0], 1);
 
   OS_CreateThread(&MyThread, MyThreadProc,
 		  NULL, MyStack + MY_STACK_SIZE / sizeof(u64),
@@ -94,9 +103,14 @@ static void init_my_thread(void)
   OS_WakeupThreadDirect(&MyThread);
 }
 
-static void start_my_thread(void)
+static BOOL start_my_thread(void)
 {
-  (void)OS_SendMessage(&MyMesgQueue, (OSMessage)0, OS_MESSAGE_NOBLOCK);
+  OSMessage message;
+  if( TRUE == OS_ReceiveMessage(&MyMesgQueue_response, &message, OS_MESSAGE_NOBLOCK) ) {
+    (void)OS_SendMessage(&MyMesgQueue_request, (OSMessage)0, OS_MESSAGE_NOBLOCK);
+    return TRUE;
+  }
+  return FALSE;
 }
 
 
@@ -381,7 +395,9 @@ static void MyThreadProc(void *arg)
   BOOL flag;
   OSMessage message;
   while( 1 ) {
-    (void)OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK);
+    (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
+
+    (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
     flag = TRUE;
     MyFile_SetPathBase("sdmc:/");
     MyFile_AddPathBase((const char *)hws_info.serialNo );
@@ -393,20 +409,53 @@ static void MyThreadProc(void *arg)
     }
     mprintf("\n");
     if( flag == TRUE ) {
+      completed_flag = TRUE;
+#if 0
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("Backup completed.\n");
+      mprintf("Backup succeded.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+#endif
+      if( TRUE == stream_play_is_end() ) {
+	stream_play0();
+      }
+
+      /* ＴＷＬカード、ＳＤカード抜いたかをチェックする */
+      m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+      mprintf("Pull out DS(DSi) & SD CARDs!\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      while( 1 ) {
+	if( (FALSE == SDCardValidation()) && (FALSE == TWLCardValidation()) ) {
+	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	  mprintf("Backup completed.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	  if( TRUE == stream_play_is_end() ) {
+	    stream_play1();
+	  }
+	  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+	  break; 
+	}
+	OS_Sleep(200);
+      }
+
+
     }
     else {
       m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("Backup failed.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      if( TRUE == stream_play_is_end() ) {
+	stream_play2();
+      }
+      Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
     }
     mprintf("\n");
-    if( TRUE == stream_is_play1_end() ) {
-      stream_play1();
-    }
   }
+}
+
+static BOOL myTWLCardCallback( void )
+{
+  return FALSE; // means that not terminate
 }
 
 
@@ -465,24 +514,21 @@ void TwlMain(void)
   SND_Init();
   stream_main();
 
+  CARD_Init();
+  CARD_SetPulledOutCallback( myTWLCardCallback );
 
   // 必須；SEA の初期化
   SEA_Init();
 
-  m_set_palette(tc[0], M_TEXT_COLOR_LIGHTBLUE );
-  mprintf( "Sys-menu ver." );
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-  if( TRUE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
-    mprintf( "%d.%d", s_major, s_minor );
-    mprintf( " (%08x)\n", s_timestamp );
-  }
-  else {
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf( "read error!\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-  }
-  mprintf( "\n");
 
+  if( FALSE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf( "system menu ver. read error!\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    s_major = 0;
+    s_minor = 0;
+    s_timestamp = 0;
+  }
 
 
   // 不要：NAM の初期化
@@ -490,7 +536,6 @@ void TwlMain(void)
   
   // 必須：ES の初期化
   ES_InitLib();
-
 
   if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -504,51 +549,44 @@ void TwlMain(void)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
-  m_set_palette(tc[0], M_TEXT_COLOR_LIGHTBLUE );
-  mprintf("Unique ID:\n");
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
     m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf(" read error.\n");
+    mprintf("HW Normal Info. read error.\n");
     m_set_palette(tc[0], 0xF);
   }
-  else {
-    mprintf(" 0x");
-    for( i =  0; i < LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN/2 ; i++ ) {
-      mprintf("%02X:", hwn_info.movableUniqueID[i]);
-    }
-    mprintf("\n 0x");
-    for( ; i < LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ; i++ ) {
-      mprintf("%02X:", hwn_info.movableUniqueID[i]);
-    }
-    mprintf("\n");
-  }
-  mprintf("\n");
 
-  
   //  mprintf("HW Secure Info. read ");
-  m_set_palette(tc[0], M_TEXT_COLOR_LIGHTBLUE );
-  mprintf("Serial No. ");
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   if( FALSE == MiyaReadHWSecureInfo( &hws_info ) ) {
     m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("read error.\n");
+    mprintf("HW Secure Info. read error.\n");
     m_set_palette(tc[0], 0xF);	/* white */
   }
-  else {
-    mprintf("%s\n", hws_info.serialNo);
-  }
-  mprintf("\n");
-  
-  OS_GetMacAddress( macAddress );
-  m_set_palette(tc[0], M_TEXT_COLOR_LIGHTBLUE );
-  mprintf("MAC add.(HEX):");
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-  for ( i = 0 ; i < 6 ; i++ ) {
-    mprintf("%02X", macAddress[i]);
-  }
-  mprintf("\n\n");
 
+
+
+  // region
+  mydata.region = LCFG_THW_GetRegion();
+  // ES Device ID
+
+  mydata.fuseId = SCFG_ReadFuseData();
+  OS_TPrintf("eFuseID:   %08X%08X\n", (u32)(mydata.fuseId >> 32), (u32)(mydata.fuseId));
+
+  OS_GetMacAddress( macAddress );
+
+  mydata.shop_record_flag = CheckShopRecord( hws_info.region, NULL );
+
+  if( TRUE == mydata.shop_record_flag ) {
+    if( TRUE == ES_GetDeviceId(&mydata.deviceId) ) {
+      snprintf(mydata.bmsDeviceId, sizeof(mydata.bmsDeviceId), "%lld", ((0x3ull << 32) | mydata.deviceId));
+      OS_TPrintf("DeviceID:  %08X %u\n", mydata.deviceId, mydata.deviceId);
+      OS_TPrintf("           %s\n", mydata.bmsDeviceId);
+    }
+  }
+
+  
+  mprintf("\n");
+  mprintf("press A button to start BACKUP\n\n");
 
 
   if( FALSE == SDCardValidation() ) {
@@ -567,10 +605,17 @@ void TwlMain(void)
   FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
 
+
   init_my_thread();
 
+#if 0 /* 自動スタートはいらない */
   if( sd_card_flag == TRUE ) {
-    start_my_thread();
+    (void)start_my_thread();
+  }
+#endif
+
+  if( TRUE == stream_play_is_end() ) {
+    stream_play0();
   }
 
   while( 1 ) {
@@ -587,27 +632,42 @@ void TwlMain(void)
     // コマンドフラッシュ（フラッシュして即座に実行を要求）
     (void)SND_FlushCommand(SND_COMMAND_NOBLOCK | SND_COMMAND_IMMEDIATE);
 
+
     if ( keyData & PAD_BUTTON_R ) {
+#ifdef LCD_UPPER_LOWER_FLIP
+      vram_num_main ^= 1;
+      vram_num_sub  ^= 1;
+#else
       vram_num_main++;
       if( vram_num_main > (MAX_VRAM_NUM-1) ) {
 	vram_num_main = 0;
       }
+#endif
     }
     else if ( keyData & PAD_BUTTON_L ) {
+#ifdef LCD_UPPER_LOWER_FLIP
+      vram_num_main ^= 1;
+      vram_num_sub  ^= 1;
+#else
       vram_num_main--;
       if( vram_num_main < 0 ) {
 	vram_num_main = (MAX_VRAM_NUM-1);
       }
+#endif
     }
 
 
     else if ( keyData & PAD_BUTTON_A ) {
       /* ユーザーデータ吸出しモード */
-      if( sd_card_flag == TRUE ) {
-	start_my_thread();
-      }
-      else {
-	mprintf("insert SD card\n");
+      if(completed_flag == FALSE ) {
+	if( sd_card_flag == TRUE ) {
+	  if( FALSE == start_my_thread() ) {
+	    OS_TPrintf("\nnow backup..\n\n");
+	  }
+	}
+	else {
+	  mprintf("insert SD card\n");
+	}
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
@@ -642,8 +702,72 @@ void TwlMain(void)
     }
 
 
-    //    mfprintf(tc[1], "\f\ncounter = %d\n\n", loop_counter);
-    mfprintf(tc[1], "\f\n%4d/%02d/%02d %02d:%02d:%02d\n\n", 
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1], "\fRepaire Tool BACKUP");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    mfprintf(tc[1], "  ver. 0.0 \n");
+    mfprintf(tc[1], "   build:%s %s\n\n",__DATE__,__TIME__);
+
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1],"Sys-menu ver." );
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    
+    mfprintf(tc[1],"%d.%d", s_major, s_minor );
+    mfprintf(tc[1]," (%08x)\n\n", s_timestamp );
+
+
+    /* ユニークＩＤは表示しなくていい？ */
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1], "Unique ID:\n");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    mfprintf(tc[1], "   ");
+    for( i =  0; i < LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN/2 ; i++ ) {
+      mfprintf(tc[1], "%02X:", hwn_info.movableUniqueID[i]);
+    }
+    mfprintf(tc[1], "\n   ");
+    for( ; i < LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ; i++ ) {
+      mfprintf(tc[1], "%02X:", hwn_info.movableUniqueID[i]);
+    }
+    mfprintf(tc[1], "\n\n");
+    
+    
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1], "Serial No. ");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    mfprintf(tc[1], "%s\n", hws_info.serialNo);
+    mfprintf(tc[1], "\n");
+
+
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1], "eFuse ID:  ");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    mfprintf(tc[1],"%08X%08X\n\n", (u32)(mydata.fuseId >> 32), (u32)(mydata.fuseId));
+
+
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1],"MAC add.:  ");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    mfprintf(tc[1],"%02X:%02X:%02X:%02X:%02X:%02X",  macAddress[0],macAddress[1],
+	     macAddress[2], macAddress[3], macAddress[4], macAddress[5]);
+    mfprintf(tc[1],"\n\n");
+
+
+    m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+    mfprintf(tc[1],"Shop record: ");
+    m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    if( TRUE == mydata.shop_record_flag ) {
+      mfprintf(tc[1],"exist.\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
+      mfprintf(tc[1],"Device ID: ");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+      mfprintf(tc[1],"%s\n", mydata.bmsDeviceId);
+    }
+    else {
+      mfprintf(tc[1],"none.\n");
+    }
+    mfprintf(tc[1],"\n");
+
+    mfprintf(tc[1], "%4d/%02d/%02d %02d:%02d:%02d\n\n", 
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
 	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 

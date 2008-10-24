@@ -16,9 +16,9 @@
 #define M_TEXT_COLOR_YELLOW         4
 #define M_TEXT_COLOR_PURPLE         5
 #define M_TEXT_COLOR_LIGHTBLUE      6
-#define M_TEXT_COLOR_DRAKRED        7
+#define M_TEXT_COLOR_DARKRED        7
 #define M_TEXT_COLOR_DARKGREEN      8
-#define M_TEXT_COLOR_DRAKBLUE       9
+#define M_TEXT_COLOR_DARKBLUE       9
 #define M_TEXT_COLOR_DARKYELLOW     0xa
 #define M_TEXT_COLOR_DARKPURPLE     0xb
 #define M_TEXT_COLOR_DARKLIGHTBLUE  0xc

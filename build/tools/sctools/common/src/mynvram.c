@@ -164,9 +164,6 @@ BOOL nvram_backup(char *path)
   if( TRUE !=  my_nvram_read( NVRAM_PERSONAL_DATA_OFFSET , sizeof(u16), (void* )&offset) ) {
     OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
   }
-  else {
-    OS_TPrintf( "nvram success: offset = 0x%02x\n", offset);
-  }
 
   if( offset == 0 ) {
     OS_TPrintf( "nvram error: offset = 0x%02x\n", offset);
@@ -176,14 +173,11 @@ BOOL nvram_backup(char *path)
   offset *= 8;
   offset -= 0xA00;
 
-  OS_TPrintf( "nvram %d: offset = 0x%02x\n",__LINE__, offset);
-
   for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
     if( TRUE !=  my_nvram_read( offset+vol , BUF_SIZE, (void* )nor_buf) ) {
       OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
     }
     else {
-      OS_TPrintf( " --: offset = 0x%02x\n", offset+vol);
 #if 0
       len = FS_WriteFile(&nor_fd, nor_buf, BUF_SIZE);
 #else

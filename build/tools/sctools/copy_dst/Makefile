@@ -62,7 +62,7 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 
 
 MAKEROM_ROMROOT  = ../files
-MAKEROM_ROMFILES = fanfare.32.wav
+MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav
 
 
 COMPONENT_NAME      =   armadillo

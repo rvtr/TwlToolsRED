@@ -62,7 +62,11 @@ static u8 strm_tmp[STRM_BUF_PAGESIZE * 2] ATTRIBUTE_ALIGN(32);
 
 // ƒtƒ@ƒCƒ‹–¼
 //const char filename2[] = "kart_title.32.wav";
-const char filename1[] = "fanfare.32.wav";
+//const char filename1[] = "fanfare.32.wav";
+const char filename0[] = "cursor.wav";
+const char filename1[] = "ok.wav";
+const char filename2[] = "ng.wav";
+const char filename3[] = "fanfare.32.wav";
 
 static StreamInfo strm;
 
@@ -80,20 +84,33 @@ void stream_main(void)
   OS_WakeupThreadDirect(&strmThread);
 }
 
+void stream_play0(void)
+{
+  PlayStream(&strm, filename0);
+}
+
 void stream_play1(void)
 {
   PlayStream(&strm, filename1);
 }
 
-BOOL stream_is_play1_end(void)
+void stream_play2(void)
+{
+  PlayStream(&strm, filename2);
+}
+
+void stream_play3(void)
+{
+  PlayStream(&strm, filename3);
+}
+
+BOOL stream_play_is_end(void)
 {
   if (strm.dataSize <= 0) {
     return TRUE;
   }
   return FALSE;
 }
-
-
 
 static void PlayStream(StreamInfo * strm, const char *filename)
 {

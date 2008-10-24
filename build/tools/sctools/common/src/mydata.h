@@ -11,6 +11,11 @@ typedef struct {
   int num_of_photo_files;
   int num_of_shared2_files;
   u8 movableUniqueID[ LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ]; // 移行可能なユニークID 16byte
+  // typedef u32  ESId;                 /* 32-bit device identity */
+  u32 deviceId;
+  u8 region;
+  u64 fuseId;
+  char bmsDeviceId[32];
 } MyData;
 
 #ifdef __cplusplus

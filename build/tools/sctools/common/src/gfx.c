@@ -3,6 +3,29 @@
 #include        "mprintf.h"
 #include        "gfx.h"
 
+
+
+
+#define DPR_HEIGHT_MAX			24
+#define DPR_WIDTH_MAX			32
+
+static u16 sDPRScrnBuffer[DPR_HEIGHT_MAX * DPR_WIDTH_MAX];
+
+
+
+void Gfx_Set_BG1_Color(u16 col)
+{
+  int i,j;
+  for( i = 0 ; i < DPR_HEIGHT_MAX ; i++ ) {
+    for( j = 0 ; j < DPR_WIDTH_MAX ; j++ ) {
+      sDPRScrnBuffer[i*DPR_WIDTH_MAX + j] = (u16)( ((col & 0xf) << 12) | ((u16)0x80) );
+    }
+  }
+  DC_FlushRange( (void *)&(sDPRScrnBuffer),sizeof(sDPRScrnBuffer));
+}
+
+
+
 static GXOamAttr g_oam[128];
 #define VRAM_SIZE 2*32*24
 
@@ -33,19 +56,16 @@ void Gfx_Init(void)
   GX_DispOff();
   GXS_DispOff();
 
-
-
   line_buf_count = init_text_buf_sys((void *)&(text_heap_buffer[0]), 
 				     (void *)&(text_heap_buffer[TEXT_HEAPBUF_SIZE]));
 
   // OS_TPrintf("Init start 1\n");
   for( i = 0 ; i < NUM_OF_SCREEN ; i++) {
     tc[i] = &(textctrl[i]);
-    init_text(tc[i],  (u16 *)&(g_screen[i]),  palette_no);
+    init_text(tc[i],  (u16 *)&(g_screen[i]), palette_no);
   }
 
-
-
+  Gfx_Set_BG1_Color(0);
   
   // VRAM初期化
   GX_SetBankForLCDC(GX_VRAM_LCDC_ALL);
@@ -67,6 +87,8 @@ void Gfx_Init(void)
 		   GX_BG_EXTPLTT_01);
   G2_SetBG0Priority(0);
   G2_BG0Mosaic(FALSE);
+  G2_BG1Mosaic(FALSE);
+
   // 2D表示設定
   GX_SetGraphicsMode(GX_DISPMODE_GRAPHICS,GX_BGMODE_0,GX_BG0_AS_2D);
   GX_LoadBG0Char(d_CharData,0,sizeof(d_CharData));
@@ -78,10 +100,21 @@ void Gfx_Init(void)
   GX_LoadOBJ(d_IconCharData,0,sizeof(d_IconCharData));
   GX_LoadOBJPltt(d_IconPaletteData,0,sizeof(d_IconPaletteData));
   
-  GX_SetVisiblePlane(GX_PLANEMASK_BG0 | GX_PLANEMASK_OBJ );  
+
+  /* 上画面用BG1設定 */
+  G2_SetBG1Priority(1);
+  GX_LoadBG1Char(d_CharData,0,sizeof(d_CharData));
+  G2_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256,  // 256pix x 256pix text
+		    GX_BG_COLORMODE_16,       // use 16 colors mode
+		    GX_BG_SCRBASE_0x3800,     // screen base offset + 0x3800 is the address for BG #1 screen
+		    GX_BG_CHARBASE_0x00000,
+		    // character base offset + 0x00000 is the address for BG #1 characters
+		    GX_BG_EXTPLTT_01          // use BGExtPltt slot #1 if BGExtPltt is enabled
+		    );
+  GX_SetVisiblePlane(GX_PLANEMASK_BG0 | GX_PLANEMASK_BG1 | GX_PLANEMASK_OBJ );  
 
 
-  /* BG1表示設定 */
+  /* sub画面表示設定 */
   GX_SetBankForSubBG( GX_VRAM_SUB_BG_48_HI );
   G2S_SetBG0Control(
 		    GX_BG_SCRSIZE_TEXT_256x256 ,
@@ -90,20 +123,34 @@ void Gfx_Init(void)
 		    GX_BG_CHARBASE_0x10000 ,	// CHR ベースブロック 0
 		    GX_BG_EXTPLTT_01
 		    );
+
+  G2S_SetBG1Control(GX_BG_SCRSIZE_TEXT_256x256,  // 256pix x 256pix text
+		    GX_BG_COLORMODE_16,       // use 16 colors mode
+		    GX_BG_SCRBASE_0x8800,     // screen base offset + 0x3800 is the address for BG #1 screen
+		    GX_BG_CHARBASE_0x00000,
+		    // character base offset + 0x00000 is the address for BG #1 characters
+		    GX_BG_EXTPLTT_01          // use BGExtPltt slot #1 if BGExtPltt is enabled
+		    );
+
+
   G2S_SetBG0Priority( 0 );
+  G2S_SetBG1Priority( 1 );
   G2S_BG0Mosaic( FALSE );
+  G2S_BG1Mosaic( FALSE );
   GXS_SetGraphicsMode(GX_BGMODE_0);
   GXS_LoadBG0Char(d_CharData,0,sizeof(d_CharData));
+  GXS_LoadBG1Char(d_CharData,0,sizeof(d_CharData));
   GXS_LoadBGPltt(d_PaletteData,0,sizeof(d_PaletteData));
 
   GX_SetBankForSubOBJ(GX_VRAM_SUB_OBJ_128_D);
   GXS_SetOBJVRamModeChar(GX_OBJVRAMMODE_CHAR_2D);
 
-
   GXS_LoadOBJ(d_IconCharData,0,sizeof(d_IconCharData));
   GXS_LoadOBJPltt(d_IconPaletteData,0,sizeof(d_IconPaletteData));
-  GXS_SetVisiblePlane( GX_PLANEMASK_BG0 | GX_PLANEMASK_OBJ );
-  
+
+
+  GXS_SetVisiblePlane( GX_PLANEMASK_BG0 | GX_PLANEMASK_BG1 | GX_PLANEMASK_OBJ );
+
 
   // LCD表示開始
   GX_DispOn();
@@ -115,7 +162,8 @@ void Gfx_Init(void)
 
   G2_SetBG0Offset( 0, 0 );
   G2S_SetBG0Offset( 0, 0 );
-
+  G2_SetBG1Offset( 0, 0 );
+  G2S_SetBG1Offset( 0, 0 );
 
   // for V Blank
   (void)OS_SetIrqFunction( OS_IE_V_BLANK, VBlankIntr );
@@ -135,6 +183,11 @@ static void VBlankIntr(void)
     DC_FlushRange( (void *)&(g_screen[vram_num_sub]),VRAM_SIZE);
   }
   GXS_LoadBG0Scr( (void *)&(g_screen[vram_num_sub]) , 0 , VRAM_SIZE );
+
+
+  GX_LoadBG1Scr(sDPRScrnBuffer, 0, sizeof(sDPRScrnBuffer));
+  GXS_LoadBG1Scr(sDPRScrnBuffer, 0, sizeof(sDPRScrnBuffer));
+
 
   // 仮想OAMをVRAMに反映
   DC_FlushRange(g_oam,sizeof(g_oam));

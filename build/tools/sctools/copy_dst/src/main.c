@@ -555,17 +555,20 @@ static void MyThreadProc(void *arg)
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
       mprintf("Restore completed.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      if( TRUE == stream_play_is_end() ) {
+	stream_play1();
+      }
     }
     else {
       m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("Restore failed.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      if( TRUE == stream_play_is_end() ) {
+	stream_play2();
+      }
     }
     mprintf("\n");
     /* 全部成功したらフォルダを消す */
-    if( TRUE == stream_is_play1_end() ) {
-      stream_play1();
-    }
   }
 }
 
@@ -591,9 +594,10 @@ static void MyThreadProcNuc(void *arg)
 	NcFinish();
 	TerminateWcmControl();
 	
-	if( TRUE == stream_is_play1_end() ) {
+	if( TRUE == stream_play_is_end() ) {
 	  stream_play1();
 	}
+
 	/* ハードウェアリセットを行い、自分自身を起動します。 */
 	OS_Sleep(30000);
 	OS_RebootSystem();

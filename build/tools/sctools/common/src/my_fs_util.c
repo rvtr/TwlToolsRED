@@ -1456,6 +1456,15 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
 
 
 
+/* TWLカードがあるかどうか */
+BOOL TWLCardValidation(void)
+{
+  if( TRUE == OS_IsRunOnDebugger() ) {
+    return FALSE;
+  }
+  return CARD_IsPulledOut();
+}
+
 /* SDカードがあるかどうか */
 BOOL SDCardValidation(void)
 {
@@ -1500,6 +1509,11 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
   FSFile f;
   BOOL bSuccess;
   char path[256];
+  u32 fileSize;
+  s32 readSize = 0;
+  void *pBuffer;
+  char *str;
+  int i;
 
   FS_InitFile(&f);
 
@@ -1513,13 +1527,43 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
   }
   (void)FS_CloseFile(&f);
 
+  
 #if 0
+  // CopyFile( dst <= src );
+  CopyFile("sdmc:/shop.log", "nand:/sys/log/shop.log",NULL);
+
   STD_StrCpy(path, "nand:/sys/log/shop.log");
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
-  if( ! bSuccess ) {
+  if( !bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
     }
     return FALSE;
+  }
+
+  fileSize = FS_GetFileLength(&f);
+  if( fileSize ) {
+    pBuffer = (char*)OS_Alloc(fileSize + 1);
+    if( pBuffer == NULL ) {
+      OS_TPrintf("Mem alloc error: %s %d\n", __FUNCTION__,__LINE__);
+      return FALSE;
+    }
+
+    readSize = FS_ReadFile(&f, pBuffer, (s32)fileSize);
+    if( readSize != fileSize ) {
+      OS_TPrintf("Failed Read File: %s %s %d\n",path,__FUNCTION__,__LINE__);
+      return FALSE;
+    }
+
+    str = (char *)pBuffer;
+
+    mprintf("\n\n");
+    for( i = 0 ; i < readSize ; i++ ) {
+      OS_PutChar( *str++ );
+      m_putchar(tc[0],*str++ );
+    }
+    mprintf("\n\n");
+  }
+  else {
   }
   (void)FS_CloseFile(&f);
 #endif

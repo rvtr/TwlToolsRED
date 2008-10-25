@@ -2,9 +2,9 @@
 #define	_MY_FILE_NAME_H_
 
 
-#define MY_FILE_NAME_UNIQUE_ID ("twl_ninfo.dat")
-#define MY_FILE_NAME_WIFI_PARAM  ("twl_nor.bin")
-#define MY_FILE_NAME_USER_SETTINGS ("twl_cfg.dat")
+#define MY_FILE_NAME_UNIQUE_ID ("twl_unique.dat")
+#define MY_FILE_NAME_WIFI_PARAM  ("twl_wifi.bin")
+#define MY_FILE_NAME_USER_SETTINGS ("twl_user.dat")
 
 #define MY_DIR_NAME_APP_SHARED ("shared2")
 #define MY_FILE_NAME_APP_SHARED_LOG ("shared2.txt")
@@ -27,9 +27,9 @@
 #define MY_FILE_NAME_DOWNLOAD_TITLE_ID_LOG ("title_id.txt" )
 #define MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG ("title_id_rst.txt" )
 
-#define MY_FILE_NAME_ORG_DATA ("global.dat")
-#define MY_FILE_NAME_ORG_LOG ("global.txt")
-#define MY_FILE_NAME_ORG_RESTORE_LOG ("global_rst.txt")
+#define MY_FILE_NAME_ORG_DATA ("personal.dat")
+#define MY_FILE_NAME_ORG_LOG ("personal.txt")
+#define MY_FILE_NAME_ORG_RESTORE_LOG ("personal_rst.txt")
 
 
 #ifdef __cplusplus

@@ -1457,12 +1457,60 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
 
 
 /* TWLカードがあるかどうか */
+static BOOL flag_TWLCardValidation = FALSE;
+
 BOOL TWLCardValidation(void)
 {
   if( TRUE == OS_IsRunOnDebugger() ) {
+    if( flag_TWLCardValidation == FALSE ) {
+      flag_TWLCardValidation = TRUE;
+      OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+    }
+    return FALSE; /* カードは抜けていることにする。 */
+  }
+
+  /*
+    CARD_IsPulledOut();
+    カード抜けを検出した場合 TRUE を、そうでない場合は FALSE を返します。
+     一度でもカード抜けを検出した後は常に TRUE を返します。 
+  */
+#if 1
+  /*
+    CARD_IsPulledOutをつかうにはアルマジロの改造がいる。
+
+    c:/twlsdk/build/components/armadillo.TWL/src/main.c
+
+    //---- check pull out card
+    CARD_CheckPullOut_Polling();
+      */
+
+  if( TRUE == CARD_IsPulledOut() ) {
     return FALSE;
   }
-  return CARD_IsPulledOut();
+#else
+  {
+    s32 lock_ret;
+    u16 id;
+    lock_ret = OS_GetLockID();
+    if( lock_ret != OS_LOCK_ID_ERROR ) {
+      id = (u16)lock_ret;
+      CARD_LockRom(id);
+
+      CARD_CheckPulledOut();
+      if( TRUE == CARD_IsPulledOut() ) {
+	return FALSE;
+      }
+      
+      CARD_UnlockRom(id);
+      OS_ReleaseLockID( id );
+    }
+    else {
+      mprintf("CARD Lock error\n");
+    }
+  }
+#endif
+
+  return TRUE;
 }
 
 /* SDカードがあるかどうか */
@@ -1509,12 +1557,13 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
   FSFile f;
   BOOL bSuccess;
   char path[256];
-  u32 fileSize;
   s32 readSize = 0;
+#if 0
+  u32 fileSize;
   void *pBuffer;
   char *str;
   int i;
-
+#endif
   FS_InitFile(&f);
 
   STD_StrCpy(path, "nand:/sys/dev.kp");
@@ -1523,6 +1572,7 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
     }
     /* キーペアファイルがない */
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     return FALSE;
   }
   (void)FS_CloseFile(&f);
@@ -1607,18 +1657,20 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     STD_StrCpy(path, "nand:/title/00030015/484e464b/data/ec.cfg");
     break;
   default:
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     return FALSE;
   }
 
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
   if( ! bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
+      OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     }
+    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     /* ショップアカウント情報ファイルがない */
     return FALSE;
   }
   (void)FS_CloseFile(&f);
-
   return TRUE;
 }
 

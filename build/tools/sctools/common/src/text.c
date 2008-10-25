@@ -19,6 +19,20 @@ void text_display_newline_off(TEXT_CTRL *tc)
   tc->text_buf.display_newline = 0;
 }
 
+void text_blink_current_line(TEXT_CTRL *tc)
+{
+  tc->text_buf.cur->blink_flag = 1;
+}
+
+void text_blink_clear(TEXT_CTRL *tc)
+{
+  LINE_BUF *lb;
+  lb = tc->text_buf.start;
+  while( lb != NULL ) {
+    lb->blink_flag = 0;
+    lb = lb->next;
+  }
+}
 
 static void link_line_buf(LINE_BUF *m,LINE_BUF *s)
 {
@@ -69,6 +83,7 @@ static LINE_BUF *alloc_line_buf(void)
   unlink_line_buf(tmp);
   tmp->last_count = 0;
   tmp->cur_count = 0;
+  tmp->blink_flag = 0;
 #if 0
   for(i = 0 ; i < LINE_BUF_X_SIZE ; i++)
     tmp->buf[i] = 0x20;
@@ -360,6 +375,8 @@ int init_text_buf_sys(void *heap_start, void *heap_end)
   return init_lb_heap(heap_start, heap_end);
 }
 
+static int blink_counter = 0;
+static int blink_flag = 0;
 
 void text_buf_to_vram(TEXT_CTRL *tc)
 {
@@ -369,6 +386,22 @@ void text_buf_to_vram(TEXT_CTRL *tc)
   int i;
   LINE_BUF *lb;
   TEXT_BUF *tb = &(tc->text_buf);
+
+  blink_counter++;
+
+  /* blink interval */
+  if( blink_flag == 1 ) {
+    if( blink_counter > 100 ) {
+      blink_counter = 0;
+      blink_flag ^= 1;
+    }
+  }
+  else {
+    if( blink_counter > 20 ) {
+      blink_counter = 0;
+      blink_flag ^= 1;
+    }
+  }
 
   lb = tb->start;
   i = 0;
@@ -396,9 +429,22 @@ void text_buf_to_vram(TEXT_CTRL *tc)
 	break;
       } 
       else {
-	c = lb->buf[x_line];
-	col = lb->col[x_line];
+	if( lb->blink_flag ) {
+	  if( blink_flag == 0 ) {
+	    c = 0;
+	    col = 0;
+	  }
+	  else {
+	    c = lb->buf[x_line];
+	    col = lb->col[x_line];
+	  }
+	}
+	else {
+	  c = lb->buf[x_line];
+	  col = lb->col[x_line];
+	}
 	put_char_vram(tc, c, col);
+
       }
       x_line++;
     }

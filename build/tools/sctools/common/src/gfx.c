@@ -9,7 +9,7 @@
 #define DPR_HEIGHT_MAX			24
 #define DPR_WIDTH_MAX			32
 
-static u16 sDPRScrnBuffer[DPR_HEIGHT_MAX * DPR_WIDTH_MAX];
+static u16 sDPRScrnBuffer[DPR_HEIGHT_MAX * DPR_WIDTH_MAX] ATTRIBUTE_ALIGN(32);
 
 
 
@@ -32,7 +32,8 @@ static GXOamAttr g_oam[128];
 /* DISPLAY Control */
 
 // #define TEXT_HEAPBUF_SIZE 0x16000
-#define TEXT_HEAPBUF_SIZE 0x80000 /* 512KByte */
+//#define TEXT_HEAPBUF_SIZE 0x80000 /* 512KByte */
+#define TEXT_HEAPBUF_SIZE 0x40000 /* 512KByte */
 static u8 text_heap_buffer[TEXT_HEAPBUF_SIZE];
 
 static TEXT_CTRL textctrl[NUM_OF_SCREEN];
@@ -42,7 +43,7 @@ static int vram_num_sub = 0;
 static void   VBlankIntr( void );
 static u32 v_blank_intr_counter = 0;
 
-static u32 g_screen[MAX_VRAM_NUM][VRAM_SIZE/sizeof(u32)];
+static u32 g_screen[MAX_VRAM_NUM][VRAM_SIZE/sizeof(u32)]  ATTRIBUTE_ALIGN(32);
 
 
 void Gfx_Init(void)

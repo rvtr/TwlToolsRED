@@ -34,6 +34,9 @@ static void *Alloc(size_t size)
 {
   OSIntrMode old = OS_DisableInterrupts();
   void* p = OS_Alloc(size);
+  if( p == NULL ) {
+    OS_TPrintf("Alloc error %s %d\n",__FUNCTION__,__LINE__);
+  }
   OS_RestoreInterrupts(old);
   return p;
 }
@@ -51,6 +54,7 @@ static void Free(void* ptr)
 
 static void*   AllocForNHTTP(u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
 static void*   AllocForEC   (u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
+
 static void*   AllocForNSSL (u32 size)            { return Alloc(size); }
 static void*   AllocForNAM  (u32 size)            { return Alloc(size); }
 static void    FreeForNHTTP (void* p)             { Free(p); }
@@ -424,8 +428,18 @@ BOOL SetupEC(void)
   
   // Initialize the EC library
 
-  logLevel = EC_LOG_FINE;
-  //  logLevel = EC_LOG_NONE;
+  /* log level definitions */
+
+  //#define EC_LOG_NONE       0
+  //#define EC_LOG_ERR        1
+  //#define EC_LOG_WARN       2
+  //#define EC_LOG_INFO       3
+  //#define EC_LOG_FINE       4
+  //#define EC_LOG_FINER      5
+  //#define EC_LOG_FINEST     6
+
+  logLevel = EC_LOG_FINEST;
+  // logLevel = EC_LOG_NONE;
 
   LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");
   LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der");

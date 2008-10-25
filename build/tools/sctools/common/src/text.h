@@ -34,6 +34,7 @@ typedef struct LINE_BUF_s {
   int cur_count;
   struct LINE_BUF_s *prev;
   struct LINE_BUF_s *next;
+  int blink_flag;
 } LINE_BUF;
 
 typedef struct {
@@ -84,6 +85,8 @@ int m_get_display_offset_x(TEXT_CTRL *tc);
 void text_buf_to_vram(TEXT_CTRL *tc);
 void text_display_newline_off(TEXT_CTRL *tc);
 void text_display_newline_on(TEXT_CTRL *tc);
+void text_blink_current_line(TEXT_CTRL *tc);
+void text_blink_clear(TEXT_CTRL *tc);
 
 #ifdef __cplusplus
 }

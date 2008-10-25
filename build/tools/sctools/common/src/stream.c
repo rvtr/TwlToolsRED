@@ -1,6 +1,7 @@
 #include <twl.h>
 #include "stream.h"
 
+#define MIYA_MEM_FILE 1
 
 #define MAKE_FOURCC(cc1, cc2, cc3, cc4) (u32)((cc1) | (cc2 << 8) | (cc3 << 16) | (cc4 << 24))
 
@@ -17,6 +18,26 @@
 #define STRM_BUF_PAGESIZE 1024*32
 #define STRM_BUF_SIZE STRM_BUF_PAGESIZE*2
 
+
+#ifdef MIYA_MEM_FILE
+
+//#define NUM_OF_MY_FS_FILE 4
+#define NUM_OF_MY_FS_FILE 3
+
+typedef struct {
+  FSFile  file;
+  char path[256];
+  u8 *data;
+  u32 length;
+  BOOL open_flag;
+  u32 position;
+} MyFSFile;
+
+static MyFSFile myfsfile[NUM_OF_MY_FS_FILE];
+
+#endif
+
+
 // WAVフォーマットヘッダ
 typedef struct WaveFormat
 {
@@ -32,7 +53,11 @@ WaveFormat;
 // ストリームオブジェクト
 typedef struct StreamInfo
 {
+#ifdef MIYA_MEM_FILE
+  MyFSFile  file;
+#else
     FSFile  file;
+#endif
     WaveFormat format;
     u32     beginPos;
     s32     dataSize;
@@ -66,15 +91,185 @@ static u8 strm_tmp[STRM_BUF_PAGESIZE * 2] ATTRIBUTE_ALIGN(32);
 const char filename0[] = "cursor.wav";
 const char filename1[] = "ok.wav";
 const char filename2[] = "ng.wav";
-const char filename3[] = "fanfare.32.wav";
+//const char filename3[] = "fanfare.32.wav";
 
 static StreamInfo strm;
 
+#ifdef MIYA_MEM_FILE
+static BOOL MY_FS_OpenFile(MyFSFile *my_file, const char *name)
+{
+
+  if( STD_StrCmp(filename0, name) == 0 ) {
+    STD_CopyMemory( (void *)my_file, (void *)&(myfsfile[0]) ,sizeof(MyFSFile) );
+    my_file->open_flag = TRUE;
+    return TRUE;
+  }
+  else if( STD_StrCmp(filename1, name) == 0 ) {
+    STD_CopyMemory( (void *)my_file, (void *)&(myfsfile[1]) ,sizeof(MyFSFile) );
+    my_file->open_flag = TRUE;
+    return TRUE;
+  }
+  else if( STD_StrCmp(filename2, name) == 0 ) {
+    STD_CopyMemory( (void *)my_file, (void *)&(myfsfile[2]) ,sizeof(MyFSFile) );
+    my_file->open_flag = TRUE;
+    return TRUE;
+  }
+#if 0
+  else if( STD_StrCmp(filename3, name) == 0 ) {
+    STD_CopyMemory( (void *)my_file, (void *)&(myfsfile[3]) ,sizeof(MyFSFile) );
+    my_file->open_flag = TRUE;
+    return TRUE;
+  }
+#endif
+  my_file->open_flag = FALSE;
+  return FALSE;
+}
+
+static BOOL MY_FS_IsFile(MyFSFile *my_file)
+{
+  return my_file->open_flag;
+}
+
+
+static BOOL MY_FS_CloseFile(MyFSFile *my_file)
+{
+  my_file->open_flag = FALSE;;
+  return TRUE;
+}
+
+static u32 MY_FS_GetPosition(MyFSFile *my_file)
+{
+  return my_file->position;
+}
+
+//static BOOL MY_FS_SeekFile( MyFSFile *p_file, s32 offset, FSSeekMode origin)
+static BOOL MY_FS_SeekFile( MyFSFile *p_file, s32 offset, FSSeekFileMode origin)
+{
+  s32 temp_offset;
+
+  switch( origin ) {
+  case FS_SEEK_SET:   /* seek from begin */
+    temp_offset = offset;
+    if( (0 <= (s32)temp_offset) && (temp_offset < (s32)p_file->length)) {
+      p_file->position = (u32)temp_offset;
+      return TRUE;
+    }
+    break;
+  case FS_SEEK_CUR:   /* seek from current */
+    temp_offset = offset + (s32)p_file->position;
+    if( (0 <= (s32)temp_offset) && (temp_offset < (s32)p_file->length)) {
+      p_file->position = (u32)temp_offset;
+      return TRUE;
+    }
+    p_file->position = p_file->length-1;
+    return TRUE;
+
+    break;
+  case FS_SEEK_END:    
+    temp_offset = (s32)(p_file->length - 1);
+    if( (0 <= (s32)temp_offset) && (temp_offset < (s32)p_file->length)) {
+      p_file->position = (u32)temp_offset;
+      return TRUE;
+    }
+    break;
+  }
+  return FALSE;
+}
+
+
+static BOOL MY_FS_SeekFileToBegin(MyFSFile *my_file)
+{
+  return MY_FS_SeekFile(my_file, 0, FS_SEEK_SET);
+}
+
+static s32 MY_FS_ReadFile( MyFSFile *p_file, void *dst, s32 len)
+{
+  s32 new_len;
+
+  if( dst == NULL ) {
+    return -1;
+  }
+  if( len < 0  ) {
+    return -1;
+  }
+  if( p_file == NULL ) {
+    return -1;
+  }
+  if( p_file->data == NULL ) {
+    return -1;
+  }
+  
+  if( p_file->open_flag ) {
+    if( (p_file->position < 0 ) ) {
+      return -1;
+    }
+    if( (p_file->position + len) < 0 ) {
+      return -1;
+    }
+    
+    if( (p_file->length <= (p_file->position + len)) ) {
+      new_len = (s32)(p_file->position + len - p_file->length);
+      new_len = len - new_len;
+      STD_CopyMemory( (void *)dst, (void *)(p_file->data + p_file->position) ,(u32)new_len );
+      p_file->position += new_len;
+      return new_len;
+    }
+
+    STD_CopyMemory( (void *)dst, (void *)(p_file->data + p_file->position) ,(u32)len );
+    p_file->position += len;
+    return len;
+  }
+  else {
+    return -1;
+  }
+  return -1;
+}
+
+
+
+#endif
+
 void stream_main(void)
 {
+  int i;
+  s32 readSize;
+
   strm.isPlay = FALSE;
   SND_LockChannel((1 << L_CHANNEL) | (1 << R_CHANNEL), 0);
+
+#ifdef MIYA_MEM_FILE
+
+  STD_StrCpy(myfsfile[0].path, filename0 );
+  STD_StrCpy(myfsfile[1].path, filename1 );
+  STD_StrCpy(myfsfile[2].path, filename2 );
+
+  for( i = 0 ; i < NUM_OF_MY_FS_FILE ; i++ ) {
+    FS_InitFile(&(myfsfile[i].file));
+
+    if ( !FS_OpenFile(&(myfsfile[i].file), myfsfile[i].path) ) {
+      // error;
+    }
+    myfsfile[i].open_flag = FALSE;
+    myfsfile[i].position = 0;
+    myfsfile[i].length = FS_GetFileLength(&(myfsfile[i].file));
+    myfsfile[i].data = (u8 *)OS_Alloc(myfsfile[i].length);
+    if( myfsfile[i].data == NULL ) {
+      OS_TPrintf("Mem alloc error: %s %d\n", __FUNCTION__,__LINE__);
+      return;
+    }
+    readSize = 0;
+
+    OS_TPrintf("%s %d Readfile %s len=%d\n",__FUNCTION__,__LINE__,myfsfile[i].path, myfsfile[i].length);
+    readSize = FS_ReadFile(&(myfsfile[i].file), myfsfile[i].data, (int)myfsfile[i].length );
+    if( readSize != myfsfile[i].length ) {
+      OS_TPrintf("Failed Read File: %s %s %d\n",myfsfile[i].path, __FUNCTION__,__LINE__);
+      return;
+    }
+    (void)FS_CloseFile(&(myfsfile[i].file));
+  }
   
+#endif 
+
   /* ストリームスレッドの起動 */
   OS_CreateThread(&strmThread,
 		  StrmThread,
@@ -99,10 +294,12 @@ void stream_play2(void)
   PlayStream(&strm, filename2);
 }
 
+#if 0
 void stream_play3(void)
 {
   PlayStream(&strm, filename3);
 }
+#endif
 
 BOOL stream_play_is_end(void)
 {
@@ -130,12 +327,24 @@ static void PlayStream(StreamInfo * strm, const char *filename)
         SND_WaitForCommandProc(tag);   // 停止を待つ
     }
 
+#ifdef MIYA_MEM_FILE
     // ファイル走査
-    if (FS_IsFile(&strm->file))
+    if (MY_FS_IsFile(&strm->file)) {
+        (void)MY_FS_CloseFile(&strm->file);
+    }
+
+    if ( ! MY_FS_OpenFile(&strm->file, filename) ) {
+      OS_Panic("Error: failed to open file %s\n", filename);
+    }
+#else
+    // ファイル走査
+    if (FS_IsFile(&strm->file)) {
         (void)FS_CloseFile(&strm->file);
+    }
     if ( ! FS_OpenFile(&strm->file, filename) ) {
         OS_Panic("Error: failed to open file %s\n", filename);
     }
+#endif
     if (!ReadWaveFormat(strm))
     {
         OS_Panic("Error: failed to read wavefile\n");
@@ -149,7 +358,11 @@ static void PlayStream(StreamInfo * strm, const char *filename)
     alarmPeriod /= (strm->format.bitPerSample == 16) ? sizeof(s16) : sizeof(s8);
 
     // 初期ストリームデータ読み込み
+#ifdef MIYA_MEM_FILE
+    (void)MY_FS_SeekFile(&strm->file, (s32)strm->beginPos, FS_SEEK_SET);
+#else
     (void)FS_SeekFile(&strm->file, (s32)strm->beginPos, FS_SEEK_SET);
+#endif
     strm->bufPage = 0;
     ReadStrmData(strm);
     ReadStrmData(strm);
@@ -182,8 +395,15 @@ static void PlayStream(StreamInfo * strm, const char *filename)
 static void StopStream(StreamInfo * strm)
 {
     SND_StopTimer((1 << L_CHANNEL) | (1 << R_CHANNEL), 0, 1 << ALARM_NUM, 0);
-    if (FS_IsFile(&strm->file))
+#ifdef MIYA_MEM_FILE
+    if (MY_FS_IsFile(&strm->file)) {
+        (void)MY_FS_CloseFile(&strm->file);
+    }
+#else
+    if (FS_IsFile(&strm->file)) {
         (void)FS_CloseFile(&strm->file);
+    }
+#endif
     strm->isPlay = FALSE;
 }
 
@@ -243,7 +463,6 @@ static void ReadStrmData(StreamInfo * strm)
     if (strm->dataSize <= 0)
     {
         StopStream(strm);
-	//	OS_TPrintf("Stop stream\n");
         return;
     }
 
@@ -265,10 +484,17 @@ static void ReadStrmData(StreamInfo * strm)
     if (strm->format.channels == 1)
     {
         // モノラル
+#ifdef MIYA_MEM_FILE
+        readSize = MY_FS_ReadFile(&strm->file,
+                               strm_tmp,
+                               (strm->dataSize <
+                                STRM_BUF_PAGESIZE) ? strm->dataSize : STRM_BUF_PAGESIZE);
+#else
         readSize = FS_ReadFile(&strm->file,
                                strm_tmp,
                                (strm->dataSize <
                                 STRM_BUF_PAGESIZE) ? strm->dataSize : STRM_BUF_PAGESIZE);
+#endif
         if (readSize == -1)
             OS_Panic("read file end\n");
 
@@ -300,10 +526,18 @@ static void ReadStrmData(StreamInfo * strm)
     else
     {
         // ステレオ
+#ifdef MIYA_MEM_FILE
+        readSize = MY_FS_ReadFile(&strm->file,
+                               strm_tmp,
+                               (strm->dataSize <
+                                STRM_BUF_PAGESIZE * 2) ? strm->dataSize : STRM_BUF_PAGESIZE * 2);
+
+#else
         readSize = FS_ReadFile(&strm->file,
                                strm_tmp,
                                (strm->dataSize <
                                 STRM_BUF_PAGESIZE * 2) ? strm->dataSize : STRM_BUF_PAGESIZE * 2);
+#endif
         if (readSize == -1)
             OS_Panic("read file end\n");
 
@@ -357,22 +591,45 @@ static BOOL ReadWaveFormat(StreamInfo * strm)
     u32     tag;
     s32     size;
     BOOL    fFmt = FALSE, fData = FALSE;
-
+#ifdef MIYA_MEM_FILE
+    (void)MY_FS_SeekFileToBegin(&strm->file);
+    (void)MY_FS_ReadFile(&strm->file, &tag, 4);
+#else
     (void)FS_SeekFileToBegin(&strm->file);
-
     (void)FS_ReadFile(&strm->file, &tag, 4);
-    if (tag != FOURCC_RIFF)
+#endif
+    if (tag != FOURCC_RIFF) {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
         return FALSE;
+    }
 
+#ifdef MIYA_MEM_FILE
+    (void)MY_FS_ReadFile(&strm->file, &size, 4);
+    (void)MY_FS_ReadFile(&strm->file, &tag, 4);
+#else
     (void)FS_ReadFile(&strm->file, &size, 4);
-
     (void)FS_ReadFile(&strm->file, &tag, 4);
-    if (tag != FOURCC_WAVE)
-        return FALSE;
+#endif
 
+    if (tag != FOURCC_WAVE) {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+        return FALSE;
+    }
     while (size > 0)
     {
         s32     chunkSize;
+#ifdef MIYA_MEM_FILE
+        if (MY_FS_ReadFile(&strm->file, &tag, 4) == -1)
+        {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+            return FALSE;
+        }
+        if (MY_FS_ReadFile(&strm->file, &chunkSize, 4) == -1)
+        {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+            return FALSE;
+        }
+#else
         if (FS_ReadFile(&strm->file, &tag, 4) == -1)
         {
             return FALSE;
@@ -381,24 +638,42 @@ static BOOL ReadWaveFormat(StreamInfo * strm)
         {
             return FALSE;
         }
-
+#endif
         switch (tag)
         {
         case FOURCC_fmt:
+#ifdef MIYA_MEM_FILE
+            if (MY_FS_ReadFile(&strm->file, (u8 *)&strm->format, chunkSize) == -1)
+            {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+                return FALSE;
+            }
+#else
             if (FS_ReadFile(&strm->file, (u8 *)&strm->format, chunkSize) == -1)
             {
                 return FALSE;
             }
+#endif
             fFmt = TRUE;
             break;
         case FOURCC_data:
+#ifdef MIYA_MEM_FILE
+            strm->beginPos = MY_FS_GetPosition(&strm->file);
+            strm->dataSize = chunkSize;
+            (void)MY_FS_SeekFile(&strm->file, chunkSize, FS_SEEK_CUR);
+#else
             strm->beginPos = FS_GetPosition(&strm->file);
             strm->dataSize = chunkSize;
             (void)FS_SeekFile(&strm->file, chunkSize, FS_SEEK_CUR);
+#endif
             fData = TRUE;
             break;
         default:
+#ifdef MIYA_MEM_FILE
+            (void)MY_FS_SeekFile(&strm->file, chunkSize, FS_SEEK_CUR);
+#else
             (void)FS_SeekFile(&strm->file, chunkSize, FS_SEEK_CUR);
+#endif
             break;
         }
         if (fFmt && fData)
@@ -409,7 +684,9 @@ static BOOL ReadWaveFormat(StreamInfo * strm)
         size -= chunkSize;
     }
 
-    if (size != 0)
+    if (size != 0) {
+OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
         return FALSE;
+    }
     return TRUE;
 }

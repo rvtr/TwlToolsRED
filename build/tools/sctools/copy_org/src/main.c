@@ -53,7 +53,11 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
     mprintf("SD card:removed!\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
+    text_blink_clear(tc[0]);
+    if( completed_flag == FALSE ) {
+      text_blink_current_line(tc[0]);
+      mprintf("insert SD card\n");
+    }
   }
   else if (event == FS_EVENT_MEDIA_INSERTED) {
     sd_card_flag = TRUE;
@@ -61,11 +65,12 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
       m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
       mprintf("SD card:inserted!\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      text_blink_clear(tc[0]);
+      text_blink_current_line(tc[0]);
       mprintf("press A button to start BACKUP\n");
     }
   }
 }
-
 
 static MyData mydata;
 
@@ -332,17 +337,6 @@ static BOOL SDBackupToSDCard8(void)
   RTCTime rtc_time;
 
   /* オリジナルのデータのバックアップ */
-  if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
-    mydata.shop_record_flag = TRUE;
-    OS_TPrintf("shop record exist - you don't have to connect the network.\n");
-    mprintf(" (--shop record exist--)\n");
-  }
-  else {
-    mydata.shop_record_flag = FALSE;
-    OS_TPrintf("no shop record\n - you don't have to connect the network.\n");
-    mprintf(" (--no shop record--)\n");
-  }
-
   if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
     mprintf("rtc read date error.\n");
   }
@@ -392,13 +386,15 @@ static int function_counter = 0;
 static void MyThreadProc(void *arg)
 {
 #pragma unused(arg)
-  BOOL flag;
   OSMessage message;
+  BOOL flag;
+  BOOL twl_card_validation_flag;
+
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
-
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
     flag = TRUE;
+    twl_card_validation_flag = TRUE;
     MyFile_SetPathBase("sdmc:/");
     MyFile_AddPathBase((const char *)hws_info.serialNo );
     MyFile_AddPathBase("/");
@@ -410,11 +406,6 @@ static void MyThreadProc(void *arg)
     mprintf("\n");
     if( flag == TRUE ) {
       completed_flag = TRUE;
-#if 0
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("Backup succeded.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-#endif
       if( TRUE == stream_play_is_end() ) {
 	stream_play0();
       }
@@ -424,15 +415,25 @@ static void MyThreadProc(void *arg)
       mprintf("Pull out DS(DSi) & SD CARDs!\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       while( 1 ) {
-	if( (FALSE == SDCardValidation()) && (FALSE == TWLCardValidation()) ) {
+	if( twl_card_validation_flag == TRUE ) {
+	  /* なぜか一回しかかからないので・・ */
+	  if( FALSE == TWLCardValidation() ) {
+	    twl_card_validation_flag = FALSE;
+	    mprintf("DS(DSi)CARD pulled out\n");
+	  }
+	}
+
+	if( (FALSE == twl_card_validation_flag) && (FALSE == SDCardValidation()) ) {
 	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
 	  mprintf("Backup completed.\n");
 	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
 	  if( TRUE == stream_play_is_end() ) {
-	    stream_play1();
+	    stream_play1(); /* ok.aiff */
 	  }
+
 	  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+	  OS_Sleep(200000);
 	  break; 
 	}
 	OS_Sleep(200);
@@ -445,7 +446,7 @@ static void MyThreadProc(void *arg)
       mprintf("Backup failed.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       if( TRUE == stream_play_is_end() ) {
-	stream_play2();
+	stream_play2(); /* ng.aiff */
       }
       Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
     }
@@ -455,7 +456,8 @@ static void MyThreadProc(void *arg)
 
 static BOOL myTWLCardCallback( void )
 {
-  return FALSE; // means that not terminate
+
+  return FALSE; // means that not terminate.
 }
 
 
@@ -474,6 +476,7 @@ void TwlMain(void)
   u8 macAddress[6];
   u16 s_major, s_minor;
   u32 s_timestamp;
+  ESError es_error_code;
 
   OS_Init();
   OS_InitThread();
@@ -537,19 +540,6 @@ void TwlMain(void)
   // 必須：ES の初期化
   ES_InitLib();
 
-  if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("rtc date read error.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
-  }
-  if( RTC_RESULT_SUCCESS != RTC_GetTime( &rtc_time ) ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("rtc time read error.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-  }
-
-
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
     m_set_palette(tc[0], 0x1);	/* red  */
     mprintf("HW Normal Info. read error.\n");
@@ -563,8 +553,6 @@ void TwlMain(void)
     m_set_palette(tc[0], 0xF);	/* white */
   }
 
-
-
   // region
   mydata.region = LCFG_THW_GetRegion();
   // ES Device ID
@@ -574,20 +562,73 @@ void TwlMain(void)
 
   OS_GetMacAddress( macAddress );
 
-  mydata.shop_record_flag = CheckShopRecord( hws_info.region, NULL );
+  // typedef s32 ESError;
+  // ESError ES_GetDeviceId(ESId* devId);
+  /*
+    #define ES_ERR_OK                                   0
+    #define ES_ERR_INCORRECT_CERT_TYPE                  -1001
+    #define ES_ERR_GENKEY_FAILED                        -1002
+    #define ES_ERR_VERIFY_SIG_FAILED                    -1003
+    #define ES_ERR_CANNOT_OPEN_FILE                     -1004
+    #define ES_ERR_INCORRECT_PUBKEY_TYPE                -1005
+    #define ES_ERR_CERT_ISSUER_MISMATCH                 -1006
+    #define ES_ERR_ENCRYPTION_FAILED                    -1007
+    #define ES_ERR_FILE_OPEN_FAILED                     -1008
+    #define ES_ERR_FILE_READ_FAILED                     -1009
+    #define ES_ERR_FILE_WRITE_FAILED                    -1010
+    #define ES_ERR_TMD_NUM_CONTENTS                     -1011
+    #define ES_ERR_INCORRECT_SIG_TYPE                   -1012
+    #define ES_ERR_INCORRECT_SIG_LENGTH                 -1013
+    #define ES_ERR_INCORRECT_CERT_LENGTH                -1014
+    #define ES_ERR_DEV                                  -1015
+    #define ES_ERR_MAXFD                                -1016
+    #define ES_ERR_INVALID                              -1017
+    #define ES_ERR_FS_CONNECTION_FAILED                 -1018
+    #define ES_ERR_UNSUPPORTED_TRANSFER_SOURCE          -1019
+    #define ES_ERR_DEVICE_ID_MISMATCH                   -1020
+    #define ES_ERR_INCORRECT_CONTENT_SIZE               -1021
+    #define ES_ERR_HASH_MISMATCH                        -1022
+    #define ES_ERR_INCORRECT_CONTENT_COUNT              -1023
+    #define ES_ERR_OUT_OF_MEMORY                        -1024
+    #define ES_ERR_NO_TMD_FILE                          -1025
+    #define ES_ERR_NO_RIGHT                             -1026
+    #define ES_ERR_ISSUER_NOT_FOUND                     -1027
+    #define ES_ERR_NO_TICKET                            -1028
+    #define ES_ERR_INCORRECT_TICKET                     -1029
+    #define ES_ERR_NOT_ENOUGH_SPACE                     -1030
+    #define ES_ERR_INCORRECT_BOOT_VERSION               -1031
+    #define ES_ERR_UNKNOWN                              -1032
+    #define ES_ERR_EXPIRED                              -1033
+    #define ES_ERR_UNUSED                               -1034
+    #define ES_ERR_INCORRECT_TITLE_VERSION              -1035
+    #define ES_ERR_OS_TICKET_NOEXISTS                   -1036
+    #define ES_ERR_OS_CONTENT_NOEXISTS                  -1037
+    #define ES_ERR_NOT_EMPTY                            -1038
+    // Game is a disc/nand game, but a tmd was not supplied by caller
+    #define ES_ERR_DISC_NAND_NO_TMD                     -1039
+    #define ES_ERR_NOEXISTS                             -106    Does not exist ISFS_ERROR_NOEXISTS
 
+  */
+
+
+  es_error_code = ES_GetDeviceId(&mydata.deviceId);
+  if( es_error_code == ES_ERR_OK ) {
+    mydata.shop_record_flag = TRUE;
+  }
+  else {
+    OS_TPrintf("es_error_code = %d\n", es_error_code );
+    mydata.shop_record_flag = FALSE;
+  }
+  
+  // (void)CheckShopRecord( hws_info.region, NULL );
+  
   if( TRUE == mydata.shop_record_flag ) {
-    if( TRUE == ES_GetDeviceId(&mydata.deviceId) ) {
-      snprintf(mydata.bmsDeviceId, sizeof(mydata.bmsDeviceId), "%lld", ((0x3ull << 32) | mydata.deviceId));
-      OS_TPrintf("DeviceID:  %08X %u\n", mydata.deviceId, mydata.deviceId);
-      OS_TPrintf("           %s\n", mydata.bmsDeviceId);
-    }
+    snprintf(mydata.bmsDeviceId, sizeof(mydata.bmsDeviceId), "%lld", ((0x3ull << 32) | mydata.deviceId));
+    // OS_TPrintf("DeviceID:  %08X %u\n", mydata.deviceId, mydata.deviceId);
+    OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
 
-  
   mprintf("\n");
-  mprintf("press A button to start BACKUP\n\n");
-
 
   if( FALSE == SDCardValidation() ) {
     sd_card_flag = FALSE;
@@ -604,24 +645,30 @@ void TwlMain(void)
 
   FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
-
+  mydata.version_major = MY_DATA_VERSION_MAJOR;
+  mydata.version_minor = MY_DATA_VERSION_MINOR;
 
   init_my_thread();
 
-#if 0 /* 自動スタートはいらない */
   if( sd_card_flag == TRUE ) {
-    (void)start_my_thread();
+    text_blink_current_line(tc[0]);
+    mprintf("press A button to start BACKUP\n\n");
   }
-#endif
+  else {
+    text_blink_current_line(tc[0]);
+    mprintf("insert SD card\n");
+  }
+
 
   if( TRUE == stream_play_is_end() ) {
-    stream_play0();
+    stream_play0(); /* cursor.aiff */
   }
 
   while( 1 ) {
     OS_WaitVBlankIntr();
     Gfx_Render( vram_num_main , vram_num_sub );
     (void)RTC_GetTime( &rtc_time );
+    (void)RTC_GetDate( &rtc_date );
 
     keyData = m_get_key_trigger();
 
@@ -631,7 +678,6 @@ void TwlMain(void)
       }
     // コマンドフラッシュ（フラッシュして即座に実行を要求）
     (void)SND_FlushCommand(SND_COMMAND_NOBLOCK | SND_COMMAND_IMMEDIATE);
-
 
     if ( keyData & PAD_BUTTON_R ) {
 #ifdef LCD_UPPER_LOWER_FLIP
@@ -655,17 +701,18 @@ void TwlMain(void)
       }
 #endif
     }
-
-
     else if ( keyData & PAD_BUTTON_A ) {
       /* ユーザーデータ吸出しモード */
       if(completed_flag == FALSE ) {
 	if( sd_card_flag == TRUE ) {
+	  text_blink_clear(tc[0]);
 	  if( FALSE == start_my_thread() ) {
 	    OS_TPrintf("\nnow backup..\n\n");
 	  }
 	}
 	else {
+	  text_blink_clear(tc[0]);
+	  text_blink_current_line(tc[0]);
 	  mprintf("insert SD card\n");
 	}
       }
@@ -705,7 +752,7 @@ void TwlMain(void)
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
     mfprintf(tc[1], "\fRepaire Tool BACKUP");
     m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
-    mfprintf(tc[1], "  ver. 0.0 \n");
+    mfprintf(tc[1], "  ver.%d.%d \n",MY_DATA_VERSION_MAJOR , MY_DATA_VERSION_MINOR );
     mfprintf(tc[1], "   build:%s %s\n\n",__DATE__,__TIME__);
 
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
@@ -751,19 +798,17 @@ void TwlMain(void)
 	     macAddress[2], macAddress[3], macAddress[4], macAddress[5]);
     mfprintf(tc[1],"\n\n");
 
-
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
-    mfprintf(tc[1],"Shop record: ");
+    mfprintf(tc[1],"Device ID: ");
     m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
     if( TRUE == mydata.shop_record_flag ) {
-      mfprintf(tc[1],"exist.\n");
-      m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
-      mfprintf(tc[1],"Device ID: ");
-      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
       mfprintf(tc[1],"%s\n", mydata.bmsDeviceId);
     }
     else {
-      mfprintf(tc[1],"none.\n");
+      //      mfprintf(tc[1],"none.\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+      mfprintf(tc[1],"-----------\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
     }
     mfprintf(tc[1],"\n");
 

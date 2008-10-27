@@ -27,7 +27,7 @@ TWL_CODEGEN					?=	ALL
 
 SRCS			=	main.c overwriteRtc.c
 
-TARGET_NAME		=	my_armadillo
+TARGET_NAME		=	armadillo
 
 TARGET_NEF		=	$(TARGET_NAME).tef
 LCFILE_SPEC		=	$(TARGET_NAME).lsf

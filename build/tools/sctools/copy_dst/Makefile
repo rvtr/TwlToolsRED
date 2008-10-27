@@ -30,6 +30,7 @@ SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
 
 TARGET_BIN		=	copy_dst.srl
 ROM_SPEC		=	copy_dst.rsf
+TARGET_AUTOBOOT		=	./bin/$(TWL_BUILDTYPE)/copy_dst_autoboot.srl
 
 
 ES_DIR			=	$(ROOT)/add-ins/es
@@ -64,9 +65,11 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 MAKEROM_ROMROOT  = ../files
 MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav
 
-
+MY_TWL_COMPONENTSDIR	= ../my_armadillo.TWL/bin
 COMPONENT_NAME      =   armadillo
-MAKEROM_ARM7_BASE   =   $(TWL_COMPONENTSDIR)/$(COMPONENT_NAME)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
+
+# MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(COMPONENT_NAME)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
+MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
 MAKEROM_ARM7        =   $(MAKEROM_ARM7_BASE).$(TWL_ELF_EXT)
 
 
@@ -84,7 +87,10 @@ MAKEROM			 := $(TWL_TOOLSDIR)/bin/makerom.TWL.secure.exe
 
 #----------------------------------------------------------------------------
 
-do-build:		$(TARGETS)
+$(TARGET_AUTOBOOT): ./bin/$(TWL_BUILDTYPE)/$(TARGET_BIN)
+		../bin/FakeRomHeader.secure.exe  -c -f $< $@
+
+do-build:		$(TARGETS) $(TARGET_AUTOBOOT)
 
 #----------------------------------------------------------------------------
 

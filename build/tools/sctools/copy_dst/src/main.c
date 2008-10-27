@@ -773,7 +773,7 @@ void TwlMain(void)
   reboot_flag = OS_IsRebooted();
   /* デバッグのために今だけ強制的にオン(UPDATE mode) */
   /* miya */
-  reboot_flag = TRUE;
+  //  reboot_flag = TRUE;
 
 
   if( FALSE == SDCardValidation() ) {
@@ -892,6 +892,9 @@ void TwlMain(void)
 
   }
   else {
+    // 不要：NAM の初期化
+    NAM_Init(&AllocForNAM, &FreeForNAM);
+
     /* 書き戻し過程 */
     if( sd_card_flag == TRUE ) {
       text_blink_current_line(tc[0]);

@@ -438,7 +438,8 @@ BOOL SetupEC(void)
   //#define EC_LOG_FINER      5
   //#define EC_LOG_FINEST     6
 
-  logLevel = EC_LOG_FINEST;
+  //  logLevel = EC_LOG_FINEST;
+  logLevel = EC_LOG_FINE;
   // logLevel = EC_LOG_NONE;
 
   LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");

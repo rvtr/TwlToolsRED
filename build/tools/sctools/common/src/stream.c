@@ -259,7 +259,7 @@ void stream_main(void)
     }
     readSize = 0;
 
-    OS_TPrintf("%s %d Readfile %s len=%d\n",__FUNCTION__,__LINE__,myfsfile[i].path, myfsfile[i].length);
+    //    OS_TPrintf("%s %d Readfile %s len=%d\n",__FUNCTION__,__LINE__,myfsfile[i].path, myfsfile[i].length);
     readSize = FS_ReadFile(&(myfsfile[i].file), myfsfile[i].data, (int)myfsfile[i].length );
     if( readSize != myfsfile[i].length ) {
       OS_TPrintf("Failed Read File: %s %s %d\n",myfsfile[i].path, __FUNCTION__,__LINE__);

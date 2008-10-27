@@ -27,6 +27,9 @@
 #ifdef SDK_RELEASE
 #define ECDL_LOG(msg)   OS_TPrintf("ECDL-LOG: %s\n", msg);
 #endif
+#ifdef SDK_FINALROM
+#define ECDL_LOG(msg)   OS_TPrintf("ECDL-LOG: %s\n", msg);
+#endif
 
 
 

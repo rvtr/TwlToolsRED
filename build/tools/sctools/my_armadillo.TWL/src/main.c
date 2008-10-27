@@ -80,6 +80,27 @@ static s32          CheckCorrectNCD(NVRAMConfig* ncdsp);
 #endif
 static void         VBlankIntr(void);
 
+
+#define MIYA_MCU_FREE_REG_NO   1
+#define MIYA_MCU_FREE_REG_CODE 0x55
+static u8 miya_mcu_free_register = 0x66;
+
+
+static void miya_mcu_free_reg_send_pxi_data(u32 data)
+{
+  while (PXI_SendWordByFifo(PXI_FIFO_TAG_USER_0, data, FALSE) != PXI_FIFO_SUCCESS) {
+    // do nothing
+  }
+}
+
+
+static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
+{
+#pragma unused(tag)
+#pragma unused(err)
+  miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+}
+
 /*---------------------------------------------------------------------------*
   Name:         TwlSpMain
   Description:  起動ベクタ。
@@ -129,6 +150,14 @@ TwlSpMain(void)
     RTC_Init(THREAD_PRIO_RTC);                  // RTC
     WVR_Begin(heapHandle);                      // NITRO 無線
     SPI_Init(THREAD_PRIO_SPI);
+
+
+    miya_mcu_free_register = MCU_GetFreeRegister( (u8)MIYA_MCU_FREE_REG_NO );
+
+    (void)MCU_SetFreeRegister( (u8)MIYA_MCU_FREE_REG_NO , (u8)MIYA_MCU_FREE_REG_CODE );
+
+    PXI_SetFifoRecvCallback(PXI_FIFO_TAG_USER_0, miya_mcu_free_reg_pxi_callback);
+
 
     while (TRUE)
     {

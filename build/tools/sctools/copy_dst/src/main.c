@@ -47,10 +47,13 @@
 
 //================================================================================
 
+#define MIYA_MCU 1
+
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
-static BOOL reboot_flag = FALSE;
+//static BOOL reboot_flag = FALSE;
+static volatile BOOL reboot_flag;
 
 static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
 
@@ -569,6 +572,7 @@ static void MyThreadProc(void *arg)
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
     flag = TRUE;
+    twl_card_validation_flag = TRUE;
     /* MydataLoadはすでにやっているのでいらない。 */
     for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
       if( FALSE == (function_table[function_counter])() ) {
@@ -705,6 +709,27 @@ static BOOL myTWLCardCallback( void )
   return FALSE; // means that not terminate.
 }
 
+#ifdef MIYA_MCU
+
+static volatile u8 miya_mcu_free_register = 0x44;
+
+static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
+{
+#pragma unused(tag)
+#pragma unused(err)
+  miya_mcu_free_register = (u8)(0xff & data);
+}
+
+static void miya_mcu_free_reg_send_pxi_data(u32 data)
+{
+    while (PXI_SendWordByFifo(PXI_FIFO_TAG_USER_0, data, FALSE) != PXI_FIFO_SUCCESS)
+    {
+        // do nothing
+    }
+}
+#endif
+
+
 void TwlMain(void)
 {
   void* newArenaLo;
@@ -725,6 +750,7 @@ void TwlMain(void)
   BOOL MydataLoadDecrypt_message_flag = TRUE;
   BOOL MydataLoadDecrypt_dir_flag = TRUE;
   BOOL MydataLoadDecrypt_success_flag = TRUE;
+
 
   OS_Init();
   OS_InitThread();
@@ -771,6 +797,20 @@ void TwlMain(void)
   SEA_Init();
 
   reboot_flag = OS_IsRebooted();
+  /* OS_IsRebootedなんかおかしい・・ */
+
+
+#ifdef MIYA_MCU
+  PXI_SetFifoRecvCallback(PXI_FIFO_TAG_USER_0, miya_mcu_free_reg_pxi_callback);
+  miya_mcu_free_reg_send_pxi_data( 0 );
+
+  if( miya_mcu_free_register == 0x55 ) {
+    reboot_flag = TRUE;
+  }
+  else {
+    reboot_flag = FALSE;    
+  }
+#endif
   /* デバッグのために今だけ強制的にオン(UPDATE mode) */
   /* miya */
   //  reboot_flag = TRUE;
@@ -785,8 +825,8 @@ void TwlMain(void)
   else {
     sd_card_flag = TRUE;
   }
-  FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
+  FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
 
   if( FALSE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -799,6 +839,7 @@ void TwlMain(void)
 
 
   ES_InitLib();
+
 
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
     m_set_palette(tc[0], 0x1);	/* red  */
@@ -839,17 +880,28 @@ void TwlMain(void)
     OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
 
+  //   mprintf("mcu reg 0x%02X\n", miya_mcu_free_register );
 
 
+#ifdef MIYA_MCU
+  if( miya_mcu_free_register == 0x55 ) {
+    reboot_flag = TRUE;
+  }
+  else {
+    reboot_flag = FALSE;    
+  }
+#endif
 
-
+#if 1
   (void)m_get_key_trigger();
   keyData = m_get_key_code();
   if ( keyData & PAD_BUTTON_X ) {
     reboot_flag = TRUE;
   }
+#endif
 
   if( FALSE == reboot_flag ) {
+    mprintf("Network update mode\n");
     /* 最初はネットワークアップデート。 */
 
     //  NSSL_Init(&s_sslConfig);
@@ -875,14 +927,9 @@ void TwlMain(void)
 
     init_my_thread_nuc();
 
-
-#if 0 /* 自動スタートはいらない */
-    if( sd_card_flag == TRUE ) {
-      start_my_thread();
-    }
-#endif
     if( sd_card_flag == TRUE ) {
       text_blink_current_line(tc[0]);
+      /* 自動スタートはいらない */
       mprintf("press A button to start UPDATE\n\n");
     }
     else {
@@ -892,7 +939,8 @@ void TwlMain(void)
 
   }
   else {
-    // 不要：NAM の初期化
+    mprintf("user data restore mode\n");
+    // NAM の初期化
     NAM_Init(&AllocForNAM, &FreeForNAM);
 
     /* 書き戻し過程 */

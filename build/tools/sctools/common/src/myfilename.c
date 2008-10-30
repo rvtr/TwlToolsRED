@@ -15,6 +15,28 @@ void MyFile_AddPathBase(const char *str)
   STD_StrCat( path_base , str );
 }
 
+char *MyFile_GetProductLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_PRODUCT_LOG );
+  return path;
+}
+
+char *MyFile_GetSystemMenuLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_SHOP_LOG );
+  return path;
+}
+
+char *MyFile_GetShopLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_SYSMENU_LOG );
+  return path;
+}
+
+
 char *MyFile_GetUniqueIDFileName(void)
 {
   STD_StrCpy( path , path_base );

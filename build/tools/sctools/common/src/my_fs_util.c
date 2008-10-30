@@ -289,7 +289,7 @@ static BOOL SaveFile(const char* path, void* pData, u32 size, FSFile *log_fd)
   return TRUE;
 }
 
-static BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd )
+BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd )
 {
   char *alloc_ptr = NULL;
   int alloc_size = 0;
@@ -1566,6 +1566,7 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
 #endif
   FS_InitFile(&f);
 
+#if 0
   STD_StrCpy(path, "nand:/sys/dev.kp");
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
   if( ! bSuccess ) {
@@ -1576,7 +1577,7 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     return FALSE;
   }
   (void)FS_CloseFile(&f);
-
+#endif
   
 #if 0
   // CopyFile( dst <= src );
@@ -2216,6 +2217,7 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 
   return ret_value;
 }
+
 
 void write_debug_data(void)
 {

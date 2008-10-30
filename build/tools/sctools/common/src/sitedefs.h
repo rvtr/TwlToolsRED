@@ -26,6 +26,7 @@ extern "C" {
 #define SITEDEFS_DEFAULTCLASS_FOR_TEST      "WiFi.LAN.1.AP.1"
 void    SiteDefs_Init(void);
 BOOL ENV_SetBinary(const char *name, void *ptr);
+BOOL ENV_SetBinary2(const char *name, void *ptr, u32 length);
 BOOL ENV_SetString(const char *name, char *str);
 BOOL ENV_SetU8(const char *name, u8 val);
 

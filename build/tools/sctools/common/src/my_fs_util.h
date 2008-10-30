@@ -49,6 +49,8 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size);
 BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd);
 BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd);
 
+BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );
+
 #ifdef __cplusplus
 }
 #endif

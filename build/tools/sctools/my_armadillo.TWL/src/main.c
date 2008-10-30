@@ -93,12 +93,43 @@ static void miya_mcu_free_reg_send_pxi_data(u32 data)
   }
 }
 
+#define MIYA_MCU_COMMAND_GET_FREE_REG   1
+#define MIYA_MCU_COMMAND_GET_VOLUME     2
+#define MIYA_MCU_COMMAND_GET_BRIGHTNESS 3
+#define MIYA_MCU_COMMAND_SET_VOLUME     4
+#define MIYA_MCU_COMMAND_SET_BRIGHTNESS 5
 
 static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
 {
 #pragma unused(tag)
 #pragma unused(err)
-  miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+  
+  switch( (data & 0xf) ) {
+  case MIYA_MCU_COMMAND_GET_FREE_REG:
+    miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+    break;
+  case MIYA_MCU_COMMAND_GET_VOLUME:
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_GetVolume() );
+    break;
+    
+  case MIYA_MCU_COMMAND_GET_BRIGHTNESS:
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_GetBackLightBrightness() );
+    break;
+    
+  case MIYA_MCU_COMMAND_SET_VOLUME:
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetVolume( (u8)((data >> 4) & 0xf)) );
+    break;
+    
+  case MIYA_MCU_COMMAND_SET_BRIGHTNESS:
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetBackLightBrightness(  (u8)((data >> 4) & 0xf) ));
+    break;
+    
+  default:
+    miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+    break;
+  }    
+
+
 }
 
 /*---------------------------------------------------------------------------*

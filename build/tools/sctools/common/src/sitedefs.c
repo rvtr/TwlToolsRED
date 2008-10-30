@@ -24,6 +24,40 @@
    c:/twlsdk/include/nitro/env/env_system.h
 */
 
+BOOL ENV_SetBinary2(const char *name, void *ptr, u32 length)
+{
+  ENVResource *resSetPtr;
+  ENVResource *p = ENVi_Search(name, &resSetPtr);
+  u16 len = 1;
+
+  if (!p) {
+    return FALSE;
+    }
+    
+  if (p->type != ENV_RESTYPE_BINARY) {
+    return FALSE;
+  }
+
+  len = (u16)(p->len - ((p->type == ENV_RESTYPE_STRING) ? 1 : 0));
+  OS_TPrintf("env bin len = %d\n", len);
+
+
+  if (p->type & ENV_RESTYPE_OFFSET_MASK)
+    {
+      //      return (void *)((u32)resSetPtr + (u32)(p->ptr));
+      //      (char *)((u32)resSetPtr + (u32)(p->ptr)) = val;
+      STD_CopyMemory( (void *)((u32)resSetPtr + (u32)(p->ptr)) , ptr, length );
+    }
+  else
+    {
+      //      return p->ptr;
+      // (char *)p->ptr = val;
+      //      STD_CopyMemory( (void *)(p->ptr) , ptr , (u32)len );
+      STD_CopyMemory( (void *)(p->ptr) , ptr , length );
+    }
+  return TRUE;
+}
+
 BOOL ENV_SetBinary(const char *name, void *ptr)
 {
   ENVResource *resSetPtr;
@@ -57,6 +91,7 @@ BOOL ENV_SetBinary(const char *name, void *ptr)
     }
   return TRUE;
 }
+
 
 BOOL ENV_SetString(const char *name, char *str)
 {

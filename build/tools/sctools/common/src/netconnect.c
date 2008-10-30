@@ -64,7 +64,35 @@ void NcGlobalInit()
     (void)OS_EnableInterrupts();
 }
 
-#ifndef SDK_WIFI_INET
+#if 0
+typedef struct
+{
+    BOOL    use_dhcp;           // if TRUE, use dhcp
+    struct
+    {
+        SOCLInAddr  my_ip;
+        SOCLInAddr  net_mask;
+        SOCLInAddr  gateway_ip;
+        SOCLInAddr  dns_ip[2];
+    } host_ip;
+    void*  (*alloc) (u32);
+    void (*free) (void*);
+
+    u32     cmd_packet_max;     // コマンドパケットの最大数
+    u32     lan_buffer_size;    // 0 なら *alloc で自力確保
+    void*   lan_buffer;         // 0 なら default(16384)設定
+
+    // CPS スレッドの優先度
+    // 0 なら SOCL_CPS_SOCKET_THREAD_PRIORITY
+    s32     cps_thread_prio;
+
+    // 通信バッファサイズ
+    s32     mtu;                //default 1500
+    s32     rwin;
+} SOCLConfig;
+
+#endif
+
 static void ncStartWiFi(void)
 {
     int result;
@@ -81,6 +109,8 @@ static void ncStartWiFi(void)
     if (OS_IsRunOnTwl())
     {
         static SOCLConfig  socl_config;
+
+
         MI_CpuClear8(&socl_config, sizeof(socl_config));
         
         socl_config.alloc = myAlloc_SOCL;
@@ -90,6 +120,17 @@ static void ncStartWiFi(void)
         socl_config.lan_buffer_size = SOCL_LAN_BUFFER_SIZE_DEFAULT * 8;
         socl_config.mtu = 1400;
         socl_config.rwin = 65535;
+
+
+
+
+	socl_config.use_dhcp = GetDhcpMODE();
+	socl_config.host_ip.gateway_ip = GetGateway();
+	socl_config.host_ip.net_mask = GetNetmask();
+	socl_config.host_ip.my_ip =  GetIPAddr();
+	socl_config.host_ip.dns_ip[0] = GetDNS1();
+	socl_config.host_ip.dns_ip[1] = GetDNS2();
+	
         
         OS_TPrintf("SOCL_Startup....\n");
         result = SOCL_Startup(&socl_config);
@@ -109,7 +150,9 @@ static void ncStartWiFi(void)
     }
     if (result < 0)
     {
-        OS_Panic("SOC_Startup failed (%d)", result);
+        OS_TPrintf("SOC_Startup failed (%d)", result);
+        mprintf("SOC_Startup failed (%d)", result);
+	return;
     }
     g_started = TRUE;
     OS_TPrintf("DHCP....\n");
@@ -136,116 +179,7 @@ static void ncFinishWiFi(void)
     }
 }
 
-#else // SDK_WIFI_INET
 
-static void ncStartInet(void)
-{
-    int result;
-    SOConfig    soConfig =
-    {
-        SO_VENDOR_NINTENDO,     // vendor
-        SO_VERSION,             // version
-
-        NcAlloc,                // alloc
-        NcFree,                 // free
-
-        SO_FLAG_DHCP,           // flag
-        SO_HtoNl(SO_INADDR_ANY),// addr
-        SO_HtoNl(SO_INADDR_ANY),// netmask
-        SO_HtoNl(SO_INADDR_ANY),// router
-        SO_HtoNl(SO_INADDR_ANY),// dns1
-        SO_HtoNl(SO_INADDR_ANY),// dns1
-        4096,                   // timeWaitBuffer
-        4096,                   // reassemblyBuffer
-        0,                      // maximum transmission unit size
-
-        // TCP
-        16384,                  // default TCP receive window size (default 2 x MSS)
-        0,                      // default TCP total retransmit timeout value (default 100 sec)
-
-        // PPP      PPP関連機能は未実装
-        NULL,
-        NULL,
-
-        // PPPoE    PPP関連機能は未実装
-        NULL,
-
-        // DHCP
-        "NINTENDO-DS",          // DHCP host name
-        4,                      // TCP total retransmit times (default 4)
-
-        // UDP
-        0,                      // default UDP send buffer size (default 1472)
-        0                       // defualt UDP receive buffer size (default 4416)
-    };
-
-#ifdef SDK_TWL
-    if (OS_IsRunOnTwl())
-    {
-        soConfig.rwin = 65535;
-    }
-#endif // SDK_TWL
-
-    OS_TPrintf("SO_Startup....\n");
-    result = SO_Startup(&soConfig);
-    if (result < 0)
-    {
-        OS_Panic("SO_Startup failed (%d)", result);
-    }
-    g_started = TRUE;
-    
-    OS_TPrintf("DHCP....\n");
-
-    while (SO_GetHostID() == 0 && IP_GetConfigError(NULL) == 0)
-    {
-        OS_Sleep(100);
-    }
-
-    if (SO_GetHostID() != 0)
-    {
-        int retry = 0;
-		u8 ip[ IP_ALEN ];
-
-		IP_GetAddr( NULL, ip );
-		OS_Printf("IP addr = %3d.%3d.%3d.%3d\n", ip[0], ip[1], ip[2], ip[3] );
-		IP_GetNetmask ( NULL, ip );
-		OS_Printf("NetMask = %3d.%3d.%3d.%3d\n", ip[0], ip[1], ip[2], ip[3] );
-		IP_GetGateway ( NULL, ip );
-		OS_Printf("GW addr = %3d.%3d.%3d.%3d\n", ip[0], ip[1], ip[2], ip[3] );
-    }
-    else
-    {
-        OS_TPrintf("NO DHCP SERVER or NO LINK....\n");
-
-        switch (IP_GetConfigError(NULL))
-        {
-        case IP_ERR_DHCP_TIMEOUT:
-            OS_Panic("IP_ERR_DHCP_TIMEOUT\n");
-            break;
-
-        case IP_ERR_LINK_DOWN:
-            OS_Panic("IP_ERR_LINK_DOWN\n");
-            break;
-
-        default:
-            OS_Panic("Default???\n");
-            break;
-        }
-    }
-
-}
-
-static void ncFinishInet(void)
-{
-    previousAddr = SO_GetHostID();
-    if (g_started)
-    {
-        (void)SO_Cleanup();
-        g_started = FALSE;
-    }
-}
-
-#endif // SDK_WIFI_INET
 
 /*---------------------------------------------------------------------------*
   Name        : NcStart
@@ -257,25 +191,38 @@ void NcStart(const char* apClass)
 {
   int counter = 0;
   s32 wcm_phase;
-
+  int len;
+  u8 key_bin_buf[MAX_KEY_BIN_BUF];
 
   SiteDefs_Init();
 
-    if( FALSE == ENV_SetBinary("WiFi.LAN.1.AP.1.WEP.KEY", (void *)GetWlanKEYSTR()) ) {
-      OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
-    }
+ if( TRUE == GetKeyModeStr() ) {
+   if( FALSE == ENV_SetBinary("WiFi.LAN.1.AP.1.WEP.KEY", (void *)GetWlanKEYSTR()) ) {
+     OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+   }
+ }
+ else {
+   STD_MemSet((void *)key_bin_buf, 0, MAX_KEY_BIN_BUF );
+   len = GetWlanKEYBIN(key_bin_buf);
+   if( len ) {
+     if( FALSE == ENV_SetBinary2("WiFi.LAN.1.AP.1.WEP.KEY", (void *)key_bin_buf, (u32)len) ) {
+       OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+     }
+   }
+ }
 
-    if( FALSE == ENV_SetString("WiFi.LAN.1.AP.1.ESSID", GetWlanSSID()) ) {
-      OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
-    }
-
-    if( FALSE == ENV_SetU8("WiFi.LAN.1.AP.1.WEP.MODE", (u8)GetWlanMode() ) ) {
-      OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
-    }
-
-    if (!InitWcmApInfo(&apInfo, apClass))
+ if( FALSE == ENV_SetString("WiFi.LAN.1.AP.1.ESSID", GetWlanSSID()) ) {
+   OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+ }
+ 
+ if( FALSE == ENV_SetU8("WiFi.LAN.1.AP.1.WEP.MODE", (u8)GetWlanMode() ) ) {
+   OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+ }
+ 
+ if (!InitWcmApInfo(&apInfo, apClass))
     {
-        OS_Panic("Invalid AP Class....");
+        mprintf("Invalid AP Class....");
+        OS_TPrintf("Invalid AP Class....");
     }
 
     while (1) {
@@ -352,21 +299,14 @@ void NcStart(const char* apClass)
     OS_TPrintf("connected\n");
     mprintf(" connected\n");
 
-#ifndef SDK_WIFI_INET
     ncStartWiFi();
-#else // SDK_WIFI_INET
-    ncStartInet();
-#endif // SDK_WIFI_INET
 
 }
 
 void NcFinish()
 {
-#ifndef SDK_WIFI_INET
+
     ncFinishWiFi();
-#else // SDK_WIFI_INET
-    ncFinishInet();
-#endif // SDK_WIFI_INET
 }
 
 void NcSetDevice(u8 deviceId)

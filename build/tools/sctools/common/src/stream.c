@@ -1,5 +1,9 @@
 #include <twl.h>
 #include "stream.h"
+#include        "font.h"
+#include        "text.h"
+#include        "mprintf.h"
+
 
 #define MIYA_MEM_FILE 1
 
@@ -334,7 +338,9 @@ static void PlayStream(StreamInfo * strm, const char *filename)
     }
 
     if ( ! MY_FS_OpenFile(&strm->file, filename) ) {
-      OS_Panic("Error: failed to open file %s\n", filename);
+      OS_TPrintf("Error: failed to open file %s\n", filename);
+      mprintf("Error: failed to open file %s\n", filename);
+      return;
     }
 #else
     // ƒtƒ@ƒCƒ‹‘–¸
@@ -342,12 +348,16 @@ static void PlayStream(StreamInfo * strm, const char *filename)
         (void)FS_CloseFile(&strm->file);
     }
     if ( ! FS_OpenFile(&strm->file, filename) ) {
-        OS_Panic("Error: failed to open file %s\n", filename);
+        OS_TPrintf("Error: failed to open file %s\n", filename);
+        mprintf("Error: failed to open file %s\n", filename);
+	return;
     }
 #endif
     if (!ReadWaveFormat(strm))
     {
-        OS_Panic("Error: failed to read wavefile\n");
+      OS_TPrintf("Error: failed to read wavefile\n");
+      mprintf("Error: failed to read wavefile\n");
+      return;
     }
 
     strm->isPlay = TRUE;
@@ -495,8 +505,11 @@ static void ReadStrmData(StreamInfo * strm)
                                (strm->dataSize <
                                 STRM_BUF_PAGESIZE) ? strm->dataSize : STRM_BUF_PAGESIZE);
 #endif
-        if (readSize == -1)
-            OS_Panic("read file end\n");
+        if (readSize == -1) {
+	  OS_TPrintf("read file end\n");
+	  mprintf("read file end\n");
+	  return;
+	}
 
         if (strm->format.bitPerSample == 16)
         {
@@ -538,8 +551,11 @@ static void ReadStrmData(StreamInfo * strm)
                                (strm->dataSize <
                                 STRM_BUF_PAGESIZE * 2) ? strm->dataSize : STRM_BUF_PAGESIZE * 2);
 #endif
-        if (readSize == -1)
-            OS_Panic("read file end\n");
+        if (readSize == -1) {
+	  OS_TPrintf("read file end\n");
+	  mprintf("read file end\n");
+	  return;
+	}
 
         if (strm->format.bitPerSample == 16)
         {

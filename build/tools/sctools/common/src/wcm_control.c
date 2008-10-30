@@ -21,6 +21,11 @@
 #include "ap_info.h"
 #include "sitedefs.h"
 #include "netconnect.h"
+#include "mywlan.h"
+
+#include        "font.h"
+#include        "text.h"
+#include        "mprintf.h"
 
 /*---------------------------------------------------------------------------*
     定数 定義
@@ -703,8 +708,9 @@ static s32 CallFunction(s16 notifyId)
              * WCM を使い始める前に WVR ライブラリを使って ARM7 側無線ドライバを
              * 起動させる必要があるが、それはアプリケーションの責任で行うべきこと。
              */
-            OS_Panic("ARM7 WM library is not ready.\n");
-
+	  OS_TPrintf("ARM7 WM library is not ready.\n");
+	  mprintf("ARM7 WM library is not ready.\n");
+	  return WCM_RESULT_FATAL_ERROR;
         case WCM_RESULT_NOT_ENOUGH_MEM: // 非同期関数にこの返り値が返されることは無い
         case WCM_RESULT_FATAL_ERROR:
         default:
@@ -883,14 +889,16 @@ BOOL InitWcmApInfo(WcmControlApInfo* apinfo, const char* apclass)
             if(apinfo->wepDesc.mode > WCM_WEPMODE_128 ) /* WPA */
             {
                 u8 psk[WCM_WPA_PSK_SIZE];
-                if (WCM_GetWPAPSK(apinfo->wepDesc.key, apinfo->essId, (u8)STD_GetStringLength((const char*)apinfo->essId), psk) == FALSE)
-                {
-                    OS_TWarning("PreSharedKey Calculation Error.\n");
-                    return FALSE;
-                }
-                MI_CpuClear8(apinfo->wepDesc.key, sizeof(apinfo->wepDesc.key));
-                MI_CpuCopy8(psk, apinfo->wepDesc.key, WCM_WPA_PSK_SIZE);
-
+		if( TRUE == GetKeyModeStr() ) {
+		  if (WCM_GetWPAPSK(apinfo->wepDesc.key, apinfo->essId, 
+				    (u8)STD_GetStringLength((const char*)apinfo->essId), psk) == FALSE)
+		    {
+		      OS_TWarning("PreSharedKey Calculation Error.\n");
+		      return FALSE;
+		    }
+		  MI_CpuClear8(apinfo->wepDesc.key, sizeof(apinfo->wepDesc.key));
+		  MI_CpuCopy8(psk, apinfo->wepDesc.key, WCM_WPA_PSK_SIZE);
+		}
                 apinfo->wepDesc.keyId = 32;
             }
 #endif

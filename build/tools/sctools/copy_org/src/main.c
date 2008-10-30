@@ -32,6 +32,7 @@
 #include        "mywlan.h"
 #include        "mydata.h"
 #include        "nuc.h"
+#include        "miya_mcu.h"
 
 #include        "myfilename.h"
 #include        "menu_version.h"
@@ -337,12 +338,21 @@ static BOOL SDBackupToSDCard8(void)
   RTCDate rtc_date;
   RTCTime rtc_time;
 
+
   /* オリジナルのデータのバックアップ */
   if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
     mprintf("rtc read date error.\n");
+    mydata.rtc_date_flag = FALSE;
+  }
+  else {
+    mydata.rtc_date_flag = TRUE;
   }
   if( RTC_RESULT_SUCCESS != RTC_GetTime( &rtc_time ) ) {
     mprintf("rtc read time error.\n");
+    mydata.rtc_time_flag = FALSE;
+  }
+  else {
+    mydata.rtc_time_flag = TRUE;
   }
 
   STD_CopyMemory( (void *)&(mydata.rtc_date), (void *)&rtc_date, sizeof(RTCDate) );
@@ -399,6 +409,12 @@ static void MyThreadProc(void *arg)
     MyFile_SetPathBase("sdmc:/");
     MyFile_AddPathBase((const char *)hws_info.serialNo );
     MyFile_AddPathBase("/");
+
+    (void)CopyFile(MyFile_GetProductLogFileName(), "nand:/sys/log/"MY_FILE_NAME_PRODUCT_LOG , NULL);
+    (void)CopyFile(MyFile_GetSystemMenuLogFileName(), "nand:/sys/log/"MY_FILE_NAME_SYSMENU_LOG , NULL);
+    (void)CopyFile(MyFile_GetShopLogFileName(), "nand:/sys/log/"MY_FILE_NAME_SHOP_LOG , NULL);
+
+
     for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
       if( FALSE == (function_table[function_counter])() ) {
 	flag = FALSE;
@@ -524,6 +540,9 @@ void TwlMain(void)
   // 必須；SEA の初期化
   SEA_Init();
 
+  MIYA_MCU_Init();
+
+  OS_TPrintf("MCU Free Reg. 0x%02x\n",MCU_GetFreeReg());
 
   if( FALSE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -542,9 +561,13 @@ void TwlMain(void)
   ES_InitLib();
 
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
+    mydata.uniqueid_flag = FALSE;
     m_set_palette(tc[0], 0x1);	/* red  */
     mprintf("HW Normal Info. read error.\n");
     m_set_palette(tc[0], 0xF);
+  }
+  else {
+    mydata.uniqueid_flag = TRUE;
   }
 
   //  mprintf("HW Secure Info. read ");
@@ -611,17 +634,19 @@ void TwlMain(void)
 
   */
 
-
+  mydata.shop_record_flag = FALSE;
   es_error_code = ES_GetDeviceId(&mydata.deviceId);
   if( es_error_code == ES_ERR_OK ) {
-    mydata.shop_record_flag = TRUE;
+    if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
+      mydata.shop_record_flag = TRUE;
+    }
+    else {
+      mprintf("no ec.cfg file\n");
+    }
   }
   else {
     OS_TPrintf("es_error_code = %d\n", es_error_code );
-    mydata.shop_record_flag = FALSE;
   }
-  
-  // (void)CheckShopRecord( hws_info.region, NULL );
   
   if( TRUE == mydata.shop_record_flag ) {
     snprintf(mydata.bmsDeviceId, sizeof(mydata.bmsDeviceId), "%lld", ((0x3ull << 32) | mydata.deviceId));
@@ -630,6 +655,19 @@ void TwlMain(void)
   }
 
   mprintf("\n");
+
+  mydata.volume = (s32)MCU_GetVolume();
+  mydata.backlight_brightness = (s32)MCU_GetBackLightBrightness();
+
+  OS_TPrintf("vol = %d\n",mydata.volume );
+  OS_TPrintf("bright = %d\n", mydata.backlight_brightness);
+
+  MCU_SetVolume( (u8)31 );
+  MCU_SetBackLightBrightness( (u8)4 );
+
+
+  // static inline BOOL MCU_SetVolume( u8 volume )
+  // static inline BOOL MCU_SetBackLightBrightness( u8 brightness )
 
   if( FALSE == SDCardValidation() ) {
     sd_card_flag = FALSE;

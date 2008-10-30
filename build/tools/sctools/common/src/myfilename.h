@@ -32,12 +32,22 @@
 #define MY_FILE_NAME_ORG_RESTORE_LOG ("personal_rst.txt")
 
 
+#define MY_FILE_NAME_PRODUCT_LOG "product.log"
+#define MY_FILE_NAME_SHOP_LOG    "sysmenu.log"
+#define MY_FILE_NAME_SYSMENU_LOG "shop.log"
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void MyFile_SetPathBase(const char *str);
 void MyFile_AddPathBase(const char *str);
+
+
+char *MyFile_GetProductLogFileName(void);
+char *MyFile_GetSystemMenuLogFileName(void);
+char *MyFile_GetShopLogFileName(void);
 
 char *MyFile_GetUniqueIDFileName(void);
 char *MyFile_GetWifiParamFileName(void);

@@ -39,6 +39,7 @@
 #include        "wcm_control.h"
 #include        "nuc.h"
 #include        "mynuc.h"
+#include        "miya_mcu.h"
 
 #include        "myfilename.h"
 #include        "mfiler.h"
@@ -47,8 +48,11 @@
 
 //================================================================================
 
-#define MIYA_MCU 1
+// #define MIYA_MCU 1
 
+static BOOL no_reboot_flag = FALSE;
+static BOOL only_wifi_config_data_trans_flag = FALSE;
+static BOOL user_and_wifi_config_data_trans_flag = FALSE;
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
@@ -159,47 +163,57 @@ static BOOL RestoreFromSDCard1(void)
      したがって MyData mydata にはデータが入っている。
   */
   // static BOOL SDBackupToSDCard8(void)
-  mprintf("RTC data restore             ");
-  if( RTC_RESULT_SUCCESS != RTC_SetDate( &(mydata.rtc_date) ) ) {
-    flag = FALSE;
-  }
-  if( RTC_RESULT_SUCCESS != RTC_SetTime( &(mydata.rtc_time) ) ) {
-    flag = FALSE;
-  }
-
-  if( flag == TRUE ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-    mprintf("OK.\n");
+  if( (mydata.rtc_date_flag == TRUE) && (mydata.rtc_time_flag == TRUE) ) {
+    mprintf("RTC data restore             ");
+    if( RTC_RESULT_SUCCESS != RTC_SetDate( &(mydata.rtc_date) ) ) {
+      flag = FALSE;
+    }
+    if( RTC_RESULT_SUCCESS != RTC_SetTime( &(mydata.rtc_time) ) ) {
+      flag = FALSE;
+    }
+    if( flag == TRUE ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED ); /* red  */
+      mprintf("NG.\n");
+    }
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
   else {
-    m_set_palette(tc[0], M_TEXT_COLOR_RED ); /* red  */
-    mprintf("NG.\n");
+    //    mprintf("RTC data restore             ");
+    mprintf("No original RTC data\n");
+    flag = TRUE;
   }
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
   return flag;
 }
 
 static BOOL RestoreFromSDCard2(void)
 {
-  mprintf("Unique ID restore            ");
-  /* すでにブート時に一度 hwn_info はリードしている。 */
-  STD_CopyMemory( (void *)hwn_info.movableUniqueID, (void *)(mydata.movableUniqueID),
-		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
-
-  if ( LCFGi_THW_WriteNormalInfoDirect( &hwn_info )) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( mydata.uniqueid_flag == TRUE ) {
+    mprintf("Unique ID restore            ");
+    /* すでにブート時に一度 hwn_info はリードしている。 */
+    STD_CopyMemory( (void *)hwn_info.movableUniqueID, (void *)(mydata.movableUniqueID),
+		    LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
+    
+    if ( LCFGi_THW_WriteNormalInfoDirect( &hwn_info )) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      // error
+      m_set_palette(tc[0], M_TEXT_COLOR_RED ); /* red  */
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+    return TRUE;
   }
-  else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED ); /* red  */
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
-  }
+  mprintf("No original Unique ID\n");
   return TRUE;
+
 }
 
 
@@ -315,27 +329,35 @@ static BOOL LoadWlanConfig(void)
     mfprintf(tc[3],"MODE = ");
 
     switch( GetWlanMode() ) {
-    case 1:
+    case WCM_WEPMODE_NONE:
       OS_TPrintf("NONE\n");
       mfprintf(tc[3],"NONE\n");
       break;
-    case 2:
+    case WM_WEPMODE_40BIT:
       OS_TPrintf("WEP128\n");
       mfprintf(tc[3],"WEP128\n");
       break;
-    case 3:
+    case WM_WEPMODE_104BIT:
+      OS_TPrintf("WEP128\n");
+      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WM_WEPMODE_128BIT:
+      OS_TPrintf("WEP128\n");
+      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WCM_WEPMODE_WPA_TKIP:
       OS_TPrintf("WPA-TKIP\n");
       mfprintf(tc[3],"WPA-TKIP\n");
       break;
-    case 4:
+    case WCM_WEPMODE_WPA2_TKIP:
       OS_TPrintf("WPA2-TKIP\n");
       mfprintf(tc[3],"WPA2-TKIP\n");
       break;
-    case 5:
+    case WCM_WEPMODE_WPA_AES:
       OS_TPrintf("WPA-AES\n");
       mfprintf(tc[3],"WPA-AES\n");
       break;
-    case 6:
+    case WCM_WEPMODE_WPA2_AES :
       OS_TPrintf("WPA2-AES\n");
       mfprintf(tc[3],"WPA2-AES\n");
       break;
@@ -344,20 +366,54 @@ static BOOL LoadWlanConfig(void)
       mfprintf(tc[3],"Unknow mode..\n");
       break;
     }
-    OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
-    mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
 
-    len = GetWlanKEYBIN(buf);
-    if( len ) {
-      OS_TPrintf("KEY BIN = 0x");
-      mfprintf(tc[3],"KEY BIN = 0x");
-      for( i = 0 ; i < len ; i++ ) {
-	OS_TPrintf("%02X",buf[i]);
-	mfprintf(tc[3],"%02X",buf[i]);
-      }
-      OS_TPrintf("\n");
-      mfprintf(tc[3],"\n");
+    if( TRUE == GetKeyModeStr() ) {
+      OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
+      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
     }
+    else {
+      len = GetWlanKEYBIN(buf);
+      if( len ) {
+	OS_TPrintf("KEY BIN = 0x");
+	mfprintf(tc[3],"KEY BIN = 0x");
+	for( i = 0 ; i < len ; i++ ) {
+	  OS_TPrintf("%02X",buf[i]);
+	  mfprintf(tc[3],"%02X",buf[i]);
+	}
+	OS_TPrintf("\n");
+	mfprintf(tc[3],"\n");
+      }
+    }
+    mfprintf(tc[3],"\n");
+
+    if( TRUE == GetDhcpMODE() ) {
+      mfprintf(tc[3],"DHCP client\n");
+    }
+    else {
+      u32 addr_temp;
+      addr_temp = GetIPAddr();
+      mfprintf(tc[3],"IP addr %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetNetmask();
+      mfprintf(tc[3],"netmask %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetGateway();
+      mfprintf(tc[3],"gateway %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetDNS1();
+      mfprintf(tc[3],"DNS1    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetDNS2();
+      mfprintf(tc[3],"DNS2    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+    }
+    mfprintf(tc[3],"\n");
+
+
   }
   else {
     OS_TPrintf("Invalid wlan cfg file\n");
@@ -606,6 +662,12 @@ static void MyThreadProc(void *arg)
 	    stream_play1(); /* ok.aiff */
 	  }
 	  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+	  OS_Sleep(2000);
+	  (void)MCU_SetVolume((u8)(mydata.volume));
+	  (void)MCU_SetBackLightBrightness((u8)(mydata.backlight_brightness));
+	  OS_TPrintf("vol = %d\n",mydata.volume );
+	  OS_TPrintf("bright = %d\n", mydata.backlight_brightness);
+
 	  OS_Sleep(200000);
 	  break; 
 	}
@@ -656,16 +718,27 @@ static void MyThreadProcNuc(void *arg)
 	  stream_play0(); /* cursor.aiff */
 	}
 	/* ハードウェアリセットを行い、自分自身を起動します。 */
-	mprintf("\n");
-	text_blink_current_line(tc[0]);
-	mprintf("press A button to start RESTORE\n\n");
-
-	while( 1 ) {
-	  keyData = m_get_key_code();
-	  if ( keyData & PAD_BUTTON_A ) {
-	    OS_RebootSystem();
+	if( no_reboot_flag == FALSE ) {
+	  mprintf("\n");
+	  text_blink_current_line(tc[0]);
+	  mprintf("press A button to start RESTORE\n\n");
+	  while( 1 ) {
+	    keyData = m_get_key_code();
+	    if ( keyData & PAD_BUTTON_A ) {
+	      OS_RebootSystem();
+	    }
+	    OS_Sleep(20);
 	  }
-	  OS_Sleep(20);
+	}
+	else {
+	  mprintf("\n");
+	  // text_blink_current_line(tc[0]);
+	  while( 1 ) {
+	    keyData = m_get_key_code();
+	    if ( keyData & PAD_BUTTON_A ) {
+	    }
+	    OS_Sleep(20);
+	  }
 	}
       }
       else {
@@ -708,26 +781,6 @@ static BOOL myTWLCardCallback( void )
 {
   return FALSE; // means that not terminate.
 }
-
-#ifdef MIYA_MCU
-
-static volatile u8 miya_mcu_free_register = 0x44;
-
-static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
-{
-#pragma unused(tag)
-#pragma unused(err)
-  miya_mcu_free_register = (u8)(0xff & data);
-}
-
-static void miya_mcu_free_reg_send_pxi_data(u32 data)
-{
-    while (PXI_SendWordByFifo(PXI_FIFO_TAG_USER_0, data, FALSE) != PXI_FIFO_SUCCESS)
-    {
-        // do nothing
-    }
-}
-#endif
 
 
 void TwlMain(void)
@@ -800,21 +853,32 @@ void TwlMain(void)
   /* OS_IsRebootedなんかおかしい・・ */
 
 
-#ifdef MIYA_MCU
-  PXI_SetFifoRecvCallback(PXI_FIFO_TAG_USER_0, miya_mcu_free_reg_pxi_callback);
-  miya_mcu_free_reg_send_pxi_data( 0 );
+  MIYA_MCU_Init();
 
-  if( miya_mcu_free_register == 0x55 ) {
+  OS_TPrintf("MCU Free Reg. 0x%02x\n", MCU_GetFreeReg());
+  if( MCU_GetFreeReg() == 0x55 ) {
     reboot_flag = TRUE;
   }
   else {
     reboot_flag = FALSE;    
   }
-#endif
+
   /* デバッグのために今だけ強制的にオン(UPDATE mode) */
   /* miya */
   //  reboot_flag = TRUE;
 
+#if 0
+  /*
+    static inline u8 MCU_GetVolume( void )
+    static inline BOOL MCU_SetVolume( u8 volume )
+    static inline u8 MCU_GetBackLightBrightness( void )
+    static inline BOOL MCU_SetBackLightBrightness( u8 brightness )
+  */
+#endif
+
+  MCU_SetVolume( (u8)31 );
+  MCU_SetBackLightBrightness( (u8)4 );
+    
 
   if( FALSE == SDCardValidation() ) {
     sd_card_flag = FALSE;
@@ -881,10 +945,9 @@ void TwlMain(void)
   }
 
   //   mprintf("mcu reg 0x%02X\n", miya_mcu_free_register );
-
-
-#ifdef MIYA_MCU
-  if( miya_mcu_free_register == 0x55 ) {
+#if 0
+  OS_TPrintf("MCU Free Reg. 0x%02x\n",MCU_GetFreeReg());
+  if( MCU_GetFreeReg() == 0x55 ) {
     reboot_flag = TRUE;
   }
   else {
@@ -897,6 +960,20 @@ void TwlMain(void)
   keyData = m_get_key_code();
   if ( keyData & PAD_BUTTON_X ) {
     reboot_flag = TRUE;
+  }
+  else if( keyData & PAD_BUTTON_Y ) {
+    no_reboot_flag = TRUE;
+    mprintf("no_reboot_flag ON\n");
+  }
+  else if( keyData & PAD_BUTTON_B ) {
+    reboot_flag = TRUE;
+    only_wifi_config_data_trans_flag = TRUE;
+    mprintf("only_wifi_config_data_trans ON\n");
+  }
+  else if( keyData & (PAD_BUTTON_START | PAD_BUTTON_SELECT) ) {
+    reboot_flag = TRUE;
+    user_and_wifi_config_data_trans_flag = TRUE;
+    mprintf("user_and_wifi_config_data ON\n");
   }
 #endif
 
@@ -1012,48 +1089,65 @@ void TwlMain(void)
 	      MyFile_AddPathBase((const char *)MFILER_GetCursorEntryPath( &mfiler_list_head ) );
 	      MyFile_AddPathBase("/");
 
-	      mprintf("Personal data. restore       ");
-	      MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
-								  &mydata, sizeof(MyData), NULL);
-	      if(TRUE == MydataLoadDecrypt_success_flag ) {
-		if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
-		  m_set_palette(tc[0], M_TEXT_COLOR_RED );
-		  mprintf("NG.\n");
-		  m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		  mprintf(" illegal format version.\n");
-		  mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
-			  mydata.version_major,mydata.version_minor);
-		  m_set_palette(tc[0], 0xF);	/* white */
-		  MydataLoadDecrypt_message_flag = FALSE;
-  		}
-		else if( mydata.version_minor != MY_DATA_VERSION_MINOR ) {
-		  m_set_palette(tc[0], M_TEXT_COLOR_RED );
-		  mprintf("NG.\n");
-		  m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		  mprintf(" illegal format version.\n");
-		  mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
-			  mydata.version_major,mydata.version_minor);
-		  m_set_palette(tc[0], 0xF);	/* white */
-		  MydataLoadDecrypt_message_flag = FALSE;
-		}
-		else {
-		  m_set_palette(tc[0], 0x2);	/* green  */
-		  mprintf("OK.\n");
-		  m_set_palette(tc[0], 0xF);	/* white */
-
-		  vram_num_sub = 0;
-		  MydataLoadDecrypt_message_flag = TRUE;
-		  MydataLoadDecrypt_dir_flag = TRUE;
-		  MydataLoadDecrypt_success_flag = TRUE;
-		  start_my_thread();
-		}
-
+	      if( only_wifi_config_data_trans_flag == TRUE ) {
+		/* 無線設定のみリストアする */
+		vram_num_sub = 0;
+		MydataLoadDecrypt_message_flag = TRUE;
+		MydataLoadDecrypt_dir_flag = TRUE;
+		MydataLoadDecrypt_success_flag = TRUE;
+		(void)RestoreFromSDCard3();
 	      }
-	      else {	
-		m_set_palette(tc[0], 0x1);	/* red  */
-		mprintf("NG.\n");
-		m_set_palette(tc[0], 0xF);	/* white */
-		MydataLoadDecrypt_message_flag = FALSE;
+	      else if( user_and_wifi_config_data_trans_flag == TRUE ) {
+		vram_num_sub = 0;
+		MydataLoadDecrypt_message_flag = TRUE;
+		MydataLoadDecrypt_dir_flag = TRUE;
+		MydataLoadDecrypt_success_flag = TRUE;
+		(void)RestoreFromSDCard4();
+		(void)RestoreFromSDCard3();
+	      }
+	      else {
+		mprintf("Personal data. restore       ");
+		MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
+								    &mydata, sizeof(MyData), NULL);
+		if(TRUE == MydataLoadDecrypt_success_flag ) {
+		  if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
+		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+		    mprintf("NG.\n");
+		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+		    mprintf(" illegal format version.\n");
+		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
+			    mydata.version_major,mydata.version_minor);
+		    m_set_palette(tc[0], 0xF);	/* white */
+		    MydataLoadDecrypt_message_flag = FALSE;
+		  }
+		  else if( mydata.version_minor != MY_DATA_VERSION_MINOR ) {
+		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+		    mprintf("NG.\n");
+		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+		    mprintf(" illegal format version.\n");
+		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
+			    mydata.version_major,mydata.version_minor);
+		    m_set_palette(tc[0], 0xF);	/* white */
+		    MydataLoadDecrypt_message_flag = FALSE;
+		  }
+		  else {
+		    m_set_palette(tc[0], 0x2);	/* green  */
+		    mprintf("OK.\n");
+		    m_set_palette(tc[0], 0xF);	/* white */
+
+		    vram_num_sub = 0;
+		    MydataLoadDecrypt_message_flag = TRUE;
+		    MydataLoadDecrypt_dir_flag = TRUE;
+		    MydataLoadDecrypt_success_flag = TRUE;
+		    start_my_thread();
+		  }
+		}
+		else {	
+		  m_set_palette(tc[0], 0x1);	/* red  */
+		  mprintf("NG.\n");
+		  m_set_palette(tc[0], 0xF);	/* white */
+		  MydataLoadDecrypt_message_flag = FALSE;
+		}
 	      }
 	    }
 	    else {
@@ -1062,7 +1156,6 @@ void TwlMain(void)
 		stream_play2();	/* ng.aiff */
 	      }
 	      MydataLoadDecrypt_message_flag = FALSE;
-
 	    }
 	  }
 	}

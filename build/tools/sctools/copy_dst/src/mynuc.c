@@ -127,6 +127,7 @@ NucStatus ProgressNupCheck(void)
     {
       // NUC_GetProgress() failed in checking, error code=34303
         OS_TPrintf("NUC_GetProgress() failed in checking, error code=%d\n", NUC_GetLastError());
+        mprintf("NUC_GetProgress() failed in checking\n error code=%d\n", NUC_GetLastError());
     }
     if (TestState.count++ % STRING_ANIM_CNT == 0)
     {

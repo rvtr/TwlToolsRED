@@ -3,6 +3,7 @@
 #include "text.h"
 
 #define TAB_SIZE 8
+#define Y_LINE_VIRTUAL_MAX (Y_LINE_MAX*10)
 /*****************************************************/
 
 static LINE_BUF *lb_free_ptr;
@@ -125,7 +126,8 @@ static void init_text_buf(TEXT_BUF *tb)
   tb->num_y = &y_size;
   tb->num_x = &x_size;
   tb->virtual_x = LINE_BUF_X_SIZE - X_LINE_MAX - 1;
-  tb->virtual_y = Y_LINE_MAX * 4;
+  //  tb->virtual_y = Y_LINE_MAX * 4;
+  tb->virtual_y = Y_LINE_VIRTUAL_MAX;
   tb->start = tb->cur = alloc_line_buf();
   tb->display_offset_y = 0;
   tb->display_offset_x = 0;

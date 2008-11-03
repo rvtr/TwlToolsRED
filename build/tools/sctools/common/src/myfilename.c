@@ -58,6 +58,30 @@ char *MyFile_GetUserSettingsFileName(void)
   return path;
 }
 
+
+char *MyFile_GetUserAppTitleListLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_USER_APP_TITLE_LIST_LOG );
+  return path;
+}
+
+char *MyFile_GetNupLogFileName(void)
+{
+  STD_StrCpy( path , "sdmc:/" );
+  STD_StrCat( path , MY_FILE_NAME_NUP_LOG);
+  return path;
+}
+
+char *MyFile_GetEcDownloadLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_EC_DOWNLOAD_LOG );
+  return path;
+}
+
+
+
 char *MyFile_GetAppSharedSaveDirName(void)
 {
   STD_StrCpy( path , path_base );
@@ -78,6 +102,14 @@ char *MyFile_GetAppSharedRestoreLogFileName(void)
   STD_StrCat( path_log , MY_FILE_NAME_APP_SHARED_RESTORE_LOG );  
   return path_log;
 }
+
+char *MyFile_GetAppSharedSaveLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_APP_SHARED_SAVE_LOG );  
+  return path_log;
+}
+
 
 char *MyFile_GetAppSharedListFileName(void)
 {
@@ -107,6 +139,13 @@ char *MyFile_GetPhotoRestoreLogFileName(void)
   return path_log;
 }
 
+char *MyFile_GetPhotoSaveLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_PHOTO_SAVE_LOG );
+  return path_log;
+}
+
 char *MyFile_GetPhotoListFileName(void)
 {
   STD_StrCpy( path , path_base );
@@ -114,31 +153,46 @@ char *MyFile_GetPhotoListFileName(void)
   return path;
 }
 
-char *MyFile_GetAppDataSaveDirName(void)
+char *MyFile_GetSaveDataSaveDirName(void)
 {
   STD_StrCpy( path , path_base );
-  STD_StrCat( path , MY_DIR_NAME_TITLE );
+  STD_StrCat( path , MY_DIR_NAME_SAVE_DATA );
   return path;
 }
 
-char *MyFile_GetAppDataLogFileName(void)
+char *MyFile_GetSaveDataLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , MY_FILE_NAME_TITLE_LOG );
+  STD_StrCat( path_log , MY_FILE_NAME_SAVE_DATA_LOG );
   return path_log;
 }
 
-char *MyFile_GetAppDataRestoreLogFileName(void)
+char *MyFile_GetSaveDataRestoreLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , MY_FILE_NAME_TITLE_RESTORE_LOG );
+  STD_StrCat( path_log , MY_FILE_NAME_SAVE_DATA_RESTORE_LOG );
   return path_log;
 }
 
-char *MyFile_GetAppDataListFileName(void)
+char *MyFile_GetSaveDataSaveLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_SAVE_DATA_SAVE_LOG );
+  return path_log;
+}
+
+char *MyFile_GetSaveDataListFileName(void)
 {
   STD_StrCpy( path , path_base );
-  STD_StrCat( path , MY_FILE_NAME_TITLE_LIST );
+  STD_StrCat( path , MY_FILE_NAME_SAVE_DATA_LIST );
+  return path;
+}
+
+
+char *MyFile_GetSaveDataListLogFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_SAVE_DATA_LIST_LOG );
   return path;
 }
 
@@ -150,6 +204,13 @@ char *MyFile_GetDownloadTitleIDLogFileName(void)
 }
 
 char *MyFile_GetDownloadTitleIDRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG );
+  return path_log;
+}
+
+char *MyFile_GetDownloadTitleIDSaveLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
   STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG );
@@ -184,4 +245,9 @@ char *MyFile_GetGlobalInformationRestoreFileName(void)
   return path;
 }
 
-
+char *MyFile_GetGlobalInformationSaveFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_ORG_SAVE_LOG );
+  return path;
+}

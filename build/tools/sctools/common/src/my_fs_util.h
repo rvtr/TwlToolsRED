@@ -22,8 +22,6 @@ s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size);
 
 int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, 
 			 const char *path_src, int *save_dir_info, char *log_file_name , int level);
-int find_copy( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src,
-	       char *extension, int max_level, int *save_info, char *log_file_name , int level);
 int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name, int level );
 int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, 
 		 int *save_parent_dir_info_flag, char *log_file_name, int level );
@@ -32,24 +30,37 @@ void PrintDirEntryListForward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd);
 
-int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path );
-BOOL RestoreDirEntryList( char *path, char *log_file_name);
+BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, int *error_count, char *log_file_name);
+BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int *error_count);
+BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int *list_count, int *error_count);
+
+BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name);
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp );
+
 void write_debug_data(void);
+
 BOOL SDCardValidation(void);
 BOOL TWLCardValidation(void);
 BOOL CheckShopRecord(u8 region, FSFile *log_fd);
-BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
-BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
+  //BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
+  //BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
 
 BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd);
 BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
 
-void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size);
-BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd);
-BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd);
+
+BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name);
+BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name);
 
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );
+
+void Log_File_Close(FSFile *log_fd);
+BOOL Log_File_Open(FSFile *log_fd, const char *log_file_name);
+
+
+void Miya_debug_OFF(void);
+void Miya_debug_ON(void);
+
 
 #ifdef __cplusplus
 }

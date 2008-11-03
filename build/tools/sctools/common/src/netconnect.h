@@ -18,6 +18,11 @@
 #ifndef NITROWIFI_DEMOS_NETCONNECT_H_
 #define NITROWIFI_DEMOS_NETCONNECT_H_
 
+
+#define NC_ERROR_TIMEOUT 1
+#define NC_ERROR_INVALID_AP_CLASS 2
+#define NC_ERROR_LINKDOWN 3
+
 #ifdef __cplusplus
 
 extern "C"
@@ -25,7 +30,7 @@ extern "C"
 #endif
 
 void    NcGlobalInit(void);
-void    NcStart(const char* apClass);
+int    NcStart(const char* apClass);
 void    NcFinish(void);
 void    NcSetDevice(u8 deviceId);
 void*   NcAlloc(u32 name, s32 size);

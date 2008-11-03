@@ -11,8 +11,16 @@
 
 #include        "text.h"
 #include        "mprintf.h"
+#include        "logprintf.h"
+#include        "my_fs_util.h"
 
 #define STRING_ANIM_CNT 20
+
+
+static BOOL log_active = FALSE;
+static FSFile *log_fd;
+static FSFile log_fd_real;
+
 
 static volatile NetConnectState NetConnect = NET_CONNECT_NONE;
 
@@ -59,7 +67,10 @@ static void *alloc(u32 size, int align)
     (void)OS_RestoreInterrupts( old );
 
   end:
-    SDK_ASSERT(((u32)ptr & (align - 1)) == 0);
+    //    SDK_ASSERT(((u32)ptr & (align - 1)) == 0);
+    if( ((u32)ptr & (align - 1)) != 0 ) {
+      return NULL;
+    }
     return (void *) ptr;
 }
 
@@ -73,6 +84,7 @@ static void free(void *p)
   Name:         InitNupLib
   Description:  NUCライブラリを開始します。
  *---------------------------------------------------------------------------*/
+
 BOOL InitNupLib()
 {
   BOOL ret;
@@ -88,8 +100,10 @@ BOOL InitNupLib()
 
   if (ret == FALSE) {
     // NUC_Init() failed, error code=34416
-    OS_TPrintf("NUC_Init() failed, error code=%d\n", NUC_GetLastError());
-    OS_TPrintf(" error type:%s\n", error_msg[ NUC_GetErrorType(NUC_GetLastError())] );
+    miya_log_fprintf(log_fd, "NUC_Init() failed, error code=%d\n", NUC_GetLastError());
+    miya_log_fprintf(log_fd, " error type:%s\n", error_msg[ NUC_GetErrorType(NUC_GetLastError())] );
+    mprintf("NUC_Init() failed, error code=%d\n", NUC_GetLastError());
+    mprintf(" error type:%s\n", error_msg[ NUC_GetErrorType(NUC_GetLastError())] );
   }
   return ret;
 }
@@ -106,7 +120,8 @@ BOOL StartNupCheck(void)
     ret = NUC_CheckAsync(TitleIds, &TitleIdNum);
     if (ret == FALSE)
     {
-        OS_TPrintf("NUC_CheckAsync() failed, error code=%d\n", NUC_GetLastError());
+        miya_log_fprintf(log_fd, "NUC_CheckAsync() failed, error code=%d\n", NUC_GetLastError());
+        mprintf("NUC_CheckAsync() failed, error code=%d\n", NUC_GetLastError());
     }
 
     return ret;
@@ -126,7 +141,7 @@ NucStatus ProgressNupCheck(void)
     if (status == NUC_STATUS_ERROR)
     {
       // NUC_GetProgress() failed in checking, error code=34303
-        OS_TPrintf("NUC_GetProgress() failed in checking, error code=%d\n", NUC_GetLastError());
+        miya_log_fprintf(log_fd, "NUC_GetProgress() failed in checking, error code=%d\n", NUC_GetLastError());
         mprintf("NUC_GetProgress() failed in checking\n error code=%d\n", NUC_GetLastError());
     }
     if (TestState.count++ % STRING_ANIM_CNT == 0)
@@ -154,7 +169,8 @@ BOOL StartNupDownload(void)
 
     if (ret == FALSE)
     {
-        OS_TPrintf("NUP_DownloadAsync() failed, error code=%d\n", NUC_GetLastError());
+        miya_log_fprintf(log_fd, "NUP_DownloadAsync() failed, error code=%d\n", NUC_GetLastError());
+        mprintf("NUP_DownloadAsync() failed, error code=%d\n", NUC_GetLastError());
     }
 
     return ret;
@@ -173,7 +189,7 @@ NucStatus ProgressNupDownload(void)
     if (status == NUC_STATUS_ERROR)
     {   // エラー発生
       // NUC_GetProgress() failed in checking, error code=34303
-        OS_TPrintf("NUC_GetProgress() failed in download, error code=%d\n", NUC_GetLastError());
+        miya_log_fprintf(log_fd, "NUC_GetProgress() failed in download, error code=%d\n", NUC_GetLastError());
         mprintf("\nNUC_GetProgress() failed\n in download\n error code=%d\n", NUC_GetLastError());
     }
 
@@ -199,7 +215,8 @@ BOOL CleanNupLib(void)
     BOOL ret = NUC_Cleanup(TitleIds, TitleIdNum);
     if (ret == FALSE)
     {
-        OS_TPrintf("NUP_CleanUp() failed, error code=%d\n", NUC_GetLastError());
+        miya_log_fprintf(log_fd, "NUP_CleanUp() failed, error code=%d\n", NUC_GetLastError());
+        mprintf( "NUP_CleanUp() failed, error code=%d\n", NUC_GetLastError());
     }
     return ret;
 }
@@ -225,23 +242,20 @@ void ProgressNetConnect(void)
 
 void ShowErrorMsg(int error_code)
 {
-
-  mprintf("Error Occurred        ");
-
   if (error_code > 0) {
     mprintf("Error Code:%d", error_code);
-    mprintf("%s", GetPublicMsg(error_code));
-    mprintf("%s", GetPrivateMsg(error_code));
+    mprintf(" %s\n", GetPublicMsg(error_code));
+    mprintf(" %s\n", GetPrivateMsg(error_code));
 
-    OS_TPrintf( "Error Code:%d\n", error_code);
-    OS_TPrintf( "%s\n", GetPublicMsg(error_code));
-    OS_TPrintf( "%s\n", GetPrivateMsg(error_code));
+    miya_log_fprintf(log_fd,  "Error Code:%d\n", error_code);
+    miya_log_fprintf(log_fd,  "%s\n", GetPublicMsg(error_code));
+    miya_log_fprintf(log_fd,  "%s\n", GetPrivateMsg(error_code));
   }
   else
     {
-      OS_TPrintf( "%s\n", "Network Error occurred.\nTry again later.");
+      miya_log_fprintf(log_fd,  "%s\n", "Network Error occurred.\nTry again later.");
       // ネットワークエラー時の表示メッセージ(暫定)
-      mprintf( "%s", "Network Error occurred.\nTry again later.");
+      mprintf( "%s", "Network Error occurred.\nTry again later.\n");
     }
 }
 
@@ -259,6 +273,7 @@ BOOL my_numc_proc(void)
     switch ( TestState.state ) {
     case PHASE_NUP_BREAK:
       mprintf("NUP Initialize\n");
+      miya_log_fprintf(log_fd, "NUP Initialize\n");
       ret = InitNupLib();
       if (ret == FALSE)
 	{   // エラー発生
@@ -273,6 +288,7 @@ BOOL my_numc_proc(void)
 
     case PHASE_NUP_READY: // 更新情報の取得を開始します。
       mprintf("NUP Check\n");
+      miya_log_fprintf(log_fd, "NUP Check\n");
       ret = StartNupCheck();
       if (ret == FALSE)
 	{   // エラー発生
@@ -290,17 +306,19 @@ BOOL my_numc_proc(void)
       if (status == NUC_STATUS_ERROR)
 	{   // エラー発生
 	  mprintf("\n");
+	  miya_log_fprintf(log_fd, "\n");
 	  ChangeState(PHASE_NUP_CLEANUP);
 	  error_code = NUC_GetLastError();
 	}
       else if (status == NUC_STATUS_COMPLETED)
 	{    // 更新リスト 取得終了
 	  mprintf("\n");
+	  miya_log_fprintf(log_fd, "\n");
 	  if (TitleIdNum > 0 )
 	    {   // ダウンロードへ
 	      int i;
 	      for (i = 0; i < TitleIdNum; i++) {	
-		OS_TPrintf("DL list:%3d:0x%llx\n", i, TitleIds[i]);
+		miya_log_fprintf(log_fd, "DL list:%3d:0x%llx\n", i, TitleIds[i]);
 		mprintf("DL list:%3d:0x%llx\n", i, TitleIds[i]);
 	      }
 	      ChangeState(PHASE_NUP_DOWNLOAD);
@@ -308,6 +326,7 @@ BOOL my_numc_proc(void)
 	  else
 	    {   // 更新すべきものがない
 	      mprintf("No title to update\n");
+	      miya_log_fprintf(log_fd, "No title to update\n");
 	      ChangeState(PHASE_NUP_CLEANUP);
 	    }
 	}
@@ -315,6 +334,7 @@ BOOL my_numc_proc(void)
 
     case PHASE_NUP_DOWNLOAD: // ダウンロードを開始します。
       mprintf("NUP Download\n");
+      miya_log_fprintf(log_fd, "NUP Download\n");
       ret = StartNupDownload();
       if (ret == FALSE)
 	{   // エラー発生
@@ -332,21 +352,22 @@ BOOL my_numc_proc(void)
       if (status == NUC_STATUS_ERROR)
 	{   // エラー発生
 	  mprintf("\n");
+	  miya_log_fprintf(log_fd, "\n");
 	  ChangeState(PHASE_NUP_CLEANUP);
 	  error_code = NUC_GetLastError();
 	}
       else if (status == NUC_STATUS_COMPLETED)
 	{   // ダウンロード完了
 	  mprintf("\n");
+	  miya_log_fprintf(log_fd, "\n");
 	  ChangeState(PHASE_NUP_CLEANUP);
 	}
       break;
 
     case PHASE_NUP_CLEANUP:  // NUPライブラリのクリーンアップ
       mprintf("NUP Cleanup\n");
+      miya_log_fprintf(log_fd, "NUP Cleanup\n");
       ret = CleanNupLib();
-      OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-
       if (ret == FALSE && error_code == 0)
 	{   // 他でエラーが起こっていない場合のみ上書きします。
 	  error_code = NUC_GetLastError();
@@ -358,11 +379,11 @@ BOOL my_numc_proc(void)
     case PHASE_FINISHED:   // ネットワークアップデートが正常終了しました。
       if( error_code == 0 ) {
 	if (TitleIdNum > 0) {
-	  OS_TPrintf("%d file is updated\n", TitleIdNum);
+	  miya_log_fprintf(log_fd, "%d file is updated\n", TitleIdNum);
 	  mprintf("%d file is updated\n", TitleIdNum);
 	}
 	else {
-	  OS_TPrintf("Nothing is updated\n");
+	  miya_log_fprintf(log_fd, "Nothing is updated\n");
 	  mprintf("Nothing is updated\n");
 	}
       }
@@ -388,3 +409,21 @@ BOOL my_numc_proc(void)
 }
 
 
+FSFile *my_nuc_log_start(char *log_file_name )
+{
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  return log_fd;
+}
+
+void my_nuc_log_end(void)
+{
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  if( log_active ) {
+    Log_File_Close(log_fd);
+  }
+}

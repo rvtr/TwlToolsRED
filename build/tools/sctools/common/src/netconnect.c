@@ -37,15 +37,17 @@ static void*    myAlloc_SOCL(u32 size);
 static void     myFree_SOCL(void* ptr);
 #endif // SDK_TWL
 
-static void     ncStartWiFi(void);
+static int     ncStartWiFi(void);
 static void     ncFinishWiFi(void);
-static void     ncStartInet(void);
-static void     ncFinishInet(void);
 
 static WcmControlApInfo apInfo;
 static s32  previousAddr = 0;
 static u8   g_deviceId    = WCM_DEVICEID_DEFAULT;
 static BOOL g_started   = FALSE;
+
+
+static int nc_error_code = 0;
+
 
 /*---------------------------------------------------------------------------*
   Name        : NcGlobalInit
@@ -93,9 +95,11 @@ typedef struct
 
 #endif
 
-static void ncStartWiFi(void)
+static int ncStartWiFi(void)
 {
     int result;
+    int timeout_counter;
+
     if (previousAddr != 0)
     {
         /*
@@ -152,14 +156,32 @@ static void ncStartWiFi(void)
     {
         OS_TPrintf("SOC_Startup failed (%d)", result);
         mprintf("SOC_Startup failed (%d)", result);
-	return;
+	return -2;
     }
     g_started = TRUE;
     OS_TPrintf("DHCP....\n");
 
+    timeout_counter = 0;
+
     while (SOC_GetHostID() == 0)
     {
-        OS_Sleep(100);
+      s32 err_code = SOC_GetConfigError(NULL);
+      if( err_code == SOC_IP_ERR_DHCP_TIMEOUT ) {
+	mprintf("%s -dhcp timeout\n",__FUNCTION__);
+	return NC_ERROR_TIMEOUT;
+      }
+      else if(err_code == SOC_IP_ERR_LINK_DOWN ) {
+	mprintf("%s -link down\n",__FUNCTION__);
+	return NC_ERROR_LINKDOWN;
+      }
+      else {
+	OS_Sleep(100);
+	timeout_counter++;
+	if( timeout_counter > (60 * 1000 / 100) ) {
+	  mprintf("%s -timeout\n",__FUNCTION__);
+	  return NC_ERROR_TIMEOUT;
+	}
+      }
     }
 
     OS_TPrintf("IP addr = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSMyIp));
@@ -167,6 +189,7 @@ static void ncStartWiFi(void)
     OS_TPrintf("GW addr = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSGatewayIp));
     OS_TPrintf("DNS[0]  = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSDnsIp[0]));
     OS_TPrintf("DNS[1]  = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSDnsIp[1]));
+    return 0;
 }
 
 static void ncFinishWiFi(void)
@@ -187,62 +210,73 @@ static void ncFinishWiFi(void)
   Arguments   : apClass     - SitDefsに定義されているアクセスポイントのクラス名
   Returns     : 
  *---------------------------------------------------------------------------*/
-void NcStart(const char* apClass)
+int NcStart(const char* apClass)
 {
   int counter = 0;
   s32 wcm_phase;
   int len;
   u8 key_bin_buf[MAX_KEY_BIN_BUF];
-
+  int timeout_counter;
+  
   SiteDefs_Init();
 
- if( TRUE == GetKeyModeStr() ) {
-   if( FALSE == ENV_SetBinary("WiFi.LAN.1.AP.1.WEP.KEY", (void *)GetWlanKEYSTR()) ) {
-     OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
-   }
- }
- else {
-   STD_MemSet((void *)key_bin_buf, 0, MAX_KEY_BIN_BUF );
-   len = GetWlanKEYBIN(key_bin_buf);
-   if( len ) {
-     if( FALSE == ENV_SetBinary2("WiFi.LAN.1.AP.1.WEP.KEY", (void *)key_bin_buf, (u32)len) ) {
-       OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
-     }
-   }
- }
-
- if( FALSE == ENV_SetString("WiFi.LAN.1.AP.1.ESSID", GetWlanSSID()) ) {
-   OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
- }
- 
- if( FALSE == ENV_SetU8("WiFi.LAN.1.AP.1.WEP.MODE", (u8)GetWlanMode() ) ) {
-   OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
- }
- 
- if (!InitWcmApInfo(&apInfo, apClass))
-    {
-        mprintf("Invalid AP Class....");
-        OS_TPrintf("Invalid AP Class....");
+  if( TRUE == GetKeyModeStr() ) {
+    if( FALSE == ENV_SetBinary("WiFi.LAN.1.AP.1.WEP.KEY", (void *)GetWlanKEYSTR()) ) {
+      OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
     }
-
-    while (1) {
-      wcm_phase = WCM_GetPhase();
-      if( wcm_phase == WCM_PHASE_NULL) {
-	break;
+  }
+  else {
+    STD_MemSet((void *)key_bin_buf, 0, MAX_KEY_BIN_BUF );
+    len = GetWlanKEYBIN(key_bin_buf);
+    if( len ) {
+      if( FALSE == ENV_SetBinary2("WiFi.LAN.1.AP.1.WEP.KEY", (void *)key_bin_buf, (u32)len) ) {
+	OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
       }
-      // OS_TPrintf("%s %d phase = %d\n", __FUNCTION__,__LINE__,wcm_phase);
-      OS_Sleep(100);
     }
+  }
 
-    InitWcmControlByApInfoEx(&apInfo, g_deviceId);
+  if( FALSE == ENV_SetString("WiFi.LAN.1.AP.1.ESSID", GetWlanSSID()) ) {
+    OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+  }
+ 
+  if( FALSE == ENV_SetU8("WiFi.LAN.1.AP.1.WEP.MODE", (u8)GetWlanMode() ) ) {
+    OS_TPrintf("Error %s %d\n", __FUNCTION__,__LINE__);
+  }
+ 
+  if (!InitWcmApInfo(&apInfo, apClass)) {
+    mprintf("Invalid AP Class....");
+    OS_TPrintf("Invalid AP Class....");
+    return  NC_ERROR_INVALID_AP_CLASS;
+  }
 
-    OS_TPrintf("LINK UP....\n");
-    mprintf("-LINK UP");
-    while ( 1 ) {
-      wcm_phase = WCM_GetPhase();
-      if( wcm_phase == WCM_PHASE_DCF ) {
-	break;
-      }
+  timeout_counter = 0;
+  while (1) {
+    wcm_phase = WCM_GetPhase();
+    if( wcm_phase == WCM_PHASE_NULL) {
+      break;
+    }
+    timeout_counter++;
+    if( timeout_counter > (60 * 1000 / 100) ) {
+      mprintf("%s -timeout\n",__FUNCTION__);
+      return NC_ERROR_TIMEOUT;
+    }
+    OS_Sleep(100);
+   
+  }
+
+  InitWcmControlByApInfoEx(&apInfo, g_deviceId);
+ 
+  OS_TPrintf("LINK UP....\n");
+  mprintf("-LINK UP");
+
+  timeout_counter = 0;
+
+
+  while ( 1 ) {
+    wcm_phase = WCM_GetPhase();
+    if( wcm_phase == WCM_PHASE_DCF ) {
+      break;
+    }
 #if 0
 #define WCM_PHASE_NULL              0               // 初期化前
 #define WCM_PHASE_WAIT              1               // 初期化直後の状態( 要求待ち )
@@ -260,47 +294,42 @@ void NcStart(const char* apClass)
 #define WCM_PHASE_TERMINATING       13              // WCM ライブラリの強制停止シーケンス中
 #endif
 
-#if 0
+    switch( counter ) {
+    case 0:
       mprintf("\r-LINK UP.     ");
-      for( i = 0 ; i < counter ; i++ ) {
-	m_putchar(tc[0], '.');
-      }
-      for(   ; i < 6 ; i++ ) {
-	m_putchar(tc[0], ' ');
-      }
-      i %= 6;
-#else
-      switch( counter ) {
-      case 0:
-	mprintf("\r-LINK UP.     ");
-	break;
-      case 1:
-	mprintf("\r-LINK UP..    ");
-	break;
-      case 2:
-	mprintf("\r-LINK UP...   ");
-	break;
-      case 3:
-	mprintf("\r-LINK UP....  ");
-	break;
-      case 5:
-	mprintf("\r-LINK UP..... ");
-	break;
-      case 6:
-	mprintf("\r-LINK UP......");
-	counter = -1;
-	break;
-      }
-#endif
-      OS_Sleep(200);
-      counter++;
+      break;
+    case 1:
+      mprintf("\r-LINK UP..    ");
+      break;
+    case 2:
+      mprintf("\r-LINK UP...   ");
+      break;
+    case 3:
+      mprintf("\r-LINK UP....  ");
+      break;
+    case 5:
+      mprintf("\r-LINK UP..... ");
+      break;
+    case 6:
+      mprintf("\r-LINK UP......");
+      counter = -1;
+      break;
     }
 
-    OS_TPrintf("connected\n");
-    mprintf(" connected\n");
+    timeout_counter++;
+    if( timeout_counter > (60 * 1000 / 200) ) {
+      mprintf("%s -timeout\n",__FUNCTION__);
+      return NC_ERROR_TIMEOUT;
+    }
+    OS_Sleep(200);
+    counter++;
+  }
 
-    ncStartWiFi();
-
+  OS_TPrintf("connected\n");
+  mprintf(" connected\n");
+ 
+  return ncStartWiFi();
+  //  return 0; /* 0 means success */
 }
 
 void NcFinish()

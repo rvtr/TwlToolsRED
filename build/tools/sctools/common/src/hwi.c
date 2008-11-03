@@ -142,6 +142,7 @@ BOOL MiyaRestoreTWLSettings(const char *path)
   s32 readSize;
   LCFGTWLSettingsData cfg_data;
   LCFGReadResult retval;
+  LCFGTWLTPCalibData tp_cal_data;
 
   retval = LCFGi_THW_ReadSecureInfo();
   if( retval != LCFG_TSF_READ_RESULT_SUCCEEDED ) {
@@ -151,8 +152,12 @@ BOOL MiyaRestoreTWLSettings(const char *path)
   }
 
   if( FALSE ==  ReadTWLSettings( &cfg_data ) ) {
-    mprintf("Failed read cfg file 2.\n" );
+    mprintf("Failed read TWLSettings 2.\n" );
+    return FALSE;
   }
+
+  /* とりあえず別でＴＰキャリブレーションデータだけ置いとく */
+  LCFG_TSD_GetTPCalibration( &tp_cal_data );
 
 
   FS_InitFile(&f);
@@ -162,11 +167,9 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     mprintf("Failed open file 2 - HWNormal Info.:%d\n", fsResult );
     return FALSE;
   }
-#if 0
-  readSize = FS_ReadFile(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
-#else
+
   readSize = my_fs_crypto_read(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
-#endif
+
 
   if( readSize != sizeof(LCFGTWLSettingsData) ) {
     fsResult = FS_GetArchiveResultCode(path);
@@ -180,6 +183,9 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     mprintf("Failed close file 2 - HWNormal Info.:%d\n", fsResult );
     return FALSE;
   }
+
+  /* さっき置いといたＴＰキャリブレーションデータを上書き */
+  STD_CopyMemory( (void *)&cfg_data.tp, (void *)&tp_cal_data ,sizeof(LCFGTWLTPCalibData) );
 
   /* 実際に書き出し */
   if( FALSE == WriteTWLSettings( &cfg_data ) ) {
@@ -205,11 +211,6 @@ BOOL MiyaReadHWSecureInfo( LCFGTWLHWSecureInfo *Info )
     return FALSE;
   }
 
-  /* 
-     c:/twlsdk/include/twl/lcfg/common/TWLHWInfo.h
-     #define LCFGi_GetHWN()      ( &s_hwInfoN )
-  */
-  
   STD_CopyMemory( (void *)Info, (void *)LCFGi_GetHWS() , sizeof(LCFGTWLHWSecureInfo) );
 
   OS_TPrintf( "HW Secure Info read succeeded.\n" );

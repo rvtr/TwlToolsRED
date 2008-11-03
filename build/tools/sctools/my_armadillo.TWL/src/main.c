@@ -81,10 +81,13 @@ static s32          CheckCorrectNCD(NVRAMConfig* ncdsp);
 static void         VBlankIntr(void);
 
 
+
 #define MIYA_MCU_FREE_REG_NO   1
+
+#if 0
 #define MIYA_MCU_FREE_REG_CODE 0x55
 static u8 miya_mcu_free_register = 0x66;
-
+#endif
 
 static void miya_mcu_free_reg_send_pxi_data(u32 data)
 {
@@ -98,6 +101,7 @@ static void miya_mcu_free_reg_send_pxi_data(u32 data)
 #define MIYA_MCU_COMMAND_GET_BRIGHTNESS 3
 #define MIYA_MCU_COMMAND_SET_VOLUME     4
 #define MIYA_MCU_COMMAND_SET_BRIGHTNESS 5
+#define MIYA_MCU_COMMAND_SET_FREE_REG   6
 
 static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
 {
@@ -106,8 +110,12 @@ static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
   
   switch( (data & 0xf) ) {
   case MIYA_MCU_COMMAND_GET_FREE_REG:
-    miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+    miya_mcu_free_reg_send_pxi_data((u32)MCU_GetFreeRegister((u8)MIYA_MCU_FREE_REG_NO ));
     break;
+  case MIYA_MCU_COMMAND_SET_FREE_REG:
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetFreeRegister((u8)MIYA_MCU_FREE_REG_NO , (u8)((data >> 4) & 0xff)) );
+    break;
+
   case MIYA_MCU_COMMAND_GET_VOLUME:
     miya_mcu_free_reg_send_pxi_data( (u32)MCU_GetVolume() );
     break;
@@ -117,15 +125,15 @@ static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
     break;
     
   case MIYA_MCU_COMMAND_SET_VOLUME:
-    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetVolume( (u8)((data >> 4) & 0xf)) );
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetVolume( (u8)((data >> 4) & 0xff)) );
     break;
     
   case MIYA_MCU_COMMAND_SET_BRIGHTNESS:
-    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetBackLightBrightness(  (u8)((data >> 4) & 0xf) ));
+    miya_mcu_free_reg_send_pxi_data( (u32)MCU_SetBackLightBrightness(  (u8)((data >> 4) & 0xff) ));
     break;
-    
+
   default:
-    miya_mcu_free_reg_send_pxi_data( (u32)miya_mcu_free_register );
+    miya_mcu_free_reg_send_pxi_data( (u32)0xffffffff );
     break;
   }    
 
@@ -182,10 +190,6 @@ TwlSpMain(void)
     WVR_Begin(heapHandle);                      // NITRO ñ≥ê¸
     SPI_Init(THREAD_PRIO_SPI);
 
-
-    miya_mcu_free_register = MCU_GetFreeRegister( (u8)MIYA_MCU_FREE_REG_NO );
-
-    (void)MCU_SetFreeRegister( (u8)MIYA_MCU_FREE_REG_NO , (u8)MIYA_MCU_FREE_REG_CODE );
 
     PXI_SetFifoRecvCallback(PXI_FIFO_TAG_USER_0, miya_mcu_free_reg_pxi_callback);
 

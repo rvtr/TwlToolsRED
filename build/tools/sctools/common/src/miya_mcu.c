@@ -19,6 +19,8 @@ static void miya_mcu_free_reg_pxi_callback(PXIFifoTag tag, u32 data, BOOL err)
 #pragma unused(err)
   switch( my_mcu_command ) {
 
+  case MIYA_MCU_COMMAND_SET_FREE_REG:
+    break;
   case MIYA_MCU_COMMAND_GET_FREE_REG:
     miya_mcu_free_register = (u8)(0xff & data);
     break;
@@ -63,6 +65,17 @@ static void miya_mcu_get_free_reg(void)
   miya_mcu_send_pxi_data(MIYA_MCU_COMMAND_GET_FREE_REG);
 }
 
+//  miya_mcu_set_free_reg( u8 number, u8 value );
+
+static void miya_mcu_set_free_reg( u8 value )
+{
+  u32 data;
+  data = MIYA_MCU_COMMAND_SET_FREE_REG;
+  data |= ((u32)value << 4);
+  miya_mcu_send_pxi_data(data);
+}
+
+
 static void miya_mcu_get_volume(void)
 {
   miya_mcu_send_pxi_data(MIYA_MCU_COMMAND_GET_VOLUME);
@@ -89,6 +102,25 @@ static void miya_mcu_set_brightness(u8 brightness)
   miya_mcu_send_pxi_data(data);
 }
 
+
+
+u8 MCU_GetFreeRegister( void )
+{
+  OSMessage message;
+  miya_mcu_get_free_reg();
+  if( TRUE == OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK) ) {
+  }
+  return miya_mcu_free_register;
+}
+
+BOOL MCU_SetFreeRegister( u8 value )
+{
+  OSMessage message;
+  miya_mcu_set_free_reg( value );
+  if( TRUE == OS_ReceiveMessage(&MyMesgQueue, &message, OS_MESSAGE_BLOCK) ) {
+  }
+  return TRUE;
+}
 
 
 u8 MCU_GetFreeReg( void )

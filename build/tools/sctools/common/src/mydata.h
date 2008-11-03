@@ -3,7 +3,7 @@
 
 
 #define MY_DATA_VERSION_MAJOR 0
-#define MY_DATA_VERSION_MINOR 2
+#define MY_DATA_VERSION_MINOR 5
 
 typedef struct {
   u8 version_major;
@@ -12,11 +12,19 @@ typedef struct {
   BOOL rtc_time_flag;
   RTCDate rtc_date;
   RTCTime rtc_time;
+  BOOL wireless_lan_param_flag;
+  BOOL user_settings_flag;
   BOOL shop_record_flag;
   int num_of_user_download_app;
   int num_of_app_save_data;
   int num_of_photo_files;
   int num_of_shared2_files;
+
+  int num_of_error_user_download_app; /* unused */
+  int num_of_error_app_save_data;
+  int num_of_error_photo_files;
+  int num_of_error_shared2_files;
+
   BOOL uniqueid_flag;
   u8 movableUniqueID[ LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN ]; // 移行可能なユニークID 16byte
   u32 deviceId;

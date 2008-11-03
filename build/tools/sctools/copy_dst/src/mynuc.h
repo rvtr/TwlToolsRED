@@ -47,6 +47,9 @@ BOOL CleanNupLib(void);
 void ProgressNetConnect(void);
 void ShowErrorMsg(int error_code);
 BOOL my_numc_proc(void);
+FSFile *my_nuc_log_start(char *log_file_name );
+void my_nuc_log_end(void);
+
 
 #ifdef __cplusplus
 }

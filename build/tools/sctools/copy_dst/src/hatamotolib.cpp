@@ -19,7 +19,7 @@
 #include        "mprintf.h"
 #include        "logprintf.h"
 
-
+#include        "my_fs_util.h"
 
 #ifdef SDK_DEBUG
 #define ECDL_LOG(msg)   OS_TPrintf("----\nECDL-LOG: %s\n----\n", msg);
@@ -32,6 +32,11 @@
 #endif
 
 
+static BOOL log_active = FALSE;
+static FSFile *log_fd;
+static FSFile log_fd_real;
+
+
 
 static void *Alloc(size_t size)
 {
@@ -39,6 +44,7 @@ static void *Alloc(size_t size)
   void* p = OS_Alloc(size);
   if( p == NULL ) {
     OS_TPrintf("Alloc error %s %d\n",__FUNCTION__,__LINE__);
+    mprintf("Alloc error %s %d\n",__FUNCTION__,__LINE__);
   }
   OS_RestoreInterrupts(old);
   return p;
@@ -55,8 +61,21 @@ static void Free(void* ptr)
 }
 
 
-static void*   AllocForNHTTP(u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
-static void*   AllocForEC   (u32 size, int align) { SDK_ASSERT(align <= 32);(void)align; return Alloc(size); }
+static void*   AllocForNHTTP(u32 size, int align)
+{ 
+  if(align <= 32) {
+    return Alloc(size);
+  }
+  return Alloc(size);
+}
+
+static void*   AllocForEC(u32 size, int align)
+{ 
+  if(align <= 32) {
+    return Alloc(size);
+  }
+  return NULL;
+}
 
 static void*   AllocForNSSL (u32 size)            { return Alloc(size); }
 static void*   AllocForNAM  (u32 size)            { return Alloc(size); }
@@ -76,17 +95,6 @@ static void* ReallocForNSSL(void* p, u32 size)
   else
     {
       return Alloc(size);
-    }
-}
-
-
-static void PrintBytes(const void* pv, u32 size)
-{
-  const u8* p = reinterpret_cast<const u8*>(pv);
-  
-  for( u32 i = 0; i < size; i++ )
-    {
-      OS_TPrintf("%02X", p[i]);
     }
 }
 
@@ -169,129 +177,27 @@ GetOSTWLRegionString(u8 x)
 }
 
 
-void SetupUserInfo(void)
+BOOL SetupVerData(void)
 {
   BOOL bSuccess;
-  BOOL bModified = FALSE;
-  void* pWork;
-  
-  // LCFG_ReadTWLSettings を行う前に LCFG_ReadHWSecureInfo が必要
-  {
-    bSuccess = LCFG_ReadHWSecureInfo();
-    SDK_ASSERT(bSuccess);
-  }
-  
-  // 設定の読み込み
-  {
-    pWork = Alloc(LCFG_READ_TEMP);
-    SDK_POINTER_ASSERT(pWork);
-    
-    bSuccess = LCFG_ReadTWLSettings(reinterpret_cast<u8 (*)[LCFG_READ_TEMP]>(pWork));
-    SDK_ASSERT(bSuccess);
-    
-    Free(pWork);
-  }
-  
-  {
-    // ニックネームが空なら適当に設定
-    if( *LCFG_TSD_GetNicknamePtr() == L'\0' )
-      {
-	LCFG_TSD_SetNickname(reinterpret_cast<const u16*>(L"ecdl"));
-	bModified = TRUE;
-      }
-    
-    // 国が選択されていないなら適当に設定
-    if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED )
-      {
-	LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
-	bModified = TRUE;
-      }
-  }
-  
-  // 設定が変更されているなら書き出す
-  if( bModified )
-    {
-      pWork = Alloc(LCFG_WRITE_TEMP);
-      SDK_POINTER_ASSERT(pWork);
-      
-      bSuccess = LCFG_WriteTWLSettings(reinterpret_cast<u8 (*)[LCFG_WRITE_TEMP]>(pWork));
-      SDK_ASSERT(bSuccess);
-      
-      Free(pWork);
-    }
-}
-
-void SetupVerData(void)
-{
-  BOOL bSuccess;
-  
   void* pWork = Alloc(NA_VERSION_DATA_WORK_SIZE);
-  SDK_POINTER_ASSERT(pWork);
-  
+  if( pWork == NULL ) {
+    miya_log_fprintf(log_fd, "%s Error memory alloc\n", __FUNCTION__);
+    return FALSE;
+  }
   bSuccess = NA_LoadVersionDataArchive(pWork, NA_VERSION_DATA_WORK_SIZE);
-
-  SDK_ASSERT(bSuccess);
+  return bSuccess;
 }
 
 
-
-void PrintDeviceInfo(void)
-{
-  ESId deviceId;
-  u8 region;
-  u32 launcherInitialCode;
-  const u8* pSerial;
-  const u8* pMovable;
-  u32 movableLen1;
-  u32 movableLen2;
-  u64 fuseId;
-  char bmsDeviceId[32];
-
-  LCFG_ReadHWNormalInfo();
-  LCFG_ReadHWSecureInfo();
-
-  // region
-  region = LCFG_THW_GetRegion();
-
-  // launcher initial code
-  LCFG_THW_GetLauncherTitleID_Lo(reinterpret_cast<u8*>(&launcherInitialCode));
-
-  // ES Device ID
-  ES_GetDeviceId(&deviceId);
-  snprintf(bmsDeviceId, sizeof(bmsDeviceId), "%lld", ((0x3ull << 32) | deviceId));
-
-  // serial
-  pSerial = LCFG_THW_GetSerialNoPtr();
-
-  // movable id
-  pMovable = LCFG_THW_GetMovableUniqueIDPtr();
-  movableLen1 = LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN / 2;
-  movableLen2 = LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN - movableLen1;
-
-  // fuse id
-  fuseId = SCFG_ReadFuseData();
-
-  OS_TPrintf("Region:    %-10s %08X\n", GetOSTWLRegionString(region), launcherInitialCode);
-  OS_TPrintf("DeviceID:  %08X %u\n", deviceId, deviceId);
-  OS_TPrintf("           %s\n", bmsDeviceId);
-  OS_TPrintf("Serial:    %s\n", pSerial);
-  OS_TPrintf("MovableID: "); PrintBytes(pMovable, movableLen1); OS_TPrintf("\n");
-  OS_TPrintf("           "); PrintBytes(pMovable + movableLen1, movableLen2); OS_TPrintf("\n");
-  OS_TPrintf("FuseID:    %08X%08X\n", static_cast<u32>(fuseId >> 32), static_cast<u32>(fuseId));
-}
 
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
   NAMTitleId tid;
-
-  //  OS_TPrintf("%s %d num=%d\n",__FUNCTION__,__LINE__,numTitleIds);
-
   for( u32 i = 0; i < numTitleIds; i++ )
     {
       tid = pTitleIds[i];
-      //      OS_TPrintf("%s %d 0x%016X\n",__FUNCTION__,__LINE__,(u64)tid);
       NAM_SetupTitleDataFile(tid);
-      //OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     }
 }
 
@@ -308,6 +214,8 @@ void DeleteECDirectory(void)
 
 void SetupShopTitleId(void)
 {
+  // はたもとくんに確認->ショップのオールリージョンでＯＫ
+  //  *(u64 *)(HW_TWL_ROM_HEADER_BUF + 0x230) = 0x00030015　48-4E-46-41-ull;
   *(u64 *)(HW_TWL_ROM_HEADER_BUF + 0x230) = 0x00030015484E4641ull;
 }
 
@@ -334,7 +242,8 @@ BOOL SetupNHTTP(void)
   
   if (rv != NHTTP_ERROR_NONE)
     {
-      OS_TPrintf("Failed to start NHTTP, rv=%d\n", rv);
+      miya_log_fprintf(log_fd, "Failed to start NHTTP, rv=%d\n", rv);
+      mprintf("Failed to start NHTTP, rv=%d\n", rv);
       return FALSE;
     }
   return TRUE;
@@ -386,7 +295,8 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   bSuccess = FS_OpenFile(&f, path);
   if( ! bSuccess )
     {
-      OS_TPrintf("Cannot open %s\n", path);
+      miya_log_fprintf(log_fd, "Cannot open %s\n", path);
+      mprintf("Cannot open %s\n", path);
       return FALSE;
     }
 
@@ -394,14 +304,16 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   pCert = OS_Alloc(certSize);
   if ( pCert == NULL )
     {
-      OS_TPrintf("Cannot allocate work memroy\n");
+      miya_log_fprintf(log_fd, "Cannot allocate work memroy\n");
+      mprintf("Cannot allocate work memroy\n");
       return FALSE;
     }
 
   readSize = FS_ReadFile(&f, pCert, static_cast<s32>(certSize));
   if( readSize != certSize )
     {
-      OS_TPrintf("fail to read file\n");
+      miya_log_fprintf(log_fd, "%s fail to read file\n", __FUNCTION__);
+      mprintf("fail to read file\n");
       return FALSE;
     }
 
@@ -410,7 +322,8 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   result = NA_DecodeVersionData(pCert, certSize, pCert, certSize);
   if( result <= 0 )
     {
-      OS_TPrintf("fail to decode version info %d\n", result);
+      miya_log_fprintf(log_fd, "%s fail to decode version info %d\n",__FUNCTION__,result);
+      mprintf("fail to decode version info %d\n", result);
       return FALSE;
     }
 
@@ -442,8 +355,8 @@ BOOL SetupEC(void)
   //#define EC_LOG_FINEST     6
 
   //  logLevel = EC_LOG_FINEST;
-  logLevel = EC_LOG_FINE;
-  // logLevel = EC_LOG_NONE;
+  //  logLevel = EC_LOG_FINE;
+  logLevel = EC_LOG_WARN;
 
   LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");
   LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der");
@@ -466,7 +379,8 @@ BOOL SetupEC(void)
   rv = EC_Init(initArgs, nInitArgs);
   // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to initialize EC, rv=%d\n", rv);
   if( rv != EC_ERROR_OK ) {
-    OS_TPrintf("Failed to initialize EC, rv=%d\n", rv);
+    miya_log_fprintf(log_fd, "%s Failed to initialize EC, rv=%d\n",__FUNCTION__, rv);
+    mprintf("Failed to initialize EC, rv=%d\n", rv);
     return FALSE;
   } 
 
@@ -475,7 +389,8 @@ BOOL SetupEC(void)
 			 "https://cas.t.shop.nintendowifi.net/cas/services/CatalogingSOAP" );
   // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
   if( rv != EC_ERROR_OK ) {
-    OS_TPrintf("Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
+    miya_log_fprintf(log_fd, "%s Failed to EC_SetWebSvcUrls, rv=%d\n", __FUNCTION__, rv);
+    mprintf("Failed to EC_SetWebSvcUrls, rv=%d\n", rv);
     return FALSE;
   } 
   
@@ -483,7 +398,8 @@ BOOL SetupEC(void)
 			  "http://ccs.t.shop.nintendowifi.net/ccs/download" );
   // SDK_ASSERTMSG(rv == EC_ERROR_OK, "Failed to EC_SetContentUrls, rv=%d\n", rv);
   if( rv != EC_ERROR_OK ) {
-    OS_TPrintf("Failed to EC_SetContentUrls, rv=%d\n", rv);
+    miya_log_fprintf(log_fd, "%s Failed to EC_SetContentUrls, rv=%d\n",__FUNCTION__, rv);
+    mprintf("Failed to EC_SetContentUrls, rv=%d\n", rv);
     return FALSE;
   } 
 
@@ -499,7 +415,8 @@ BOOL WaitEC(ECOpId opId)
   
   if( opId < 0 )
     {
-      OS_TPrintf("error %d %s\n", opId, GetECErrorString(opId));
+      miya_log_fprintf(log_fd, "%s WaitEC error %d %s\n", __FUNCTION__,opId, GetECErrorString(opId));
+      mprintf("WaitEC error %d %s\n", opId, GetECErrorString(opId));
       return FALSE;
     }
   
@@ -512,9 +429,10 @@ BOOL WaitEC(ECOpId opId)
         {
 	  if( result == EC_ERROR_NOT_ACTIVE )
             {
-	      OS_TPrintf("opId=%d\n", opId);
+	      miya_log_fprintf(log_fd, "%s  opId=%d\n", __FUNCTION__, opId);
             }
-	  OS_TPrintf("Failed to EC_GetProgress, result=%d %s\n", result, GetECErrorString(result));
+	  miya_log_fprintf(log_fd, "%s Failed to EC_GetProgress, result=%d %s\n", 
+			   __FUNCTION__, result, GetECErrorString(result));
 	  mprintf("EC_GetProgress failed %d\n %s\n", result, GetECErrorString(result));
 	  return FALSE;
         }
@@ -556,14 +474,17 @@ static char CheckRegistration()
   ECError ecError;
   ECDeviceInfo di;
 
-  ECDL_LOG("check registeration");
+  //ECDL_LOG("check registeration");
   progress = EC_CheckRegistration();
   if( FALSE == WaitEC(progress) ) {
     return '\0'; // 微妙・・
   }
 
   ecError = EC_GetDeviceInfo(&di);
-  SDK_ASSERT( ecError == EC_ERROR_OK );
+  //  SDK_ASSERT( ecError == EC_ERROR_OK );
+  if( ecError != EC_ERROR_OK ) {
+    return '\0'; // 微妙・・
+  }
 
 #ifdef SDK_DEBUG
 #define ECDL_DI_FMT "%-30s"
@@ -607,22 +528,24 @@ static    BOOL GetChallenge(char* challenge)
   s32 progress;
   ECError ecError;
 
-  ECDL_LOG("get challenge");
+  //ECDL_LOG("get challenge");
   progress = EC_SendChallengeReq();
   if( FALSE == WaitEC(progress) ) {
     return FALSE;
   }
 
   ecError = EC_GetChallengeResp(challenge);
-  SDK_ASSERT( ecError == EC_ERROR_OK );
-  return TRUE;
+  if( ecError == EC_ERROR_OK ) {
+    return TRUE;
+  }
+  return FALSE;
 }
 
 static BOOL SyncRegistration(const char* challenge)
 {
   s32 progress;
 
-  ECDL_LOG("sync registration");
+  // ECDL_LOG("sync registration");
   progress = EC_SyncRegistration(challenge);
   if( FALSE == WaitEC(progress) ) {
     return FALSE;
@@ -634,7 +557,7 @@ static BOOL Register(const char* challenge)
 {
   s32 progress;
 
-  ECDL_LOG("register");
+  //  ECDL_LOG("register");
   progress = EC_Register(challenge, NULL, NULL);
   if( FALSE == WaitEC(progress) ) {
     return FALSE;
@@ -646,7 +569,7 @@ static BOOL Transfer(const char* challenge)
 {
   s32 progress;
 
-  ECDL_LOG("transfer");
+  //  ECDL_LOG("transfer");
   progress = EC_Transfer(challenge);
   if( FALSE == WaitEC(progress) ) {
     return FALSE;
@@ -658,7 +581,7 @@ static BOOL SyncTickets()
 {
   s32 progress;
 
-  ECDL_LOG("sync tickets");
+  //  ECDL_LOG("sync tickets");
   progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
   if( FALSE == WaitEC(progress) ) {
     return FALSE;
@@ -666,133 +589,211 @@ static BOOL SyncTickets()
   return TRUE;
 }
 
+static int a_to_int(char c)
+{
+  if( ('a' <= c) && (c <= 'f') ) {
+    return (int)( c - 'a' + 10 );
+  }
+  else if( ('A' <= c) && (c <= 'F') ) {
+    return (int)( c - 'A' + 10 );
+  }
+  else if( ('0' <= c) && (c <= '9') ) {
+    return (int)( c - '0' );
+  }
+  return -1;
+}
+
+static BOOL Tid_To_GameCode(u64 tid, char *gcode)
+{
+  u32 code;
+  char *str;
+  OS_TPrintf("tid = %016X\n",tid);
+  str = gcode;
+  code = (u32)(tid & 0xffffffff);
+  *str++ = (char)((code >> 24) & 0xff);
+  *str++ = (char)((code >> 16) & 0xff);
+  *str++ = (char)((code >> 8) & 0xff);
+  *str++ = (char)(code  & 0xff);
+  return TRUE;
+}
+
+
 static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
   s32 progress;
+  NAMTitleId tid;
+  BOOL ret_flag = TRUE;
+  //  ECDL_LOG("download");
+  char game_code_buf[5];
 
-  ECDL_LOG("download");
-  for( u32 i = 0; i < numTitleIds; i++ )
-    {
-      NAMTitleId tid = pTitleIds[i];
+  for( u32 i = 0; i < numTitleIds; i++ ) {
+      tid = pTitleIds[i];
       progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
+      //      mprintf("-check registration..        ");
+      (void)Tid_To_GameCode((u64)tid, game_code_buf);
+      game_code_buf[4] = '\0';
+      mprintf("  downloading.. [%s]       ", game_code_buf);
       if( FALSE == WaitEC(progress) ) {
-	return FALSE;
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
+	ret_flag = FALSE;
+      }
+      else {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	miya_log_fprintf(log_fd, " %s download OK.\n",game_code_buf);
       }
     }
-  return TRUE;
+  return ret_flag;
 }
 
 BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
   char challenge[EC_CHALLENGE_BUF_SIZE];
   char status;
+  BOOL ret_flag;
 
-  //    mprintf("-CheckRegistration..\n");
+  mprintf("-check registration..        ");
+  miya_log_fprintf(log_fd, "-check registration...");
   status = CheckRegistration();
   // U  unregistered
   // R  registered
   // P  pending
   // T  transfered
-#if 0
-  SDK_ASSERTMSG(status != 'U', "acount not transfered yet.");
-  SDK_ASSERTMSG(status != 'R', "already registered. please delete acount.");
-  SDK_ASSERTMSG( (status == 'P') || (status == 'T'), "invalid registration status '%c'", status );
-#else
-  if( status == 'U') {
+  if( status == '\0' ) {
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mprintf(" my error.\n");
+    miya_log_fprintf(log_fd, " my error.\n");
+    return FALSE;
+  }
+  else if( status == 'U') {
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" acount not transfered yet.\n");
+    miya_log_fprintf(log_fd, " acount not transfered yet.\n");
     return FALSE;
   }
-  if( status == 'R') {
+  else if( status == 'R') {
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" already registered. please delete acount.\n");
+    miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
     return FALSE;
   }
-  if( (status != 'P') && (status != 'T') ) {
+  else if( (status != 'P') && (status != 'T') ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" invalid registration status '%c'\n", status );
+    miya_log_fprintf(log_fd, " invalid registration status '%c'\n", status );
     return FALSE;
   }
-  //    mprintf(" succeeded.");
-#endif
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
+  miya_log_fprintf(log_fd, "-get challenge1..");
   mprintf("-get challenge1              ");
   if( FALSE == GetChallenge(challenge) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  miya_log_fprintf(log_fd, "-transfer.. ");
   mprintf("-transfer                    ");
   if( FALSE == Transfer(challenge) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+
+  miya_log_fprintf(log_fd, "-get challenge.. ");
   mprintf("-get challenge2              ");
   if( FALSE == GetChallenge(challenge) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
 
+  miya_log_fprintf(log_fd, "-sync registration..");
   mprintf("-sync registration           ");
   if( FALSE == SyncRegistration(challenge) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  miya_log_fprintf(log_fd, "-sync tickets..");
   mprintf("-sync tickets                ");
   if( FALSE == SyncTickets() ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
-  mprintf("-download titles             ");
-  if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
-  }
-  else {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-  }
+  // ここでアプリをダウンロードしている
+  miya_log_fprintf(log_fd, "-download titles\n");
+  mprintf("-download titles\n");
 
-  return TRUE;
+  ret_flag = DownloadTitles(pTitleIds, numTitleIds);
+  
+  return ret_flag;
 }
 
 
@@ -800,32 +801,36 @@ BOOL KPSClient()
 {
   s32 progress;
 
-  OS_TPrintf("generate key pair\n");
+  miya_log_fprintf(log_fd, "-generate key pair ..");
   mprintf("-generate key pair           ");
   progress = EC_GenerateKeyPair();
   if( FALSE == WaitEC(progress) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
 
-  OS_TPrintf("confirm key pair\n");
+  miya_log_fprintf(log_fd, "-confirm key pair .. ");
   mprintf("-confirm key pair            ");
   progress = EC_ConfirmKeyPair();
   if( FALSE ==  WaitEC(progress) ) {
+    miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return FALSE;
   }
   else {
+    miya_log_fprintf(log_fd, "OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -835,4 +840,23 @@ BOOL KPSClient()
 }
 
 
+
+FSFile *hatamotolib_log_start(char *log_file_name )
+{
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  return log_fd;
+}
+
+void hatamotolib_log_end(void)
+{
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  if( log_active ) {
+    Log_File_Close(log_fd);
+  }
+}
 

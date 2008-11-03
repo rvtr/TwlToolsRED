@@ -24,6 +24,8 @@
 #include        "font.h"
 #include        "text.h"
 #include        "mprintf.h"
+#include        "logprintf.h"
+
 #include        "gfx.h"
 #include        "key.h"
 #include        "my_fs_util.h"
@@ -40,6 +42,7 @@
 #include        "nuc.h"
 #include        "mynuc.h"
 #include        "miya_mcu.h"
+#include        "error_report.h"
 
 #include        "myfilename.h"
 #include        "mfiler.h"
@@ -53,13 +56,34 @@
 static BOOL no_reboot_flag = FALSE;
 static BOOL only_wifi_config_data_trans_flag = FALSE;
 static BOOL user_and_wifi_config_data_trans_flag = FALSE;
+static BOOL no_network_flag = FALSE;
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 //static BOOL reboot_flag = FALSE;
+
+static u8 org_region = 0;
+static u64 org_fuseId = 0;
+static int select_mode = 0;
 static volatile BOOL reboot_flag;
 
+static int miya_debug_level = 0;
+
+
+
 static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
+
+
+
+static BOOL pushed_power_button = FALSE;
+
+static PMExitCallbackInfo pmexitcallbackinfo;
+
+static void pmexitcallback(void *arg)
+{
+#pragma unused(arg)
+  pushed_power_button = TRUE;
+}
 
 
 static void SDEvents(void *userdata, FSEvent event, void *arg)
@@ -162,7 +186,6 @@ static BOOL RestoreFromSDCard1(void)
      ちなみにすでにMydataLoad関数は成功しているものとする。
      したがって MyData mydata にはデータが入っている。
   */
-  // static BOOL SDBackupToSDCard8(void)
   if( (mydata.rtc_date_flag == TRUE) && (mydata.rtc_time_flag == TRUE) ) {
     mprintf("RTC data restore             ");
     if( RTC_RESULT_SUCCESS != RTC_SetDate( &(mydata.rtc_date) ) ) {
@@ -186,6 +209,7 @@ static BOOL RestoreFromSDCard1(void)
     mprintf("No original RTC data\n");
     flag = TRUE;
   }
+
   return flag;
 }
 
@@ -220,18 +244,23 @@ static BOOL RestoreFromSDCard2(void)
 static BOOL RestoreFromSDCard3(void)
 {
   // static BOOL SDBackupToSDCard2(void)
-  mprintf("WirelessLAN param. restore   ");
-  if( TRUE == nvram_restore( MyFile_GetWifiParamFileName() ) ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( mydata.wireless_lan_param_flag == TRUE ) {
+    mprintf("WirelessLAN param. restore   ");
+    if( TRUE == nvram_restore( MyFile_GetWifiParamFileName() ) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      // error
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
   }
   else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    mprintf("no original WirelessLAN param.\n");
   }
 
   return TRUE;
@@ -240,79 +269,158 @@ static BOOL RestoreFromSDCard3(void)
 static BOOL RestoreFromSDCard4(void)
 {
   // static BOOL SDBackupToSDCard3(void)
-  mprintf("User setting param. restore  ");
-  if( TRUE == MiyaRestoreTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( mydata.user_settings_flag == TRUE ) {
+    mprintf("User setting param. restore  ");
+    if( TRUE == MiyaRestoreTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      // error
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
   }
   else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    mprintf("no original user setting param.\n");
   }
-
   return TRUE;
 }
 
 static BOOL RestoreFromSDCard5(void)
 {
   // static BOOL SDBackupToSDCard4(void)
-  mprintf("App. shared files restore    ");
-  if( TRUE == RestoreDirEntryList( MyFile_GetAppSharedListFileName(), MyFile_GetAppSharedRestoreLogFileName() )) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  int list_count;
+  int error_count;
+
+  Error_Report_Init();
+
+  if( mydata.num_of_shared2_files > 0 ) { 
+    mprintf("App. shared files restore    ");
+    if( TRUE == RestoreDirEntryList( MyFile_GetAppSharedListFileName(), 
+				     MyFile_GetAppSharedRestoreLogFileName(), &list_count, &error_count )) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      // error
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+  }
+  else if( mydata.num_of_shared2_files == 0 ) {
+    mprintf("Original device has no shared file\n");
   }
   else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    mprintf("Original shared files saving failed\n");
   }
+
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
   return TRUE;
 }
 
 static BOOL RestoreFromSDCard6(void)
 {
-  // static BOOL SDBackupToSDCard5(void)
-  mprintf("Photo files restore          ");
-  if( TRUE == RestoreDirEntryList( MyFile_GetPhotoListFileName() , MyFile_GetPhotoRestoreLogFileName() )) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  int list_count;
+  int error_count;
+
+
+  Error_Report_Init();
+
+  if( mydata.num_of_photo_files  > 0 ) { 
+    mprintf("Photo files restore          ");
+    if( TRUE == RestoreDirEntryList( MyFile_GetPhotoListFileName() , 
+				     MyFile_GetPhotoRestoreLogFileName(),
+				     &list_count, &error_count )) {
+     
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      // error
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+  }
+  else if( mydata.num_of_photo_files == 0 ) {
+    mprintf("Original device has no photo file\n");
   }
   else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    mprintf("Original photo files saving failed\n");
   }
+
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
   return TRUE;
 }
 
 
 static BOOL RestoreFromSDCard8(void)
 {
+  int list_count;
+  int error_count;
 
-  // static BOOL SDBackupToSDCard6(void)
-  mprintf("App. save data restore       ");
-  if( TRUE == RestoreDirEntryList( MyFile_GetAppDataListFileName() , MyFile_GetAppDataRestoreLogFileName() )) {
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  Error_Report_Init();
+
+  if( mydata.num_of_app_save_data  > 0 ) { 
+    mprintf("App. save data restore       ");
+    if( no_network_flag == TRUE ) {
+      if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
+						       MyFile_GetSaveDataRestoreLogFileName(),
+						       &list_count, &error_count )) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+      else {
+	// error
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+    }
+    else {
+      if( TRUE == RestoreDirEntryList( MyFile_GetSaveDataListFileName() , 
+				       MyFile_GetSaveDataRestoreLogFileName(),
+				       &list_count, &error_count )) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+      else {
+	// error
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+    }
+  }
+  else if( mydata.num_of_app_save_data == 0 ) {
+    mprintf("Original device has no app. save data\n");
   }
   else {
-    // error
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    mprintf("Original app. save data saving failed\n");
   }
+
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
   return TRUE;
 }
 
@@ -418,6 +526,7 @@ static BOOL LoadWlanConfig(void)
   else {
     OS_TPrintf("Invalid wlan cfg file\n");
     mfprintf(tc[3],"Invalid wlan cfg file\n");
+    mprintf("Invalid wlan cfg file\n");
     return FALSE;
   }
   return TRUE;
@@ -430,113 +539,134 @@ static BOOL RestoreFromSDCard7(void)
   int title_id_count;
   int i;
   ECError rv;
+  BOOL ret_flag = TRUE;
+  FSFile *log_fd;
 
   title_id_buf_ptr = NULL;
   title_id_count = 0;
   rv = EC_ERROR_OK;
 
   /* hws_info.serialNoは戻せない */
-  /*  */
-  // static BOOL SDBackupToSDCard7(void)
 
-  // for DEBUG
-  //  mydata.shop_record_flag = TRUE; 
+  if( no_network_flag == TRUE ) {
+    return TRUE;
+  }
+
+  log_fd = hatamotolib_log_start( MyFile_GetEcDownloadLogFileName() );
 
 
   if( mydata.shop_record_flag == FALSE ) {
     /* ネットワークにつながなくていいか？ */
-    OS_TPrintf("no shop record\n");
+    miya_log_fprintf(log_fd,"no shop record\n");
     mprintf(" (--no shop record--)\n");
   }
   else {
-    mprintf("Connect to the internet\n");
-
-    mprintf("-user title list loading..   ");
-    OS_TPrintf("user title list loading\n");
-    if( TRUE == TitleIDLoad( MyFile_GetDownloadTitleIDFileName(), &title_id_buf_ptr, 
-			     &title_id_count, NULL) ) {
-
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      for( i = 0; i < title_id_count ; i++ ) {
-	u64 tid = *(title_id_buf_ptr + i );
-	mprintf(" id %02d %08X %08X\n", i,(u32)(tid >> 32), (u32)tid);
+    miya_log_fprintf(log_fd,"EC download\n");
+    mprintf("EC download\n");
+    
+    if( mydata.num_of_user_download_app > 0 ) {
+      miya_log_fprintf(log_fd,"-user title list loading\n");
+      mprintf("-user title list load        ");
+      if( TRUE == TitleIDLoad( MyFile_GetDownloadTitleIDFileName(), &title_id_buf_ptr, 
+			       &title_id_count, MyFile_GetDownloadTitleIDRestoreLogFileName()) ) {
+	
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	for( i = 0; i < title_id_count ; i++ ) {
+	  u64 tid = *(title_id_buf_ptr + i );
+	  mprintf(" id %02d %08X %08X\n", i,(u32)(tid >> 32), (u32)tid);
+	  miya_log_fprintf(log_fd," id %02d %08X %08X\n", i,(u32)(tid >> 32), (u32)tid);
+	}
+      }
+      else {
+	ret_flag = FALSE;
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
     }
+    else if( mydata.num_of_user_download_app == 0 ) {
+      miya_log_fprintf(log_fd,"Original device has no user download app.\n");
+      mprintf("Original device has no user download app.\n");
+    }
     else {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      miya_log_fprintf(log_fd,"Original user download app. list saving failed\n");
+      mprintf("Original user download app. list saving failed\n");
     }
 
     //    mprintf("                             ");
-    mprintf("-wireless AP conf. loading.. ");
+    miya_log_fprintf(log_fd,"-wireless AP conf. load.. ");
+    mprintf("-wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
+      miya_log_fprintf(log_fd, "OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
 
       /* nand:/ticketはチケット同期でダウンロード */
       // 不要：デバイス情報の表示
       //      PrintDeviceInfo();
 
-      //      OS_TPrintf("--------------------------------\n");
-
       // setup
       // 必須：タイトル ID の偽装
-      SetupShopTitleId();
-    
+      SetupShopTitleId(); /* エラーはない */
+      miya_log_fprintf(log_fd,"SetupShopTitleId\n");
+
+
       // ？：ユーザ設定がされていないと接続できないので適当に設定
-      SetupUserInfo();
+      // SetupUserInfo();
     
       // 必須：バージョンデータのマウント
-      SetupVerData();
+      if( FALSE == SetupVerData() ) {
+	miya_log_fprintf(log_fd, "%s failed SetupVerData\n", __FUNCTION__);
+	ret_flag = FALSE;
+	goto end_log_e;
+      }
     
+
+
       // 必須：ネットワークへの接続
-      NcStart(SITEDEFS_DEFAULTCLASS);
+      if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
+	miya_log_fprintf(log_fd, "%s failed NcStart\n", __FUNCTION__);
+	ret_flag = FALSE;
+	goto end_log_e;
+      }
     
       /******** ネットワークにつないだ *************/
 
       // 必須：HTTP と SSL の初期化
-      OS_TPrintf("start NHTTP\n");
-      mprintf("-start NHTTP                 ");
+      miya_log_fprintf(log_fd,"-setup NSSL & NHTTP\n");
       SetupNSSL();
       if( FALSE == SetupNHTTP() ) {
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "%s failed SetupNHTTP\n", __FUNCTION__);
+	mprintf(" %s failed SetupNHTTP\n", __FUNCTION__);
 	goto end_nhttp;
-      }
-      else {
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-	mprintf("OK.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
 
       /******** NHTTP & NSSLにつないだ *************/
     
       // 必須：EC の初期化
-      OS_TPrintf("start EC\n");
-      mprintf("-start EC                    ");
+      miya_log_fprintf(log_fd,"-setup EC\n");
       if( FALSE == SetupEC() ) {
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "%s failed SetupEC\n", __FUNCTION__);
+	mprintf(" %s failed SetupEC\n", __FUNCTION__);
 	goto end_ec;
-      }
-      else {
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-	mprintf("OK.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
 
       // 必須：デバイス証明書の発行
       if( FALSE == KPSClient() ) {
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "%s failed KPSClient\n", __FUNCTION__);
 	goto end_ec_f;
       }
 
       if( FALSE == ECDownload((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count) ) {
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "%s failed ECDownload\n", __FUNCTION__);
 	goto end_ec_f;
       }
 
@@ -547,13 +677,15 @@ static BOOL RestoreFromSDCard7(void)
     end_ec_f:
       // cleanup
       // EC の終了処理
-      mprintf("-EC_Shutdown..               ");
+      mprintf("-ec shutdown..               ");
       rv = EC_Shutdown();
       // SDK_WARNING(rv == EC_ERROR_OK, "Failed to shutdown EC, rv=%d\n", rv);
       if( rv != EC_ERROR_OK ) {
+	ret_flag = FALSE;
 	m_set_palette(tc[0], M_TEXT_COLOR_RED );
 	mprintf("NG.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	miya_log_fprintf(log_fd, "%s failed EC_Shutdown\n", __FUNCTION__);
       }
       else {
 	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
@@ -561,11 +693,10 @@ static BOOL RestoreFromSDCard7(void)
       }
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     end_ec:
-
     
       // ネットワークからの切断
-      OS_TPrintf("disconnecting ..\n");
-      mprintf("-disconnecting... ");
+      miya_log_fprintf(log_fd,"-LINK DOWN....");
+      mprintf("-LINK DOWN....");
 
       NHTTP_Cleanup();
     end_nhttp:
@@ -573,11 +704,11 @@ static BOOL RestoreFromSDCard7(void)
     end_nssl:
       NcFinish();
     end_nc:
-      //OS_TPrintf("NSSL_Finish() return = %d\n", NSSL_Finish());
+      //miya_log_fprintf(log_fd,"NSSL_Finish() return = %d\n", NSSL_Finish());
 
       TerminateWcmControl();
 
-      OS_TPrintf("done.\n");
+      miya_log_fprintf(log_fd,"done.\n");
       mprintf("done.\n");
 
       if( title_id_buf_ptr != NULL && title_id_count != 0 ) {
@@ -585,17 +716,22 @@ static BOOL RestoreFromSDCard7(void)
       }
       // EC が自分の Title ID のディレクトリを作成してしまうため、削除する
       DeleteECDirectory();
-      
+    end_log_e:
+      ;
     }
     else {
       /* mprintf("-Wireless AP conf. loading.. "); */
+      miya_log_fprintf(log_fd, "NG.\n");
+      ret_flag = FALSE;
       m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("NG.\n");
     }
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
-  return TRUE;
+  hatamotolib_log_end();
+
+  return ret_flag;
 }
 
 
@@ -662,13 +798,14 @@ static void MyThreadProc(void *arg)
 	    stream_play1(); /* ok.aiff */
 	  }
 	  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+#ifdef MIYA_SET_VOL_AND_BRIGHT
 	  OS_Sleep(2000);
 	  (void)MCU_SetVolume((u8)(mydata.volume));
 	  (void)MCU_SetBackLightBrightness((u8)(mydata.backlight_brightness));
 	  OS_TPrintf("vol = %d\n",mydata.volume );
 	  OS_TPrintf("bright = %d\n", mydata.backlight_brightness);
-
 	  OS_Sleep(200000);
+#endif
 	  break; 
 	}
 	OS_Sleep(200);
@@ -695,17 +832,39 @@ static void MyThreadProcNuc(void *arg)
 #pragma unused(arg)
   OSMessage message;
   u16 keyData;
+  FSFile *log_fd;
+  BOOL ret_flag;
+
+
+  
+
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
-    mprintf("-Wireless AP conf. loading.. ");
+    mprintf("-Wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      NcStart(SITEDEFS_DEFAULTCLASS);
+
+      if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
+	mprintf("connection failed!\n\n");
+	while( 1 ) {
+	  keyData = m_get_key_code();
+	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
+	    OS_RebootSystem();
+	  }
+	  OS_Sleep(20);
+	}
+      }
+
+
       /* NSSL_Init()呼んではダメ！ */
-      if( TRUE == my_numc_proc() ) {
+      log_fd = my_nuc_log_start( MyFile_GetNupLogFileName() );
+      ret_flag = my_numc_proc();
+      my_nuc_log_end();
+
+      if( TRUE == ret_flag ) {
 	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
 	OS_TPrintf("Network Update Completed!\n");
 	mprintf("Network Update Completed!\n");
@@ -722,9 +881,10 @@ static void MyThreadProcNuc(void *arg)
 	  mprintf("\n");
 	  text_blink_current_line(tc[0]);
 	  mprintf("press A button to start RESTORE\n\n");
+	  MCU_SetFreeRegister( 0x55 );
 	  while( 1 ) {
 	    keyData = m_get_key_code();
-	    if ( keyData & PAD_BUTTON_A ) {
+	    if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
 	      OS_RebootSystem();
 	    }
 	    OS_Sleep(20);
@@ -735,7 +895,7 @@ static void MyThreadProcNuc(void *arg)
 	  // text_blink_current_line(tc[0]);
 	  while( 1 ) {
 	    keyData = m_get_key_code();
-	    if ( keyData & PAD_BUTTON_A ) {
+	    if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
 	    }
 	    OS_Sleep(20);
 	  }
@@ -794,7 +954,7 @@ void TwlMain(void)
   RTCDate rtc_date;
   RTCTime rtc_time;
   int i;
-  //  int n;
+  int n;
   u8 macAddress[6];
   MY_ENTRY_LIST *mfiler_list_head = NULL;
   u16 s_major, s_minor;
@@ -803,7 +963,9 @@ void TwlMain(void)
   BOOL MydataLoadDecrypt_message_flag = TRUE;
   BOOL MydataLoadDecrypt_dir_flag = TRUE;
   BOOL MydataLoadDecrypt_success_flag = TRUE;
-
+  BOOL dir_select_mode = FALSE;
+  u8 free_reg;
+  u8 mode;
 
   OS_Init();
   OS_InitThread();
@@ -824,7 +986,7 @@ void TwlMain(void)
   // ファイルシステム初期化
   FS_Init( FS_DMA_NOT_USE );
 
-
+  PM_Init();
   // メインアリーナのアロケートシステムを初期化
   newArenaLo = OS_InitAlloc(OS_ARENA_MAIN, OS_GetMainArenaLo(), OS_GetMainArenaHi(), 1);
   OS_SetMainArenaLo(newArenaLo);
@@ -856,8 +1018,27 @@ void TwlMain(void)
   MIYA_MCU_Init();
 
   OS_TPrintf("MCU Free Reg. 0x%02x\n", MCU_GetFreeReg());
-  if( MCU_GetFreeReg() == 0x55 ) {
+  free_reg = MCU_GetFreeReg();
+  if( free_reg == 0x55 ) {
     reboot_flag = TRUE;
+  } 
+  else if( free_reg == 0x66 ) {
+    reboot_flag = TRUE;
+    no_network_flag = TRUE;
+  }
+  else if( free_reg == 0x77 ) {
+    no_reboot_flag = TRUE;
+    mprintf("no_reboot_flag ON\n");
+  }
+  else if( free_reg == 0x88 ) {
+    reboot_flag = TRUE;
+    only_wifi_config_data_trans_flag = TRUE;
+    mprintf("only_wifi_config_data_trans ON\n");
+  }
+  else if( free_reg == 0x99 ) {
+    reboot_flag = TRUE;
+    user_and_wifi_config_data_trans_flag = TRUE;
+    mprintf("user_and_wifi_config_data ON\n");
   }
   else {
     reboot_flag = FALSE;    
@@ -867,18 +1048,18 @@ void TwlMain(void)
   /* miya */
   //  reboot_flag = TRUE;
 
-#if 0
-  /*
-    static inline u8 MCU_GetVolume( void )
-    static inline BOOL MCU_SetVolume( u8 volume )
-    static inline u8 MCU_GetBackLightBrightness( void )
-    static inline BOOL MCU_SetBackLightBrightness( u8 brightness )
-  */
-#endif
 
+
+
+  PM_SetAutoExit( FALSE );
+  PM_SetExitCallbackInfo( &pmexitcallbackinfo,pmexitcallback, NULL);
+  PM_PrependPreExitCallback( &pmexitcallbackinfo );
+
+
+#ifdef MIYA_SET_VOL_AND_BRIGHT
   MCU_SetVolume( (u8)31 );
   MCU_SetBackLightBrightness( (u8)4 );
-    
+#endif    
 
   if( FALSE == SDCardValidation() ) {
     sd_card_flag = FALSE;
@@ -918,22 +1099,41 @@ void TwlMain(void)
     m_set_palette(tc[0], 0xF);	/* white */
   }
 
+#if 1
+  // ニックネームが空なら適当に設定
+  if( *LCFG_TSD_GetNicknamePtr() == L'\0' ) {
+    LCFG_TSD_SetNickname((const u16*)(L"repair-tool"));
+    //    mprintf("Set dummy Nickname\n");
+  }
+#endif  
+
+  // 国が選択されていないなら適当に設定
+  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
+    LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
+    //    mprintf("Set dummy Country code\n");
+  }
+
   // region
-  mydata.region = LCFG_THW_GetRegion();
+  org_region = LCFG_THW_GetRegion();
   // ES Device ID
 
-  mydata.fuseId = SCFG_ReadFuseData();
-  OS_TPrintf("eFuseID:   %08X%08X\n", (u32)(mydata.fuseId >> 32), (u32)(mydata.fuseId));
+  org_fuseId = SCFG_ReadFuseData();
+  OS_TPrintf("eFuseID:   %08X%08X\n", (u32)(org_fuseId >> 32), (u32)(org_fuseId));
 
   OS_GetMacAddress( macAddress );
 
+  mydata.shop_record_flag = FALSE;
   es_error_code = ES_GetDeviceId(&mydata.deviceId);
   if( es_error_code == ES_ERR_OK ) {
-    mydata.shop_record_flag = TRUE;
+    if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
+      mydata.shop_record_flag = TRUE;
+    }
+    else {
+      mprintf("no ec.cfg file\n");
+    }
   }
   else {
     OS_TPrintf("es_error_code = %d\n", es_error_code );
-    mydata.shop_record_flag = FALSE;
   }
   
   // (void)CheckShopRecord( hws_info.region, NULL );
@@ -944,38 +1144,6 @@ void TwlMain(void)
     OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
 
-  //   mprintf("mcu reg 0x%02X\n", miya_mcu_free_register );
-#if 0
-  OS_TPrintf("MCU Free Reg. 0x%02x\n",MCU_GetFreeReg());
-  if( MCU_GetFreeReg() == 0x55 ) {
-    reboot_flag = TRUE;
-  }
-  else {
-    reboot_flag = FALSE;    
-  }
-#endif
-
-#if 1
-  (void)m_get_key_trigger();
-  keyData = m_get_key_code();
-  if ( keyData & PAD_BUTTON_X ) {
-    reboot_flag = TRUE;
-  }
-  else if( keyData & PAD_BUTTON_Y ) {
-    no_reboot_flag = TRUE;
-    mprintf("no_reboot_flag ON\n");
-  }
-  else if( keyData & PAD_BUTTON_B ) {
-    reboot_flag = TRUE;
-    only_wifi_config_data_trans_flag = TRUE;
-    mprintf("only_wifi_config_data_trans ON\n");
-  }
-  else if( keyData & (PAD_BUTTON_START | PAD_BUTTON_SELECT) ) {
-    reboot_flag = TRUE;
-    user_and_wifi_config_data_trans_flag = TRUE;
-    mprintf("user_and_wifi_config_data ON\n");
-  }
-#endif
 
   if( FALSE == reboot_flag ) {
     mprintf("Network update mode\n");
@@ -1016,6 +1184,8 @@ void TwlMain(void)
 
   }
   else {
+    dir_select_mode = TRUE;
+
     mprintf("user data restore mode\n");
     // NAM の初期化
     NAM_Init(&AllocForNAM, &FreeForNAM);
@@ -1071,7 +1241,8 @@ void TwlMain(void)
 	vram_num_main = (MAX_VRAM_NUM-1);
       }
     }
-    else if ( keyData & PAD_BUTTON_A ) {
+    else if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
+
       if( sd_card_flag == TRUE ) {
 	if( FALSE == reboot_flag ) {
 	  /* ネットワークアップデート */
@@ -1091,6 +1262,7 @@ void TwlMain(void)
 
 	      if( only_wifi_config_data_trans_flag == TRUE ) {
 		/* 無線設定のみリストアする */
+		mydata.wireless_lan_param_flag = TRUE;
 		vram_num_sub = 0;
 		MydataLoadDecrypt_message_flag = TRUE;
 		MydataLoadDecrypt_dir_flag = TRUE;
@@ -1098,6 +1270,8 @@ void TwlMain(void)
 		(void)RestoreFromSDCard3();
 	      }
 	      else if( user_and_wifi_config_data_trans_flag == TRUE ) {
+		mydata.user_settings_flag = TRUE;
+		mydata.wireless_lan_param_flag = TRUE;
 		vram_num_sub = 0;
 		MydataLoadDecrypt_message_flag = TRUE;
 		MydataLoadDecrypt_dir_flag = TRUE;
@@ -1110,7 +1284,17 @@ void TwlMain(void)
 		MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
 								    &mydata, sizeof(MyData), NULL);
 		if(TRUE == MydataLoadDecrypt_success_flag ) {
-		  if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
+		  if( org_region != mydata.region ) {
+		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+		    mprintf("NG.\n");
+		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+		    mprintf(" invalid region code.\n");
+		    mprintf(" \n");
+		    mprintf(" \n");
+		    m_set_palette(tc[0], 0xF);	/* white */
+		    MydataLoadDecrypt_message_flag = FALSE;
+		  }
+		  else if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
@@ -1139,6 +1323,7 @@ void TwlMain(void)
 		    MydataLoadDecrypt_message_flag = TRUE;
 		    MydataLoadDecrypt_dir_flag = TRUE;
 		    MydataLoadDecrypt_success_flag = TRUE;
+		    dir_select_mode = FALSE;
 		    start_my_thread();
 		  }
 		}
@@ -1167,30 +1352,102 @@ void TwlMain(void)
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
+      miya_debug_level++;
+      miya_debug_level &= 1;
+      if( miya_debug_level ) {
+	Miya_debug_ON();
+	mprintf("debug ON\n");
+      }
+      else {
+	Miya_debug_OFF();
+	mprintf("debug OFF\n");
+      }
     }
+#if 0
+    /* スタートボタンはＡボタンと同じ扱い */
     else if ( keyData & PAD_BUTTON_START ) {
     }
+#endif
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {
+      select_mode++;
+      switch( select_mode ) {
+      case 1:
+	free_reg = mode = 0x55;
+	break;
+      case 2:
+	free_reg = mode = 0x66;
+	no_network_flag = TRUE;
+	break;
+      case 3:
+	free_reg = mode = 0x77;
+	no_reboot_flag = TRUE;
+	break;
+      case 4:
+	free_reg = mode = 0x88;
+	only_wifi_config_data_trans_flag = TRUE;
+	break;
+      case 5:
+	free_reg = mode = 0x99;
+	user_and_wifi_config_data_trans_flag = TRUE;
+	break;
+      default:
+	free_reg = mode = 0;
+	select_mode = 0;
+	break;
+      }
+
     }
     else if ( keyData & PAD_BUTTON_Y ) {
+      MCU_SetFreeRegister( mode);
+      OS_RebootSystem();
+    }
+    else if ( keyData & PAD_KEY_RIGHT ) {
+      n = m_get_display_offset_x(tc[0]);
+      n++;
+      m_set_display_offset_x(tc[0], n);
+    }
+    else if ( keyData & PAD_KEY_LEFT ) {
+      n = m_get_display_offset_x(tc[0]);
+      n--;
+      m_set_display_offset_x(tc[0], n);
     }
     else if ( keyData & PAD_KEY_UP ) {
       if( FALSE == reboot_flag ) {
+	n = m_get_display_offset_y(tc[0]);
+	n++;
+	m_set_display_offset_y(tc[0], n);
       }
       else {
-	if( vram_num_sub == 2 ) {
-	  MFILER_CursorY_Up();
+	if( dir_select_mode == TRUE ) {
+	  if( vram_num_sub == 2 ) {
+	    MFILER_CursorY_Up();
+	  }
+	}
+	else {
+	  n = m_get_display_offset_y(tc[0]);
+	  n++;
+	  m_set_display_offset_y(tc[0], n);
 	}
       }
     }
     else if ( keyData & PAD_KEY_DOWN ) {
       if( FALSE == reboot_flag ) {
+	n = m_get_display_offset_y(tc[0]);
+	n--;
+	m_set_display_offset_y(tc[0], n);
       }
       else {
-	if( vram_num_sub == 2 ) {
-	  MFILER_CursorY_Down();
+	if( dir_select_mode == TRUE ) {
+	  if( vram_num_sub == 2 ) {
+	    MFILER_CursorY_Down();
+	  }
+	}
+	else {
+	  n = m_get_display_offset_y(tc[0]);
+	  n--;
+	  m_set_display_offset_y(tc[0], n);
 	}
       }
     }
@@ -1234,7 +1491,7 @@ void TwlMain(void)
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
     mfprintf(tc[1], "eFuse ID:  ");
     m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
-    mfprintf(tc[1],"%08X%08X\n\n", (u32)(mydata.fuseId >> 32), (u32)(mydata.fuseId));
+    mfprintf(tc[1],"%08X%08X\n\n", (u32)(org_fuseId >> 32), (u32)(org_fuseId));
 
 
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
@@ -1262,13 +1519,45 @@ void TwlMain(void)
 	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
 
-    //    mfprintf(tc[1], "cwd = %s\n\n", MFILER_Get_CurrentDir());
-    
     if( FALSE == reboot_flag ) {
+      if( free_reg == 0x55 ) {
+	mfprintf(tc[1],"restart to RESTORE mode\n");
+      }
+      else if( free_reg == 0x66 ) {
+	mfprintf(tc[1],"network-connection OFF mode\n");
+      }
+      else if( free_reg == 0x77 ) {
+	mfprintf(tc[1],"no_reboot_flag ON\n");
+      }
+      else if( free_reg == 0x88 ) {
+	mfprintf(tc[1],"only wifi config data\n");
+      }
+      else if( free_reg == 0x99 ) {
+	mfprintf(tc[1],"only user settings data\n");
+      }
+      else {
+	mfprintf(tc[1],"just reboot\n");
+      }
+      mfprintf(tc[1], "press Y button to restart.\n");
+
     }
     else {
       mfprintf(tc[1], "function no.%d/%d\n\n", function_counter, function_table_max);
 
+      if( free_reg == 0x66 ) {
+	mfprintf(tc[1],"network-connection OFF mode\n");
+      }
+      else if( free_reg == 0x77 ) {
+	mfprintf(tc[1],"no_reboot_flag ON\n");
+      }
+      else if( free_reg == 0x88 ) {
+	mfprintf(tc[1],"only wifi config data\n");
+      }
+      else if( free_reg == 0x99 ) {
+	mfprintf(tc[1],"only user settings data\n");
+      }
+      
+	 
       mfprintf(tc[2],"\f");
 
       if( MydataLoadDecrypt_dir_flag == FALSE ) {
@@ -1303,42 +1592,17 @@ void TwlMain(void)
       MFILER_ReadDir(&mfiler_list_head, MFILER_Get_CurrentDir());
       MFILER_DisplayDir(tc[2], &mfiler_list_head, 0 );
     }
+
+    if( pushed_power_button == TRUE ) {
+      MCU_SetFreeRegister( 0x00 );
+      //      OS_TPrintf("ahondara\n");
+      PM_ReadyToExit();
+    }
+
     
     loop_counter++;
 
   }
-#if 0
-      else if ( keyData & PAD_KEY_UP ) {
-	if( vram_num_main != 1 ) {
-	  n = m_get_display_offset_y(tc[0]);
-	  n++;
-	  m_set_display_offset_y(tc[0], n);
-	}
-	else if( vram_num_sub == 2 ) {
-	  MFILER_CursorY_Up();
-	}
-      }
-      else if ( keyData & PAD_KEY_DOWN ) {
-	if( vram_num_main != 1 ) {
-	  n = m_get_display_offset_y(tc[0]);
-	  n--;
-	  m_set_display_offset_y(tc[0], n);
-	}
-	else if( vram_num_sub == 2 ) {
-	  MFILER_CursorY_Down();
-	}
-      }
-      else if ( keyData & PAD_KEY_RIGHT ) {
-	n = m_get_display_offset_x(tc[0]);
-	n++;
-	m_set_display_offset_x(tc[0], n);
-      }
-      else if ( keyData & PAD_KEY_LEFT ) {
-	n = m_get_display_offset_x(tc[0]);
-	n--;
-	m_set_display_offset_x(tc[0], n);
-      }
-#endif
 
   OS_Terminate();
 }

@@ -33,6 +33,7 @@
 #include        "mydata.h"
 #include        "nuc.h"
 #include        "miya_mcu.h"
+#include        "error_report.h"
 
 #include        "myfilename.h"
 #include        "menu_version.h"
@@ -43,6 +44,7 @@
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
+static int miya_debug_level = 0;
 
 
 static void SDEvents(void *userdata, FSEvent event, void *arg)
@@ -130,11 +132,13 @@ static BOOL SDBackupToSDCard2(void)
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mydata.wireless_lan_param_flag = TRUE;
   }
   else {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mydata.wireless_lan_param_flag = FALSE;
     return FALSE;
   }
   return TRUE;
@@ -149,11 +153,13 @@ static BOOL SDBackupToSDCard3(void)
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mydata.user_settings_flag = TRUE;
   }
   else {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    mydata.user_settings_flag = FALSE;
     return FALSE;
   }
   return TRUE;
@@ -163,66 +169,137 @@ static BOOL SDBackupToSDCard4(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   int save_dir_info = 0;
+  BOOL ret_flag = TRUE;
+  int list_count;
+  int error_count;
 
   /*
     nand:/shared2ディレクトリまわりの保存
     内容はアプリケーション共有ファイル
     nand:/shared2/*
   */
+
+  Error_Report_Init();
+
+
   mprintf("App. shared files backup     ");
   if( 0 == copy_r( &dir_entry_list_head, MyFile_GetAppSharedSaveDirName() , 
 		   "nand:/shared2" , MyFile_GetAppSharedLogFileName(), 0) ) {
-
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    mydata.num_of_shared2_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName() );
-    m_set_palette(tc[0], 0x2);	/* green  */
-    mprintf("OK.\n");
-    m_set_palette(tc[0], 0xF);	/* white */
+    if( TRUE == SaveDirEntryList( dir_entry_list_head, MyFile_GetAppSharedListFileName(), 
+				  &list_count, &error_count, MyFile_GetAppSharedSaveLogFileName()) ) {
+      mydata.num_of_shared2_files = list_count;
+      mydata.num_of_error_shared2_files = error_count;
+
+      if( error_count == 0 ) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+      else {
+	ret_flag = FALSE;
+      }
+    }
+    else {
+      mydata.num_of_shared2_files = -1; /* failed */
+      mydata.num_of_error_shared2_files = -1;
+      ret_flag = FALSE;
+    }
   }
   else {
+    mydata.num_of_shared2_files = -1; /* failed */
+    mydata.num_of_error_shared2_files = -1;
+    ret_flag = FALSE;
+  }
+
+  if( ret_flag == FALSE ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
   }
+
   (void)ClearDirEntryList( &dir_entry_list_head );
-  return TRUE;
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
+  return ret_flag;
 }
+
 
 static BOOL SDBackupToSDCard5(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   int save_dir_info = 0;
+  BOOL ret_flag = TRUE;
+  int list_count;
+  int error_count;
+
   /* 
      nand2:/photoディレクトリまわりの保存
      内容は写真長のJPEGファイル
      nand2:/photo/*.*
    */
+  Error_Report_Init();
+
   mprintf("Photo files backup           ");
   if( 0 == copy_r( &dir_entry_list_head, MyFile_GetPhotoSaveDirName() , 
 		   "nand2:/photo" , MyFile_GetPhotoLogFileName(),0 ) ) {
 
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    mydata.num_of_photo_files = SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName() );
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    if( TRUE == SaveDirEntryList( dir_entry_list_head, MyFile_GetPhotoListFileName(),
+				  &list_count, &error_count, MyFile_GetPhotoSaveLogFileName() ) ) {
+      mydata.num_of_photo_files = list_count;
+      mydata.num_of_error_photo_files = error_count;
+      if( error_count > 0 ) {
+	ret_flag = FALSE;
+      }
+    }
+    else {
+      mydata.num_of_photo_files = -1; /* failed */
+      mydata.num_of_error_photo_files = -1; /* failed */
+      ret_flag = FALSE;
+    }
   }
   else {
+    mydata.num_of_photo_files = -1; /* failed */
+    mydata.num_of_error_photo_files = -1; /* failed */
+    ret_flag = FALSE;
+  }
+
+  if( ret_flag == FALSE ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+  }
+  else {
+    m_set_palette(tc[0], 0x2);	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], 0xF);	/* white */
+
   }
   (void)ClearDirEntryList( &dir_entry_list_head );
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
 
-  return TRUE;
+
+  return ret_flag;
 }
 
 static BOOL SDBackupToSDCard6(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   int save_dir_info = 0;
+  BOOL ret_flag = TRUE;
+
+  int list_count;
+  int error_count;
+
+
+  Error_Report_Init();
 
   /* nand:/ticketはチケット同期？でうまいこと合わせてくれるんでバックアップ不要 */
 
@@ -232,10 +309,34 @@ static BOOL SDBackupToSDCard6(void)
   */
 
   mprintf("App. save data backup        ");
-  if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetAppDataSaveDirName(), "nand:/title",
-				 &save_dir_info, MyFile_GetAppDataLogFileName(),0 ) ) {
+  if( 0 == find_title_save_data( &dir_entry_list_head, MyFile_GetSaveDataSaveDirName(), "nand:/title",
+				 &save_dir_info, MyFile_GetSaveDataLogFileName(),0 ) ) {
     // PrintDirEntryListBackward( dir_entry_list_head, NULL );
-    mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , MyFile_GetAppDataListFileName() );
+    //    mydata.num_of_app_save_data = SaveDirEntryList( dir_entry_list_head , 
+    //						    mydata.num_of_app_save_data = 
+
+
+    if( TRUE == SaveDirEntryList( dir_entry_list_head , MyFile_GetSaveDataListFileName(),
+				  &list_count, &error_count, MyFile_GetSaveDataSaveLogFileName() ) ) {
+      mydata.num_of_app_save_data = list_count;
+      mydata.num_of_error_app_save_data = error_count;
+      if( error_count > 0 ) {
+	ret_flag = FALSE;
+      }
+    }
+    else {
+      mydata.num_of_app_save_data = -1;
+      mydata.num_of_error_app_save_data = -1;
+      ret_flag = FALSE;
+    }
+  }
+  else {
+    mydata.num_of_app_save_data = -1;
+    mydata.num_of_error_app_save_data = -1;
+    ret_flag = FALSE;
+  }
+
+  if( ret_flag == TRUE ) {
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -244,12 +345,17 @@ static BOOL SDBackupToSDCard6(void)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
   }
+
 
   (void)ClearDirEntryList( &dir_entry_list_head );
 
-  return TRUE;
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
+  return ret_flag;
 }
 
 static BOOL SDBackupToSDCard7(void)
@@ -285,50 +391,57 @@ static BOOL SDBackupToSDCard7(void)
      | 
      システムアプリはダウンロード対象外
   */
+
+  Error_Report_Init();
+
   OS_TPrintf("User title list backup \n");
   mprintf("User title list backup       ");
   if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, 
 			 MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
 
-    GetDirEntryList( dir_entry_list_head, &pBuffer, &count);
+    flag = GetUserAppTitleList( dir_entry_list_head, &pBuffer, &count, 
+				MyFile_GetUserAppTitleListLogFileName()) ;
 
-    ptr = pBuffer;
-    mydata.num_of_user_download_app = count;
-    
-    if( ptr != NULL && count != 0 )  {
-      for( j = 0 ; j < count ; j++ ) {
-	OS_TPrintf("No. %d 0x%016llx\n",j,*ptr);
-	mfprintf(tc[2],"No. %d 0x%016llx\n",j,*ptr);
-	ptr++;
+    if( TRUE == flag ) {
+      ptr = pBuffer;
+      mydata.num_of_user_download_app = count;
+      mydata.num_of_error_user_download_app = 0;
+      
+      if( ptr != NULL && count != 0 )  {
+	for( j = 0 ; j < count ; j++ ) {
+	  OS_TPrintf("No. %d 0x%016llx\n",j,*ptr);
+	  mfprintf(tc[2],"No. %d 0x%016llx\n",j,*ptr);
+	  ptr++;
+	}
       }
-    }
-    PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
-
-    if( TRUE == TitleIDSave( MyFile_GetDownloadTitleIDFileName(), pBuffer, count, NULL) ) {
-      //MyFile_GetDownloadTitleIDLogFileName() 
-      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-      mprintf("OK.\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    }
-    else {
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("NG.(save ids)\n");
-      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      flag = FALSE;
-      // return FALSE;
+      
+      // PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
+      flag =  TitleIDSave( MyFile_GetDownloadTitleIDFileName(), 
+			   pBuffer, count,  MyFile_GetDownloadTitleIDSaveLogFileName());
     }
     if( pBuffer ) {
       OS_Free(pBuffer);
     }
   }
+
+  if( flag == TRUE ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
   else {
     m_set_palette(tc[0], 0x1);	/* red  */
-    mprintf("NG.(get ids)\n");
+    mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    flag = FALSE;
-    // return FALSE;
+    mydata.num_of_user_download_app = -1; /* failed */
+    mydata.num_of_error_user_download_app = -1;
   }
   (void)ClearDirEntryList( &dir_entry_list_head );
+
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
 
   return flag;
 }
@@ -337,7 +450,6 @@ static BOOL SDBackupToSDCard8(void)
 {
   RTCDate rtc_date;
   RTCTime rtc_time;
-
 
   /* オリジナルのデータのバックアップ */
   if( RTC_RESULT_SUCCESS != RTC_GetDate( &rtc_date ) ) {
@@ -361,6 +473,7 @@ static BOOL SDBackupToSDCard8(void)
 		  LCFG_TWL_HWINFO_MOVABLE_UNIQUE_ID_LEN );
 
   mprintf("Personal data backup         ");
+  /* こいつはフラグを立てられない、セーブできない。あたりまえ */
   if( TRUE == MydataSaveEncrypt( MyFile_GetGlobalInformationFileName(), (void *)&mydata, sizeof(MyData), NULL) ) {
     m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
     mprintf("OK.\n");
@@ -659,12 +772,14 @@ void TwlMain(void)
   mydata.volume = (s32)MCU_GetVolume();
   mydata.backlight_brightness = (s32)MCU_GetBackLightBrightness();
 
+
+#if 0 /* いらないらしい */
   OS_TPrintf("vol = %d\n",mydata.volume );
   OS_TPrintf("bright = %d\n", mydata.backlight_brightness);
 
   MCU_SetVolume( (u8)31 );
   MCU_SetBackLightBrightness( (u8)4 );
-
+#endif
 
   // static inline BOOL MCU_SetVolume( u8 volume )
   // static inline BOOL MCU_SetBackLightBrightness( u8 brightness )
@@ -740,7 +855,7 @@ void TwlMain(void)
       }
 #endif
     }
-    else if ( keyData & PAD_BUTTON_A ) {
+    else if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
       /* ユーザーデータ吸出しモード */
       if(completed_flag == FALSE ) {
 	if( sd_card_flag == TRUE ) {
@@ -757,9 +872,22 @@ void TwlMain(void)
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
+      miya_debug_level++;
+      miya_debug_level &= 1;
+      if( miya_debug_level ) {
+	Miya_debug_ON();
+	mprintf("debug ON\n");
+      }
+      else {
+	Miya_debug_OFF();
+	mprintf("debug OFF\n");
+      }
     }
+#if 0
+    /* スタートボタンはＡボタンと同じ扱い */
     else if ( keyData & PAD_BUTTON_START ) {
     }
+#endif
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {

@@ -4,6 +4,28 @@
 #include        "mprintf.h"
 #include        "my_fs_util.h"
 #include        "logprintf.h"
+#include        "error_report.h"
+
+
+#define ATTRIBUTE_BACK 1
+
+/* このフラグどこかまずい！！！*/
+#define COPY_FILE_ENCRYPTION 1
+
+
+static BOOL miya_debug_flag = FALSE;
+static int miya_debug_counter = 0;
+
+void Miya_debug_ON(void)
+{
+  miya_debug_flag = TRUE;
+}
+
+void Miya_debug_OFF(void)
+{
+  miya_debug_flag = FALSE;
+}
+
 
 /*
   NAND -> SDコピーの時、アトリビュートと時間とパーミッションを合わせる必要あり？
@@ -95,40 +117,41 @@ typedef struct {
 
 /* c:/twlsdk/include/nitro/fs/types.h */
 
-static FS_RESUTL_WORD my_word[] = {
-  { FS_RESULT_SUCCESS, "FS_RESULT_SUCCESS" },
-  { FS_RESULT_FAILURE, "FS_RESULT_FAILURE" },
-  { FS_RESULT_BUSY, "FS_RESULT_BUSY" },
-  { FS_RESULT_CANCELED, "FS_RESULT_CANCELED" },
-  { FS_RESULT_CANCELLED, "FS_RESULT_CANCELLED" },
-  { FS_RESULT_UNSUPPORTED, "FS_RESULT_UNSUPPORTED" },
-  { FS_RESULT_ERROR, "FS_RESULT_ERROR" },
-  { FS_RESULT_INVALID_PARAMETER, "FS_RESULT_INVALID_PARAMETER" },
-  { FS_RESULT_NO_MORE_RESOUCE, "FS_RESULT_NO_MORE_RESOUCE" },
-  { FS_RESULT_ALREADY_DONE, "FS_RESULT_ALREADY_DONE" },
-  { FS_RESULT_PERMISSION_DENIED, "FS_RESULT_PERMISSION_DENIED" },
-  { FS_RESULT_MEDIA_FATAL, "FS_RESULT_MEDIA_FATAL" },
-  { FS_RESULT_NO_ENTRY, "FS_RESULT_NO_ENTRY" },
-  { FS_RESULT_MEDIA_NOTHING, "FS_RESULT_MEDIA_NOTHING" },
-  { FS_RESULT_MEDIA_UNKNOWN, "FS_RESULT_MEDIA_UNKNOWN" },
-  { FS_RESULT_BAD_FORMAT, "FS_RESULT_BAD_FORMAT" },
-  { FS_RESULT_MAX, "FS_RESULT_MAX" },
-    // プロシージャ内で使用する一時的な結果値
-  { FS_RESULT_PROC_ASYNC, "FS_RESULT_PROC_ASYNC" },
-  { FS_RESULT_PROC_DEFAULT, "FS_RESULT_PROC_DEFAULT" },
-  { FS_RESULT_PROC_UNKNOWN, "FS_RESULT_PROC_UNKNOW" },
-};
 
 
 char *my_fs_util_get_fs_result_word( FSResult res )
 {
   int i;
+  static FS_RESUTL_WORD my_fs_result_word[] = {
+    { FS_RESULT_SUCCESS, "FS_RESULT_SUCCESS" },
+    { FS_RESULT_FAILURE, "FS_RESULT_FAILURE" },
+    { FS_RESULT_BUSY, "FS_RESULT_BUSY" },
+    { FS_RESULT_CANCELED, "FS_RESULT_CANCELED" },
+    { FS_RESULT_CANCELLED, "FS_RESULT_CANCELLED" },
+    { FS_RESULT_UNSUPPORTED, "FS_RESULT_UNSUPPORTED" },
+    { FS_RESULT_ERROR, "FS_RESULT_ERROR" },
+    { FS_RESULT_INVALID_PARAMETER, "FS_RESULT_INVALID_PARAMETER" },
+    { FS_RESULT_NO_MORE_RESOUCE, "FS_RESULT_NO_MORE_RESOUCE" },
+    { FS_RESULT_ALREADY_DONE, "FS_RESULT_ALREADY_DONE" },
+    { FS_RESULT_PERMISSION_DENIED, "FS_RESULT_PERMISSION_DENIED" },
+    { FS_RESULT_MEDIA_FATAL, "FS_RESULT_MEDIA_FATAL" },
+    { FS_RESULT_NO_ENTRY, "FS_RESULT_NO_ENTRY" },
+    { FS_RESULT_MEDIA_NOTHING, "FS_RESULT_MEDIA_NOTHING" },
+    { FS_RESULT_MEDIA_UNKNOWN, "FS_RESULT_MEDIA_UNKNOWN" },
+    { FS_RESULT_BAD_FORMAT, "FS_RESULT_BAD_FORMAT" },
+    { FS_RESULT_MAX, "FS_RESULT_MAX" },
+    // プロシージャ内で使用する一時的な結果値
+    { FS_RESULT_PROC_ASYNC, "FS_RESULT_PROC_ASYNC" },
+    { FS_RESULT_PROC_DEFAULT, "FS_RESULT_PROC_DEFAULT" },
+    { FS_RESULT_PROC_UNKNOWN, "FS_RESULT_PROC_UNKNOW" },
+  };
+
   for( i = 0 ; i < 19 ; i++ ) {
-    if( my_word[i].result  == res ) {
-      return my_word[i].string;
+    if( my_fs_result_word[i].result  == res ) {
+      return my_fs_result_word[i].string;
     }
   }
-  return my_word[0].string;
+  return my_fs_result_word[0].string;
 }
 
 
@@ -146,20 +169,23 @@ static void PrintAttributes(u32 attributes, FSFile *log_fd)
 
 }
 
-
-static BOOL Log_File_Open(FSFile *log_fd, const char *log_file_name)
+BOOL Log_File_Open(FSFile *log_fd, const char *log_file_name)
 {
   BOOL bSuccess;
   FSResult res;
 
+  if( log_fd == NULL ) {
+    return FALSE;
+  }
+
   if( log_file_name == NULL ) {
+    miya_log_fprintf(NULL, "%s %d: No log file name\n",__FUNCTION__,__LINE__);
     return FALSE;
   }
 
   FS_InitFile(log_fd);
 
   bSuccess = FS_OpenFileEx(log_fd, log_file_name, (FS_FILEMODE_W));
-
   if( ! bSuccess ) {
     FS_CreateFileAuto( log_file_name, FS_PERMIT_W);
     bSuccess = FS_OpenFileEx(log_fd, log_file_name, (FS_FILEMODE_W));
@@ -173,23 +199,90 @@ static BOOL Log_File_Open(FSFile *log_fd, const char *log_file_name)
   return TRUE;
 }
 
-static void Log_File_Close(FSFile *log_fd)
+void Log_File_Close(FSFile *log_fd)
 {
-  FS_FlushFile(log_fd);
-  FS_CloseFile(log_fd);
+  if( log_fd ) {
+    FS_FlushFile(log_fd);
+    FS_CloseFile(log_fd);
+  }
 }
 
-/*---------------------------------------------------------------------------*
-  Name:         LoadFile
 
-  Description:  内部でメモリを確保しファイルを読み込みます。
 
-  Arguments:    path:   読み込むファイルのパス。
+/*
+  void CRYPTO_RC4Encrypt(CRYPTORC4Context* context, const void* in, u32 length, void* out);
 
-  Returns:      ファイルが存在するならファイルの内容が読み込まれた
-                内部で確保したバッファへのポインタを返します。
-                このポインタは FS_Free で解放する必要があります。
- *---------------------------------------------------------------------------*/
+  context - CRYPTO_RC4Init() で予め鍵を設定した CRYPTORC4Context 型の構造体を指定します。 
+  in      - RC4 アルゴリズムによる暗号化/復号を行う対象のデータへのポインタを指定します。 
+  length  - in で指定したデータの長さを指定します。 
+  out     - 暗号化/復号を行った結果を格納する先のポインタを指定します。 
+  
+*/
+static u32 my_fs_GetStringLength(char* str)
+{
+  u32 i;
+  for (i = 0; ; i++) {
+    if (*(str++) == '\0') {
+      return i;
+    }
+  }
+}
+
+static char *my_fs_key = "twl-repair-tool";
+
+
+s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size)
+{
+  s32 readSize;
+  CRYPTORC4FastContext context;
+  u8 *crypt_buf;
+
+  crypt_buf = (u8 *)OS_Alloc( (u32)size );
+  if(crypt_buf == NULL ) {
+    return -1;
+  }
+
+  readSize = FS_ReadFile(f, (void *)crypt_buf, size);
+  if( readSize != size ) {
+    /* error! */
+    goto end;
+  }
+  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+  CRYPTO_RC4FastEncrypt(&context, (char *)crypt_buf, (u32)size, ptr);
+
+ end:  
+  if( crypt_buf != NULL ) {
+    OS_Free(crypt_buf);
+  }
+  return readSize;
+}
+
+s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size)
+{
+  s32 writtenSize;
+  CRYPTORC4FastContext context;
+  u8 *crypt_buf;
+
+  crypt_buf = (u8 *)OS_Alloc( (u32)size );
+  if(crypt_buf == NULL ) {
+    return -1;
+  }
+
+  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+  CRYPTO_RC4FastEncrypt(&context, (char *)ptr, (u32)size, crypt_buf);
+
+  writtenSize = FS_WriteFile(f, crypt_buf, size);
+  if( writtenSize != size ) {
+    /* error */
+  }
+
+  if( crypt_buf != NULL ) {
+    OS_Free(crypt_buf);
+  }
+  return writtenSize; 
+}
+
+
 static BOOL LoadFile(const char* path, char **alloc_ptr, int *alloc_size, FSFile *log_fd)
 {
     FSFile f;
@@ -199,7 +292,7 @@ static BOOL LoadFile(const char* path, char **alloc_ptr, int *alloc_size, FSFile
     s32 readSize = 0;
 
     if( alloc_ptr == 0 || alloc_size == NULL ) {
-      miya_log_fprintf(log_fd, "Failed LoadFile argument error\n");
+      miya_log_fprintf(log_fd, "Failed LoadFile argument error ptr=0x%08p, size=%d\n", alloc_ptr , alloc_size);
       return FALSE;
     }
 
@@ -207,33 +300,45 @@ static BOOL LoadFile(const char* path, char **alloc_ptr, int *alloc_size, FSFile
 
     bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
     if( ! bSuccess ) {
-      miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
+      miya_log_fprintf(log_fd, "%s Failed Open File\n",__FUNCTION__);
       miya_log_fprintf(log_fd, " path=%s\n", path );
       miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
       return FALSE;
     }
 
     fileSize = FS_GetFileLength(&f);
-    pBuffer = (char*)OS_Alloc(fileSize + 1);
+
+    //    pBuffer = (char*)OS_Alloc(fileSize + 1);
+    pBuffer = (char*)OS_Alloc( fileSize );
     if( pBuffer == NULL ) {
-      miya_log_fprintf(log_fd, "Mem alloc error: %s\n", __FUNCTION__);
+      miya_log_fprintf(log_fd, "%s Mem alloc error: %d\n", __FUNCTION__, fileSize);
+      *alloc_size = 0;
+      *alloc_ptr = NULL;
       return FALSE;
     }
 
     readSize = FS_ReadFile(&f, pBuffer, (s32)fileSize);
     if( readSize != fileSize ) {
-      miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
+      miya_log_fprintf(log_fd, "%s Failed Read File:%s\n",__FUNCTION__ , path );
+      miya_log_fprintf(log_fd, " request size=%d read size=%d\n", fileSize, readSize);
+      if( pBuffer != NULL ) {
+	OS_Free(pBuffer);
+      }
+      *alloc_size = 0;
+      *alloc_ptr = NULL;
+      return FALSE;
     }
     
     *alloc_size = (int)readSize;
 
     bSuccess = FS_CloseFile(&f);
     if( ! bSuccess ) {
-      miya_log_fprintf(log_fd, "Failed Close File\n");
+      miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
       miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
     }
 
-    pBuffer[fileSize] = '\0';
+    //  pBuffer[fileSize] = '\0';
+
     *alloc_ptr = pBuffer;
     return TRUE;
 }
@@ -254,8 +359,9 @@ static BOOL SaveFile(const char* path, void* pData, u32 size, FSFile *log_fd)
       /* 本来ここで問題なし */
     }
     else {
-      miya_log_fprintf(log_fd, "Failed open file:%s %d %s %s\n",
-		       __FUNCTION__,__LINE__, path, my_fs_util_get_fs_result_word(res) );
+      miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+      miya_log_fprintf(log_fd, " %s\n", path );
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
     }
   }
   else {
@@ -268,8 +374,9 @@ static BOOL SaveFile(const char* path, void* pData, u32 size, FSFile *log_fd)
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if (bSuccess == FALSE) {
     FSResult res = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd,"Failed open file:%s %d %s %s\n", 
-		     __FUNCTION__,__LINE__, path, my_fs_util_get_fs_result_word(res) );
+    miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " %s\n", path );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
     return FALSE;
   }
 
@@ -279,13 +386,17 @@ static BOOL SaveFile(const char* path, void* pData, u32 size, FSFile *log_fd)
 
   writtenSize = FS_WriteFile(&f, pData, (s32)size);
   if( writtenSize != size ) {
+    FSResult res = FS_GetArchiveResultCode(path);
+    miya_log_fprintf(log_fd, "%s Failed write file %d:\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " %s\n", path );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
+    (void)FS_CloseFile(&f);
+    return FALSE;
   }
 
   FS_FlushFile(&f);
-  bSuccess = FS_CloseFile(&f);
-  if( bSuccess ) {
-      
-  }
+  (void)FS_CloseFile(&f);
+
   return TRUE;
 }
 
@@ -308,6 +419,134 @@ BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd )
   }
   return FALSE;
 }
+
+
+#ifdef COPY_FILE_ENCRYPTION
+static BOOL CopyFileCrypto(const char *dst_path, const char *src_path, FSFile *log_fd )
+{
+  FSFile f_src;
+  FSFile f_dst;
+  char* pBuffer;
+  u32 fileSize;
+  s32 readSize = 0;
+  FSResult fsResult;
+  s32 writtenSize;
+  CRYPTORC4FastContext context;
+  char* pBuffer_crypto;
+  BOOL ret_flag = FALSE;
+
+  if( miya_debug_flag ) {
+    miya_debug_counter++;
+    if( miya_debug_counter > 2 ) {
+      miya_debug_counter = 0;
+      return FALSE;
+    }
+  }
+
+  FS_InitFile(&f_src);
+
+  if( FALSE == FS_OpenFileEx(&f_src, src_path, FS_FILEMODE_R) ) {
+    miya_log_fprintf(log_fd, "%s Failed Open File\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", src_path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(src_path) ));
+    return FALSE;
+  }
+
+  fileSize = FS_GetFileLength(&f_src);
+
+  pBuffer = (char*)OS_Alloc( fileSize );
+  if( pBuffer == NULL ) {
+    miya_log_fprintf(log_fd, "%s Mem alloc error: %d\n", __FUNCTION__, fileSize);
+  }
+  else {
+    readSize = FS_ReadFile(&f_src, pBuffer, (s32)fileSize);
+    if( readSize != fileSize ) {
+      miya_log_fprintf(log_fd, "%s Failed Read File:%s\n",__FUNCTION__ , src_path );
+      miya_log_fprintf(log_fd, " request size=%d read size=%d\n", fileSize, readSize);
+    }
+    else {
+      /* crypto start */
+      pBuffer_crypto = (char*)OS_Alloc( fileSize );
+      if( pBuffer_crypto == NULL ) {
+	miya_log_fprintf(log_fd, "%s Mem(cryto) alloc error: %d\n", __FUNCTION__, fileSize);
+      }
+      else {
+	/* ここからWrite */
+
+	CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+	CRYPTO_RC4FastEncrypt(&context, pBuffer, (u32)fileSize, pBuffer_crypto);
+      
+
+	FS_InitFile(&f_dst);
+	if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+	  FSResult res = FS_GetArchiveResultCode(dst_path);
+	  if( res == FS_RESULT_NO_ENTRY ) {
+	    /* 本来ここで問題なし */
+	  }
+	  else {
+	    miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+	    miya_log_fprintf(log_fd, " %s\n", dst_path );
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
+	  }
+	}
+	else {
+	  FS_CloseFile(&f_dst);
+	  /* backup バックアップを取っておくべき？？ */
+	  FS_DeleteFile(dst_path);
+	}
+	
+	
+	FS_CreateFile(dst_path, (FS_PERMIT_R|FS_PERMIT_W));
+	if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+	  miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+	  miya_log_fprintf(log_fd, " %s\n", dst_path );
+	  miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+	}
+	else {
+	  fsResult = FS_SetFileLength(&f_dst, 0);
+	  if( fsResult != FS_RESULT_SUCCESS ) {
+	    miya_log_fprintf(log_fd, "%s Error: Set file len\n", __FUNCTION__);
+	    miya_log_fprintf(log_fd, " %s\n", dst_path );
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(fsResult) );
+	  }
+	  else {
+	    writtenSize = FS_WriteFile(&f_dst, pBuffer_crypto, readSize);
+	    if( writtenSize != readSize ) {
+	      miya_log_fprintf(log_fd, "%s Failed write file %d:\n", __FUNCTION__,__LINE__);
+	      miya_log_fprintf(log_fd, " %s\n", dst_path );
+	      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+	    }
+	    else {
+	      FS_FlushFile(&f_dst);
+	      ret_flag = TRUE;
+	    }
+	  }
+	}
+	/* Write終了 */
+      }
+      /* crypto end */
+    }
+  }
+
+  if( pBuffer != NULL ) {
+    OS_Free(pBuffer);
+  }
+  if( pBuffer_crypto != NULL ) {
+    OS_Free(pBuffer_crypto);
+  }
+    
+  if( FALSE == FS_CloseFile(&f_src) ) {
+    miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(src_path)));
+  }
+  if( FALSE == FS_CloseFile(&f_dst) ) {
+    miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(dst_path)));
+  }
+
+  return ret_flag;
+}
+#endif
 
 static BOOL CompareFsDateTime( FSDateTime *dt1, FSDateTime *dt2)
 {
@@ -371,20 +610,27 @@ static BOOL restore_entry_list(MY_DIR_ENTRY_LIST **headp, FSFile *log_fd)
 }
 
 
-static BOOL add_entry_list( MY_DIR_ENTRY_LIST **headp, MY_DIR_ENTRY_LIST *entry_list )
+static BOOL add_entry_list( MY_DIR_ENTRY_LIST **headp, MY_DIR_ENTRY_LIST *entry_list, FSFile *log_fd)
 {
   MY_DIR_ENTRY_LIST *list_temp;
   MY_DIR_ENTRY_LIST *list_prev_temp;
 
   if( entry_list == NULL ) {
+    miya_log_fprintf(log_fd, "%s ERROR:entry_list ptr -> NULL\n", __FUNCTION__);
     return FALSE;
   }
   if( headp == NULL ) {
+    miya_log_fprintf(log_fd, "%s ERROR:headp ptr -> NULL\n", __FUNCTION__);
     return FALSE;
   }
 
   if( *headp == NULL ) {
     *headp = (MY_DIR_ENTRY_LIST *)OS_Alloc( sizeof(MY_DIR_ENTRY_LIST) );
+    if( *headp == NULL ) {
+      miya_log_fprintf(log_fd, "%s memory alloc error: *headp size=%d\n",  
+		       __FUNCTION__, sizeof(MY_DIR_ENTRY_LIST) );
+      return FALSE;
+    }
     STD_CopyMemory( (void *)(*headp), (void *)entry_list , sizeof(MY_DIR_ENTRY_LIST) );
     (*headp)->prev = NULL;
     (*headp)->next = NULL;
@@ -394,6 +640,11 @@ static BOOL add_entry_list( MY_DIR_ENTRY_LIST **headp, MY_DIR_ENTRY_LIST *entry_
       ;
     }
     list_temp->next = (MY_DIR_ENTRY_LIST *)OS_Alloc( sizeof(MY_DIR_ENTRY_LIST) );
+    if( list_temp->next == NULL ) {
+      miya_log_fprintf(log_fd, "%s memory alloc error: list_temp->next size=%d\n",  
+		       __FUNCTION__, sizeof(MY_DIR_ENTRY_LIST) );
+      return FALSE;
+    }
 
     list_prev_temp = list_temp;
     list_temp = list_temp->next;
@@ -404,26 +655,35 @@ static BOOL add_entry_list( MY_DIR_ENTRY_LIST **headp, MY_DIR_ENTRY_LIST *entry_
   return TRUE;
 }
 
+
+
 static BOOL my_fs_add_list( MY_DIR_ENTRY_LIST **headp, FSDirectoryEntryInfo *entry, 
 			    const char *src_path, const char *dst_path, FSFile *log_fd)
 {
+
   MY_DIR_ENTRY_LIST *list_temp;
   MY_DIR_ENTRY_LIST *list_prev_temp;
   FSPathInfo path_info;
-  if( entry == NULL ) {
+
+
+  if( (entry == NULL) || (src_path == NULL) ) {
+    miya_log_fprintf(log_fd, "%s %d: invalid arg.\n", __FUNCTION__,__LINE__ );
+    miya_log_fprintf(log_fd, " entry=0x%08p src_path=0x%-8p\n",entry, src_path);
     return FALSE;
   }
 
   /* ファイルの場合 srcがNAND, dstがSD */
   if( !STD_StrCmp( src_path, "nand:" ) ) {
     /* nandのルートディレクトリはスルーする。 */
+    miya_log_fprintf(log_fd, "detect nand: root dir\n");
     return TRUE;
   }
 
-
   if( FALSE == FS_GetPathInfo(src_path,&path_info) ) {
-    miya_log_fprintf(log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
+    FSResult fsResult = FS_GetArchiveResultCode( src_path );
+    miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
     miya_log_fprintf(log_fd, " %s\n", src_path );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
   }
   else {
     if( FALSE == CompareFsDateTime( &(entry->atime), &(path_info.atime)) )  {
@@ -432,9 +692,7 @@ static BOOL my_fs_add_list( MY_DIR_ENTRY_LIST **headp, FSDirectoryEntryInfo *ent
       miya_log_fprintf(log_fd,"%02d:%02d:%02d\n", entry->atime.hour,entry->atime.minute,entry->atime.second);
       miya_log_fprintf(log_fd," path_info %d/%02d/%02d ", path_info.atime.year,path_info.atime.month,path_info.atime.day);
       miya_log_fprintf(log_fd,"%02d:%02d:%02d\n", path_info.atime.hour,path_info.atime.minute,path_info.atime.second);
-
       entry->atime = path_info.atime;
-
     }
 
     if( FALSE == CompareFsDateTime( &(entry->mtime), &(path_info.mtime)) )  {
@@ -443,13 +701,11 @@ static BOOL my_fs_add_list( MY_DIR_ENTRY_LIST **headp, FSDirectoryEntryInfo *ent
       miya_log_fprintf(log_fd,"%02d:%02d:%02d\n", entry->mtime.hour,entry->mtime.minute,entry->mtime.second);
       miya_log_fprintf(log_fd," path_info %d/%02d/%02d ", path_info.mtime.year,path_info.mtime.month,path_info.mtime.day);
       miya_log_fprintf(log_fd,"%02d:%02d:%02d\n", path_info.mtime.hour,path_info.mtime.minute,path_info.mtime.second);
-
       entry->mtime = path_info.mtime;
     }
 
 #if 0
     /* なぜがWarningが出る */
-OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     if( FALSE == CompareFsDateTime( &(entry->ctime), &(path_info.ctime)) )  {
       miya_log_fprintf(log_fd, "warning ctime\n");
       miya_log_fprintf(log_fd," entry     %d/%02d/%02d ", entry->ctime.year,entry->ctime.month,entry->ctime.day); 
@@ -457,7 +713,6 @@ OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
       miya_log_fprintf(log_fd," path_info %d/%02d/%02d ", path_info.ctime.year,path_info.ctime.month,path_info.ctime.day);
       miya_log_fprintf(log_fd,"%02d:%02d:%02d\n", path_info.ctime.hour,path_info.ctime.minute,path_info.ctime.second);
     }
-OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
 #endif
     //    OS_TPrintf("path info att=0x%08x\n",path_info.attributes);
     if( entry->attributes != path_info.attributes ) {
@@ -467,11 +722,14 @@ OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     entry->attributes = path_info.attributes;
   }
 
-
   if( *headp == NULL ) {
     *headp = (MY_DIR_ENTRY_LIST *)OS_Alloc( sizeof(MY_DIR_ENTRY_LIST) );
+    if( *headp == NULL ) {
+      miya_log_fprintf(log_fd, "%s memory alloc error: *headp size=%d\n",  
+		       __FUNCTION__, sizeof(MY_DIR_ENTRY_LIST) );
+      return FALSE;
+    }
     STD_MemSet((void *)*headp, 0, sizeof(MY_DIR_ENTRY_LIST) );
-
     (*headp)->prev = NULL;
     (*headp)->next = NULL;
     STD_CopyMemory( (void *)&((*headp)->content), (void *)entry ,sizeof(FSDirectoryEntryInfo) );
@@ -485,8 +743,12 @@ OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
       ;
     }
     list_temp->next = (MY_DIR_ENTRY_LIST *)OS_Alloc( sizeof(MY_DIR_ENTRY_LIST) );
+    if( list_temp->next == NULL ) {
+      miya_log_fprintf(log_fd, "%s memory alloc error:list_temp->next size=%d\n",  
+		       __FUNCTION__, sizeof(MY_DIR_ENTRY_LIST) );
+      return FALSE;
+    }
     STD_MemSet((void *)list_temp->next, 0, sizeof(MY_DIR_ENTRY_LIST) );
-
     list_prev_temp = list_temp;
     list_temp = list_temp->next;
     list_temp->prev = list_prev_temp;
@@ -497,15 +759,20 @@ OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
       STD_StrCpy(list_temp->dst_path, dst_path);
     }
   }
+#if 1
+  PrintAttributes(entry->attributes, log_fd);
+  miya_log_fprintf(log_fd, " %s len=%d\n",src_path,entry->filesize);
+#endif
 
   return TRUE;
 }
  
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp )
 {
-  MY_DIR_ENTRY_LIST *list_temp1 = *headp;
+  MY_DIR_ENTRY_LIST *list_temp1;
   MY_DIR_ENTRY_LIST *list_temp2;
 
+  list_temp1 = *headp;
   *headp = NULL;
 
   while( list_temp1 ) {
@@ -559,6 +826,81 @@ void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd)
   miya_log_fprintf(log_fd, "PrintDirEntryListBackward-----End\n");
 }
 
+static int a_to_int(char c)
+{
+  if( ('a' <= c) && (c <= 'f') ) {
+    return (int)( c - 'a' + 10 );
+  }
+  else if( ('A' <= c) && (c <= 'F') ) {
+    return (int)( c - 'A' + 10 );
+  }
+  else if( ('0' <= c) && (c <= '9') ) {
+    return (int)( c - '0' );
+  }
+  return -1;
+}
+
+
+static BOOL GetAppGameCode(const char path[], char *code_buf , FSFile *log_fd)
+{
+  /*
+    012345678901234567890123456789
+    nand:/title/00030017/484e4141 は ランチャー
+  */
+  int c_hi;
+  int c_lo;
+  int i;
+  char *str;
+  str = code_buf;
+
+  if( (path == NULL ) || (code_buf == NULL) ) {
+    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
+    miya_log_fprintf(log_fd, " path=0x%08x code_buf=0x%08x\n", path, code_buf);
+    return FALSE;
+  }
+
+  if( STD_StrLen(path) < 28 ) {
+    return FALSE;
+  }
+
+  for( i = 0 ; i < 8 ; i++ ) {
+    if( i % 2 ) {
+      c_lo = a_to_int( path[21+i] );
+      if( c_lo == -1 ) {
+	return FALSE;
+      }
+      *str = (char)( c_hi << 4 | c_lo );
+      str++;
+    }
+    else {
+      c_hi = a_to_int( path[21+i] );
+      if( c_hi == -1 ) {
+	return FALSE;
+      }
+    }
+  }
+  *str = '\0';
+  return TRUE;
+}
+
+static void AppErrorReport(const char *path, char *msg)
+{
+  char game_code[5];
+  char *dir_name1 = "nand:/shared2";
+  char *dir_name2 = "nand2:/photo";
+  if( !STD_StrNCmp( path, dir_name1 , STD_StrLen(dir_name1) ) ) {
+    (void)Error_Report_Printf(" Shared:%s\n", msg);
+  }
+  else if( !STD_StrNCmp( path, dir_name2 , STD_StrLen(dir_name2) ) ) {
+    (void)Error_Report_Printf(" Photo :%s\n", msg);
+  }
+  else if( TRUE == GetAppGameCode(path, game_code, NULL ) ) {
+    (void)Error_Report_Printf(" %s  :%s\n", game_code, msg);
+  }
+  else {
+    (void)Error_Report_Printf(" ????  :%s\n   path=%s\n",msg, path);
+  }
+}
 
 static BOOL CheckSystemApp(char path[])
 {
@@ -581,31 +923,22 @@ static BOOL CheckSystemApp(char path[])
 
   */
   c = path[19];
-  if( ('a' <= c) && (c <= 'f') ) {
-    num = (int)( c - 'a' + 10 );
-  }
-  else if( ('A' <= c) && (c <= 'F') ) {
-    num = (int)( c - 'A' + 10 );
-  }
-  else if( ('0' <= c) && (c <= '9') ) {
-    num = (int)( c - '0' );
-  }
-  else {
+  num = a_to_int( c );
+
+  if( num == -1 ) {
+    /* Panicぐらいでええかも */
+    miya_log_fprintf(NULL, "%s error: not ascii code-> %c\n",__FUNCTION__, c);
     num = 0;
   }
-  
-  if( num & 1 ) {
-    /* System App. */
+  if( num & 1 ) { /* System App. */
     return TRUE;
   }
-  else {
-    /* User App. */
+  else { /* User App. */
     return FALSE;
   }
 }
 
-
-void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
+BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name )
 {
   int i;
   int count = 0;
@@ -613,7 +946,20 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
   u64 *buf = NULL;
   char c;
   u8 hex;
-  
+  BOOL log_active = FALSE;
+  FSFile *log_fd;
+  FSFile log_fd_real;
+  BOOL ret_flag = TRUE;
+
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  else {
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  }
+
   if( head == NULL ) {
     *pBuffer = NULL;
     *size = 0;
@@ -626,12 +972,18 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	}
       }
     }
-    OS_TPrintf("User App. count1 = %d\n", count);    
-    // mprintf("\nUser App. count1 = %d\n", count); 
+    miya_log_fprintf(log_fd, "User App. count = %d\n", count); 
 
     if( count ) {
       buf = (u64 *)OS_Alloc( (u32)(count * sizeof(u64)) );
-      STD_MemSet((void *)buf, 0, count * sizeof(u64));
+      if( buf ) {
+	STD_MemSet((void *)buf, 0, count * sizeof(u64));
+      }
+      else {
+	miya_log_fprintf(log_fd, "%s memory allocate error\n",__FUNCTION__);
+	ret_flag = FALSE;
+	goto function_end;
+      }
     }
     else {
 
@@ -655,52 +1007,39 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	  システムアプリはダウンロード対象外
 	*/
 	if( FALSE == CheckSystemApp( list_temp->src_path ) ) {
-	  /* koko-made */
-	  count++;
-	  
 	  /* User App. */
 	  for( i =  0 ; i < 8 ; i++ ) {
 	    c = list_temp->src_path[12 + i];
-	    hex = 0;
-	    if( ('a' <= c) && (c <= 'f') ) {
-	      hex = (u8)( c - 'a' + 10 );
-	    }
-	    else if( ('A' <= c) && (c <= 'F') ) {
-	      hex = (u8)( c - 'A' + 10 );
-	    }
-	    else if( ('0' <= c) && (c <= '9') ) {
-	      hex = (u8)(c - '0');
+	    hex =  (u8)a_to_int(c);
+	    if( hex > -1 ) {
 	    }
 	    else {
 	      /* error! */
-	      //  count--;
-	      return;
+	      miya_log_fprintf(log_fd, "%s 1 invalid path name %s\n",__FUNCTION__,list_temp->src_path);
+	      if( *size > 0 ) {
+		*size = *size - 1;
+	      }
+	      goto next_loop;
 	    }
 	    *buf |= (((u64)hex) << ((7-i)*4 + 32 ));
 	  }
-
 	  for( i =  0 ; i < 8 ; i++ ) {
 	    c = list_temp->src_path[21 + i];
-	    hex = 0;
-	    if( ('a' <= c) && (c <= 'f') ) {
-	      hex = (u8)( c - 'a' + 10 );
-	    }
-	    else if( ('A' <= c) && (c <= 'F') ) {
-	      hex = (u8)( c - 'A' + 10 );
-	    }
-	    else if( ('0' <= c) && (c <= '9') ) {
-	      hex = (u8)(c - '0');
+	    hex =  (u8)a_to_int(c);
+	    if( hex > -1 ) {
 	    }
 	    else {
 	      /* error! */
-	      // count--;
-	      return;
+	      miya_log_fprintf(log_fd, "%s 2 invalid path name %s\n",__FUNCTION__,list_temp->src_path);
+	      if( *size > 0 ) {
+		*size = *size - 1;
+	      }
+	      goto next_loop;
 	    }
 	    *buf |= (((u64)hex) << ((7-i)*4 ));
 	  }
 	  buf++;
-	  //  OS_TPrintf("User App. count2 = %d\n", count);
-
+	  count++;
 	}
 	/*
 	  012345678901234567890123456789
@@ -708,16 +1047,23 @@ void GetDirEntryList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size)
 	  nand:/title/00030015/484e4641 は shop
 	  nand:/title/00030015/484e4241 は 本体設定
 	*/
+      next_loop:
+	;
       }
     }
   }
+function_end:
+  if( log_active ) {
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
+  }
+  return ret_flag;
 }
 
 
 void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd)
 {
   MY_DIR_ENTRY_LIST *list_temp;
-  //  MY_DIR_ENTRY_LIST *list_prev;
   miya_log_fprintf(log_fd, "PrintSrcDirEntryListBackword-----Start\n");
   if( head == NULL ) {
   }
@@ -728,11 +1074,6 @@ void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd)
     for(  ; list_temp != NULL ; list_temp = list_temp->prev ) {
       if( list_temp->src_path ) {
 	miya_log_fprintf(log_fd, "%s\n", list_temp->src_path );
-	/*
-	  nand:/title/00030017/484e4141 は ランチャー
-	  nand:/title/00030015/484e4641 は shop
-	  nand:/title/00030015/484e4241 は 本体設定
-	*/
       }
     }
   }
@@ -740,53 +1081,69 @@ void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd)
 }
 
 
-
-
-
-int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
+BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, int *error_count, char *log_file_name)
 {
   FSFile f;
   FSFile f_src;
   FSFile f_dst;
-  BOOL bSuccess;
   FSResult fsResult;
   s32 writtenSize;
   MY_DIR_ENTRY_LIST *list_temp;
-  int list_count = 0;
   
   FSFile log_fd_real;
   FSFile *log_fd;
   BOOL log_active = FALSE;
-  //  char *log_file_name = "sdmc:/miya/save_dir_entry_log.txt";
-  char *log_file_name = NULL;
-
+  BOOL copy_error_flag;
+  
   log_fd = &log_fd_real;
 
-  /* ここでSDカードがあるかどうか調べる */
   log_active = Log_File_Open( log_fd, log_file_name );
   if( !log_active ) {
     log_fd = NULL;
   }
+  else {
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  }
+
+  if( (list_count == NULL) || (error_count == NULL) ) {
+    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
+    miya_log_fprintf(log_fd, " list ptr=0x%08x error ptr=0x%08x\n", list_count, error_count);
+    return FALSE;
+  }
+
+  *list_count = 0;
+  *error_count = 0;
+
 
   /* 最初にSD側のルートディレクトリのデータを消しとくべきか？
      せっかくファイルリストに記録してるのでもったいない→必要ない */
   FS_InitFile(&f);
   FS_InitFile(&f_src);
   FS_InitFile(&f_dst);
+
   if( path == NULL ) {
-    miya_log_fprintf(log_fd, "%s %d not specify entry save file\n",__FUNCTION__,__LINE__ );
-    return -1;
+    miya_log_fprintf(log_fd, "%s %d not specify entry save file name\n",__FUNCTION__,__LINE__ );
+    return FALSE; /* error */
   }
+
   FS_CreateFileAuto(path, (FS_PERMIT_R|FS_PERMIT_W));
-  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
-  if (bSuccess == FALSE) {
+  if( FALSE == FS_OpenFileEx(&f, path, FS_FILEMODE_W) ) {
     fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd, "Failed create file - dir entry list file:%d\n", fsResult );
-    return -1;
+    miya_log_fprintf(log_fd, "%s %d Failed open-file\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " - dir entry list file:\n");
+    miya_log_fprintf(log_fd, "   %s\n", my_fs_util_get_fs_result_word( fsResult ));
+
+    (void)Error_Report_Printf(" ????  :Open file failed.\n   path=%s\n", path);
+    return FALSE; /* error */
   }
   fsResult = FS_SetFileLength(&f, 0);
   if( fsResult != FS_RESULT_SUCCESS ) {
-    miya_log_fprintf(log_fd, "Failed set file len - dir entry list file:%d\n", fsResult );
+    miya_log_fprintf(log_fd, "%s %d Failed set file-len 0\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " - dir entry list file:\n");
+    miya_log_fprintf(log_fd, "   %s\n", my_fs_util_get_fs_result_word( fsResult ));
+
+    (void)Error_Report_Printf(" ????  :Open file failed.\n   path=%s\n", path);
+    return FALSE; /* error */
   }
 
   /* バックワードでファイルに保存 */
@@ -797,31 +1154,27 @@ int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
       ;
       }
     for(  ; list_temp != NULL ; list_temp = list_temp->prev ) {
-      // OS_TPrintf( "name = %s\n", list_temp->src_path );
-      /* SDにログを残す場合 */
-      if( log_active ) {
-	miya_log_fprintf(log_fd, "%s\n", list_temp->src_path);
-      }
+      copy_error_flag = FALSE;
 
-      writtenSize = FS_WriteFile(&f, (void *)list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
-      if( writtenSize != sizeof(MY_DIR_ENTRY_LIST) ) {
-	miya_log_fprintf(log_fd, "%s %d: Failed write file\n", __FUNCTION__ , __LINE__ );
-	miya_log_fprintf(log_fd, " %s\n", path);
-	miya_log_fprintf(log_fd, " entry count %d\n", list_count );
-      }
-      
+      miya_log_fprintf(log_fd, "%s\n", list_temp->src_path);
+
       /* SD側にディレクトリの作成とファイルのコピー */
       if( (list_temp->content.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
-	bSuccess = FS_CreateDirectoryAuto(list_temp->dst_path, FS_PERMIT_RW);
-	// bSuccess = FS_CreateDirectory(list_temp->dst_path, FS_PERMIT_RW);
-	if(!bSuccess) {
+	//	copy_error_flag = FS_CreateDirectoryAuto(list_temp->dst_path, FS_PERMIT_RW);
+	//     Createオートを使ったらまずい。
+	copy_error_flag = FS_CreateDirectory(list_temp->dst_path, FS_PERMIT_RW);
+
+	if(!copy_error_flag ) {
 	  fsResult = FS_GetArchiveResultCode(list_temp->dst_path);
 	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
 	    miya_log_fprintf(log_fd, "%s %d: Failed Create DST Directory\n", __FUNCTION__ , __LINE__ );
 	    miya_log_fprintf(log_fd, " %s\n", list_temp->dst_path);
 	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	    return -1;
+	    //  return -1;
+	  }
+	  else {
+	    copy_error_flag = TRUE; /* カッコ悪・・ */
 	  }
 	}
       }
@@ -833,10 +1186,41 @@ int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
 	else {
 	  /* NANDからSDにコピーする */
 	  // CopyFile( dst <= src );
-	  CopyFile(list_temp->dst_path, list_temp->src_path, log_fd );
+	  // Createオートを使ったらまずい。
+#ifdef COPY_FILE_ENCRYPTION
+	  copy_error_flag = CopyFileCrypto(list_temp->dst_path, list_temp->src_path, log_fd );
+#else
+	  copy_error_flag = CopyFile(list_temp->dst_path, list_temp->src_path, log_fd );
+#endif
 	}
       }
-      list_count++;
+
+      if( copy_error_flag == TRUE ) {
+	writtenSize = FS_WriteFile(&f, (void *)list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
+	if( writtenSize != sizeof(MY_DIR_ENTRY_LIST) ) {
+	  miya_log_fprintf(log_fd, "%s %d: Failed write file\n", __FUNCTION__ , __LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n\n", path);
+	  if( writtenSize > 0 ) {
+	    if(FALSE == FS_SeekFile( &f, -writtenSize, FS_SEEK_CUR) ) {
+	      fsResult = FS_GetArchiveResultCode(path);
+	      miya_log_fprintf(log_fd, "%s %d: Failed seek-file\n", __FUNCTION__ , __LINE__ );
+	      miya_log_fprintf(log_fd, " %s\n", path);
+	      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	      /* panic.. */
+	    }
+	  }
+	  (*error_count)++;
+	  AppErrorReport(list_temp->src_path, "copy file failed");
+	}
+	else {
+	  (*list_count)++;
+	}
+      }
+      else {
+	(*error_count)++;
+	AppErrorReport(list_temp->src_path, "copy file failed");
+      }
+
     }
   }
   
@@ -847,20 +1231,22 @@ int SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path )
     miya_log_fprintf(log_fd, " %s\n", path);
     miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ) );
   }
-  if( log_active ) {
-    miya_log_fprintf(log_fd, "write entry list count %d\n", list_count);
-  }
 
-  if( log_active ) {
-    Log_File_Close(log_fd);
+  miya_log_fprintf(log_fd, "write entry list count  %d\n", *list_count);
+  miya_log_fprintf(log_fd, "            error count %d\n", *error_count );
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  Log_File_Close(log_fd);
+  
+  if( *error_count > 0 ) {
+    return FALSE;
   }
-  return list_count;
+  return TRUE;
 }
 
 /********************************************
  * NANDにディレクトリエントリとファイルを復活させる。
 *********************************************/
-BOOL RestoreDirEntryList( char *path , char *log_file_name)
+BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int *error_count)
 {
   FSFile f;
   FSFile f_dir;
@@ -869,152 +1255,394 @@ BOOL RestoreDirEntryList( char *path , char *log_file_name)
   s32 readSize;
   MY_DIR_ENTRY_LIST list_temp;
   FSPathInfo path_info;
-  int list_count = 0;
   MY_DIR_ENTRY_LIST *readonly_list_head = NULL;
-
-  FSFile log_fd;
+  BOOL copy_error_flag;
+  FSFile log_fd_real;
+  FSFile *log_fd;
   BOOL log_active = FALSE;
   
 
-  /* ここでSDカードがあるかどうか調べる */
 
-  log_active = Log_File_Open( &log_fd, log_file_name );
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+
+  if( (list_count == NULL) || (error_count == NULL) ) {
+    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
+    miya_log_fprintf(log_fd, " list ptr=0x%08x error ptr=0x%08x\n", list_count, error_count);
+    return FALSE;
+  }
+
+  *list_count = 0;
+  *error_count = 0;
 
   FS_InitFile(&f);
   FS_InitFile(&f_dir);
 
   if( FS_OpenFileEx(&f, path, FS_FILEMODE_R) == FALSE) {
     fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(&log_fd, "%s %d: Failed Open file\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-    return FALSE;
+    miya_log_fprintf(log_fd, "%s %d: Failed Open file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+
+    (void)Error_Report_Printf(" ????  :Open file failed.\n   path=%s\n", path);
+    return FALSE; /* error */
   }
 
   while( 1 ) {
+
     /* リストはルートディレクトリに近い順から入っている */
     readSize = FS_ReadFile(&f, (void *)&list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
     if( readSize == 0 ) {
-      miya_log_fprintf(&log_fd, "Read entry count %d\n", list_count );
+      /* 終わり */
       break;
     }
     else if( readSize != (s32)sizeof(MY_DIR_ENTRY_LIST) ) {
-      miya_log_fprintf(&log_fd, "%s %d: Failed Read file\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(&log_fd, " %s\n", path);
-      miya_log_fprintf(&log_fd, " read entry count %d\n", list_count );
+      miya_log_fprintf(log_fd, "%s %d: Failed Read file\n", __FUNCTION__ , __LINE__ );
+      miya_log_fprintf(log_fd, " %s\n", path);
       break;
     }
 
-    list_count++;
+    copy_error_flag = TRUE;
+
+
+    /* もうちょっとよく考えて順番とか作り直し FS_GetPathInfoとか減らせそう・・ */
 
     /* NAND側にディレクトリの作成とファイルのコピー */
     if( (list_temp.content.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
       /* ディレクトリの場合 */
       if( TRUE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
-	/* 復元される側にすでにディレクトリエントリがある場合 */
+	/* 復元される側(NAND)にすでに何かファイルかディレクトリがある場合 */
 	if( (path_info.attributes & FS_ATTRIBUTE_IS_DIRECTORY) == 0 ) {
 	  /* ディレクトリでない場合 エラー */
 	  /* SDにログを残す場合 */
-	  if( log_active ) {
-	    miya_log_fprintf(&log_fd, "%s %d: NOT a directory\n", __FUNCTION__ , __LINE__ );
-	    miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path );
-	  }
+	  miya_log_fprintf(log_fd, "%s %d: NOT a directory\n", __FUNCTION__ , __LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
 	  /* require backup file */
 	  /* パニック?? */
 	  /* それとも一度デリートする?? */
+	  FS_DeleteFile( list_temp.src_path ); /* ちょっと無理やりか？ */
+	  goto label1;
 	}
+	/* read onlyディレクトリだった場合の処理は下のほうでやる。 */
       }
       else {
-	/* 復元される側にディレクトリエントリがない場合 */
+      label1:
+	/* 復元される側(NAND)にディレクトリエントリがない場合 */
 	bSuccess = FS_CreateDirectory(list_temp.src_path, FS_PERMIT_RW);
 	if(!bSuccess) {
 	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
 	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
-	    if( log_active ) {
-	      miya_log_fprintf(&log_fd, "%s %d: Failed Create NAND Directory\n", __FUNCTION__,__LINE__);
-	      miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	      miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path);
-	    }
+	    miya_log_fprintf(log_fd, "%s %d: Failed Create NAND Directory\n", __FUNCTION__,__LINE__);
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    miya_log_fprintf(log_fd, " %s\n", list_temp.src_path);
+	    copy_error_flag = FALSE;
+
 	  }
 	}
 	if( FALSE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
-	  if( log_active ) {
-	    miya_log_fprintf(&log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
-	    miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path );
-	  }
+	  miya_log_fprintf(log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
 	  //  return FALSE;
 	}
       }
 
+
+#ifdef ATTRIBUTE_BACK
       /* このディレクトリを記憶しておき、あとで属性をまとめて戻す */
-      if( FALSE == add_entry_list( &readonly_list_head, &list_temp ) ) {
-	miya_log_fprintf(&log_fd, "%s %d: ERROR: add_entry_list\n", __FUNCTION__,__LINE__ );
-	miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path );
+      if( FALSE == add_entry_list( &readonly_list_head, &list_temp, log_fd ) ) {
+	miya_log_fprintf(log_fd, "%s %d: ERROR: add_entry_list\n", __FUNCTION__,__LINE__ );
+	miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
       }
+#endif
 
       if( (path_info.attributes & FS_ATTRIBUTE_DOS_READONLY) != 0 ) {
 	/* リードオンリーの場合,一度リードライト可能にする */
 	path_info.attributes &= ~FS_ATTRIBUTE_DOS_READONLY;
 	if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
 	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
-	  miya_log_fprintf(&log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
-	  miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path );
-	  miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	  miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
 	}
       }
     }
     else {
-      /* ファイルの場合 srcがSD, dstがNAND */
+      /* ファイルの場合 */
       if( !STD_StrCmp( list_temp.src_path, "nand:" ) ) {
 	/* nandのルートディレクトリはスルーする。 */
+	OS_TPrintf("nand: root detect \n");
       }
       else {
 
 	/* とりあえずデスティネーションファイルがあるかどうか確認して
 	   あればSDにバックアップする */
 	// CopyFile( dst <= src );
-	CopyFile( list_temp.src_path, list_temp.dst_path, &log_fd );
+#ifdef COPY_FILE_ENCRYPTION
+	copy_error_flag = CopyFileCrypto( list_temp.src_path, list_temp.dst_path, log_fd );
+#else
+	copy_error_flag = CopyFile( list_temp.src_path, list_temp.dst_path, log_fd );
+#endif
 
-	path_info.attributes  = list_temp.content.attributes;
-	path_info.ctime  = list_temp.content.ctime;
-	path_info.mtime = list_temp.content.mtime;
-	path_info.atime = list_temp.content.atime;
-	path_info.id = list_temp.content.id;
-	path_info.filesize = list_temp.content.filesize;
-	if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
-	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
-	  miya_log_fprintf(&log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
-	  miya_log_fprintf(&log_fd, " %s\n", list_temp.src_path );
-	  miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	if( TRUE == copy_error_flag ) {
+	  path_info.attributes  = list_temp.content.attributes;
+	  path_info.ctime  = list_temp.content.ctime;
+	  path_info.mtime = list_temp.content.mtime;
+	  path_info.atime = list_temp.content.atime;
+	  path_info.id = list_temp.content.id;
+	  path_info.filesize = list_temp.content.filesize;
+	  if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
+	    fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	    miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	    miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	  }
 	}
       }
     }
+
+    /* ファイルでもディレクトリでもどっちでもここを通る */
+    if(  copy_error_flag == FALSE ) {
+      (*error_count)++;
+      AppErrorReport(list_temp.src_path, "copy file failed");
+    }
+    else {
+      (*list_count)++;
+    }
   }
 
+  miya_log_fprintf(log_fd, "%s Read entry count %d error count %d\n",__FUNCTION__ , *list_count, *error_count );
+
+#ifdef ATTRIBUTE_BACK
   /* add_entry_list( &readonly_list_head, &list_temp );
      でリストにしたエントリーのアトリビュートを逆順で元に戻す。*/
-  if( FALSE == restore_entry_list(&readonly_list_head, &log_fd) ) {
-    miya_log_fprintf(&log_fd, "%s %d: ERROR: restore_entry_list\n", __FUNCTION__,__LINE__ );
+  if( FALSE == restore_entry_list(&readonly_list_head, log_fd) ) {
+    miya_log_fprintf(log_fd, "%s %d: ERROR: restore_entry_list\n", __FUNCTION__,__LINE__ );
   }
+#endif
 
  exit_label:
 
   //  FS_FlushFile(&f); //リードだからいらない
   if( FS_CloseFile(&f) == FALSE) {
     fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(&log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+    miya_log_fprintf(log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
   }
 
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
   if( log_active ) {
-    Log_File_Close(&log_fd);
+    Log_File_Close(log_fd);
   }
-
+  if( *error_count > 0 ) {
+    return FALSE;
+  }
   return TRUE;
 }
 
-// = "nand:/title";
+
+
+BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int *list_count, int *error_count)
+{
+  FSFile f;
+  FSFile f_dir;
+  BOOL bSuccess;
+  FSResult fsResult;
+  s32 readSize;
+  MY_DIR_ENTRY_LIST list_temp;
+  FSPathInfo path_info;
+  MY_DIR_ENTRY_LIST *readonly_list_head = NULL;
+  BOOL copy_error_flag;
+  FSFile log_fd_real;
+  FSFile *log_fd;
+  BOOL log_active = FALSE;
+  
+
+
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+
+  if( (list_count == NULL) || (error_count == NULL) ) {
+    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
+    miya_log_fprintf(log_fd, " list ptr=0x%08x error ptr=0x%08x\n", list_count, error_count);
+    return FALSE;
+  }
+
+  *list_count = 0;
+  *error_count = 0;
+
+  FS_InitFile(&f);
+  FS_InitFile(&f_dir);
+
+  if( FS_OpenFileEx(&f, path, FS_FILEMODE_R) == FALSE) {
+    fsResult = FS_GetArchiveResultCode(path);
+    miya_log_fprintf(log_fd, "%s %d: Failed Open file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+    return FALSE; /* error */
+  }
+
+  while( 1 ) {
+    /* リストはルートディレクトリに近い順から入っている */
+    readSize = FS_ReadFile(&f, (void *)&list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
+    if( readSize == 0 ) {
+      /* 終わり */
+      break;
+    }
+    else if( readSize != (s32)sizeof(MY_DIR_ENTRY_LIST) ) {
+      miya_log_fprintf(log_fd, "%s %d: Failed Read file\n", __FUNCTION__ , __LINE__ );
+      miya_log_fprintf(log_fd, " %s\n", path);
+      break;
+    }
+
+    copy_error_flag = TRUE;
+
+    /* NAND側にディレクトリの作成とファイルのコピー */
+    if( (list_temp.content.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
+      /* ディレクトリの場合 */
+      if( TRUE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
+	/* 復元される側(NAND)にすでに何かファイルかディレクトリがある場合 */
+	if( (path_info.attributes & FS_ATTRIBUTE_IS_DIRECTORY) == 0 ) {
+	  /* ディレクトリでない場合 エラー */
+	  /* SDにログを残す場合 */
+	  miya_log_fprintf(log_fd, "%s %d: NOT a directory\n", __FUNCTION__ , __LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  /* require backup file */
+	  /* パニック?? */
+	  /* それとも一度デリートする?? */
+	  FS_DeleteFile( list_temp.src_path ); /* ちょっと無理やりか？ */
+	  goto label1;
+	}
+	/* read onlyディレクトリだった場合の処理は下のほうでやる。 */
+      }
+      else {
+      label1:
+	/* 復元される側(NAND)にディレクトリエントリがない場合 */
+	bSuccess = FS_CreateDirectory(list_temp.src_path, FS_PERMIT_RW);
+	if(!bSuccess) {
+	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
+	    miya_log_fprintf(log_fd, "%s %d: Failed Create NAND Directory\n", __FUNCTION__,__LINE__);
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    miya_log_fprintf(log_fd, " %s\n", list_temp.src_path);
+	    copy_error_flag = FALSE;
+	  }
+	}
+	if( FALSE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
+	  miya_log_fprintf(log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  //  return FALSE;
+	}
+      }
+
+
+#ifdef ATTRIBUTE_BACK
+      /* このディレクトリを記憶しておき、あとで属性をまとめて戻す */
+      if( FALSE == add_entry_list( &readonly_list_head, &list_temp, log_fd ) ) {
+	miya_log_fprintf(log_fd, "%s %d: ERROR: add_entry_list\n", __FUNCTION__,__LINE__ );
+	miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+      }
+#endif
+
+      if( (path_info.attributes & FS_ATTRIBUTE_DOS_READONLY) != 0 ) {
+	/* リードオンリーの場合,一度リードライト可能にする */
+	path_info.attributes &= ~FS_ATTRIBUTE_DOS_READONLY;
+	if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
+	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	  miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	}
+      }
+    }
+    else {
+      /* ファイルの場合 */
+      if( !STD_StrCmp( list_temp.src_path, "nand:" ) ) {
+	/* nandのルートディレクトリはスルーする。 */
+	OS_TPrintf("nand: root detect \n");
+      }
+      else {
+
+	// CopyFile( dst <= src );
+	if( TRUE == CheckSystemApp( list_temp.src_path ) ) {
+	  /* 一応拡張子(*.sav)もチェックしといたほうがいいか？ */
+	  OS_TPrintf("sys backup %s\n",list_temp.src_path);
+#ifdef COPY_FILE_ENCRYPTION
+	  copy_error_flag = CopyFileCrypto( list_temp.src_path, list_temp.dst_path, log_fd );
+#else
+	  copy_error_flag = CopyFile( list_temp.src_path, list_temp.dst_path, log_fd );
+#endif
+
+	  if( TRUE == copy_error_flag ) {
+	    path_info.attributes  = list_temp.content.attributes;
+	    path_info.ctime  = list_temp.content.ctime;
+	    path_info.mtime = list_temp.content.mtime;
+	    path_info.atime = list_temp.content.atime;
+	    path_info.id = list_temp.content.id;
+	    path_info.filesize = list_temp.content.filesize;
+	    if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
+	      fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	      miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	      miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    }
+	    (*list_count)++;
+	  }
+	}
+	else {
+	  /* ユーザーアプリだった場合。 */
+	  
+	}
+      }
+    }
+
+    if( copy_error_flag == FALSE ) {
+      (*error_count)++;
+      AppErrorReport(list_temp.src_path, "copy file failed");
+    }
+  }
+
+  miya_log_fprintf(log_fd, "%s Read entry count %d error count %d\n",__FUNCTION__ , *list_count, *error_count );
+
+#ifdef ATTRIBUTE_BACK
+  /* add_entry_list( &readonly_list_head, &list_temp );
+     でリストにしたエントリーのアトリビュートを逆順で元に戻す。*/
+  if( FALSE == restore_entry_list(&readonly_list_head, log_fd) ) {
+    miya_log_fprintf(log_fd, "%s %d: ERROR: restore_entry_list\n", __FUNCTION__,__LINE__ );
+  }
+#endif
+
+ exit_label:
+
+  //  FS_FlushFile(&f); //リードだからいらない
+  if( FS_CloseFile(&f) == FALSE) {
+    fsResult = FS_GetArchiveResultCode(path);
+    miya_log_fprintf(log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+  }
+
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  if( log_active ) {
+    Log_File_Close(log_fd);
+  }
+  if( *error_count > 0 ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
+
 
 static BOOL my_fs_is_Title_Hi_dir_name(const char *name)
 {
@@ -1037,6 +1665,12 @@ static BOOL my_fs_is_Title_Hi_dir_name(const char *name)
   }
   return TRUE;
 }
+
+/*
+  nand:/title/00030017/484e4141 は ランチャー
+  nand:/title/00030015/484e4641 は shop
+  nand:/title/00030015/484e4241 は 本体設定
+*/
 
 static BOOL my_fs_is_Title_Lo_dir_name(const char *name)
 {
@@ -1119,80 +1753,6 @@ static void Path_Buffers_Clean( char *path_src_dir, char *path_src_full,
 
 
 
-
-/*
-  void CRYPTO_RC4Encrypt(CRYPTORC4Context* context, const void* in, u32 length, void* out);
-
-  context - CRYPTO_RC4Init() で予め鍵を設定した CRYPTORC4Context 型の構造体を指定します。 
-  in      - RC4 アルゴリズムによる暗号化/復号を行う対象のデータへのポインタを指定します。 
-  length  - in で指定したデータの長さを指定します。 
-  out     - 暗号化/復号を行った結果を格納する先のポインタを指定します。 
-  
-*/
-static u32 my_fs_GetStringLength(char* str)
-{
-  u32 i;
-  for (i = 0; ; i++) {
-    if (*(str++) == '\0') {
-      return i;
-    }
-  }
-}
-
-static char *my_fs_key = "twl-repair-tool";
-
-
-s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size)
-{
-  s32 readSize;
-  CRYPTORC4FastContext context;
-  u8 *crypt_buf;
-
-  crypt_buf = (u8 *)OS_Alloc( (u32)size );
-  if(crypt_buf == NULL ) {
-    return -1;
-  }
-
-  readSize = FS_ReadFile(f, (void *)crypt_buf, size);
-  if( readSize != size ) {
-    /* error! */
-    goto end;
-  }
-  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
-  CRYPTO_RC4FastEncrypt(&context, (char *)crypt_buf, (u32)size, ptr);
-
- end:  
-  if( crypt_buf != NULL ) {
-    OS_Free(crypt_buf);
-  }
-  return readSize;
-}
-
-s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size)
-{
-  s32 writtenSize;
-  CRYPTORC4FastContext context;
-  u8 *crypt_buf;
-
-  crypt_buf = (u8 *)OS_Alloc( (u32)size );
-  if(crypt_buf == NULL ) {
-    return -1;
-  }
-
-  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
-  CRYPTO_RC4FastEncrypt(&context, (char *)ptr, (u32)size, crypt_buf);
-
-  writtenSize = FS_WriteFile(f, crypt_buf, size);
-  if( writtenSize != size ) {
-    /* error */
-  }
-
-  if( crypt_buf != NULL ) {
-    OS_Free(crypt_buf);
-  }
-  return writtenSize; 
-}
-
 BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd)
 {
   FSFile f;
@@ -1264,7 +1824,7 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
 }
 
 
-
+#if 0
 BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd)
 {
   FSFile f;
@@ -1293,8 +1853,9 @@ BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd)
   
   return TRUE;
 }
+#endif
 
-
+#if 0
 BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
 {
 #pragma unused(log_fd)
@@ -1336,9 +1897,9 @@ BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
   }
   return TRUE;
 }
+#endif
 
-
-BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd)
+BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -1346,22 +1907,38 @@ BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd)
   s32 readSize = 0;
   int id_count= 0;
   int size;
+  BOOL log_active = FALSE;
+  FSFile *log_fd;
+  FSFile log_fd_real;
+  BOOL ret_flag = TRUE;
+
+  log_fd = &log_fd_real;
 
   FS_InitFile(&f);
+
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  else {
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  }
   
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
   if( ! bSuccess ) {
     miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
     miya_log_fprintf(log_fd, " path=%s\n", path );
     miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
-    return FALSE;
+    ret_flag = FALSE;
+    goto function_end;
   }
 
   if( sizeof(int) != FS_ReadFile(&f, &id_count, (s32)sizeof(int)) ) {
     miya_log_fprintf(log_fd, "Failed Read File %s\n",__FUNCTION__);
     miya_log_fprintf(log_fd, " path=%s\n", path );
     miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
-    return FALSE;
+    ret_flag = FALSE;
+    goto function_end;
   } 
 
 
@@ -1370,34 +1947,61 @@ BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, FSFile *log_fd)
 
   *pBuffer = (u64 *)OS_Alloc( (u32)size );
   if( *pBuffer == NULL ) {
-    return FALSE;
+    ret_flag = FALSE;
+    miya_log_fprintf(log_fd, "%s Failed memory alloc size %d\n",__FUNCTION__, size);
+    goto function_end;
   }
 
   readSize = FS_ReadFile(&f, *pBuffer, (s32)size );
   if( readSize != size ) {
-    miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
+    miya_log_fprintf(log_fd, "Failed Read File: %s request size %d read size %d\n",path, size, readSize);
+    if( readSize != size ) {
+      ret_flag = FALSE;
+      goto function_end;
+    }
   }
+
+
+ function_end:
+
   bSuccess = FS_CloseFile(&f);
   if( ! bSuccess ) {
     miya_log_fprintf(log_fd, "Failed Close File\n");
     miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
   }
   
-  return TRUE;
-
+  if( log_active ) {
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
+  }
+  return ret_flag;
 }
 
-BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
+BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
 {
-#pragma unused(log_fd)
 
   FSFile f;
   BOOL bSuccess;
   FSResult res;
   FSResult fsResult;
   //  s32 writtenSize;
+  BOOL log_active = FALSE;
+  FSFile *log_fd;
+  FSFile log_fd_real;
+  BOOL ret_flag = TRUE;
+
+  log_fd = &log_fd_real;
 
   FS_InitFile(&f);
+
+
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  else {
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  }
 
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if( ! bSuccess ) {
@@ -1405,25 +2009,31 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
     bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
     if( ! bSuccess ) {
       res = FS_GetArchiveResultCode( path );
-      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
-      miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
-      return FALSE;
+      miya_log_fprintf(log_fd, "%s file open error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
+      ret_flag = FALSE;
+      goto function_end;
     }
   }
 
   fsResult = FS_SetFileLength(&f, 0);
   if( fsResult != FS_RESULT_SUCCESS ) {
     res = FS_GetArchiveResultCode( path );
-    miya_log_fprintf(NULL, "%s file length error %s\n", __FUNCTION__,path );
-    miya_log_fprintf(NULL, " Failed file lenght :%s\n", my_fs_util_get_fs_result_word( res ));
-    return FALSE;
+    miya_log_fprintf(log_fd, "%s file length error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(log_fd, " Failed file lenght :%s\n", my_fs_util_get_fs_result_word( res ));
+    ret_flag = FALSE;
+    goto function_end;
   }
 
   if( sizeof(int) != FS_WriteFile(&f, &count, (s32)sizeof(int)) ) {
     res = FS_GetArchiveResultCode( path );
-    miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
-    miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
-    return FALSE;
+    miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+    ret_flag = FALSE;
+    goto function_end;
+  }
+  else {
+    miya_log_fprintf(log_fd, "num of title id = %d\n", count);
   }
 
   /*
@@ -1440,18 +2050,40 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, FSFile *log_fd)
     /* 16文字だから */
     if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
       res = FS_GetArchiveResultCode( path );
-      miya_log_fprintf(NULL, "%s file write error %s\n", __FUNCTION__,path );
-      miya_log_fprintf(NULL, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
-      return FALSE;
+      miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+      ret_flag = FALSE;
+      goto function_end;
+    }
+    else {
+      int j;
+      u64 *ptr = pData;
+      if( ptr != NULL && count > 0 )  {
+	for( j = 0 ; j < count ; j++ ) {
+	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j,*ptr);
+	  ptr++;
+	}
+      }
     }
   }
 
   FS_FlushFile(&f);
+
+ function_end:
+
   bSuccess = FS_CloseFile(&f);
   if( bSuccess ) {
       
   }
-  return TRUE;
+
+  if( log_active ) {
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
+  }
+
+
+  return ret_flag;
+
 }
 
 
@@ -1464,52 +2096,17 @@ BOOL TWLCardValidation(void)
   if( TRUE == OS_IsRunOnDebugger() ) {
     if( flag_TWLCardValidation == FALSE ) {
       flag_TWLCardValidation = TRUE;
-      OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+      //  OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
     }
     return FALSE; /* カードは抜けていることにする。 */
   }
-
-  /*
-    CARD_IsPulledOut();
-    カード抜けを検出した場合 TRUE を、そうでない場合は FALSE を返します。
-     一度でもカード抜けを検出した後は常に TRUE を返します。 
-  */
-#if 1
   /*
     CARD_IsPulledOutをつかうにはアルマジロの改造がいる。
-
-    c:/twlsdk/build/components/armadillo.TWL/src/main.c
-
-    //---- check pull out card
-    CARD_CheckPullOut_Polling();
-      */
+  */
 
   if( TRUE == CARD_IsPulledOut() ) {
     return FALSE;
   }
-#else
-  {
-    s32 lock_ret;
-    u16 id;
-    lock_ret = OS_GetLockID();
-    if( lock_ret != OS_LOCK_ID_ERROR ) {
-      id = (u16)lock_ret;
-      CARD_LockRom(id);
-
-      CARD_CheckPulledOut();
-      if( TRUE == CARD_IsPulledOut() ) {
-	return FALSE;
-      }
-      
-      CARD_UnlockRom(id);
-      OS_ReleaseLockID( id );
-    }
-    else {
-      mprintf("CARD Lock error\n");
-    }
-  }
-#endif
-
   return TRUE;
 }
 
@@ -1528,9 +2125,6 @@ BOOL SDCardValidation(void)
   (void)FS_CloseDirectory(&f);
   return flag;
 }
-
-
-
 
 
 /* 
@@ -1555,70 +2149,30 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
 #pragma unused(log_fd)
 
   FSFile f;
+  FSResult res;
+
+  BOOL ret_flag = TRUE;
   BOOL bSuccess;
   char path[256];
   s32 readSize = 0;
-#if 0
-  u32 fileSize;
-  void *pBuffer;
-  char *str;
-  int i;
-#endif
-  FS_InitFile(&f);
 
-#if 0
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+  FS_InitFile(&f);
   STD_StrCpy(path, "nand:/sys/dev.kp");
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
   if( ! bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
+      /* キーペアファイルがない */
+      ret_flag = FALSE;
+      miya_log_fprintf(log_fd, "No key pair file\n");
     }
-    /* キーペアファイルがない */
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-    return FALSE;
-  }
-  (void)FS_CloseFile(&f);
-#endif
-  
-#if 0
-  // CopyFile( dst <= src );
-  CopyFile("sdmc:/shop.log", "nand:/sys/log/shop.log",NULL);
-
-  STD_StrCpy(path, "nand:/sys/log/shop.log");
-  bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
-  if( !bSuccess ) {
-    if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
-    }
-    return FALSE;
-  }
-
-  fileSize = FS_GetFileLength(&f);
-  if( fileSize ) {
-    pBuffer = (char*)OS_Alloc(fileSize + 1);
-    if( pBuffer == NULL ) {
-      OS_TPrintf("Mem alloc error: %s %d\n", __FUNCTION__,__LINE__);
-      return FALSE;
-    }
-
-    readSize = FS_ReadFile(&f, pBuffer, (s32)fileSize);
-    if( readSize != fileSize ) {
-      OS_TPrintf("Failed Read File: %s %s %d\n",path,__FUNCTION__,__LINE__);
-      return FALSE;
-    }
-
-    str = (char *)pBuffer;
-
-    mprintf("\n\n");
-    for( i = 0 ; i < readSize ; i++ ) {
-      OS_PutChar( *str++ );
-      m_putchar(tc[0],*str++ );
-    }
-    mprintf("\n\n");
   }
   else {
+    (void)FS_CloseFile(&f);
   }
-  (void)FS_CloseFile(&f);
-#endif
 
+  
   // STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg"); /* ショップアカウント情報 */
   /* 海外だと変わってくる・・ */
   /* リージョンコードと合わせる-> リージョンコードは変えられないから。 */
@@ -1626,74 +2180,89 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     J(0x4a) - Japan
     E(0x45) - America    
     P(0x50) - Europe
-    U(0x41) - Australia
+    U(0x55) - Australia
     C(0x43) - China
     K(0x4b) - Korea
   */
+  
+  miya_log_fprintf(log_fd, "device region ");
 
-  //  STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg");
+  /*  STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg"); ALL Region */
   switch( region ) {
   case OS_TWL_REGION_JAPAN:
     /* J(0x4a) - Japan */
+    miya_log_fprintf(log_fd, "Japan");
     STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg");
     break;
   case OS_TWL_REGION_AMERICA:
     /* E(0x45) - America  */   
+    miya_log_fprintf(log_fd, "US");
     STD_StrCpy(path, "nand:/title/00030015/484e4645/data/ec.cfg");
     break;
   case OS_TWL_REGION_EUROPE:
     /* P(0x50) - Europe */
+    miya_log_fprintf(log_fd, "EUROPE");
     STD_StrCpy(path, "nand:/title/00030015/484e4650/data/ec.cfg");
     break;
   case OS_TWL_REGION_AUSTRALIA:
-    /* U(0x41) - Australia */
-    STD_StrCpy(path, "nand:/title/00030015/484e4641/data/ec.cfg");
+    /* U(0x55) - Australia */
+    miya_log_fprintf(log_fd, "Australie");
+    STD_StrCpy(path, "nand:/title/00030015/484e4655/data/ec.cfg");
     break;
   case OS_TWL_REGION_CHINA:
     /* C(0x43) - China */
+    miya_log_fprintf(log_fd, "China");
     STD_StrCpy(path, "nand:/title/00030015/484e4643/data/ec.cfg");
     break;
   case OS_TWL_REGION_KOREA:
     /* K(0x4b) - Korea */
+    miya_log_fprintf(log_fd, "Korea");
     STD_StrCpy(path, "nand:/title/00030015/484e464b/data/ec.cfg");
     break;
   default:
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-    return FALSE;
+    miya_log_fprintf(log_fd, "Unknown region");
+    ret_flag = FALSE;
   }
+  miya_log_fprintf(log_fd, "\n");
 
-  bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
-  if( ! bSuccess ) {
-    if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
-      OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+
+  if( ret_flag == TRUE ) {
+    bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
+    if( ! bSuccess ) {
+      res = FS_GetArchiveResultCode(path);
+      if( FS_RESULT_NO_ENTRY == res ) {
+	/* ショップアカウント情報ファイルがない */
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "No ec.cfg file %s\n",path);
+      }
     }
-    OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
-    /* ショップアカウント情報ファイルがない */
-    return FALSE;
+    (void)FS_CloseFile(&f);
   }
-  (void)FS_CloseFile(&f);
-  return TRUE;
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+
+  return ret_flag;
 }
 
 int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name, int level )
 {
-  static FSFile log_fd;
+  static FSFile *log_fd;
+  static FSFile log_fd_real;
   static BOOL log_active = FALSE;
 
   FSFile f_src;
   FSDirectoryEntryInfo entry_src;
   FSDirectoryEntryInfo entry_current_dir;
   int ret_value = 0;
-  //  FSResult fs_ret_value;
   int save_parent_dir_info_flag_temp = 0;
 
   char *path_src_dir = NULL;
   char *path_src_full = NULL;
 
-  /* ここでSDカードがあるかどうか調べる */
 
   if( level == 0 ) {
-    log_active = Log_File_Open( &log_fd, log_file_name );
+    log_fd = &log_fd_real;
+    log_active = Log_File_Open( log_fd, log_file_name );
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
   }
 
   level++;
@@ -1710,27 +2279,29 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
   FS_InitFile(&f_src);
 
   if(FS_OpenDirectory(&f_src, path_src, FS_PERMIT_R) == FALSE ) {
-    if( log_active ) {
-      miya_log_fprintf(&log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(&log_fd, " %s\n", path_src);
-      miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
-    }
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path_src);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
+
+    ret_value |= 1;
+    AppErrorReport(path_src, "Open directory failed.");
     goto end_process;
   }
 
   /* ファイル名バッファ初期化 */
   path_src_dir = (char *)OS_Alloc( FILE_PATH_LEN );
   if( path_src_dir == NULL ) {
-    miya_log_fprintf(&log_fd, "Error: alloc error src_dir\n");
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "Error: alloc error src_dir\n");
+    ret_value |= 1;
+    AppErrorReport(path_src, "Open directory failed.");
     goto end_process;
   }
 
   path_src_full = (char *)OS_Alloc( FILE_PATH_LEN );
   if( path_src_full == NULL ) {
-    miya_log_fprintf(&log_fd, "Error: alloc error src_full\n");
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "Error: alloc error src_full\n");
+    ret_value |= 1;
+    AppErrorReport(path_src, "Open directory failed.");
     goto end_process;
   }
 
@@ -1750,13 +2321,6 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
       STD_StrCpy( path_src_full , path_src_dir );
       STD_StrCat( path_src_full , entry_src.longname );
 
-      /* SDにログを残す場合 */
-      if( log_active ) {
-	// OS_TPrintf("path = %s len=%d att=0x%08x\n",path_src_full,entry_src.filesize, entry_src.attributes);
-	PrintAttributes(entry_src.attributes, &log_fd);
-	miya_log_fprintf(&log_fd, " %8d %s\n", entry_src.filesize, path_src_full );
-      }
-
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
 	// level        1      2        3       4
@@ -1764,17 +2328,17 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 	//             nand:/title/00000000/00000000/data/*.sav
 	if( level == 1 ) {
 	  if( my_fs_is_Title_Hi_dir_name( entry_src.longname ) == TRUE ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
+	    ret_value |= get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
 	if( level == 2 ) {
 	  if( my_fs_is_Title_Lo_dir_name( entry_src.longname ) == TRUE ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
+	    ret_value |= get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
 	else if( (level == 3) ) {
 	  if( !STD_StrCmp( entry_src.longname, "content" ) ) {
-	    get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
+	    ret_value |= get_title_id( headp, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
       }	
@@ -1785,9 +2349,6 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 	if( (level == 4) ) {
 	  if( !STD_StrCmp( entry_src.longname, "title.tmd" ) ) {
 	    /* 目的のファイルを見つけた。 */
-#if 0
-	    my_fs_add_list(headp, &entry_src, path_src_full, NULL, &log_fd);
-#endif
 	    save_parent_dir_info_flag_temp = 1;
 	  }
 	}
@@ -1796,23 +2357,24 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
   }
 
   if( save_parent_dir_info_flag_temp == 1 ) {
-    // OS_TPrintf("save dir info = %s\n\n",path_src);
     if( level == 3 ) {
-      my_fs_add_list( headp, &entry_current_dir, path_src, NULL, &log_fd);
+      if( FALSE == my_fs_add_list( headp, &entry_current_dir, path_src, NULL, log_fd) ) {
+	ret_value |= 1;
+	AppErrorReport(path_src, "Save directory failed.");
+      }
     }
     else {
       /* contentディレクトリなど */
-
     }
     *save_parent_dir_info_flag = 1;
   }
 
   /* ソースディレクトリクローズ */
   if( FS_CloseDirectory(&f_src) == FALSE) {
-    miya_log_fprintf(&log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path_src);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path_src);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
+    //    ret_value |= 1; /* いらないかも？あとで考える */
   }
 
  end_process:
@@ -1826,9 +2388,8 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
   level--;
 
   if( level == 0 ) {
-    if( log_active ) {
-      Log_File_Close(&log_fd);
-    }
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
   }
 
   return ret_value;
@@ -1838,9 +2399,10 @@ int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_pare
 
 int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name,  int level )
 {
-  static FSFile log_fd;
+  //  static FSFile log_fd;
+  static FSFile *log_fd;
+  static FSFile log_fd_real;
   static BOOL log_active = FALSE;
-  //  static char *log_file_name = "sdmc:/miya/nandinfo_find_title_save_data.txt";
 
   FSFile f_src;
   FSDirectoryEntryInfo entry_src;
@@ -1857,7 +2419,9 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
   /* ここでSDカードがあるかどうか調べる */
 
   if( level == 0 ) {
-    log_active = Log_File_Open( &log_fd, log_file_name );
+    log_fd = &log_fd_real;
+    log_active = Log_File_Open( log_fd, log_file_name );
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
   }
 
   level++;
@@ -1874,22 +2438,21 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
   FS_InitFile(&f_src);
 
   if(FS_OpenDirectory(&f_src, path_src, FS_PERMIT_R) == FALSE ) {
-    if( log_active ) {
-      miya_log_fprintf(&log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(&log_fd, " %s\n", path_src);
-      miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
-    }
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path_src);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
+    AppErrorReport(path_src, "Open directory failed.");
+    ret_value |= 1;
     goto end_process;
   }
 
   /* ファイル名バッファ初期化 */
-  if( FALSE == Path_Buffers_Init(path_src, path_dst, 
-				 &path_src_dir, &path_src_full, &path_dst_dir, &path_dst_full, &log_fd ) )
-    {
-      ret_value = -1;
-      goto end_process;
-    }
+  if( FALSE == Path_Buffers_Init(path_src, path_dst, &path_src_dir, 
+				 &path_src_full, &path_dst_dir, &path_dst_full, log_fd ) ) {
+    AppErrorReport(path_src, "Open directory failed.");
+    ret_value |= 1;
+    goto end_process;
+  }
 
   while( FS_ReadDirectory(&f_src, &entry_src) ) {
 
@@ -1904,13 +2467,6 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
       STD_StrCat( path_src_full , entry_src.longname );
       STD_StrCpy( path_dst_full , path_dst_dir );
       STD_StrCat( path_dst_full , entry_src.longname );
-
-      /* SDにログを残す場合 */
-      if( log_active ) {
-	// OS_TPrintf("path = %s len=%d att=0x%08x\n",path_src_full,entry_src.filesize, entry_src.attributes);
-	PrintAttributes(entry_src.attributes, &log_fd);
-	miya_log_fprintf(&log_fd, " %8d %s\n", entry_src.filesize, path_src_full );
-      }
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
@@ -1919,17 +2475,20 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 	//                 nand:/title/00000000/00000000/data/*.sav
 	if( level == 1 ) {
 	  if( my_fs_is_Title_Hi_dir_name( entry_src.longname ) == TRUE ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name , level );
+	    ret_value |= find_title_save_data( headp, path_dst_full, path_src_full , 
+					       &save_parent_dir_info_flag_temp, log_file_name , level );
 	  }
 	}
 	if( level == 2 ) {
 	  if( my_fs_is_Title_Lo_dir_name( entry_src.longname ) == TRUE ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
+	    ret_value |= find_title_save_data( headp, path_dst_full, path_src_full , 
+					       &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
 	else if( (level == 3) ) {
 	  if( !STD_StrCmp( entry_src.longname, "data" ) ) {
-	    find_title_save_data( headp, path_dst_full, path_src_full , &save_parent_dir_info_flag_temp, log_file_name, level );
+	    ret_value |= find_title_save_data( headp, path_dst_full, path_src_full , 
+					       &save_parent_dir_info_flag_temp, log_file_name, level );
 	  }
 	}
       }	
@@ -1938,150 +2497,15 @@ int find_title_save_data(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const 
 	//                 nand:/title 
 	//                 nand:/title/00000000/00000000/data/*.sav
 	if( (level == 4) ) {
-	  if( !STD_StrCmp( entry_src.longname, "public.sav" ) ) {
+	  if( !STD_StrCmp( entry_src.longname, "public.sav" ) 
+	      || !STD_StrCmp( entry_src.longname, "private.sav" )
+	      || !STD_StrCmp( entry_src.longname, "banner.sav" ) ) {
 	    /* 目的のファイルを見つけた。 */
-	    my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
-	    save_parent_dir_info_flag_temp = 1;
-	  }
-	  else if( !STD_StrCmp( entry_src.longname, "private.sav" ) ) {
-	    my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
-	    save_parent_dir_info_flag_temp = 1;
-	  }	  
-#if 1
-	  /* いるのか？ */
-	  else if( !STD_StrCmp( entry_src.longname, "banner.sav" ) ) {
-	    my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
-	    save_parent_dir_info_flag_temp = 1;
-	  }	  
-#endif	  
-	}
-      }
-    }
-  }
-
-  if( save_parent_dir_info_flag_temp == 1 ) {
-    // OS_TPrintf("save dir info = %s\n\n",path_src);
-    my_fs_add_list( headp, &entry_current_dir, path_src, path_dst, &log_fd);
-    *save_parent_dir_info_flag = 1;
-  }
-
-  /* ソースディレクトリクローズ */
-  if( FS_CloseDirectory(&f_src) == FALSE) {
-    miya_log_fprintf(&log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path_src);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
-    ret_value = -1;
-  }
-
- end_process:
-
-  Path_Buffers_Clean( path_src_dir, path_src_full, path_dst_dir, path_dst_full );
-
-  level--;
-
-  if( level == 0 ) {
-    if( log_active ) {
-      Log_File_Close(&log_fd);
-    }
-  }
-
-  return ret_value;
-}
-
-
-int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, 
-	      char *extension, int max_level, int *save_parent_dir_info_flag, char *log_file_name, int level )
-{
-  static FSFile log_fd;
-  static BOOL log_active = FALSE;
-  //  static char *log_file_name = "sdmc:/miya/nandinfo_find_copy.txt";
-
-  FSFile f_src;
-  FSDirectoryEntryInfo entry_src;
-  FSDirectoryEntryInfo entry_current_dir;
-  int ret_value = 0;
-  //  FSResult fs_ret_value;
-  int save_parent_dir_info_flag_temp = 0;
-
-  char *path_src_dir = NULL;
-  char *path_src_full = NULL;
-  char *path_dst_dir = NULL;
-  char *path_dst_full = NULL;
-
-  /* ここでSDカードがあるかどうか調べる */
-
-  if( level == 0 ) {
-    log_active = Log_File_Open( &log_fd, log_file_name );
-  }
-
-  if( level > max_level ) {
-    ret_value = 0;
-    goto end_process;
-  }
-
-  level++;
-
-  /* ソースディレクトリオープン */
-  FS_InitFile(&f_src);
-
-  if( FS_OpenDirectory(&f_src, path_src, FS_PERMIT_R) == FALSE ) {
-    miya_log_fprintf(&log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path_src);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
-    ret_value = -1;
-    goto end_process;
-  }
-
-  /* ファイル名バッファ初期化 */
-  if( FALSE == Path_Buffers_Init(path_src, path_dst, 
-				 &path_src_dir, &path_src_full, &path_dst_dir, &path_dst_full, &log_fd ) )
-    {
-      ret_value = -1;
-      goto end_process;
-    }
-
-  while( FS_ReadDirectory(&f_src, &entry_src) ) {
-
-    if( STD_StrCmp(entry_src.longname, ".") == 0 ) {
-      /* とりあえずカレントディレクトリエントリを残しておく */
-      STD_CopyMemory( (void *)&entry_current_dir, (void *)&entry_src ,sizeof(FSDirectoryEntryInfo) );
-    }
-    else if( STD_StrCmp(entry_src.longname, "..") == 0 ) {
-    }
-    else {
-      STD_StrCpy( path_src_full , path_src_dir );
-      STD_StrCat( path_src_full , entry_src.longname );
-      STD_StrCpy( path_dst_full , path_dst_dir );
-      STD_StrCat( path_dst_full , entry_src.longname );
-
-      /* SDにログを残す場合 */
-      if( log_active ) {
-	PrintAttributes(entry_src.attributes, &log_fd);
-	miya_log_fprintf(&log_fd, " %8d %s\n", entry_src.filesize, path_src_full );
-      }
-
-      if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
-	find_copy( headp, path_dst_full, path_src_full , extension, max_level, &save_parent_dir_info_flag_temp , log_file_name, level);
-      }	
-      else {
-	/* ここで拡張子比較 */
-	{
-	  int len;
-	  int extension_len = STD_StrLen( extension );
-	  len = STD_StrLen( path_src_full );
-
-	  if( len  > (extension_len - 1) ) {
-	    // 123456789012345678901234567890123456789012345678901234567890123
-	    // ../backup_sample/ARM7.TWL/bin/ARM7-TS.HYB/Release/ltdmain.c.cpp
-	    if( !STD_StrNCmp( &(path_src_full[len - (extension_len )]), extension , extension_len+1 ) ) {
-	      /* 目的のファイルを見つけた。 */
-	      // OS_TPrintf("%s len=%d att=0x%08x\n", path_src_full, entry_src.filesize, entry_src.attributes);
-	      // OS_TPrintf("%s\n", path_dst_full );
-
-	      my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
-
-	      save_parent_dir_info_flag_temp = 1;
+	    if( FALSE == my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, log_fd) ) {
+	      ret_value |= 1;
+	      AppErrorReport(path_src_full, "Save file failed.");
 	    }
+	    save_parent_dir_info_flag_temp = 1;
 	  }
 	}
       }
@@ -2090,16 +2514,19 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
 
   if( save_parent_dir_info_flag_temp == 1 ) {
     // OS_TPrintf("save dir info = %s\n\n",path_src);
-    my_fs_add_list( headp, &entry_current_dir, path_src, path_dst, &log_fd );
+    if( FALSE ==  my_fs_add_list( headp, &entry_current_dir, path_src, path_dst, log_fd) ) {
+      ret_value |= 1;
+      AppErrorReport(path_src, "Save Directory failed.");
+    }
     *save_parent_dir_info_flag = 1;
   }
 
   /* ソースディレクトリクローズ */
   if( FS_CloseDirectory(&f_src) == FALSE) {
-    miya_log_fprintf(&log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(&log_fd, " %s\n", path_src);
-    miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path_src);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
+    // ret_value |= 1; /* いらないかも？あとで考える */
   }
 
  end_process:
@@ -2107,21 +2534,21 @@ int find_copy(MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_
   Path_Buffers_Clean( path_src_dir, path_src_full, path_dst_dir, path_dst_full );
 
   level--;
+
   if( level == 0 ) {
-    if( log_active ) {
-      Log_File_Close(&log_fd);
-    }
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
   }
 
   return ret_value;
 }
-
 
 int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_src, char *log_file_name, int level )
 {
-  static FSFile log_fd;
+  //  static FSFile log_fd;
   static BOOL log_active = FALSE;
-  //  static char *log_file_name = "sdmc:/nandinfo_copy_r.txt";
+  static FSFile *log_fd;
+  static FSFile log_fd_real;
 
   FSFile f_src;
   FSDirectoryEntryInfo entry_src;
@@ -2135,7 +2562,11 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 
   /* ここでSDカードがあるかどうか調べる */
   if( level == 0 ) {
-    log_active = Log_File_Open( &log_fd, log_file_name );
+    log_fd = &log_fd_real;
+    log_active = Log_File_Open( log_fd, log_file_name );
+    if( log_active ) {
+      miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+    }
   }
 
   level++;
@@ -2145,20 +2576,24 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 
   if( FS_OpenDirectory(&f_src, path_src, FS_PERMIT_R) == FALSE ) {
     if( log_active ) {
-      miya_log_fprintf(&log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(&log_fd, " %s\n", path_src);
-      miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
+      miya_log_fprintf(log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
+      miya_log_fprintf(log_fd, " %s\n", path_src);
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ) );
     }
 
-    ret_value = -1;
+    ret_value |= 1;
+    AppErrorReport(path_src, "Open directory failed.");
+
     goto end_process;
   }
 
   /* ファイル名バッファ初期化 */
   if( FALSE == Path_Buffers_Init(path_src, path_dst, 
-				 &path_src_dir, &path_src_full, &path_dst_dir, &path_dst_full, &log_fd ) )
+				 &path_src_dir, &path_src_full, &path_dst_dir, &path_dst_full, log_fd ) )
     {
-      ret_value = -1;
+      ret_value |= 1;
+      AppErrorReport(path_src, "Open directory failed.");
+
       goto end_process;
     }
 
@@ -2176,32 +2611,32 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
       STD_StrCat( path_src_full , entry_src.longname );
       STD_StrCpy( path_dst_full , path_dst_dir );
       STD_StrCat( path_dst_full , entry_src.longname );
-      /* SDにログを残す場合 */
-      if( log_active ) {
-	miya_log_fprintf(&log_fd, "path = %s len=%d\n",path_src_full,entry_src.filesize);
-      }
 
       if( (entry_src.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
-	copy_r( headp, path_dst_full, path_src_full, log_file_name, level );
+	ret_value |= copy_r( headp, path_dst_full, path_src_full, log_file_name, level );
       }	
       else {
-	my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, &log_fd);
+	if( FALSE == my_fs_add_list(headp, &entry_src, path_src_full, path_dst_full, log_fd) ) {
+	  ret_value |= 1;
+	  AppErrorReport(path_src_full, "Save file failed.");
+	}
       }
     }
   }
 
   /* ディレクトリエントリをセーブ */
 
-  my_fs_add_list( headp, &entry_current_dir, path_src, path_dst, &log_fd );
+  if( FALSE == my_fs_add_list( headp, &entry_current_dir, path_src, path_dst, log_fd ) ) {
+    AppErrorReport(path_src, "Save directory failed.");
+    ret_value |= 1;
+  }
 
   /* ディレクトリクローズ */
   if( FS_CloseDirectory(&f_src) == FALSE) {
-    if( log_active ) {
-      miya_log_fprintf(&log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(&log_fd, " %s\n", path_src);
-      miya_log_fprintf(&log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
-    }
-    ret_value = -1;
+    miya_log_fprintf(log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path_src);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src)));
+    //    ret_value |= 1; /* いらないかも？あとで考える */
   }
 
  end_process:
@@ -2210,11 +2645,9 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
 
   level--;
   if( level == 0 ) {
-    if( log_active ) {
-      Log_File_Close(&log_fd);
-    }
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
   }
-
   return ret_value;
 }
 

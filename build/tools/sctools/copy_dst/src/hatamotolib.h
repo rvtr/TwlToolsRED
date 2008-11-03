@@ -8,14 +8,15 @@ extern "C" {
 void PrintDeviceInfo(void);
 void SetupShopTitleId(void);
 void SetupUserInfo(void);
-void SetupVerData(void);
+BOOL SetupVerData(void);
 void SetupNSSL(void);
 BOOL SetupNHTTP(void);
 BOOL SetupEC(void);
 void DeleteECDirectory(void);
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds);
+FSFile *hatamotolib_log_start(char *log_file_name );
+void hatamotolib_log_end(void);
 
-BOOL hatamotolib_main(u64 *title_id_buf, u32 num_title);
 
 #ifdef __cplusplus
 }

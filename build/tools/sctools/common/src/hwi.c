@@ -24,6 +24,36 @@
 #include        "mprintf.h"
 #include        "my_fs_util.h"
 
+#include <twl/os/common/ownerInfoEx.h>
+
+#define  OS_ADDR_TWL_SETTINGSDATA   ( (OSTWLSettingsData *)HW_PARAM_TWL_SETTINGS_DATA )
+
+void WLAN_FORCE_ON(void)
+{
+  OSTWLSettingsData *p = (OSTWLSettingsData*)OS_ADDR_TWL_SETTINGSDATA;
+  OS_TPrintf("w flag %d\n",p->flags.isAvailableWireless);
+  if( p->flags.isAvailableWireless != 0x1 ) {
+    p->flags.isAvailableWireless = 0;
+  }
+}
+
+/*
+BOOL OS_IsAvailableWireless(void)
+{
+    BOOL result;
+    OSTWLSettingsData *p;
+    if( OS_IsRunOnTwl() )
+    {
+        p = (OSTWLSettingsData*)OS_ADDR_TWL_SETTINGSDATA;
+        result = (p->flags.isAvailableWireless == 0x1);
+    }
+    else
+    {
+        result = TRUE;
+    }
+    return (result);
+}
+*/
 
 /*
 // TWL本体設定データリード（関数内でNTR本体設定データのリードも行う。）

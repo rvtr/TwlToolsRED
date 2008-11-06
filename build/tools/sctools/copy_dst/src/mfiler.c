@@ -123,6 +123,72 @@ char *MFILER_Get_CurrentDir(void)
   return NULL;
 }
 
+#if 1
+
+#define LOCAL_FILE_PATH_LEN 64
+
+int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
+{
+  FSFile f_src;
+  FSDirectoryEntryInfo entry_src;
+  BOOL bSuccess;
+  char path_src_dir[LOCAL_FILE_PATH_LEN];
+  char path_src_full[LOCAL_FILE_PATH_LEN];
+
+  int ret_value = 0;
+
+  FS_InitFile(&f_src);
+  bSuccess = FS_OpenDirectory(&f_src, path_src, FS_PERMIT_R);
+  if(!bSuccess) {
+#if 0
+    mprintf("Failed Open SRC Directory\n");
+    mprintf(" %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ));
+#endif
+    ret_value = -1;
+    goto end_process;
+  }
+
+  STD_MemSet((void *)path_src_dir, 0, LOCAL_FILE_PATH_LEN);
+  STD_MemSet((void *)path_src_full, 0, LOCAL_FILE_PATH_LEN);
+  STD_StrCpy(path_src_dir, path_src);
+  STD_StrCat(path_src_dir, "/");
+
+
+  while( FS_ReadDirectory(&f_src, &entry_src) ) {
+
+    if( STD_StrCmp(entry_src.longname, ".") == 0 ) {
+
+    }
+    else if( STD_StrCmp(entry_src.longname, "..") == 0 ) {
+    }
+    else if( STD_StrCmp(entry_src.longname, "wlan_cfg.txt") == 0 ) {
+    }
+    else if( STD_StrCmp(entry_src.longname, "nup_log.txt") == 0 ) {
+    }
+    else if( entry_src.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
+    }
+    else {
+      STD_StrCpy( path_src_full , path_src_dir );
+      STD_StrCat( path_src_full , entry_src.longname );
+      mfilter_add_list( headp, &entry_src, path_src_full );
+    }
+  }
+
+  bSuccess = FS_CloseDirectory(&f_src);
+  if(!bSuccess) {
+#if 0
+    mprintf("Failed Close SRC Directory\n");
+    mprintf(" %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_src) ));
+#endif
+    ret_value = -1;
+    //    goto end_process;
+  }
+
+ end_process:
+
+  return ret_value;
+}
+#else
 int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
 {
   FSFile f_src;
@@ -167,7 +233,7 @@ int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
 
 
   while( FS_ReadDirectory(&f_src, &entry_src) ) {
-#if 1
+
     if( STD_StrCmp(entry_src.longname, ".") == 0 ) {
 
     }
@@ -184,11 +250,6 @@ int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
       STD_StrCat( path_src_full , entry_src.longname );
       mfilter_add_list( headp, &entry_src, path_src_full );
     }
-#else
-    STD_StrCpy( path_src_full , path_src_dir );
-    STD_StrCat( path_src_full , entry_src.longname );
-    mfilter_add_list( headp, &entry_src, path_src_full );
-#endif
   }
 
   bSuccess = FS_CloseDirectory(&f_src);
@@ -211,6 +272,8 @@ int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
 
   return ret_value;
 }
+
+#endif
 
 void MFILER_DisplayDir(TEXT_CTRL *tc, MY_ENTRY_LIST **headp, int mode )
 {
@@ -302,6 +365,7 @@ void MFILER_DisplayDir(TEXT_CTRL *tc, MY_ENTRY_LIST **headp, int mode )
     m_putchar( tc, '\n');
   }
 }
+
 
 BOOL MFILER_ClearDir(MY_ENTRY_LIST **headp)
 {

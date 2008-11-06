@@ -956,9 +956,7 @@ BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, cha
   if( !log_active ) {
     log_fd = NULL;
   }
-  else {
-    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
 
   if( head == NULL ) {
     *pBuffer = NULL;
@@ -1101,9 +1099,7 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, in
   if( !log_active ) {
     log_fd = NULL;
   }
-  else {
-    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
 
   if( (list_count == NULL) || (error_count == NULL) ) {
     miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
@@ -1196,6 +1192,7 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, in
       }
 
       if( copy_error_flag == TRUE ) {
+	/* エントリリストのセーブ */
 	writtenSize = FS_WriteFile(&f, (void *)list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
 	if( writtenSize != sizeof(MY_DIR_ENTRY_LIST) ) {
 	  miya_log_fprintf(log_fd, "%s %d: Failed write file\n", __FUNCTION__ , __LINE__ );
@@ -1296,6 +1293,7 @@ BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int
   while( 1 ) {
 
     /* リストはルートディレクトリに近い順から入っている */
+    /* エントリリストのロード */
     readSize = FS_ReadFile(&f, (void *)&list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
     if( readSize == 0 ) {
       /* 終わり */
@@ -1920,9 +1918,7 @@ BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_nam
   if( !log_active ) {
     log_fd = NULL;
   }
-  else {
-    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
   
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
   if( ! bSuccess ) {
@@ -1999,9 +1995,8 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
   if( !log_active ) {
     log_fd = NULL;
   }
-  else {
-    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
 
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if( ! bSuccess ) {
@@ -2144,7 +2139,7 @@ BOOL SDCardValidation(void)
 */
 
 
-BOOL CheckShopRecord(u8 region, FSFile *log_fd)
+BOOL CheckShopRecord(FSFile *log_fd)
 {
 #pragma unused(log_fd)
 
@@ -2153,7 +2148,7 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
 
   BOOL ret_flag = TRUE;
   BOOL bSuccess;
-  char path[256];
+  char path[64];
   s32 readSize = 0;
 
   miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
@@ -2172,7 +2167,12 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     (void)FS_CloseFile(&f);
   }
 
-  
+
+  /* 
+     本体初期化後でもショップレコードは残っているので
+     この判定はいらない。
+   */
+#if  0
   // STD_StrCpy(path, "nand:/title/00030015/484e464a/data/ec.cfg"); /* ショップアカウント情報 */
   /* 海外だと変わってくる・・ */
   /* リージョンコードと合わせる-> リージョンコードは変えられないから。 */
@@ -2224,7 +2224,7 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
     ret_flag = FALSE;
   }
   miya_log_fprintf(log_fd, "\n");
-
+#endif
 
   if( ret_flag == TRUE ) {
     bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
@@ -2242,6 +2242,93 @@ BOOL CheckShopRecord(u8 region, FSFile *log_fd)
 
   return ret_flag;
 }
+
+
+BOOL CleanSDCardFiles(char *log_file_name)
+{
+  char *path = "sdmc:/";
+  FSFile *log_fd;
+  FSFile log_fd_real;
+
+  FSFile f;
+  FSDirectoryEntryInfo direntry;
+  BOOL ret_value = TRUE;
+  char path_full[FILE_PATH_LEN];
+
+  log_fd = &log_fd_real;
+  if( FALSE == Log_File_Open( log_fd, log_file_name ) ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+  /* ソースディレクトリオープン */
+  FS_InitFile(&f);
+
+  if(FS_OpenDirectory(&f, path, FS_PERMIT_R | FS_PERMIT_W ) == FALSE ) {
+    miya_log_fprintf(log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ) );
+    ret_value = FALSE;
+    (void)Error_Report_Printf(" Open directory failed:%s\n",path);
+    goto end_process;
+  }
+
+
+  while( FS_ReadDirectory(&f, &direntry) ) {
+    if( STD_StrCmp(direntry.longname, ".") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry.longname, "..") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry.longname, "wlan_cfg.txt") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry.longname, "nup_log.txt") == 0 ) {
+    }
+    else if( direntry.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
+    }
+    else {
+      STD_StrCpy( path_full , path );
+      STD_StrCat( path_full , direntry.longname );
+
+      if( (direntry.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
+	/* ディレクトリの場合 */
+	if( FALSE == FS_DeleteDirectoryAuto( path_full ) ) {
+	  OS_TPrintf("FS_DeleteDirectoryAuto failed.: ");
+	  PrintAttributes(direntry.attributes, log_fd);
+	  OS_TPrintf(" %s\n", path_full);
+	  mprintf("FS_DeleteDirectoryAuto failed. %s\n", path_full);
+	  ret_value = FALSE;
+	}
+      }
+      else {
+	/* ファイルの場合 */
+	if( FALSE == FS_DeleteFile( path_full ) ) {
+	  OS_TPrintf("FS_DeleteFile failed.: ");
+	  PrintAttributes(direntry.attributes, log_fd);
+	  OS_TPrintf(" %s\n", path_full);
+	  mprintf("FS_DeleteFile failed. %s\n", path_full);
+	  ret_value = FALSE;
+	}
+      }
+    }
+  }
+
+  /* ソースディレクトリクローズ */
+  if( FS_CloseDirectory(&f) == FALSE) {
+    miya_log_fprintf(log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
+    //    ret_value |= 1; /* いらないかも？あとで考える */
+  }
+
+ end_process:
+
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  Log_File_Close(log_fd);
+
+  return ret_value;
+
+}
+
 
 int get_title_id(MY_DIR_ENTRY_LIST **headp, const char *path_src, int *save_parent_dir_info_flag, char *log_file_name, int level )
 {
@@ -2564,9 +2651,7 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
   if( level == 0 ) {
     log_fd = &log_fd_real;
     log_active = Log_File_Open( log_fd, log_file_name );
-    if( log_active ) {
-      miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-    }
+    miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
   }
 
   level++;

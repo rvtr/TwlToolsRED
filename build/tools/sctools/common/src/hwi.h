@@ -41,7 +41,7 @@ BOOL MiyaRestoreTWLSettings(const char *path);
 BOOL MiyaReadHWNormalInfo( LCFGTWLHWNormalInfo *Info );
 BOOL MiyaReadHWSecureInfo( LCFGTWLHWSecureInfo *Info );
 BOOL MiyaReadHWNormalInfo_From_SD(const char *path,   LCFGTWLHWNormalInfo *info);
-
+void WLAN_FORCE_ON(void);
 
 #if 0
 typedef struct LCFGTWLHWNormalInfo

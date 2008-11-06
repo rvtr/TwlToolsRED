@@ -19,6 +19,9 @@
 #include <twl/na.h>
 #include <twl/nam.h>
 #include <NitroWiFi/nhttp.h>
+
+#include </twl/os/common/ownerInfoEx.h>
+
 #include "nssl.h"
 
 #include        "font.h"
@@ -53,7 +56,6 @@
 
 // #define MIYA_MCU 1
 
-static BOOL no_reboot_flag = FALSE;
 static BOOL only_wifi_config_data_trans_flag = FALSE;
 static BOOL user_and_wifi_config_data_trans_flag = FALSE;
 static BOOL no_network_flag = FALSE;
@@ -62,9 +64,10 @@ static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 //static BOOL reboot_flag = FALSE;
 
+static BOOL ec_download_success_flag = FALSE;
+
 static u8 org_region = 0;
 static u64 org_fuseId = 0;
-static int select_mode = 0;
 static volatile BOOL reboot_flag;
 
 static int miya_debug_level = 0;
@@ -377,8 +380,12 @@ static BOOL RestoreFromSDCard8(void)
   Error_Report_Init();
 
   if( mydata.num_of_app_save_data  > 0 ) { 
-    mprintf("App. save data restore       ");
-    if( no_network_flag == TRUE ) {
+
+
+    
+
+    if( (no_network_flag == TRUE) || (ec_download_success_flag == FALSE) ) {
+      mprintf("Sys-App. save data restore   ");
       if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
 						       MyFile_GetSaveDataRestoreLogFileName(),
 						       &list_count, &error_count )) {
@@ -394,6 +401,7 @@ static BOOL RestoreFromSDCard8(void)
       }
     }
     else {
+      mprintf("App. save data restore       ");
       if( TRUE == RestoreDirEntryList( MyFile_GetSaveDataListFileName() , 
 				       MyFile_GetSaveDataRestoreLogFileName(),
 				       &list_count, &error_count )) {
@@ -729,6 +737,14 @@ static BOOL RestoreFromSDCard7(void)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  
+  if( ret_flag == TRUE ) {
+    ec_download_success_flag = TRUE;
+  }
+  else {
+    ec_download_success_flag = FALSE;
+  }
+
   hatamotolib_log_end();
 
   return ret_flag;
@@ -835,9 +851,6 @@ static void MyThreadProcNuc(void *arg)
   FSFile *log_fd;
   BOOL ret_flag;
 
-
-  
-
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
@@ -848,7 +861,18 @@ static void MyThreadProcNuc(void *arg)
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
       if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
-	mprintf("connection failed!\n\n");
+	mprintf("-connect to the AP           ");
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
+	if( TRUE == stream_play_is_end() ) {
+	  stream_play2();	/* ng.aiff */
+	}
+	mprintf("Network Update failed!\n");
+	OS_TPrintf("Network Update failed!\n");
+
 	while( 1 ) {
 	  keyData = m_get_key_code();
 	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
@@ -856,6 +880,12 @@ static void MyThreadProcNuc(void *arg)
 	  }
 	  OS_Sleep(20);
 	}
+      }
+      else {
+	mprintf("-connect to the AP           ");
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
 
 
@@ -877,28 +907,16 @@ static void MyThreadProcNuc(void *arg)
 	  stream_play0(); /* cursor.aiff */
 	}
 	/* ハードウェアリセットを行い、自分自身を起動します。 */
-	if( no_reboot_flag == FALSE ) {
-	  mprintf("\n");
-	  text_blink_current_line(tc[0]);
-	  mprintf("press A button to start RESTORE\n\n");
-	  MCU_SetFreeRegister( 0x55 );
-	  while( 1 ) {
-	    keyData = m_get_key_code();
-	    if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
-	      OS_RebootSystem();
-	    }
-	    OS_Sleep(20);
+	mprintf("\n");
+	text_blink_current_line(tc[0]);
+	mprintf("press A button to start RESTORE\n\n");
+	MCU_SetFreeRegister( 0x55 );
+	while( 1 ) {
+	  keyData = m_get_key_code();
+	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
+	    OS_RebootSystem();
 	  }
-	}
-	else {
-	  mprintf("\n");
-	  // text_blink_current_line(tc[0]);
-	  while( 1 ) {
-	    keyData = m_get_key_code();
-	    if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
-	    }
-	    OS_Sleep(20);
-	  }
+	  OS_Sleep(20);
 	}
       }
       else {
@@ -958,20 +976,28 @@ void TwlMain(void)
   u8 macAddress[6];
   MY_ENTRY_LIST *mfiler_list_head = NULL;
   u16 s_major, s_minor;
+  BOOL s_flag;
+  s64 sys_version_org;
+  s64 sys_version;
   u32 s_timestamp;
   ESError es_error_code;
   BOOL MydataLoadDecrypt_message_flag = TRUE;
   BOOL MydataLoadDecrypt_dir_flag = TRUE;
   BOOL MydataLoadDecrypt_success_flag = TRUE;
   BOOL dir_select_mode = FALSE;
+  int select_mode = 0;
+
   u8 free_reg;
-  u8 mode;
 
   OS_Init();
   OS_InitThread();
 
   OS_InitTick();
   OS_InitAlarm();
+
+
+  /* 無線ＬＡＮ設定の強制ＯＮ */
+  WLAN_FORCE_ON();
 
 
   // マスター割り込みフラグを許可に
@@ -1022,24 +1048,6 @@ void TwlMain(void)
   if( free_reg == 0x55 ) {
     reboot_flag = TRUE;
   } 
-  else if( free_reg == 0x66 ) {
-    reboot_flag = TRUE;
-    no_network_flag = TRUE;
-  }
-  else if( free_reg == 0x77 ) {
-    no_reboot_flag = TRUE;
-    mprintf("no_reboot_flag ON\n");
-  }
-  else if( free_reg == 0x88 ) {
-    reboot_flag = TRUE;
-    only_wifi_config_data_trans_flag = TRUE;
-    mprintf("only_wifi_config_data_trans ON\n");
-  }
-  else if( free_reg == 0x99 ) {
-    reboot_flag = TRUE;
-    user_and_wifi_config_data_trans_flag = TRUE;
-    mprintf("user_and_wifi_config_data ON\n");
-  }
   else {
     reboot_flag = FALSE;    
   }
@@ -1047,9 +1055,6 @@ void TwlMain(void)
   /* デバッグのために今だけ強制的にオン(UPDATE mode) */
   /* miya */
   //  reboot_flag = TRUE;
-
-
-
 
   PM_SetAutoExit( FALSE );
   PM_SetExitCallbackInfo( &pmexitcallbackinfo,pmexitcallback, NULL);
@@ -1080,10 +1085,17 @@ void TwlMain(void)
     s_major = 0;
     s_minor = 0;
     s_timestamp = 0;
+    s_flag = FALSE;
+    sys_version = -1;
+  }
+  else {
+    s_flag = TRUE;
+    sys_version = (s64)(((u32)s_major) << 16 | (u32)s_minor);
   }
 
-
   ES_InitLib();
+
+
 
 
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
@@ -1099,13 +1111,13 @@ void TwlMain(void)
     m_set_palette(tc[0], 0xF);	/* white */
   }
 
-#if 1
+
   // ニックネームが空なら適当に設定
   if( *LCFG_TSD_GetNicknamePtr() == L'\0' ) {
     LCFG_TSD_SetNickname((const u16*)(L"repair-tool"));
     //    mprintf("Set dummy Nickname\n");
   }
-#endif  
+
 
   // 国が選択されていないなら適当に設定
   if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
@@ -1125,18 +1137,17 @@ void TwlMain(void)
   mydata.shop_record_flag = FALSE;
   es_error_code = ES_GetDeviceId(&mydata.deviceId);
   if( es_error_code == ES_ERR_OK ) {
-    if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
+    if( TRUE == CheckShopRecord( NULL ) ) {
       mydata.shop_record_flag = TRUE;
     }
     else {
-      mprintf("no ec.cfg file\n");
+      mprintf("no shop record\n");
     }
   }
   else {
     OS_TPrintf("es_error_code = %d\n", es_error_code );
   }
   
-  // (void)CheckShopRecord( hws_info.region, NULL );
   
   if( TRUE == mydata.shop_record_flag ) {
     snprintf(mydata.bmsDeviceId, sizeof(mydata.bmsDeviceId), "%lld", ((0x3ull << 32) | mydata.deviceId));
@@ -1145,9 +1156,18 @@ void TwlMain(void)
   }
 
 
+
   if( FALSE == reboot_flag ) {
     mprintf("Network update mode\n");
     /* 最初はネットワークアップデート。 */
+
+    if( FALSE == OS_IsAvailableWireless() ) {
+      //    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("Warning:WLAN Enable flag = OFF\n");
+      m_set_palette(tc[0], 0xF);	/* white */
+      OS_TPrintf("WLAN Enable flag OFF\n");
+    } 
 
     //  NSSL_Init(&s_sslConfig);
     //    SetupNSSL();
@@ -1161,12 +1181,6 @@ void TwlMain(void)
 	OS_TPrintf("Client cert load error\n");
 	mprintf("Client cert load error\n");
       }
-#if 0
-      else {
-	OS_TPrintf("Client cert load success\n");
-	mprintf("Client cert load success\n");
-      }
-#endif
       (void)NA_UnloadVersionDataArchive();
     }
 
@@ -1283,6 +1297,16 @@ void TwlMain(void)
 		mprintf("Personal data. restore       ");
 		MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
 								    &mydata, sizeof(MyData), NULL);
+
+
+
+		if( mydata.sys_ver_flag == TRUE ) {
+		  sys_version_org = (s64)(((u32)(mydata.sys_ver_major)) << 16 | (u32)(mydata.sys_ver_minor));
+		}
+		else {
+		  sys_version_org = -1;
+		}
+
 		if(TRUE == MydataLoadDecrypt_success_flag ) {
 		  if( org_region != mydata.region ) {
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -1311,6 +1335,16 @@ void TwlMain(void)
 		    mprintf(" illegal format version.\n");
 		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
 			    mydata.version_major,mydata.version_minor);
+		    m_set_palette(tc[0], 0xF);	/* white */
+		    MydataLoadDecrypt_message_flag = FALSE;
+		  }
+		  else if( s_flag && mydata.sys_ver_flag && (sys_version < sys_version_org) ) {
+		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+		    mprintf("NG.\n");
+		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+		    mprintf(" illegal System menu version.\n");
+		    mprintf(" org. version %d.%d\n", mydata.sys_ver_major,mydata.sys_ver_minor);
+		    mprintf(" cur. version %d.%d\n", s_major,s_minor);
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
 		  }
@@ -1352,16 +1386,6 @@ void TwlMain(void)
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
-      miya_debug_level++;
-      miya_debug_level &= 1;
-      if( miya_debug_level ) {
-	Miya_debug_ON();
-	mprintf("debug ON\n");
-      }
-      else {
-	Miya_debug_OFF();
-	mprintf("debug OFF\n");
-      }
     }
 #if 0
     /* スタートボタンはＡボタンと同じ扱い */
@@ -1371,37 +1395,40 @@ void TwlMain(void)
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {
-      select_mode++;
-      switch( select_mode ) {
-      case 1:
-	free_reg = mode = 0x55;
-	break;
-      case 2:
-	free_reg = mode = 0x66;
-	no_network_flag = TRUE;
-	break;
-      case 3:
-	free_reg = mode = 0x77;
-	no_reboot_flag = TRUE;
-	break;
-      case 4:
-	free_reg = mode = 0x88;
-	only_wifi_config_data_trans_flag = TRUE;
-	break;
-      case 5:
-	free_reg = mode = 0x99;
-	user_and_wifi_config_data_trans_flag = TRUE;
-	break;
-      default:
-	free_reg = mode = 0;
-	select_mode = 0;
-	break;
+      if( TRUE == reboot_flag ) {
+	no_network_flag = FALSE;
+	only_wifi_config_data_trans_flag = FALSE;
+	user_and_wifi_config_data_trans_flag = FALSE;
+	Miya_debug_OFF();
+	
+	select_mode++;
+	select_mode %= 5;
+	switch( select_mode ) {
+	case 0:
+	  /* restore mode : default */
+	  break;
+	case 1:
+	  no_network_flag = TRUE;
+	  break;
+	case 2:
+	  only_wifi_config_data_trans_flag = TRUE;
+	  break;
+	case 3:
+	  user_and_wifi_config_data_trans_flag = TRUE;
+	  break;
+	case 4:
+	  Miya_debug_ON();
+	  break;
+	default:
+	  break;
+	}
       }
-
     }
     else if ( keyData & PAD_BUTTON_Y ) {
-      MCU_SetFreeRegister( mode);
-      OS_RebootSystem();
+      if( FALSE == reboot_flag ) {
+	MCU_SetFreeRegister( 0x55 );
+	OS_RebootSystem();
+      }
     }
     else if ( keyData & PAD_KEY_RIGHT ) {
       n = m_get_display_offset_x(tc[0]);
@@ -1518,46 +1545,41 @@ void TwlMain(void)
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
 	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
-
     if( FALSE == reboot_flag ) {
-      if( free_reg == 0x55 ) {
-	mfprintf(tc[1],"restart to RESTORE mode\n");
-      }
-      else if( free_reg == 0x66 ) {
-	mfprintf(tc[1],"network-connection OFF mode\n");
-      }
-      else if( free_reg == 0x77 ) {
-	mfprintf(tc[1],"no_reboot_flag ON\n");
-      }
-      else if( free_reg == 0x88 ) {
-	mfprintf(tc[1],"only wifi config data\n");
-      }
-      else if( free_reg == 0x99 ) {
-	mfprintf(tc[1],"only user settings data\n");
-      }
-      else {
-	mfprintf(tc[1],"just reboot\n");
-      }
-      mfprintf(tc[1], "press Y button to restart.\n");
-
+      mfprintf(tc[1], "press Y button to RESTORE mode\n");
     }
     else {
-      mfprintf(tc[1], "function no.%d/%d\n\n", function_counter, function_table_max);
+      switch( select_mode ) {
+      case 0:
+	/* restore mode : default */
+	mfprintf(tc[1],"-- normal mode --\n");
+	break;
+      case 1:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+	mfprintf(tc[1],"-- no network connection mode --\n");
+	break;
+      case 2:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+	mfprintf(tc[1],"-- only wifi data mode --\n");
+	break;
+      case 3:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+	mfprintf(tc[1],"-- only user data mode --\n");
+	break;
+      case 4:
+	m_set_palette(tc[1], M_TEXT_COLOR_RED ); /* red  */
+	mfprintf(tc[1],"-- NG mode --\n");
+	break;
+      default:
+	break;  
+      }
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
 
-      if( free_reg == 0x66 ) {
-	mfprintf(tc[1],"network-connection OFF mode\n");
-      }
-      else if( free_reg == 0x77 ) {
-	mfprintf(tc[1],"no_reboot_flag ON\n");
-      }
-      else if( free_reg == 0x88 ) {
-	mfprintf(tc[1],"only wifi config data\n");
-      }
-      else if( free_reg == 0x99 ) {
-	mfprintf(tc[1],"only user settings data\n");
-      }
-      
-	 
+
+      mfprintf(tc[1],"\n");
+
+      mfprintf(tc[1], "function no.%d/%d\n", function_counter, function_table_max);
+
       mfprintf(tc[2],"\f");
 
       if( MydataLoadDecrypt_dir_flag == FALSE ) {

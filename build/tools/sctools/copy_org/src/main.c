@@ -44,7 +44,7 @@
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
-static int miya_debug_level = 0;
+//static int miya_debug_level = 0;
 
 
 static void SDEvents(void *userdata, FSEvent event, void *arg)
@@ -607,6 +607,8 @@ void TwlMain(void)
   u16 s_major, s_minor;
   u32 s_timestamp;
   ESError es_error_code;
+  int select_mode = 0;
+  BOOL no_sd_clean_flag = FALSE;
 
   OS_Init();
   OS_InitThread();
@@ -657,6 +659,10 @@ void TwlMain(void)
 
   OS_TPrintf("MCU Free Reg. 0x%02x\n",MCU_GetFreeReg());
 
+
+  STD_MemSet((void *)&mydata, 0, sizeof(MyData));
+
+
   if( FALSE == Read_SystemMenuVersion(&s_major, &s_minor, &s_timestamp) ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf( "system menu ver. read error!\n");
@@ -664,6 +670,12 @@ void TwlMain(void)
     s_major = 0;
     s_minor = 0;
     s_timestamp = 0;
+    mydata.sys_ver_flag = FALSE;
+  }
+  else {
+    mydata.sys_ver_flag = TRUE;
+    mydata.sys_ver_major = s_major;
+    mydata.sys_ver_minor = s_minor;
   }
 
 
@@ -672,6 +684,7 @@ void TwlMain(void)
   
   // 必須：ES の初期化
   ES_InitLib();
+
 
   if( FALSE == MiyaReadHWNormalInfo( &hwn_info ) ) {
     mydata.uniqueid_flag = FALSE;
@@ -750,11 +763,11 @@ void TwlMain(void)
   mydata.shop_record_flag = FALSE;
   es_error_code = ES_GetDeviceId(&mydata.deviceId);
   if( es_error_code == ES_ERR_OK ) {
-    if( TRUE == CheckShopRecord( hws_info.region, NULL ) ) {
+    if( TRUE == CheckShopRecord( NULL ) ) {
       mydata.shop_record_flag = TRUE;
     }
     else {
-      mprintf("no ec.cfg file\n");
+      mprintf("no shop record\n");
     }
   }
   else {
@@ -805,6 +818,7 @@ void TwlMain(void)
   init_my_thread();
 
   if( sd_card_flag == TRUE ) {
+
     text_blink_current_line(tc[0]);
     mprintf("press A button to start BACKUP\n\n");
   }
@@ -859,6 +873,10 @@ void TwlMain(void)
       /* ユーザーデータ吸出しモード */
       if(completed_flag == FALSE ) {
 	if( sd_card_flag == TRUE ) {
+	  if( no_sd_clean_flag == FALSE ) {
+	    (void)CleanSDCardFiles(NULL);
+	  }
+
 	  text_blink_clear(tc[0]);
 	  if( FALSE == start_my_thread() ) {
 	    OS_TPrintf("\nnow backup..\n\n");
@@ -872,16 +890,6 @@ void TwlMain(void)
       }
     }
     else if ( keyData & PAD_BUTTON_B ) {
-      miya_debug_level++;
-      miya_debug_level &= 1;
-      if( miya_debug_level ) {
-	Miya_debug_ON();
-	mprintf("debug ON\n");
-      }
-      else {
-	Miya_debug_OFF();
-	mprintf("debug OFF\n");
-      }
     }
 #if 0
     /* スタートボタンはＡボタンと同じ扱い */
@@ -891,6 +899,20 @@ void TwlMain(void)
     else if ( keyData & PAD_BUTTON_SELECT ) {
     }
     else if ( keyData & PAD_BUTTON_X ) {
+      select_mode++;
+      select_mode %= 3;
+
+      Miya_debug_OFF();
+      no_sd_clean_flag = FALSE;
+
+      if( select_mode == 0 ) {
+      }
+      else if(select_mode == 1 ) {
+	no_sd_clean_flag = TRUE;
+      }
+      else if(select_mode == 2 ) {
+	Miya_debug_ON();
+      }
     }
     else if ( keyData & PAD_BUTTON_Y ) {
     }
@@ -983,6 +1005,22 @@ void TwlMain(void)
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
 	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
 
+
+    if( select_mode == 0 ) {
+      mfprintf(tc[1],"-- normal mode(default) --\n");
+    }
+    else if( select_mode == 1 ) {
+      m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+      mfprintf(tc[1],"-- no SDCard clean mode --\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
+    else if( select_mode == 2 ) {
+      m_set_palette(tc[1], M_TEXT_COLOR_RED ); /* red  */
+      mfprintf(tc[1],"-- NG mode --\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
+
+    mfprintf(tc[1],"\n");
 
     mfprintf(tc[1], "function no.%d/%d\n", function_counter, function_table_max);
     

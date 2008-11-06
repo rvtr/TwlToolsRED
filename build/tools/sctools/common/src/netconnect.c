@@ -217,7 +217,8 @@ int NcStart(const char* apClass)
   int len;
   u8 key_bin_buf[MAX_KEY_BIN_BUF];
   int timeout_counter;
-  
+  int sec = 0;
+
   SiteDefs_Init();
 
   if( TRUE == GetKeyModeStr() ) {
@@ -294,42 +295,68 @@ int NcStart(const char* apClass)
 #define WCM_PHASE_TERMINATING       13              // WCM ライブラリの強制停止シーケンス中
 #endif
 
+#define TIMEOUT_SEC 60
     switch( counter ) {
     case 0:
-      mprintf("\r-LINK UP.     ");
+      mprintf("\r-LINK UP.      %02d/%02d",sec,TIMEOUT_SEC);
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     case 1:
-      mprintf("\r-LINK UP..    ");
+      mprintf("\r-LINK UP..     %02d/%02d",sec,TIMEOUT_SEC);
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     case 2:
-      mprintf("\r-LINK UP...   ");
+      mprintf("\r-LINK UP...    %02d/%02d",sec,TIMEOUT_SEC);
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     case 3:
-      mprintf("\r-LINK UP....  ");
+      mprintf("\r-LINK UP....   %02d/%02d",sec,TIMEOUT_SEC);
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     case 5:
-      mprintf("\r-LINK UP..... ");
+      mprintf("\r-LINK UP.....  %02d/%02d",sec,TIMEOUT_SEC);
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     case 6:
-      mprintf("\r-LINK UP......");
+      mprintf("\r-LINK UP...... %02d/%02d",sec,TIMEOUT_SEC);
       counter = -1;
+      if( timeout_counter > (TIMEOUT_SEC * 1000 / 200) ) {
+	goto error_ret;
+      }
       break;
     }
 
     timeout_counter++;
-    if( timeout_counter > (60 * 1000 / 200) ) {
-      mprintf("%s -timeout\n",__FUNCTION__);
-      return NC_ERROR_TIMEOUT;
-    }
+
+    sec = timeout_counter*200/1000;
+
     OS_Sleep(200);
     counter++;
   }
 
-  OS_TPrintf("connected\n");
-  mprintf(" connected\n");
+  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+  mprintf("         OK.\n");
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
  
   return ncStartWiFi();
-  //  return 0; /* 0 means success */
+
+ error_ret:
+  m_set_palette(tc[0], M_TEXT_COLOR_RED );
+  mprintf("         NG.\n");
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  return NC_ERROR_TIMEOUT;
+
 }
 
 void NcFinish()

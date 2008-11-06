@@ -41,7 +41,10 @@ void write_debug_data(void);
 
 BOOL SDCardValidation(void);
 BOOL TWLCardValidation(void);
-BOOL CheckShopRecord(u8 region, FSFile *log_fd);
+BOOL CheckShopRecord(FSFile *log_fd);
+
+BOOL CleanSDCardFiles(char *log_file_name);
+
   //BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd);
   //BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd);
 

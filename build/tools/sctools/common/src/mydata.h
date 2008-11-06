@@ -3,11 +3,14 @@
 
 
 #define MY_DATA_VERSION_MAJOR 0
-#define MY_DATA_VERSION_MINOR 5
+#define MY_DATA_VERSION_MINOR 6
 
 typedef struct {
   u8 version_major;
   u8 version_minor;
+  BOOL sys_ver_flag;
+  u16 sys_ver_major;
+  u16 sys_ver_minor;
   BOOL rtc_date_flag;
   BOOL rtc_time_flag;
   RTCDate rtc_date;

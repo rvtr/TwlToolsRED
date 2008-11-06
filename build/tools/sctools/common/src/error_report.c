@@ -24,6 +24,11 @@ void Error_Report_End(void)
 {
   ERROR_REPORT *er_temp;
   ERROR_REPORT *er_next;
+
+  if( er_active == FALSE ) {
+    return;
+  }
+
   er_temp = er_head;
   while( er_temp != NULL ) {
     if( er_temp->report_str ) {
@@ -103,6 +108,11 @@ BOOL Error_Report_Printf(const char *fmt, ...)
   char str_buf[STR_BUF_LEN];
   int     ret;
   va_list vlist;
+
+  if( er_active == FALSE ) {
+    return FALSE;
+  }
+
   va_start(vlist, fmt);
   ret = STD_TVSNPrintf(str_buf, STR_BUF_LEN, fmt, vlist);
   va_end(vlist);

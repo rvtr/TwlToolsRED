@@ -650,15 +650,16 @@ static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
   return ret_flag;
 }
 
-BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
+int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 {
   char challenge[EC_CHALLENGE_BUF_SIZE];
   char status;
-  BOOL ret_flag;
+  //  BOOL ret_flag;
 
   mprintf("-check registration..        ");
   miya_log_fprintf(log_fd, "-check registration...");
   status = CheckRegistration();
+
   // U  unregistered
   // R  registered
   // P  pending
@@ -670,16 +671,23 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" my error.\n");
     miya_log_fprintf(log_fd, " my error.\n");
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else if( status == 'U') {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+    mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    mprintf(" acount not transfered yet.\n");
+
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("  acount not transfered yet,\n");
+    mprintf("   OR, acount already cleared\n\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     miya_log_fprintf(log_fd, " acount not transfered yet.\n");
-    return FALSE;
+    miya_log_fprintf(log_fd, "  OR acount already cleared by user.\n");
+    // 「ご利用記録の削除」をした場合、ここでエラーになる。
+    // ここでＯＫにする？
+    return ECDOWNLOAD_NO_REGISTER;
   }
   else if( status == 'R') {
     miya_log_fprintf(log_fd, "NG.\n");
@@ -688,7 +696,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" already registered. please delete acount.\n");
     miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else if( (status != 'P') && (status != 'T') ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -696,7 +704,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     mprintf(" invalid registration status '%c'\n", status );
     miya_log_fprintf(log_fd, " invalid registration status '%c'\n", status );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -712,7 +720,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -728,7 +736,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -745,7 +753,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -762,7 +770,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -778,7 +786,7 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    return FALSE;
+    return ECDOWNLOAD_FAILURE;
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
@@ -791,9 +799,16 @@ BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
   miya_log_fprintf(log_fd, "-download titles\n");
   mprintf("-download titles\n");
 
-  ret_flag = DownloadTitles(pTitleIds, numTitleIds);
+  if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
   
-  return ret_flag;
+  //#define ECDOWNLOAD_DUMMY       0
+  //#define ECDOWNLOAD_SUCCESS     1
+  //#define ECDOWNLOAD_NO_REGISTER 2
+  //#define ECDOWNLOAD_FAILURE     3
+
+  return ECDOWNLOAD_SUCCESS;
 }
 
 

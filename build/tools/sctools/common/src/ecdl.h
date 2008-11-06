@@ -31,10 +31,6 @@
 extern "C" {
 #endif
 
-BOOL ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);
-BOOL KPSClient();
-BOOL WaitEC(ECOpId opId);
-
 
 #ifdef __cplusplus
 }

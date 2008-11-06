@@ -65,6 +65,11 @@ static BOOL sd_card_flag = FALSE;
 //static BOOL reboot_flag = FALSE;
 
 static BOOL ec_download_success_flag = FALSE;
+static BOOL ec_download_no_registered_flag = FALSE;
+
+static BOOL wlan_active_flag = TRUE;
+
+
 
 static u8 org_region = 0;
 static u64 org_fuseId = 0;
@@ -239,6 +244,7 @@ static BOOL RestoreFromSDCard2(void)
     return TRUE;
   }
   mprintf("No original Unique ID\n");
+
   return TRUE;
 
 }
@@ -298,6 +304,7 @@ static BOOL RestoreFromSDCard5(void)
   // static BOOL SDBackupToSDCard4(void)
   int list_count;
   int error_count;
+  BOOL ret_flag = TRUE;
 
   Error_Report_Init();
 
@@ -314,6 +321,7 @@ static BOOL RestoreFromSDCard5(void)
       m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("NG.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      ret_flag = FALSE;
     }
   }
   else if( mydata.num_of_shared2_files == 0 ) {
@@ -328,14 +336,14 @@ static BOOL RestoreFromSDCard5(void)
   }
   Error_Report_End();
 
-  return TRUE;
+  return ret_flag;
 }
 
 static BOOL RestoreFromSDCard6(void)
 {
   int list_count;
   int error_count;
-
+  BOOL ret_flag = TRUE;
 
   Error_Report_Init();
 
@@ -354,6 +362,7 @@ static BOOL RestoreFromSDCard6(void)
       m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("NG.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      ret_flag = FALSE;
     }
   }
   else if( mydata.num_of_photo_files == 0 ) {
@@ -368,7 +377,7 @@ static BOOL RestoreFromSDCard6(void)
   }
   Error_Report_End();
 
-  return TRUE;
+  return ret_flag;
 }
 
 
@@ -376,15 +385,15 @@ static BOOL RestoreFromSDCard8(void)
 {
   int list_count;
   int error_count;
+  BOOL ret_flag = TRUE;
 
   Error_Report_Init();
 
   if( mydata.num_of_app_save_data  > 0 ) { 
 
-
-    
-
-    if( (no_network_flag == TRUE) || (ec_download_success_flag == FALSE) ) {
+    if( (no_network_flag == TRUE) 
+	|| (ec_download_success_flag == FALSE) 
+	|| (ec_download_no_registered_flag == TRUE ) ) {
       mprintf("Sys-App. save data restore   ");
       if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
 						       MyFile_GetSaveDataRestoreLogFileName(),
@@ -398,6 +407,7 @@ static BOOL RestoreFromSDCard8(void)
 	m_set_palette(tc[0], M_TEXT_COLOR_RED );
 	mprintf("NG.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
       }
     }
     else {
@@ -414,6 +424,7 @@ static BOOL RestoreFromSDCard8(void)
 	m_set_palette(tc[0], M_TEXT_COLOR_RED );
 	mprintf("NG.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
       }
     }
   }
@@ -429,7 +440,7 @@ static BOOL RestoreFromSDCard8(void)
   }
   Error_Report_End();
 
-  return TRUE;
+  return ret_flag;
 }
 
 
@@ -549,6 +560,7 @@ static BOOL RestoreFromSDCard7(void)
   ECError rv;
   BOOL ret_flag = TRUE;
   FSFile *log_fd;
+  int ec_download_ret;
 
   title_id_buf_ptr = NULL;
   title_id_count = 0;
@@ -672,9 +684,20 @@ static BOOL RestoreFromSDCard7(void)
 	goto end_ec_f;
       }
 
-      if( FALSE == ECDownload((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count) ) {
+      ec_download_ret = ECDownload((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count);
+      if( ec_download_ret == ECDOWNLOAD_FAILURE ) {
 	ret_flag = FALSE;
-	miya_log_fprintf(log_fd, "%s failed ECDownload\n", __FUNCTION__);
+	miya_log_fprintf(log_fd, "%s failed ECDownload 1\n", __FUNCTION__);
+	goto end_ec_f;
+      }
+      else if( ec_download_ret == ECDOWNLOAD_DUMMY ) {
+	ret_flag = FALSE;
+	miya_log_fprintf(log_fd, "%s failed ECDownload 2\n", __FUNCTION__);
+	goto end_ec_f;
+      }
+      else if(ec_download_ret == ECDOWNLOAD_NO_REGISTER ) {
+	// ret_flag = FALSE;どうする？
+	ec_download_no_registered_flag = TRUE;
 	goto end_ec_f;
       }
 
@@ -1155,18 +1178,24 @@ void TwlMain(void)
     OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
 
+  if( FALSE == OS_IsAvailableWireless() ) {
+    wlan_active_flag = FALSE;
+  }
 
 
   if( FALSE == reboot_flag ) {
     mprintf("Network update mode\n");
     /* 最初はネットワークアップデート。 */
 
-    if( FALSE == OS_IsAvailableWireless() ) {
+    if( FALSE == wlan_active_flag ) {
       //    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-      m_set_palette(tc[0], M_TEXT_COLOR_RED );
-      mprintf("Warning:WLAN Enable flag = OFF\n");
-      m_set_palette(tc[0], 0xF);	/* white */
+      mprintf("Error:WLAN Enable flag = OFF\n");
       OS_TPrintf("WLAN Enable flag OFF\n");
+      if( TRUE == stream_play_is_end() ) {
+	stream_play2();	/* ng.aiff */
+      }
+      Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
+      goto loop_start;
     } 
 
     //  NSSL_Init(&s_sslConfig);
@@ -1198,6 +1227,13 @@ void TwlMain(void)
 
   }
   else {
+
+    if( FALSE == wlan_active_flag ) {
+      select_mode = 1;	
+      no_network_flag = TRUE;
+    }
+
+
     dir_select_mode = TRUE;
 
     mprintf("user data restore mode\n");
@@ -1229,7 +1265,7 @@ void TwlMain(void)
     stream_play0(); /* cursor.aiff */
   }
 
-  
+ loop_start:
   while( 1 ) {
     Gfx_Render( vram_num_main , vram_num_sub );
     OS_WaitVBlankIntr();
@@ -1256,12 +1292,13 @@ void TwlMain(void)
       }
     }
     else if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
-
       if( sd_card_flag == TRUE ) {
 	if( FALSE == reboot_flag ) {
-	  /* ネットワークアップデート */
-	  text_blink_clear(tc[0]);
-	  start_my_thread();
+	  if( wlan_active_flag != FALSE ) {
+	    /* ネットワークアップデート */
+	    text_blink_clear(tc[0]);
+	    start_my_thread();
+	  }
 	}
 	else {
 	  /* リストア */
@@ -1297,8 +1334,11 @@ void TwlMain(void)
 		mprintf("Personal data. restore       ");
 		MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
 								    &mydata, sizeof(MyData), NULL);
-
-
+		/* 
+		   ランチャーが古い本体に書き戻す場合ですが、ネットワークアップデートを
+		   スキップしてリストアしようとするとデータの整合性からNGになるようにされて
+		   いると思います。なのですが、その時の表示がちょっと変です。
+		*/
 
 		if( mydata.sys_ver_flag == TRUE ) {
 		  sys_version_org = (s64)(((u32)(mydata.sys_ver_major)) << 16 | (u32)(mydata.sys_ver_minor));
@@ -1314,29 +1354,37 @@ void TwlMain(void)
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
 		    mprintf(" invalid region code.\n");
 		    mprintf(" \n");
-		    mprintf(" \n");
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
+		    if( TRUE == stream_play_is_end() ) {
+		      stream_play2();	/* ng.aiff */
+		    }
 		  }
 		  else if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		    mprintf(" illegal format version.\n");
+		    mprintf(" illegal tool data format.\n");
 		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
 			    mydata.version_major,mydata.version_minor);
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
+		    if( TRUE == stream_play_is_end() ) {
+		      stream_play2();	/* ng.aiff */
+		    }
 		  }
 		  else if( mydata.version_minor != MY_DATA_VERSION_MINOR ) {
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		    mprintf(" illegal format version.\n");
+		    mprintf(" illegal tool data format.\n");
 		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
 			    mydata.version_major,mydata.version_minor);
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
+		    if( TRUE == stream_play_is_end() ) {
+		      stream_play2();	/* ng.aiff */
+		    }
 		  }
 		  else if( s_flag && mydata.sys_ver_flag && (sys_version < sys_version_org) ) {
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
@@ -1347,6 +1395,9 @@ void TwlMain(void)
 		    mprintf(" cur. version %d.%d\n", s_major,s_minor);
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
+		    if( TRUE == stream_play_is_end() ) {
+		      stream_play2();	/* ng.aiff */
+		    }
 		  }
 		  else {
 		    m_set_palette(tc[0], 0x2);	/* green  */
@@ -1366,6 +1417,9 @@ void TwlMain(void)
 		  mprintf("NG.\n");
 		  m_set_palette(tc[0], 0xF);	/* white */
 		  MydataLoadDecrypt_message_flag = FALSE;
+		  if( TRUE == stream_play_is_end() ) {
+		    stream_play2();	/* ng.aiff */
+		  }
 		}
 	      }
 	    }
@@ -1400,7 +1454,8 @@ void TwlMain(void)
 	only_wifi_config_data_trans_flag = FALSE;
 	user_and_wifi_config_data_trans_flag = FALSE;
 	Miya_debug_OFF();
-	
+
+
 	select_mode++;
 	select_mode %= 5;
 	switch( select_mode ) {
@@ -1591,7 +1646,22 @@ void TwlMain(void)
 	mfprintf(tc[2],"\n\n\n");
       }
       else if( MydataLoadDecrypt_message_flag == FALSE ) {
-	if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
+	if( s_flag && mydata.sys_ver_flag && (sys_version < sys_version_org) ) {
+	  m_set_palette(tc[2], M_TEXT_COLOR_YELLOW );
+	  mfprintf(tc[2], " illegal System menu version.\n");
+	  mfprintf(tc[2], " org. version %d.%d\n", mydata.sys_ver_major,mydata.sys_ver_minor);
+	  mfprintf(tc[2], " cur. version %d.%d\n", s_major,s_minor);
+	  mfprintf(tc[2], " \n");
+	  m_set_palette(tc[2], 0xF);	/* white */
+	}
+	else if( org_region != mydata.region ) {
+	  mfprintf(tc[2]," invalid region code.\n");
+	  mfprintf(tc[2]," \n");
+	  mfprintf(tc[2]," \n");
+	  mfprintf(tc[2]," \n");
+	  m_set_palette(tc[2], 0xF);	/* white */
+	}
+	else if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
 	  mfprintf(tc[2]," illegal format version.\n");
 	  mfprintf(tc[2]," %s\n",MyFile_GetGlobalInformationFileName());
 	  mfprintf(tc[2]," version %d.%d\n", mydata.version_major,mydata.version_minor);

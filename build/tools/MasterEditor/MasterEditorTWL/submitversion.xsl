@@ -18,9 +18,7 @@
 	</xsl:variable>
 	<!-- NamedCellノードの名前がSubmitVersionのときのみ出力 -->
 	<xsl:if test="$tag='SubmitVersion'">
-	<submit_version>
-	<xsl:value-of select="ss:Data" />
-	</submit_version>
+		<xsl:value-of select="ss:Data" />
 	</xsl:if>
 </xsl:template>
 

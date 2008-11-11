@@ -142,7 +142,7 @@ NucStatus ProgressNupCheck(void)
     {
       // NUC_GetProgress() failed in checking, error code=34303
         miya_log_fprintf(log_fd, "NUC_GetProgress() failed in checking, error code=%d\n", NUC_GetLastError());
-        mprintf("NUC_GetProgress() failed in checking\n error code=%d\n", NUC_GetLastError());
+        mprintf("NUC_GetProgress() failed in checking\n");
     }
     if (TestState.count++ % STRING_ANIM_CNT == 0)
     {
@@ -243,13 +243,13 @@ void ProgressNetConnect(void)
 void ShowErrorMsg(int error_code)
 {
   if (error_code > 0) {
-    mprintf("Error Code:%d", error_code);
+    mprintf("--Error Code:%d\n", error_code);
     mprintf(" %s\n", GetPublicMsg(error_code));
     mprintf(" %s\n", GetPrivateMsg(error_code));
 
-    miya_log_fprintf(log_fd,  "Error Code:%d\n", error_code);
-    miya_log_fprintf(log_fd,  "%s\n", GetPublicMsg(error_code));
-    miya_log_fprintf(log_fd,  "%s\n", GetPrivateMsg(error_code));
+    miya_log_fprintf(log_fd, "--Error Code:%d\n", error_code);
+    miya_log_fprintf(log_fd, " %s\n", GetPublicMsg(error_code));
+    miya_log_fprintf(log_fd, " %s\n", GetPrivateMsg(error_code));
   }
   else
     {
@@ -305,10 +305,9 @@ BOOL my_numc_proc(void)
       status = ProgressNupCheck();
       if (status == NUC_STATUS_ERROR)
 	{   // エラー発生
-	  mprintf("\n");
-	  miya_log_fprintf(log_fd, "\n");
 	  ChangeState(PHASE_NUP_CLEANUP);
 	  error_code = NUC_GetLastError();
+	  ShowErrorMsg(error_code);
 	}
       else if (status == NUC_STATUS_COMPLETED)
 	{    // 更新リスト 取得終了

@@ -1,4 +1,9 @@
+#include <twl.h>
+#include <twl/nam.h>
+#include <nitro/fs.h>
+
 #include "ecdl.h"
+
 #include <twl/sea.h>
 #include <twl/lcfg.h>
 #include <twl/na.h>
@@ -473,6 +478,7 @@ static char CheckRegistration()
   s32 progress;
   ECError ecError;
   ECDeviceInfo di;
+  BOOL printf_status_flag = FALSE;
 
   //ECDL_LOG("check registeration");
   progress = EC_CheckRegistration();
@@ -486,39 +492,63 @@ static char CheckRegistration()
     return '\0'; // 微妙・・
   }
 
-#ifdef SDK_DEBUG
+
+  switch( di.registrationStatus[0] ) {
+  case '\0':
+    // mprintf(" my error.\n");
+    printf_status_flag = TRUE;
+    break;
+  case 'U':
+    // mprintf("  acount not transfered yet,\n");
+    //    mprintf("   OR, acount already cleared\n\n");
+    printf_status_flag = TRUE;
+    break;
+  case 'R':
+    //    mprintf(" already registered. please delete acount.\n");
+    printf_status_flag = TRUE;
+    break;
+  case 'P':
+  case 'T':
+    // mprintf("  invalid registration status '%c'\n", status );
+    printf_status_flag = TRUE;
+    break;
+  default:
+    break;
+  }
+
+  if( printf_status_flag == TRUE ) {
 #define ECDL_DI_FMT "%-30s"
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "serial", di.serial);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountId", di.accountId);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "registrationStatus", di.registrationStatus);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "extAccountId", di.extAccountId);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "country", di.country);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountCountry", di.accountCountry);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "region", di.region);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "language", di.language);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "blockSize", di.blockSize);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "usedBlocks", di.usedBlocks);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "totalBlocks", di.totalBlocks);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "netContentRestrictions", di.netContentRestrictions);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "userAge", di.userAge);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlFlags", di.parentalControlFlags);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "parentalControlOgn", di.parentalControlOgn);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "isParentalControlEnabled", di.isParentalControlEnabled);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSync", di.isNeedTicketSync);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "lastTicketSyncTime", di.lastTicketSyncTime);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "wirelessMACAddr", di.wirelessMACAddr);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "bluetoothMACAddr", di.bluetoothMACAddr);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "titleId", di.titleId);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "freeChannelAppCount", di.freeChannelAppCount);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "usedUserInodes", di.usedUserInodes);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "maxUserInodes", di.maxUserInodes);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "deviceCode", di.deviceCode);
-  OS_TPrintf(ECDL_DI_FMT " %s\n", "accountDeviceCode", di.accountDeviceCode);
-  OS_TPrintf(ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
-#endif
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "serial", di.serial);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "accountId", di.accountId);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "registrationStatus", di.registrationStatus);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "extAccountId", di.extAccountId);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "country", di.country);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "accountCountry", di.accountCountry);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "region", di.region);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "language", di.language);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "blockSize", di.blockSize);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "usedBlocks", di.usedBlocks);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "totalBlocks", di.totalBlocks);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "netContentRestrictions", di.netContentRestrictions);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "userAge", di.userAge);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "parentalControlFlags", di.parentalControlFlags);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "parentalControlOgn", di.parentalControlOgn);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isParentalControlEnabled", di.isParentalControlEnabled);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isNeedTicketSync", di.isNeedTicketSync);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "lastTicketSyncTime", di.lastTicketSyncTime);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "wirelessMACAddr", di.wirelessMACAddr);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "bluetoothMACAddr", di.bluetoothMACAddr);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "titleId", di.titleId);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "freeChannelAppCount", di.freeChannelAppCount);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "usedUserInodes", di.usedUserInodes);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "maxUserInodes", di.maxUserInodes);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "deviceCode", di.deviceCode);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "accountDeviceCode", di.accountDeviceCode);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
+  }
 
   return di.registrationStatus[0];
 }
@@ -674,35 +704,36 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     return ECDOWNLOAD_FAILURE;
   }
   else if( status == 'U') {
-    miya_log_fprintf(log_fd, "OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-    mprintf("OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-    mprintf("  acount not transfered yet,\n");
-    mprintf("   OR, acount already cleared\n\n");
+    mprintf("  acount not transfered yet.\n");
+    //    mprintf("   OR, acount already cleared\n\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     miya_log_fprintf(log_fd, " acount not transfered yet.\n");
-    miya_log_fprintf(log_fd, "  OR acount already cleared by user.\n");
+    //    miya_log_fprintf(log_fd, "  OR acount already cleared by user.\n");
     // 「ご利用記録の削除」をした場合、ここでエラーになる。
     // ここでＯＫにする？
-    return ECDOWNLOAD_NO_REGISTER;
+    return ECDOWNLOAD_FAILURE;
+    //    return ECDOWNLOAD_NO_REGISTER;
   }
   else if( status == 'R') {
     miya_log_fprintf(log_fd, "NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("  already registered. please delete acount.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    mprintf(" already registered. please delete acount.\n");
-    miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
+    miya_log_fprintf(log_fd, "  already registered. please delete acount.\n");
     return ECDOWNLOAD_FAILURE;
   }
   else if( (status != 'P') && (status != 'T') ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("  invalid registration status '%c'\n", status );
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    mprintf(" invalid registration status '%c'\n", status );
     miya_log_fprintf(log_fd, " invalid registration status '%c'\n", status );
     return ECDOWNLOAD_FAILURE;
   }

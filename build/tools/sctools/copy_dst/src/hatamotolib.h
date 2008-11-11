@@ -8,7 +8,7 @@ extern "C" {
 
 #define ECDOWNLOAD_DUMMY       0
 #define ECDOWNLOAD_SUCCESS     1
-#define ECDOWNLOAD_NO_REGISTER 2
+  // #define ECDOWNLOAD_NO_REGISTER 2
 #define ECDOWNLOAD_FAILURE     3
 
 int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);

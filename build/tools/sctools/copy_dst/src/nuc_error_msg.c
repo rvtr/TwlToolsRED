@@ -178,18 +178,18 @@ static const char* PublicError[] =
 {
     /* エラーが発生しましたため、
        TWL本体の更新ができません。*/
-    "Error occurred.\nUnable to update TWL system.",
+    "Error occurred.\n  Unable to update TWL system.",
     /* TWL本体保存メモリの空き容量が
        不足しています。
        TWL本体の更新はできませんでした。*/
-    "Insufficient memory in TWL\nUnable to update TWL system.",
+    "Insufficient memory in TWL\n  Unable to update TWL system.",
     /* サーバーに接続できません。
        しばらく待ってやり直してください。*/
-    "Unable to connect to server\nTry again later.",
+    "Unable to connect to server\n  Try again later.",
     /* インターネットのエラーにより、
        TWL本体の更新ができません。
        しばらく待ってやり直してください。*/
-    "Network Error occurred.\nTry again later."
+    "Network Error occurred.\n  Try again later."
 };
 
 /*---------------------------------------------------------------------------*

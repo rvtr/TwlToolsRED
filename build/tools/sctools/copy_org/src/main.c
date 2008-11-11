@@ -13,11 +13,12 @@
  *---------------------------------------------------------------------------*/
 #include <twl.h>
 #include <nitro/nvram/nvram.h>
-#include "ecdl.h"
 #include <twl/sea.h>
 #include <twl/lcfg.h>
 #include <twl/na.h>
 #include <twl/nam.h>
+
+#include "ecdl.h"
 
 #include        "font.h"
 #include        "text.h"
@@ -28,7 +29,6 @@
 #include        "mynvram.h"
 #include        "stream.h"
 #include        "hwi.h"
-#include        "ecdl.h"
 #include        "mywlan.h"
 #include        "mydata.h"
 #include        "nuc.h"
@@ -44,6 +44,8 @@
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
+static BOOL no_sd_clean_flag = FALSE;
+
 //static int miya_debug_level = 0;
 
 
@@ -517,6 +519,13 @@ static void MyThreadProc(void *arg)
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
+
+    if( no_sd_clean_flag == FALSE ) {
+      mprintf("cleaning up SD card.. ");
+      (void)CleanSDCardFiles(NULL);
+      mprintf("done.\n");
+    }
+
     flag = TRUE;
     twl_card_validation_flag = TRUE;
     MyFile_SetPathBase("sdmc:/");
@@ -608,7 +617,6 @@ void TwlMain(void)
   u32 s_timestamp;
   ESError es_error_code;
   int select_mode = 0;
-  BOOL no_sd_clean_flag = FALSE;
 
   OS_Init();
   OS_InitThread();
@@ -677,6 +685,7 @@ void TwlMain(void)
     mydata.sys_ver_major = s_major;
     mydata.sys_ver_minor = s_minor;
   }
+
 
 
   // 不要：NAM の初期化
@@ -873,9 +882,6 @@ void TwlMain(void)
       /* ユーザーデータ吸出しモード */
       if(completed_flag == FALSE ) {
 	if( sd_card_flag == TRUE ) {
-	  if( no_sd_clean_flag == FALSE ) {
-	    (void)CleanSDCardFiles(NULL);
-	  }
 
 	  text_blink_clear(tc[0]);
 	  if( FALSE == start_my_thread() ) {

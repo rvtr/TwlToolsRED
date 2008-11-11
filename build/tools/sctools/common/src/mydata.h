@@ -3,7 +3,7 @@
 
 
 #define MY_DATA_VERSION_MAJOR 0
-#define MY_DATA_VERSION_MINOR 6
+#define MY_DATA_VERSION_MINOR 7
 
 typedef struct {
   u8 version_major;

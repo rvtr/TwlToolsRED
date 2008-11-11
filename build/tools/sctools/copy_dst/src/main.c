@@ -13,11 +13,14 @@
  *---------------------------------------------------------------------------*/
 #include <twl.h>
 #include <nitro/nvram/nvram.h>
-#include "ecdl.h"
+
 #include <twl/sea.h>
 #include <twl/lcfg.h>
 #include <twl/na.h>
 #include <twl/nam.h>
+
+#include "ecdl.h"
+
 #include <NitroWiFi/nhttp.h>
 
 #include </twl/os/common/ownerInfoEx.h>
@@ -36,7 +39,6 @@
 #include        "stream.h"
 #include        "hwi.h"
 #include        "hatamotolib.h"
-#include        "ecdl.h"
 #include        "mywlan.h"
 #include        "mydata.h"
 #include        "netconnect.h"
@@ -64,8 +66,7 @@ static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 //static BOOL reboot_flag = FALSE;
 
-static BOOL ec_download_success_flag = FALSE;
-static BOOL ec_download_no_registered_flag = FALSE;
+static BOOL ec_download_success_flag = TRUE;
 
 static BOOL wlan_active_flag = TRUE;
 
@@ -184,6 +185,114 @@ static BOOL start_my_thread(void)
     return TRUE;
   }
   return FALSE;
+}
+
+
+static BOOL LoadWlanConfig(void)
+{
+  u8 buf[256];
+  int len;
+  int i;  /* ユーザーデータ書き込みモード */
+  if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
+    OS_TPrintf("SSID = %s\n", GetWlanSSID()); 
+    mfprintf(tc[3],"SSID = %s\n", GetWlanSSID()); 
+    OS_TPrintf("MODE = ");
+    mfprintf(tc[3],"MODE = ");
+
+    switch( GetWlanMode() ) {
+    case WCM_WEPMODE_NONE:
+      OS_TPrintf("NONE\n");
+      mfprintf(tc[3],"NONE\n");
+      break;
+    case WM_WEPMODE_40BIT:
+      OS_TPrintf("WEP128\n");
+      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WM_WEPMODE_104BIT:
+      OS_TPrintf("WEP128\n");
+      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WM_WEPMODE_128BIT:
+      OS_TPrintf("WEP128\n");
+      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WCM_WEPMODE_WPA_TKIP:
+      OS_TPrintf("WPA-TKIP\n");
+      mfprintf(tc[3],"WPA-TKIP\n");
+      break;
+    case WCM_WEPMODE_WPA2_TKIP:
+      OS_TPrintf("WPA2-TKIP\n");
+      mfprintf(tc[3],"WPA2-TKIP\n");
+      break;
+    case WCM_WEPMODE_WPA_AES:
+      OS_TPrintf("WPA-AES\n");
+      mfprintf(tc[3],"WPA-AES\n");
+      break;
+    case WCM_WEPMODE_WPA2_AES :
+      OS_TPrintf("WPA2-AES\n");
+      mfprintf(tc[3],"WPA2-AES\n");
+      break;
+    defalut:
+      OS_TPrintf("Unknow mode..\n");
+      mfprintf(tc[3],"Unknow mode..\n");
+      break;
+    }
+
+    if( TRUE == GetKeyModeStr() ) {
+      OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
+      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
+    }
+    else {
+      len = GetWlanKEYBIN(buf);
+      if( len ) {
+	OS_TPrintf("KEY BIN = 0x");
+	mfprintf(tc[3],"KEY BIN = 0x");
+	for( i = 0 ; i < len ; i++ ) {
+	  OS_TPrintf("%02X",buf[i]);
+	  mfprintf(tc[3],"%02X",buf[i]);
+	}
+	OS_TPrintf("\n");
+	mfprintf(tc[3],"\n");
+      }
+    }
+    mfprintf(tc[3],"\n");
+
+    if( TRUE == GetDhcpMODE() ) {
+      mfprintf(tc[3],"DHCP client\n");
+    }
+    else {
+      u32 addr_temp;
+      addr_temp = GetIPAddr();
+      mfprintf(tc[3],"IP addr %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetNetmask();
+      mfprintf(tc[3],"netmask %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetGateway();
+      mfprintf(tc[3],"gateway %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetDNS1();
+      mfprintf(tc[3],"DNS1    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+
+      addr_temp = GetDNS2();
+      mfprintf(tc[3],"DNS2    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
+	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
+    }
+    mfprintf(tc[3],"\n");
+
+
+  }
+  else {
+    OS_TPrintf("Invalid wlan cfg file\n");
+    mfprintf(tc[3],"Invalid wlan cfg file\n");
+    mprintf("Invalid wlan cfg file\n");
+    return FALSE;
+  }
+  return TRUE;
 }
 
 static BOOL RestoreFromSDCard1(void)
@@ -381,176 +490,6 @@ static BOOL RestoreFromSDCard6(void)
 }
 
 
-static BOOL RestoreFromSDCard8(void)
-{
-  int list_count;
-  int error_count;
-  BOOL ret_flag = TRUE;
-
-  Error_Report_Init();
-
-  if( mydata.num_of_app_save_data  > 0 ) { 
-
-    if( (no_network_flag == TRUE) 
-	|| (ec_download_success_flag == FALSE) 
-	|| (ec_download_no_registered_flag == TRUE ) ) {
-      mprintf("Sys-App. save data restore   ");
-      if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
-						       MyFile_GetSaveDataRestoreLogFileName(),
-						       &list_count, &error_count )) {
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-	mprintf("OK.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      }
-      else {
-	// error
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	ret_flag = FALSE;
-      }
-    }
-    else {
-      mprintf("App. save data restore       ");
-      if( TRUE == RestoreDirEntryList( MyFile_GetSaveDataListFileName() , 
-				       MyFile_GetSaveDataRestoreLogFileName(),
-				       &list_count, &error_count )) {
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
-	mprintf("OK.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-      }
-      else {
-	// error
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	ret_flag = FALSE;
-      }
-    }
-  }
-  else if( mydata.num_of_app_save_data == 0 ) {
-    mprintf("Original device has no app. save data\n");
-  }
-  else {
-    mprintf("Original app. save data saving failed\n");
-  }
-
-  if( TRUE == Error_Report_Display(tc[0]) ) {
-    mprintf("\n");
-  }
-  Error_Report_End();
-
-  return ret_flag;
-}
-
-
-static BOOL LoadWlanConfig(void)
-{
-  u8 buf[256];
-  int len;
-  int i;  /* ユーザーデータ書き込みモード */
-  if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
-    OS_TPrintf("SSID = %s\n", GetWlanSSID()); 
-    mfprintf(tc[3],"SSID = %s\n", GetWlanSSID()); 
-    OS_TPrintf("MODE = ");
-    mfprintf(tc[3],"MODE = ");
-
-    switch( GetWlanMode() ) {
-    case WCM_WEPMODE_NONE:
-      OS_TPrintf("NONE\n");
-      mfprintf(tc[3],"NONE\n");
-      break;
-    case WM_WEPMODE_40BIT:
-      OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
-      break;
-    case WM_WEPMODE_104BIT:
-      OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
-      break;
-    case WM_WEPMODE_128BIT:
-      OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
-      break;
-    case WCM_WEPMODE_WPA_TKIP:
-      OS_TPrintf("WPA-TKIP\n");
-      mfprintf(tc[3],"WPA-TKIP\n");
-      break;
-    case WCM_WEPMODE_WPA2_TKIP:
-      OS_TPrintf("WPA2-TKIP\n");
-      mfprintf(tc[3],"WPA2-TKIP\n");
-      break;
-    case WCM_WEPMODE_WPA_AES:
-      OS_TPrintf("WPA-AES\n");
-      mfprintf(tc[3],"WPA-AES\n");
-      break;
-    case WCM_WEPMODE_WPA2_AES :
-      OS_TPrintf("WPA2-AES\n");
-      mfprintf(tc[3],"WPA2-AES\n");
-      break;
-    defalut:
-      OS_TPrintf("Unknow mode..\n");
-      mfprintf(tc[3],"Unknow mode..\n");
-      break;
-    }
-
-    if( TRUE == GetKeyModeStr() ) {
-      OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
-      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
-    }
-    else {
-      len = GetWlanKEYBIN(buf);
-      if( len ) {
-	OS_TPrintf("KEY BIN = 0x");
-	mfprintf(tc[3],"KEY BIN = 0x");
-	for( i = 0 ; i < len ; i++ ) {
-	  OS_TPrintf("%02X",buf[i]);
-	  mfprintf(tc[3],"%02X",buf[i]);
-	}
-	OS_TPrintf("\n");
-	mfprintf(tc[3],"\n");
-      }
-    }
-    mfprintf(tc[3],"\n");
-
-    if( TRUE == GetDhcpMODE() ) {
-      mfprintf(tc[3],"DHCP client\n");
-    }
-    else {
-      u32 addr_temp;
-      addr_temp = GetIPAddr();
-      mfprintf(tc[3],"IP addr %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
-	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
-
-      addr_temp = GetNetmask();
-      mfprintf(tc[3],"netmask %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
-	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
-
-      addr_temp = GetGateway();
-      mfprintf(tc[3],"gateway %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
-	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
-
-      addr_temp = GetDNS1();
-      mfprintf(tc[3],"DNS1    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
-	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
-
-      addr_temp = GetDNS2();
-      mfprintf(tc[3],"DNS2    %d.%d.%d.%d\n", (u32)((addr_temp >> 24) & 0xff),(u32)((addr_temp >> 16) & 0xff),
-	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
-    }
-    mfprintf(tc[3],"\n");
-
-
-  }
-  else {
-    OS_TPrintf("Invalid wlan cfg file\n");
-    mfprintf(tc[3],"Invalid wlan cfg file\n");
-    mprintf("Invalid wlan cfg file\n");
-    return FALSE;
-  }
-  return TRUE;
-}
-
 
 static BOOL RestoreFromSDCard7(void)
 {
@@ -695,12 +634,6 @@ static BOOL RestoreFromSDCard7(void)
 	miya_log_fprintf(log_fd, "%s failed ECDownload 2\n", __FUNCTION__);
 	goto end_ec_f;
       }
-      else if(ec_download_ret == ECDOWNLOAD_NO_REGISTER ) {
-	// ret_flag = FALSE;どうする？
-	ec_download_no_registered_flag = TRUE;
-	goto end_ec_f;
-      }
-
       // 不要：セーブデータ領域を作成
       // NAM_Init を忘れてた
       SetupTitlesDataFile((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count);
@@ -772,6 +705,71 @@ static BOOL RestoreFromSDCard7(void)
 
   return ret_flag;
 }
+
+
+
+static BOOL RestoreFromSDCard8(void)
+{
+  int list_count;
+  int error_count;
+  BOOL ret_flag = TRUE;
+
+  Error_Report_Init();
+
+  if( mydata.num_of_app_save_data  > 0 ) { 
+
+    if( (no_network_flag == TRUE) 
+	|| (ec_download_success_flag == FALSE)
+	|| ( mydata.shop_record_flag == FALSE )	) {
+      mprintf("Sys-App. save data restore   ");
+      if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
+						       MyFile_GetSaveDataRestoreLogFileName(),
+						       &list_count, &error_count )) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+      else {
+	// error
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
+      }
+    }
+    else {
+      mprintf("App. save data restore       ");
+      if( TRUE == RestoreDirEntryList( MyFile_GetSaveDataListFileName() , 
+				       MyFile_GetSaveDataRestoreLogFileName(),
+				       &list_count, &error_count )) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+      else {
+	// error
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	ret_flag = FALSE;
+      }
+    }
+  }
+  else if( mydata.num_of_app_save_data == 0 ) {
+    mprintf("Original device has no app. save data\n");
+  }
+  else {
+    mprintf("Original app. save data saving failed\n");
+  }
+
+  if( TRUE == Error_Report_Display(tc[0]) ) {
+    mprintf("\n");
+  }
+  Error_Report_End();
+
+  return ret_flag;
+}
+
 
 
 typedef BOOL (*function_ptr)(void);

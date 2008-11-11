@@ -26,6 +26,30 @@
 
 #include <twl/os/common/ownerInfoEx.h>
 
+
+#if 0
+typedef struct LCFGTWLTPCalibData
+{
+    LCFGNTRTPCalibData  data;                   // TPキャリブレーションデータ
+    u8              rsv[ 8 ];
+} LCFGTWLTPCalibData;   // 20 bytes
+
+
+// タッチパネルキャリブレーションデータ
+typedef struct LCFGNTRTPCalibData
+{
+    u16             raw_x1;                     // 第１キャリブレーション点のTP取得値X
+    u16             raw_y1;                     //         〃                TP取得値Y
+    u8              dx1;                        //         〃                LCD座標 X
+    u8              dy1;                        //         〃                LCD座標 Y
+    u16             raw_x2;                     // 第２キャリブレーション点のTP取得値X
+    u16             raw_y2;                     //         〃                TP取得値Y
+    u8              dx2;                        //         〃                LCD座標 X
+    u8              dy2;                        //         〃                LCD座標 Y
+} LCFGNTRTPCalibData;   // 12byte
+#endif
+
+
 #define  OS_ADDR_TWL_SETTINGSDATA   ( (OSTWLSettingsData *)HW_PARAM_TWL_SETTINGS_DATA )
 
 void WLAN_FORCE_ON(void)
@@ -164,6 +188,31 @@ BOOL MiyaBackupTWLSettings(const char *path)
   return TRUE;
 }
 
+
+void  MiyaReadTpCalData(void)
+{
+  LCFGTWLSettingsData cfg_data;
+  LCFGTWLTPCalibData tp_cal_data;
+  if( FALSE ==  ReadTWLSettings( &cfg_data ) ) {
+    mprintf("Failed read TWLSettings 3.\n" );
+  }
+  
+  /* とりあえず別でＴＰキャリブレーションデータだけ置いとく */
+  LCFG_TSD_GetTPCalibration( &tp_cal_data );
+  
+  OS_TPrintf("tp. raw_x1 = %d\n",tp_cal_data.data.raw_x1);
+  OS_TPrintf("tp.raw_y1 = %d\n",tp_cal_data.data.raw_y1);
+  OS_TPrintf("tp.dx1 = %d\n",tp_cal_data.data.dx1);
+  OS_TPrintf("tp.dy1 = %d\n",tp_cal_data.data.dy1);
+  OS_TPrintf("tp.raw_x2 = %d\n",tp_cal_data.data.raw_x2);
+  OS_TPrintf("tp.raw_y2 = %d\n",tp_cal_data.data.raw_y2);
+  OS_TPrintf("tp.dx2 = %d\n",tp_cal_data.data.dx2);
+  OS_TPrintf("tp.dy2 = %d\n",tp_cal_data.data.dy2);
+}
+
+
+
+
 BOOL MiyaRestoreTWLSettings(const char *path)
 {
   FSFile f;
@@ -173,6 +222,7 @@ BOOL MiyaRestoreTWLSettings(const char *path)
   LCFGTWLSettingsData cfg_data;
   LCFGReadResult retval;
   LCFGTWLTPCalibData tp_cal_data;
+  BOOL tp_over_write_flag = TRUE;
 
   retval = LCFGi_THW_ReadSecureInfo();
   if( retval != LCFG_TSF_READ_RESULT_SUCCEEDED ) {
@@ -188,6 +238,16 @@ BOOL MiyaRestoreTWLSettings(const char *path)
 
   /* とりあえず別でＴＰキャリブレーションデータだけ置いとく */
   LCFG_TSD_GetTPCalibration( &tp_cal_data );
+  if( (tp_cal_data.data.raw_x1 == 0 )
+      && (tp_cal_data.data.raw_y1 == 0 )
+      && (tp_cal_data.data.dx1 == 0 )
+      && (tp_cal_data.data.dy1 == 0 )
+      && (tp_cal_data.data.raw_x2 == 0 )
+      && (tp_cal_data.data.raw_y2 == 0 )
+      && (tp_cal_data.data.dx2 == 0 )
+      && (tp_cal_data.data.dy2 == 0 ) ) {
+    tp_over_write_flag = FALSE;
+  }
 
 
   FS_InitFile(&f);
@@ -214,8 +274,10 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     return FALSE;
   }
 
-  /* さっき置いといたＴＰキャリブレーションデータを上書き */
-  STD_CopyMemory( (void *)&cfg_data.tp, (void *)&tp_cal_data ,sizeof(LCFGTWLTPCalibData) );
+  if( tp_over_write_flag != FALSE ) {
+    /* さっき置いといたＴＰキャリブレーションデータを上書き */
+    STD_CopyMemory( (void *)&cfg_data.tp, (void *)&tp_cal_data ,sizeof(LCFGTWLTPCalibData) );
+  }
 
   /* 実際に書き出し */
   if( FALSE == WriteTWLSettings( &cfg_data ) ) {

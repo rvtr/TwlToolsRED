@@ -1769,7 +1769,7 @@ BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd
   }
   readSize = my_fs_crypto_read(&f, pBuffer, (s32)size);
   if( readSize != size ) {
-    miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
+    miya_log_fprintf(log_fd, "%s Failed Read File: %s\n",__FUNCTION__,path);
   }
   bSuccess = FS_CloseFile(&f);
   if( ! bSuccess ) {
@@ -1782,7 +1782,6 @@ BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd
 
 BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
 {
-#pragma unused(log_fd)
   FSFile f;
   //  BOOL flag;
   BOOL bSuccess;
@@ -1798,8 +1797,8 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
     bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
     if( ! bSuccess ) {
       res = FS_GetArchiveResultCode( path );
-      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
-      miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
+      miya_log_fprintf(log_fd, "%s file open error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
       return FALSE;
     }
   }
@@ -1810,6 +1809,7 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
 
   writtenSize = my_fs_crypto_write(&f, pData, (s32)size);
   if( writtenSize != size ) {
+    miya_log_fprintf(log_fd, "%s Failed Write File: %s\n",__FUNCTION__,path);
     return FALSE;
   }
 
@@ -1856,7 +1856,6 @@ BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd)
 #if 0
 BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
 {
-#pragma unused(log_fd)
 
   FSFile f;
   //  BOOL flag;
@@ -2141,26 +2140,36 @@ BOOL SDCardValidation(void)
 
 BOOL CheckShopRecord(FSFile *log_fd)
 {
-#pragma unused(log_fd)
-
   FSFile f;
+#if 0
   FSResult res;
-
+#endif
   BOOL ret_flag = TRUE;
   BOOL bSuccess;
   char path[64];
   s32 readSize = 0;
-
+  /* "nand:/sys/log/shop.log  */
   miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
 
   FS_InitFile(&f);
-  STD_StrCpy(path, "nand:/sys/dev.kp");
+  //  STD_StrCpy(path, "nand:/sys/dev.kp");
+  STD_StrCpy(path, "nand:/sys/log/shop.log");
+
+  /* 
+     shop.logは
+     本体設定初期化では消さない。
+     ショップの履歴消去では消す。
+     当然、ショップに再接続したら作られる。
+ */
+
   bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
   if( ! bSuccess ) {
     if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
       /* キーペアファイルがない */
+      /* Shopログファイルがない */
       ret_flag = FALSE;
-      miya_log_fprintf(log_fd, "No key pair file\n");
+      //   miya_log_fprintf(log_fd, "No key pair file\n");
+      miya_log_fprintf(log_fd, "No shop log file\n");
     }
   }
   else {
@@ -2224,7 +2233,6 @@ BOOL CheckShopRecord(FSFile *log_fd)
     ret_flag = FALSE;
   }
   miya_log_fprintf(log_fd, "\n");
-#endif
 
   if( ret_flag == TRUE ) {
     bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
@@ -2238,6 +2246,8 @@ BOOL CheckShopRecord(FSFile *log_fd)
     }
     (void)FS_CloseFile(&f);
   }
+#endif
+
   miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
 
   return ret_flag;

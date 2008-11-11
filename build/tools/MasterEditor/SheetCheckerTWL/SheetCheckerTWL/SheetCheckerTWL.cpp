@@ -287,7 +287,7 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 // getopt
 // ------------------------------------------------------------------
 
-// 返り値: オプションを除いたときのargc
+// @ret オプションを除いたときのargc
 System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^context )
 {
 	System::Collections::Generic::List<System::Int32> ^indexList

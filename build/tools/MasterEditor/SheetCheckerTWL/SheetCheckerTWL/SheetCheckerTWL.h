@@ -16,7 +16,7 @@ enum class SheetCheckerError
 	ERROR_VERIFY_ROM_VERSION = -3,
 	ERROR_READ_SRL           = -8,
 	ERROR_READ_SHEET         = -9,
-	ERROR_ARG                = -0xA,
+	ERROR_ARG                = -10,
 };
 
 // 実行Context
@@ -25,12 +25,14 @@ ref class SheetCheckerContext
 private:
 	System::Boolean    ^hbSubmitVersion;	// オプションフラグ
 	System::Boolean    ^hbResult;
+	System::Boolean    ^hbTadVersion;
 	SheetCheckerError  ^hErrorCode;			// エラー情報
 public:
 	SheetCheckerContext()
 	{
 		this->hbSubmitVersion = gcnew System::Boolean(false);
 		this->hbResult        = gcnew System::Boolean(false);
+		this->hbTadVersion    = gcnew System::Boolean(false);
 		this->hErrorCode      = gcnew SheetCheckerError( SheetCheckerError::NOERROR );
 	}
 	property System::Boolean bSubmitVersion
@@ -42,6 +44,11 @@ public:
 	{
 		void set( System::Boolean flg ){ this->hbResult = gcnew System::Boolean(flg); }
 		System::Boolean get(){ return *this->hbResult; }
+	};
+	property System::Boolean bTadVersion
+	{
+		void set( System::Boolean flg ){ this->hbTadVersion = gcnew System::Boolean(flg); }
+		System::Boolean get(){ return *this->hbTadVersion; }
 	};
 	property SheetCheckerError ErrorCode
 	{
@@ -59,6 +66,8 @@ private:
 	System::UInt16 ^hFileCRC;
 	System::Byte   ^hSubmitVersion;
 public:
+	System::String ^hMedia;
+public:
 	SheetItem()
 	{
 		this->pGameCode   = new char[4];
@@ -66,6 +75,7 @@ public:
 		this->hRomVersion = gcnew System::Byte(0xFF);
 		this->hFileCRC    = gcnew System::UInt16(0);
 		this->hSubmitVersion = gcnew System::Byte(0xFF);
+		this->hMedia      = gcnew System::String("");
 	}
 	~SheetItem()
 	{
@@ -90,5 +100,16 @@ public:
 	{
 		void set( System::Byte v ){ *this->hSubmitVersion = v; }
 		System::Byte get(){ return *this->hSubmitVersion; }
+	}
+	property System::String ^Media
+	{
+		void set( System::String ^str )
+		{
+			if( str != nullptr )
+				this->hMedia = System::String::Copy(str);
+			else
+				this->hMedia = gcnew System::String("");
+		}
+		System::String^ get(){ return System::String::Copy( this->hMedia ); }
 	}
 };

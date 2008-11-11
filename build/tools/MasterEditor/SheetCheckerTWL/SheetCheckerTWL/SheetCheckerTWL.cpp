@@ -102,19 +102,19 @@ void printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item,
 		Console::WriteLine( "" );
 
 		printf( "                 SRL       Sheet\n" ); 
-		printf( "------------------------------------\n" ); 
+		printf( "---------------------------------------\n" ); 
 		printf( "InitialCode:     %c%c%c%c      %c%c%c%c\n", 
 			rh->s.game_code[0],  rh->s.game_code[1],  rh->s.game_code[2],  rh->s.game_code[3], 
 			item->GameCode[0], item->GameCode[1], item->GameCode[2], item->GameCode[3] );
 		printf( "RemasterVersion: %02X        %02X\n", rh->s.rom_version, item->RomVersion );
 		printf( "File CRC:        %04X      %04X\n", srlcrc, item->FileCRC );
-		printf( "------------------------------------\n" ); 
+		printf( "---------------------------------------\n" ); 
 		printf( "SubmitVersion:   -         %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
 		if( item->Media->Equals("NAND") )
 		{
 			printf( "TAD Version:               %d (%04X)\n", tadver, tadver );
 		}
-		printf( "------------------------------------\n" ); 
+		printf( "---------------------------------------\n" ); 
 		printf( "Result:          " );
 		if( context->ErrorCode == SheetCheckerError::NOERROR )
 		{

@@ -91,7 +91,7 @@ int main(array<System::String ^> ^args)
 		printf( "RemasterVersion: %02X        %02X\n", rh.s.rom_version, hItem->RomVersion );
 		printf( "File CRC:        %04X      %04X\n", crc, hItem->FileCRC );
 		printf( "------------------------------------\n" ); 
-		printf( "SubmitVersion:   -         %d\n", hItem->SubmitVersion );
+		printf( "SubmitVersion:   -         %d (%02X)\n", hItem->SubmitVersion, hItem->SubmitVersion );
 		printf( "------------------------------------\n" ); 
 		printf( "Result:          " );
 		if( hContext->ErrorCode == SheetCheckerError::NOERROR )
@@ -160,9 +160,12 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 	// XSLによってXML変換
 	System::String ^tmpfile = ".\\temp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".xml";
 	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
+	System::String ^xslpath = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
+		                      + "\\extract_sheet.xsl";
 	try
 	{
-		xslt->Load( ".\\extract_sheet.xsl" );
+		//Console::WriteLine( "xslpath: " + xslpath );
+		xslt->Load( xslpath );
 		xslt->Transform( sheetfile, tmpfile );
 	}
 	catch( System::Exception ^ex )
@@ -180,12 +183,14 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 	catch( System::Exception ^ex )
 	{
 		(void)ex;
+		//Console::WriteLine( "Load error" );
 		return false;
 	}
 
 	// XMLからデータを抽出
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 	System::String ^text;
+	try
 	{
 		text = getXPathText( root, "/Sheet/GameCode" );
 		char code[4];
@@ -201,6 +206,7 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 		{
 			text = text->Remove( text->IndexOf("(") );
 		}
+		text = text->Trim();
 		item->RomVersion = System::Byte::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
 
 		text = getXPathText( root, "/Sheet/CRC" );
@@ -212,18 +218,23 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 
 		text = getXPathText( root, "/Sheet/SubmitVersion" );
 		char c = (char)text[0];
-		if( ('G' <= c) && (c <= 'Z') )		// Fより上はG..Zで表現されていく
+		if( ('G' <= c) && (c <= 'Z') )		// Fより上はG..Zで表現されていく(可能性あり)
 		{
-			item->SubmitVersion = c - 'F' + 16;
+			item->SubmitVersion = c - 'G' + 16;
 		}
 		else if( ('g' <= c) && (c <= 'z') )
 		{
-			item->SubmitVersion = c - 'f' + 16;
+			item->SubmitVersion = c - 'g' + 16;
 		}
 		else
 		{
 			item->SubmitVersion = System::Byte::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
 		}
+	}
+	catch( System::Exception ^ex )
+	{
+		(void)ex;
+		return false;
 	}
 
 	// 中間ファイルを削除

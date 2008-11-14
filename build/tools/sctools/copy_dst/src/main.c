@@ -55,6 +55,10 @@
 
 
 //================================================================================
+#define THREAD_COMMAND_NUP_FUNCTION               0
+#define THREAD_COMMAND_FULL_FUNCTION              1
+#define THREAD_COMMAND_WIFI_FUNCTION              2
+#define THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION 3
 
 // #define MIYA_MCU 1
 
@@ -177,11 +181,11 @@ static void init_my_thread_nuc(void)
 }
 
 
-static BOOL start_my_thread(void)
+static BOOL start_my_thread(u32 command)
 {
   OSMessage message;
   if( TRUE == OS_ReceiveMessage(&MyMesgQueue_response, &message, OS_MESSAGE_NOBLOCK) ) {
-    (void)OS_SendMessage(&MyMesgQueue_request, (OSMessage)0, OS_MESSAGE_NOBLOCK);
+    (void)OS_SendMessage(&MyMesgQueue_request, (OSMessage)command, OS_MESSAGE_NOBLOCK);
     return TRUE;
   }
   return FALSE;
@@ -796,6 +800,7 @@ static void MyThreadProc(void *arg)
   OSMessage message;
   BOOL flag;
   BOOL twl_card_validation_flag;
+  u32 command;
 
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
@@ -803,10 +808,41 @@ static void MyThreadProc(void *arg)
     flag = TRUE;
     twl_card_validation_flag = TRUE;
     /* MydataLoadはすでにやっているのでいらない。 */
-    for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
-      if( FALSE == (function_table[function_counter])() ) {
+    command = (u32)message;
+    switch( command ) {
+    case THREAD_COMMAND_FULL_FUNCTION:
+      for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
+	if( FALSE == (function_table[function_counter])() ) {
+	  flag = FALSE;
+	}
+      }
+      break;
+    case THREAD_COMMAND_WIFI_FUNCTION:
+      function_table_max = 1;
+      function_counter = 0;
+      if( FALSE == RestoreFromSDCard3() ) {
 	flag = FALSE;
       }
+      function_counter++;
+      break;
+    case THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION:
+      function_table_max = 2;
+      function_counter = 0;
+      if( FALSE == RestoreFromSDCard4() ) {
+	flag = FALSE;
+      }
+      function_counter++;
+      if( FALSE == RestoreFromSDCard3() ) {
+	flag = FALSE;
+      }
+      function_counter++;
+      break;
+    default:
+      function_table_max = 0;
+      function_counter = 0;
+      flag = FALSE;
+      mprintf("%s unknown command!\n",__FUNCTION__);
+      break;
     }
     mprintf("\n");
     if( flag == TRUE ) {
@@ -875,6 +911,12 @@ static void MyThreadProcNuc(void *arg)
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
+
+    if( (u32)message != THREAD_COMMAND_NUP_FUNCTION ) {
+      mprintf("%s unknown command!\n",__FUNCTION__);
+      continue;
+    }
+
     mprintf("-Wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
@@ -1295,7 +1337,7 @@ void TwlMain(void)
 	  if( wlan_active_flag != FALSE ) {
 	    /* ネットワークアップデート */
 	    text_blink_clear(tc[0]);
-	    start_my_thread();
+	    start_my_thread( THREAD_COMMAND_NUP_FUNCTION );
 	  }
 	}
 	else {
@@ -1316,17 +1358,48 @@ void TwlMain(void)
 		MydataLoadDecrypt_message_flag = TRUE;
 		MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
-		(void)RestoreFromSDCard3();
+
+#if 1
+		start_my_thread( THREAD_COMMAND_WIFI_FUNCTION );
+#else
+		if( TRUE == RestoreFromSDCard3() ) {
+		  if( TRUE == stream_play_is_end() ) {
+		    stream_play1(); /* ok.aiff */
+		  }
+		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+		}
+		else {
+		  if( TRUE == stream_play_is_end() ) {
+		    stream_play2();	/* ng.aiff */
+		  }
+		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
+		}
+#endif
 	      }
 	      else if( user_and_wifi_config_data_trans_flag == TRUE ) {
+		/* ユーザー設定と無線設定のみリストアする */
 		mydata.user_settings_flag = TRUE;
 		mydata.wireless_lan_param_flag = TRUE;
 		vram_num_sub = 0;
 		MydataLoadDecrypt_message_flag = TRUE;
 		MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
-		(void)RestoreFromSDCard4();
-		(void)RestoreFromSDCard3();
+#if 1
+		start_my_thread( THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION );
+#else
+		if( (TRUE == RestoreFromSDCard4()) && (TRUE == RestoreFromSDCard3() ) ) {
+		  if( TRUE == stream_play_is_end() ) {
+		    stream_play1(); /* ok.aiff */
+		  }
+		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
+		}
+		else {
+		  if( TRUE == stream_play_is_end() ) {
+		    stream_play2();	/* ng.aiff */
+		  }
+		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
+		}
+#endif
 	      }
 	      else {
 		mprintf("Personal data. restore       ");
@@ -1362,9 +1435,10 @@ void TwlMain(void)
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		    mprintf(" illegal tool data format.\n");
+		    mprintf(" invalid tool data format.\n");
 		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
 			    mydata.version_major,mydata.version_minor);
+		    mprintf(" \n");
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
 		    if( TRUE == stream_play_is_end() ) {
@@ -1375,9 +1449,10 @@ void TwlMain(void)
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		    mprintf(" illegal tool data format.\n");
+		    mprintf(" invalid tool data format.\n");
 		    mprintf(" %s\n version %d.%d\n",MyFile_GetGlobalInformationFileName(),
 			    mydata.version_major,mydata.version_minor);
+		    mprintf(" \n");
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
 		    if( TRUE == stream_play_is_end() ) {
@@ -1388,9 +1463,10 @@ void TwlMain(void)
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-		    mprintf(" illegal System menu version.\n");
+		    mprintf(" invalid System menu version.\n");
 		    mprintf(" org. version %d.%d\n", mydata.sys_ver_major,mydata.sys_ver_minor);
 		    mprintf(" cur. version %d.%d\n", s_major,s_minor);
+		    mprintf(" \n");
 		    m_set_palette(tc[0], 0xF);	/* white */
 		    MydataLoadDecrypt_message_flag = FALSE;
 		    if( TRUE == stream_play_is_end() ) {
@@ -1407,7 +1483,8 @@ void TwlMain(void)
 		    MydataLoadDecrypt_dir_flag = TRUE;
 		    MydataLoadDecrypt_success_flag = TRUE;
 		    dir_select_mode = FALSE;
-		    start_my_thread();
+
+		    start_my_thread( THREAD_COMMAND_FULL_FUNCTION );
 		  }
 		}
 		else {	
@@ -1646,7 +1723,7 @@ void TwlMain(void)
       else if( MydataLoadDecrypt_message_flag == FALSE ) {
 	if( s_flag && mydata.sys_ver_flag && (sys_version < sys_version_org) ) {
 	  m_set_palette(tc[2], M_TEXT_COLOR_YELLOW );
-	  mfprintf(tc[2], " illegal System menu version.\n");
+	  mfprintf(tc[2], " invalid System menu version.\n");
 	  mfprintf(tc[2], " org. version %d.%d\n", mydata.sys_ver_major,mydata.sys_ver_minor);
 	  mfprintf(tc[2], " cur. version %d.%d\n", s_major,s_minor);
 	  mfprintf(tc[2], " \n");
@@ -1660,14 +1737,14 @@ void TwlMain(void)
 	  m_set_palette(tc[2], 0xF);	/* white */
 	}
 	else if( mydata.version_major != MY_DATA_VERSION_MAJOR ) {
-	  mfprintf(tc[2]," illegal format version.\n");
+	  mfprintf(tc[2]," invalid format version.\n");
 	  mfprintf(tc[2]," %s\n",MyFile_GetGlobalInformationFileName());
 	  mfprintf(tc[2]," version %d.%d\n", mydata.version_major,mydata.version_minor);
 	  m_set_palette(tc[2], 0xF);	/* white */
 	  mfprintf(tc[2],"\n");
 	}
 	else if( mydata.version_minor != MY_DATA_VERSION_MINOR ) {
-	  mfprintf(tc[2]," illegal format version.\n");
+	  mfprintf(tc[2]," invalid format version.\n");
 	  mfprintf(tc[2]," %s\n",MyFile_GetGlobalInformationFileName());
 	  mfprintf(tc[2]," version %d.%d\n", mydata.version_major,mydata.version_minor);
 	  m_set_palette(tc[1], 0xF);	/* white */

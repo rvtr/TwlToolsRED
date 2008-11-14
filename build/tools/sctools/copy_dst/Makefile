@@ -58,7 +58,6 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				libsfs$(TWL_LIBSUFFIX).a   \
 				libna$(TWL_LIBSUFFIX).a    \
 
-
 #				libnhttp$(TWL_LIBSUFFIX).a \
 
 

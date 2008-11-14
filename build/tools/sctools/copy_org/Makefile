@@ -41,6 +41,8 @@ LINCLUDES           = 	$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include ../c
 
 LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib/$(TWL_BUILDTYPE)
 
+# LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE)
+
 
 LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				liblcfg$(TWL_LIBSUFFIX).a  \

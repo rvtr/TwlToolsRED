@@ -342,11 +342,6 @@ System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^c
 			context->bTadVersion = true;
 			numopt++;
 		}
-		else if( args[i]->StartsWith( "-c" ) )
-		{
-			context->bConsole = true;
-			numopt++;
-		}
 		else if( !args[i]->StartsWith( "-" ) )	// オプションでない引数のindexを記録
 		{
 			indexList->Add(i);

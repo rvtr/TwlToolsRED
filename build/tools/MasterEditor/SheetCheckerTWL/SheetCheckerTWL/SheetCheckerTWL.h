@@ -28,7 +28,6 @@ private:
 	System::Boolean    ^hbSubmitVersion;	// オプションフラグ
 	System::Boolean    ^hbResult;
 	System::Boolean    ^hbTadVersion;
-	System::Boolean    ^hbConsole;
 	SheetCheckerError  ^hErrorCode;			// エラー情報
 public:
 	SheetCheckerContext()
@@ -36,7 +35,6 @@ public:
 		this->hbSubmitVersion = gcnew System::Boolean(false);
 		this->hbResult        = gcnew System::Boolean(false);
 		this->hbTadVersion    = gcnew System::Boolean(false);
-		this->hbConsole       = gcnew System::Boolean(false);
 		this->hErrorCode      = gcnew SheetCheckerError( SheetCheckerError::NOERROR );
 	}
 	property System::Boolean bSubmitVersion
@@ -53,11 +51,6 @@ public:
 	{
 		void set( System::Boolean flg ){ this->hbTadVersion = gcnew System::Boolean(flg); }
 		System::Boolean get(){ return *this->hbTadVersion; }
-	};
-	property System::Boolean bConsole
-	{
-		void set( System::Boolean flg ){ this->hbConsole = gcnew System::Boolean(flg); }
-		System::Boolean get(){ return *this->hbConsole; }
 	};
 	property SheetCheckerError ErrorCode
 	{

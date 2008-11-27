@@ -519,7 +519,7 @@ static char CheckRegistration()
   if( printf_status_flag == TRUE ) {
 #define ECDL_DI_FMT "%-30s"
     miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isKeyPairConfirmed", di.isKeyPairConfirmed);
-    miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "deviceId", di.deviceId);
+    miya_log_fprintf(log_fd, ECDL_DI_FMT " %dll\n", "deviceId", di.deviceId);
     miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "serial", di.serial);
     miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "originalSerial", di.originalSerial);
     miya_log_fprintf(log_fd, ECDL_DI_FMT " %s\n", "accountId", di.accountId);

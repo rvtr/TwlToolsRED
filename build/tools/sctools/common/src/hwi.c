@@ -61,6 +61,29 @@ void WLAN_FORCE_ON(void)
   }
 }
 
+
+BOOL IsThisDevelopmentConsole(void)
+{
+  /* 0 ~ 3   : bonding option information */
+  /*
+    0 量産機 
+    1 デバッガー
+    2 開発実機
+    3 ??
+  */
+  u16 scfg_bonding_option = 0xffff;
+
+  scfg_bonding_option = SCFG_ReadBondingOption();
+
+  if( scfg_bonding_option == 0 ) {
+    /* 量産機 */
+    return FALSE;
+  }
+  /* 開発機 */
+  return TRUE;
+}
+
+
 /*
 BOOL OS_IsAvailableWireless(void)
 {

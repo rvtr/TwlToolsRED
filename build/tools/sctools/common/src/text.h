@@ -19,12 +19,14 @@
 #define M_TEXT_COLOR_DARKRED        7
 #define M_TEXT_COLOR_DARKGREEN      8
 #define M_TEXT_COLOR_DARKBLUE       9
-#define M_TEXT_COLOR_DARKYELLOW     0xa
-#define M_TEXT_COLOR_DARKPURPLE     0xb
-#define M_TEXT_COLOR_DARKLIGHTBLUE  0xc
+#define M_TEXT_COLOR_ORANGE         0xa
+#define M_TEXT_COLOR_BROWN          0xb
+#define M_TEXT_COLOR_PINK           0xc
 #define M_TEXT_COLOR_GRAY           0xd
 #define M_TEXT_COLOR_DARKGRAY       0xe
 #define M_TEXT_COLOR_WHITE          0x0f
+
+/* ƒIƒŒƒ“ƒW‚Æ‚©‚Ù‚µ‚¢ */
 
 
 typedef struct LINE_BUF_s {

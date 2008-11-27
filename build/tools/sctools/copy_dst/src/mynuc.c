@@ -146,11 +146,20 @@ NucStatus ProgressNupCheck(void)
     }
     if (TestState.count++ % STRING_ANIM_CNT == 0)
     {
-        u32 num = (TestState.count / STRING_ANIM_CNT) % 3;
+        u32 num = (TestState.count / STRING_ANIM_CNT) % 11;
         const char* msg[] = {
-            "Now checking list.   ", 
-            "Now checking list..  ",
-            "Now checking list... "};
+            "Now checking list.           ", 
+            "Now checking list..          ",
+            "Now checking list...         ",
+	    "Now checking list....        ",
+            "Now checking list.....       ",
+            "Now checking list......      ",
+            "Now checking list.......     ",
+            "Now checking list........    ",
+            "Now checking list.........   ",
+            "Now checking list..........  ",
+            "Now checking list........... ",
+            "Now checking list............"};
         
         mprintf("%s\r", msg[num]);
     }
@@ -184,22 +193,33 @@ NucStatus ProgressNupDownload(void)
 {
     u64 CurrentSize, TotalSize;
     NucStatus status;
-
+    int error_code;
     NUC_GetProgress(&CurrentSize, &TotalSize, &status);
     if (status == NUC_STATUS_ERROR)
     {   // ÉGÉâÅ[î≠ê∂
       // NUC_GetProgress() failed in checking, error code=34303
-        miya_log_fprintf(log_fd, "NUC_GetProgress() failed in download, error code=%d\n", NUC_GetLastError());
-        mprintf("\nNUC_GetProgress() failed\n in download\n error code=%d\n", NUC_GetLastError());
+      error_code = NUC_GetLastError();
+      miya_log_fprintf(log_fd, "NUC_GetProgress failed in download, error code=%d\n", NUC_GetLastError());
+      mprintf("\nNUC_GetProgress failed in download\n");
+      ShowErrorMsg(error_code);
     }
 
     if (TestState.count++ % STRING_ANIM_CNT == 0)
     {
-        u32 num = (TestState.count / STRING_ANIM_CNT) % 3;
+        u32 num = (TestState.count / STRING_ANIM_CNT) % 12;
         const char* msg[] = {
-            "Now downloading.     ", 
-            "Now downloading..    ",
-            "Now downloading...   "};
+            "Now downloading.           ", 
+            "Now downloading..          ",
+            "Now downloading...         ",
+            "Now downloading....        ",
+            "Now downloading.....       ",
+            "Now downloading......      ",
+            "Now downloading.......     ",
+            "Now downloading........    ",
+            "Now downloading.........   ",
+            "Now downloading..........  ",
+            "Now downloading........... ",
+            "Now downloading............"};
         mprintf("%s\r", msg[num]);
     }
 
@@ -229,11 +249,20 @@ void ProgressNetConnect(void)
 {
     if (TestState.count++ % STRING_ANIM_CNT == 0)
     {
-        u32 num = (TestState.count / STRING_ANIM_CNT) % 3;
+        u32 num = (TestState.count / STRING_ANIM_CNT) % 12;
         const char* msg[] = {
-            "Connecting network.  ", 
-            "Connecting network.. ",
-            "Connecting network..."};
+            "Connecting network.           ",
+            "Connecting network..          ",
+            "Connecting network...         ",
+            "Connecting network....        ",
+            "Connecting network.....       ",
+            "Connecting network......      ",
+            "Connecting network.......     ",
+            "Connecting network........    ",
+            "Connecting network.........   ",
+            "Connecting network..........  ",
+            "Connecting network........... ",
+            "Connecting network............"};
         mprintf("%s\r", msg[num]);
     }
 }

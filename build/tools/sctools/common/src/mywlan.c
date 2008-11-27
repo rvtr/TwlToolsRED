@@ -258,10 +258,13 @@ BOOL LoadWlanConfigFile(char *path)
   char c;
 
 
-#define LINE_BUF_SIZE 256
+#define LINE_BUF_SIZE 512
   char line_buf[LINE_BUF_SIZE];
 
   FS_InitFile(&f);
+
+  OS_TPrintf("%s %s\n",__FUNCTION__,path);
+
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
   if (bSuccess == FALSE) {
     res = FS_GetArchiveResultCode(path);

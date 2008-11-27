@@ -46,6 +46,8 @@ static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
 static BOOL no_sd_clean_flag = FALSE;
 
+static BOOL development_console_flag = FALSE;
+
 //static int miya_debug_level = 0;
 
 
@@ -617,6 +619,8 @@ void TwlMain(void)
   u32 s_timestamp;
   ESError es_error_code;
   int select_mode = 0;
+  u16 BatterylevelBuf = 0;
+  BOOL isAcConnectedBuf = FALSE;
 
   OS_Init();
   OS_InitThread();
@@ -686,6 +690,15 @@ void TwlMain(void)
     mydata.sys_ver_minor = s_minor;
   }
 
+  development_console_flag = IsThisDevelopmentConsole();
+  if(TRUE == development_console_flag ) {
+    mprintf("--development console--\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+    m_set_palette(tc[0], M_TEXT_COLOR_PURPLE );
+    m_set_palette(tc[0], M_TEXT_COLOR_ORANGE );
+    m_set_palette(tc[0], M_TEXT_COLOR_BROWN );
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
 
 
   // ïsóvÅFNAM ÇÃèâä˙âª
@@ -803,9 +816,6 @@ void TwlMain(void)
   MCU_SetBackLightBrightness( (u8)4 );
 #endif
 
-  // static inline BOOL MCU_SetVolume( u8 volume )
-  // static inline BOOL MCU_SetBackLightBrightness( u8 brightness )
-
   if( FALSE == SDCardValidation() ) {
     sd_card_flag = FALSE;
     m_set_palette(tc[0], 0x1);	/* red  */
@@ -813,8 +823,6 @@ void TwlMain(void)
   }
   else {
     sd_card_flag = TRUE;
-    //  m_set_palette(tc[0], 0x2);	/* green  */
-    //  mprintf("Detect SD Card\n");
   }
   m_set_palette(tc[0], 0xF);	/* white */
 
@@ -1007,9 +1015,40 @@ void TwlMain(void)
     }
     mfprintf(tc[1],"\n");
 
-    mfprintf(tc[1], "%4d/%02d/%02d %02d:%02d:%02d\n\n", 
+    if( (loop_counter % 60) == 0 ) {
+      // PM_RESULT_SUCCESS 
+      (void)PM_GetACAdapter( &isAcConnectedBuf );
+      (void)PM_GetBatteryLevel( &BatterylevelBuf );
+    }
+
+    mfprintf(tc[1], "%4d/%02d/%02d %02d:%02d:%02d ",
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
-	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
+	     rtc_time.hour , rtc_time.minute , rtc_time.second );
+
+    if( isAcConnectedBuf == TRUE ) {
+      m_set_palette(tc[1], M_TEXT_COLOR_BLUE );
+      mfprintf(tc[1], "AC.        \n\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      mfprintf(tc[1], "Batt.Lv ");
+      switch( BatterylevelBuf ) {
+      case 0:
+      case 1:
+	m_set_palette(tc[1], M_TEXT_COLOR_RED );
+	break;
+      case 2:
+      case 3:
+      case 4:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+	break;
+      default:
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	break;
+      }
+      mfprintf(tc[1], "%d/5\n\n" , BatterylevelBuf); 
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
 
 
     if( select_mode == 0 ) {

@@ -59,6 +59,7 @@
 #define THREAD_COMMAND_FULL_FUNCTION              1
 #define THREAD_COMMAND_WIFI_FUNCTION              2
 #define THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION 3
+#define THREAD_COMMAND_REBOOT_FUNCTION            4
 
 // #define MIYA_MCU 1
 
@@ -74,7 +75,7 @@ static BOOL ec_download_success_flag = TRUE;
 
 static BOOL wlan_active_flag = TRUE;
 
-
+static BOOL development_console_flag = FALSE;
 
 static u8 org_region = 0;
 static u64 org_fuseId = 0;
@@ -89,12 +90,14 @@ static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
 
 
 static BOOL pushed_power_button = FALSE;
+static BOOL throw_pushed_power_button = FALSE;
 
 static PMExitCallbackInfo pmexitcallbackinfo;
 
 static void pmexitcallback(void *arg)
 {
 #pragma unused(arg)
+  /* 処理中（データ書き込み中）ならリセットをブロックしなければならない */
   pushed_power_button = TRUE;
 }
 
@@ -131,7 +134,6 @@ static void SDEvents(void *userdata, FSEvent event, void *arg)
     }
   }
 }
-
 
 
 static MyData mydata;
@@ -185,7 +187,7 @@ static BOOL start_my_thread(u32 command)
 {
   OSMessage message;
   if( TRUE == OS_ReceiveMessage(&MyMesgQueue_response, &message, OS_MESSAGE_NOBLOCK) ) {
-    (void)OS_SendMessage(&MyMesgQueue_request, (OSMessage)command, OS_MESSAGE_NOBLOCK);
+    (void)OS_SendMessage(&MyMesgQueue_request, (OSMessage)command, OS_MESSAGE_BLOCK);
     return TRUE;
   }
   return FALSE;
@@ -837,6 +839,13 @@ static void MyThreadProc(void *arg)
       }
       function_counter++;
       break;
+    case THREAD_COMMAND_REBOOT_FUNCTION:
+      mprintf("%s Power button pressed!\n",__FUNCTION__);
+      OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
+      MCU_SetFreeRegister( 0x00 );
+      PM_ReadyToExit();
+      OS_Sleep(100000);
+      break;
     default:
       function_table_max = 0;
       function_counter = 0;
@@ -877,9 +886,15 @@ static void MyThreadProc(void *arg)
 	  (void)MCU_SetBackLightBrightness((u8)(mydata.backlight_brightness));
 	  OS_TPrintf("vol = %d\n",mydata.volume );
 	  OS_TPrintf("bright = %d\n", mydata.backlight_brightness);
-	  OS_Sleep(200000);
+	  OS_Sleep(20);
 #endif
 	  break; 
+	}
+	if( pushed_power_button == TRUE ) {
+	  OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
+	  MCU_SetFreeRegister( 0x00 );
+	  PM_ReadyToExit();
+	  pushed_power_button = FALSE;
 	}
 	OS_Sleep(200);
       }
@@ -912,10 +927,18 @@ static void MyThreadProcNuc(void *arg)
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
 
-    if( (u32)message != THREAD_COMMAND_NUP_FUNCTION ) {
+    if( (u32)message == THREAD_COMMAND_REBOOT_FUNCTION ) {
+      mprintf("%s Power button pressed!\n",__FUNCTION__);
+      OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
+      MCU_SetFreeRegister( 0x00 );
+      PM_ReadyToExit();
+      pushed_power_button = FALSE;
+    }
+    else if( (u32)message != THREAD_COMMAND_NUP_FUNCTION ) {
       mprintf("%s unknown command!\n",__FUNCTION__);
       continue;
     }
+
 
     mprintf("-Wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
@@ -935,11 +958,16 @@ static void MyThreadProcNuc(void *arg)
 	}
 	mprintf("Network Update failed!\n");
 	OS_TPrintf("Network Update failed!\n");
-
 	while( 1 ) {
 	  keyData = m_get_key_code();
 	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
 	    OS_RebootSystem();
+	  }
+	  if( pushed_power_button == TRUE ) {
+	    OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
+	    MCU_SetFreeRegister( 0x00 );
+	    PM_ReadyToExit();
+	    pushed_power_button = FALSE;
 	  }
 	  OS_Sleep(20);
 	}
@@ -978,6 +1006,12 @@ static void MyThreadProcNuc(void *arg)
 	  keyData = m_get_key_code();
 	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
 	    OS_RebootSystem();
+	  }
+	  if( pushed_power_button == TRUE ) {
+	    OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
+	    MCU_SetFreeRegister( 0x00 );
+	    PM_ReadyToExit();
+	    pushed_power_button = FALSE;
 	  }
 	  OS_Sleep(20);
 	}
@@ -1051,6 +1085,9 @@ void TwlMain(void)
   int select_mode = 0;
 
   u8 free_reg;
+  u16 BatterylevelBuf = 0;
+  BOOL isAcConnectedBuf = FALSE;
+
 
   OS_Init();
   OS_InitThread();
@@ -1115,9 +1152,10 @@ void TwlMain(void)
     reboot_flag = FALSE;    
   }
 
-  /* デバッグのために今だけ強制的にオン(UPDATE mode) */
-  /* miya */
-  //  reboot_flag = TRUE;
+  development_console_flag = IsThisDevelopmentConsole();
+  if(TRUE == development_console_flag ) {
+    mprintf("--development console--\n");
+  }
 
   PM_SetAutoExit( FALSE );
   PM_SetExitCallbackInfo( &pmexitcallbackinfo,pmexitcallback, NULL);
@@ -1460,6 +1498,10 @@ void TwlMain(void)
 		    }
 		  }
 		  else if( s_flag && mydata.sys_ver_flag && (sys_version < sys_version_org) ) {
+		    if(TRUE == IsThisDevelopmentConsole()) {
+		      /* 開発機ではシステムバージョンアップが微妙なため */
+		      goto label1;
+		    }
 		    m_set_palette(tc[0], M_TEXT_COLOR_RED );
 		    mprintf("NG.\n");
 		    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
@@ -1474,9 +1516,13 @@ void TwlMain(void)
 		    }
 		  }
 		  else {
+		  label1:
 		    m_set_palette(tc[0], 0x2);	/* green  */
 		    mprintf("OK.\n");
 		    m_set_palette(tc[0], 0xF);	/* white */
+		    if(TRUE == development_console_flag ) {
+		      mprintf("--development console--\n");
+		    }
 
 		    vram_num_sub = 0;
 		    MydataLoadDecrypt_message_flag = TRUE;
@@ -1671,9 +1717,40 @@ void TwlMain(void)
     }
     mfprintf(tc[1],"\n");
 
-    mfprintf(tc[1], "%4d/%02d/%02d %02d:%02d:%02d\n\n", 
+    if( (loop_counter % 60) == 0 ) {
+      // PM_RESULT_SUCCESS 
+      (void)PM_GetACAdapter( &isAcConnectedBuf );
+      (void)PM_GetBatteryLevel( &BatterylevelBuf );
+    }
+
+    mfprintf(tc[1], "%4d/%02d/%02d %02d:%02d:%02d ",
 	     rtc_date.year + 2000, rtc_date.month , rtc_date.day,
-	     rtc_time.hour , rtc_time.minute , rtc_time.second ); 
+	     rtc_time.hour , rtc_time.minute , rtc_time.second );
+
+    if( isAcConnectedBuf == TRUE ) {
+      m_set_palette(tc[1], M_TEXT_COLOR_BLUE );
+      mfprintf(tc[1], "AC.        \n\n");
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
+    else {
+      mfprintf(tc[1], "Batt.Lv ");
+      switch( BatterylevelBuf ) {
+      case 0:
+      case 1:
+	m_set_palette(tc[1], M_TEXT_COLOR_RED );
+	break;
+      case 2:
+      case 3:
+      case 4:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
+	break;
+      default:
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	break;
+      }
+      mfprintf(tc[1], "%d/5\n\n" , BatterylevelBuf); 
+      m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+    }
 
     if( FALSE == reboot_flag ) {
       mfprintf(tc[1], "press Y button to RESTORE mode\n");
@@ -1760,13 +1837,14 @@ void TwlMain(void)
       MFILER_DisplayDir(tc[2], &mfiler_list_head, 0 );
     }
 
-    if( pushed_power_button == TRUE ) {
-      MCU_SetFreeRegister( 0x00 );
-      //      OS_TPrintf("ahondara\n");
-      PM_ReadyToExit();
+    if( (pushed_power_button == TRUE)  &&  (throw_pushed_power_button == FALSE) ) {
+      if( FALSE == start_my_thread((u32)THREAD_COMMAND_REBOOT_FUNCTION) ) {
+      }
+      else {
+	throw_pushed_power_button = TRUE;
+      }
     }
 
-    
     loop_counter++;
 
   }

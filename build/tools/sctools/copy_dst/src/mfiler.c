@@ -283,7 +283,7 @@ void MFILER_DisplayDir(TEXT_CTRL *tc, MY_ENTRY_LIST **headp, int mode )
   int list_count = 0;
   int backslash_count = 0;
 
-  mfprintf(tc, "page %d entry no. %d/%d\n", display_offset_y, cursor_pos_y , list_count_max);
+  mfprintf(tc, "page %d entry no. %d/%d\n", display_offset_y, cursor_pos_y , list_count_max+1);
   m_set_palette(tc, 0x4);	/* yellow  */
   mfprintf(tc,"-------------------------------\n");
   m_set_palette(tc, 0xF);	/* white */

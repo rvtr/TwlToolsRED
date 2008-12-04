@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="C:\twlsdk\build\tools\makerom.TWL;C:\twlsdk\include"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL\MasterEditorTWL&quot;;C:\twlsdk\build\tools\makerom.TWL;C:\twlsdk\include"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
@@ -188,7 +188,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\split_tad.cpp"
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad.cpp"
 				>
 			</File>
 			<File
@@ -196,7 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\split_tad_util.cpp"
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad_util.cpp"
 				>
 			</File>
 			<File
@@ -230,11 +230,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\split_tad.h"
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad.h"
 				>
 			</File>
 			<File
-				RelativePath=".\split_tad_util.h"
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad_util.h"
 				>
 			</File>
 			<File

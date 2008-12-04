@@ -232,14 +232,14 @@ void Form1::setSrlFormsCaptionEx()
 	System::String ^appother = gcnew System::String("");
 	if( *(this->hSrl->hIsLaunch) == false )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			appother += "ランチャー非表示.\r\n";
 		else
 			appother += "Not Display On the Launcher.\r\n";
 	}
 	if( *(this->hSrl->hIsDataOnly) == true )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			appother += "データ専用.\r\n";
 		else
 			appother += "Data Only.\r\n";
@@ -249,14 +249,14 @@ void Form1::setSrlFormsCaptionEx()
 	this->tboxCaptionEx->Clear();
 	if( (this->hSrl->hHasDSDLPlaySign != nullptr) && (*(this->hSrl->hHasDSDLPlaySign) == true) )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->tboxCaptionEx->Text += gcnew System::String( "DSクローンブート対応.\r\n" );
 		else
 			this->tboxCaptionEx->Text += gcnew System::String( "DS Clone Boot.\r\n" );
 	}
 	if( (this->hSrl->hIsSCFGAccess != nullptr) && (*(this->hSrl->hIsSCFGAccess) == true) )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->tboxCaptionEx->Text += gcnew System::String( "SCFGレジスタアクセス可能.\r\n" );
 		else
 			this->tboxCaptionEx->Text += gcnew System::String( "SDFC Register Accessible.\r\n" );

@@ -2831,6 +2831,23 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// ミドルウェアリストの保存(XSL埋め込み)
 		System::Boolean saveMiddlewareListXmlEmbeddedXsl( System::String ^filename );
 
+		// tadの読み出し
+		System::Void loadTad( System::String ^tadfile );
+
+		// 提出ファイル名をゲームコードなどから決定
+		System::String^ getSubmitFilePrefix(void)
+		{
+			System::Byte romver = *this->hSrl->hRomVersion & 0x0F;		// 下位1桁
+			System::Byte subver = System::Decimal::ToByte(this->numSubmitVersion->Value) & 0x0F;
+
+			System::String ^prefix = "T" + this->hSrl->hGameCode + romver.ToString("X") + subver.ToString("X");
+			if( this->isPreliminary() == true )
+			{
+				prefix += "E";
+			}
+			return prefix;
+		}
+
 	private:
 		// ----------------------------------------------
 		// 一時ファイルの取り扱い
@@ -2924,6 +2941,12 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// フォームの入力をチェックする
 		System::Boolean checkSrlForms(void);
 
+		// 事前版かどうか確認する
+		bool isPreliminary()
+		{
+			return this->cboxRemasterVerE->Checked;
+		}
+
 	private:
 		// ---------------------------------------------------------------------
 		// リージョン設定は複雑なので別に切り出す
@@ -2997,7 +3020,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 
 		void sucMsg( System::String ^msgJ, System::String ^msgE )
 		{
-			if( this->stripItemJapanese->Checked )
+			if( this->isJapanese() )
 				MessageBox::Show( msgJ, "Information", MessageBoxButtons::OK, MessageBoxIcon::None );
 			else
 				MessageBox::Show( msgE, "Information", MessageBoxButtons::OK, MessageBoxIcon::None );
@@ -3006,7 +3029,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// エラーメッセージを出力
 		void errMsg( System::String ^msgJ, System::String ^msgE )
 		{
-			if( this->stripItemJapanese->Checked )
+			if( this->isJapanese() )
 				MessageBox::Show( msgJ, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error );
 			else
 				MessageBox::Show( msgE, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error );
@@ -3028,6 +3051,16 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 
 		// 言語リソース切り替え
 		void changeLanguage( System::String ^langname );
+
+		// 日本語版かどうか確認する
+		bool isJapanese()
+		{
+			return (this->stripItemJapanese->Checked);
+		}
+		bool isEnglish()
+		{
+			return (!this->isJapanese());
+		}
 
 		// --------------------------------------------------------
 		// エラー情報の登録
@@ -3061,6 +3094,32 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// SRLのバイナリに影響する項目の中で修正可能なエラーだけをチェック
 		System::Boolean isValidAffectRomModified(void);
 
+	private:
+		// ----------------------------------------------
+		// ファイル操作ユーティリティ
+		// ----------------------------------------------
+
+		// 直前にアクセスしたディレクトリを記憶して次回のデフォルトにする
+		System::String ^prevDir;	// 初期値はnullptr
+
+		// ファイルをダイアログで取得
+		// @arg [in] 拡張子フィルタ
+		// @ret 取得したファイル名 エラーのとき nullptr
+		System::String^ openFileDlg( System::String ^filter );
+
+		// セーブするファイルをダイアログで取得
+		// @arg [in] 拡張子フィルタ
+		// @arg [in] ファイルの拡張子が不正なときに追加するときの正しい拡張子
+		// @ret 取得したファイル名 エラーのとき nullptr
+		System::String^ saveFileDlg( System::String ^filter, System::String ^extension );
+
+		// セーブするディレクトリをダイアログで取得
+		// @ret 取得したディレクトリ名(\\で終わるように調整される) エラーのときnullptr
+		System::String^ saveDirDlg( System::String ^msgJ, System::String ^msgE );
+
+		// ファイルが存在するかを調べて上書き確認をする
+		bool isOverwriteFile( System::String ^path );
+
 	/////////////////////////////////////////////
 	// タイトルバー操作メソッド
 	/////////////////////////////////////////////
@@ -3089,22 +3148,24 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			System::String^ filename;
 
 			// ドラッグアンドドロップ以外ではダイアログから入力する
+			filename = this->openFileDlg( "rom format (*.srl;*.tad)|*.srl;*.tad|All files (*.*)|*.*" );
+			if( filename == nullptr )
 			{
-				System::Windows::Forms::OpenFileDialog ^dlg = gcnew (OpenFileDialog);
-
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "srl format (*.srl)|*.srl|All files (*.*)|*.*";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					//this->errMsg( "ROMデータファイルのオープンがキャンセルされました。", "Opening the ROM data file is canceled by user." );
-					return;
-				}
-				filename = dlg->FileName;
+				//this->errMsg( "ROMデータファイルのオープンがキャンセルされました。", "Opening the ROM data file is canceled by user." );
+				return;
 			}
-			this->loadSrl( filename );
+
+			// 拡張子で tad 読み込みにするかを判定
+			if( System::IO::Path::GetExtension( filename )->ToLower()->Equals( ".tad" ) )
+			{
+				this->loadTad( filename );
+			}
+			else
+			{
+				this->loadSrl( filename );
+			}
+			this->tboxFile->Text = filename;
+
 			this->clearOtherForms();
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 		} //stripItemOpenRom_Click()
@@ -3112,8 +3173,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 	private:
 		System::Void stripItemMasterRom_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			System::String^ filename;
-
 			// SRLが読み込まれていないときにはリードさせない
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
 			{
@@ -3132,76 +3191,47 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				return;
 			}
 
-			// SRL名を提出手順書に従わせる
-			{
-				filename = gcnew System::String("");
+			// 出力ファイル名をゲームコードなどから強制的に決める
+			System::String ^prefix     = this->getSubmitFilePrefix();
+			System::String ^srlfile    = prefix + ".SRL";
 
-				if( this->cboxRemasterVerE->Checked == true )
-				{
-					filename = "T" + this->hSrl->hGameCode + "E"
-						           + System::Decimal::ToByte(this->numSubmitVersion->Value).ToString("X") + ".SRL";
-				}
-				else
-				{
-					filename = "T" + this->hSrl->hGameCode + this->hSrl->hRomVersion->ToString("X")
-						           + System::Decimal::ToByte(this->numSubmitVersion->Value).ToString("X") + ".SRL";
-				}
-			}
+			// 注意書き
+			this->sucMsg(
+				"以下のファイルが作成されます。\n\n"
+				+ srlfile + " (マスターROM)\n",
 
-			// 注意書き 
-			{
-				this->sucMsg( 
-					"提出手順書にしたがい、ROMデータファイル名は \"" + filename + "\"となります。\n" + "\nROMデータファイルを保存するフォルダを選択してください。",
-					"ROM data file name is \"" + filename + "\".\n" + "\nPlease select a folder in which the ROM data is saved."
-				);
-			}
+				"Following file for submission will be made. \n\n"
+				+ srlfile + " (Master ROM)\n"
+			);
+
 			// ダイアログからSRLを保存するディレクトリを取得する
+			System::String ^dir = this->saveDirDlg( "保存先フォルダを選択してください。", "Please select a folder for saving the file" );
+			if( !dir )
 			{
-				System::Windows::Forms::FolderBrowserDialog ^dlg = gcnew (System::Windows::Forms::FolderBrowserDialog);
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					this->errMsg( "フォルダの選択がキャンセルされましたのでマスターROMは作成されません。", 
-								  "A submission sheet can not be made, since selecting folder is canceled." );
-					return;
-				}
-				else
-				{
-					if( !dlg->SelectedPath->EndsWith("\\") )
-					{
-						filename = dlg->SelectedPath + "\\" + filename;
-					}
-					else
-					{
-						filename = dlg->SelectedPath + filename;
-					}
-				}
-				if( System::IO::File::Exists( filename ) )
-				{
-					System::String ^msg;
-					if( this->stripItemJapanese->Checked )
-						msg = gcnew System::String( filename + "はすでに存在します。上書きしますか?" );
-					else
-						msg = gcnew System::String( filename + "already exists. Overwrite it?" );
-					if( MessageBox::Show( msg, "Information", MessageBoxButtons::YesNo, MessageBoxIcon::None ) 
-						== System::Windows::Forms::DialogResult::No )
-					{
-						this->errMsg( "マスターROMの作成をキャンセルしました。", 
-									  "Making a master ROM is canceled." );
-						return;
-					}
-				}
+				this->errMsg( "フォルダの選択がキャンセルされましたのでマスターROMは作成されません。", 
+							  "A master ROM isn't made, since selecting folder is canceled." );
+				return;
 			}
+			srlfile = dir + srlfile;
+
+			// ファイルが存在するかを調べて上書き確認をする
+			if( !this->isOverwriteFile(srlfile) )
+			{
+				this->errMsg( "ファイルの上書きがキャンセルされましたのでマスターROMは作成されません。", 
+							  "Since overwriting a file is canceled, a master ROM isn't made." );
+				return;
+			}
+
 			try
 			{
-				if( !this->saveSrl( filename ) )
+				if( !this->saveSrl( srlfile ) )
 				{
 					this->errMsg( "マスターROMの作成に失敗しました。",
 								  "Making a master ROM failed." );
 					return;
 				}
-				this->sucMsg( "マスターROMの作成が成功しました。", "Making the ROM data file succeeded." );
-				this->tboxFile->Text = filename;
+				this->sucMsg( "マスターROMの作成が成功しました。", "A master ROM is made successfully." );
+				this->tboxFile->Text = srlfile;
 			}
 			catch( System::Exception ^ex )
 			{
@@ -3240,132 +3270,52 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				return;
 			}
 
-			// SRL名を提出手順書に従わせる
-			System::String ^srlfile;
-			{
-				srlfile = gcnew System::String("");
+			// 出力ファイル名をゲームコードなどから強制的に決める
+			System::String ^prefix     = this->getSubmitFilePrefix();
+			System::String ^srlfile    = prefix + ".SRL";
+			System::String ^delivfile  = prefix + "_SHEET.XML";
+			System::String ^middlefile = prefix + "_MIDDLEWARE.XML";
+			System::String ^middlefilePrint = prefix + "_MIDDLEWARE.HTML";
 
-				if( this->cboxRemasterVerE->Checked == true )
-				{
-					srlfile = "T" + this->hSrl->hGameCode + "E"
-						          + System::Decimal::ToByte(this->numSubmitVersion->Value).ToString("X") + ".SRL";
-				}
-				else
-				{
-					srlfile = "T" + this->hSrl->hGameCode + this->hSrl->hRomVersion->ToString("X")
-						          + System::Decimal::ToByte(this->numSubmitVersion->Value).ToString("X") + ".SRL";
-				}
-			}
+			// 注意書き
+			this->sucMsg(
+				"以下の提出ファイルが一度に作成されます。\n\n"
+				+ srlfile    + " (マスターROM)\n"
+				+ delivfile  + " (マスターROM提出確認書)\n"
+				+ middlefile + " (ミドルウェア一覧)\n"
+				+ middlefilePrint + " (ミドルウェア一覧 印刷用)\n"
+				+ "\n",
 
-			// 注意書き 
-			{
-				this->sucMsg( 
-					"Step1/3: ROMデータファイルと提出確認書の情報を一致させるため、まず、入力情報を反映させたマスターROMデータファイルを作成します。\n(キャンセルされたとき、提出データ一式は作成されません。)\n"
-					+ "\n  マスターROMデータファイル名は \"" + srlfile + "\"となります。\n" + "\nマスターROMデータファイルを保存するフォルダを選択してください。",
-					"Step1/3: Firstly, We make a master ROM file because all information in a submission sheet are match those in the ROM data file.\n(When it is canceled, both A set of submission data is not made.)\n"
-					+ "\n  The name of the master ROM data file is \"" + srlfile + "\".\n" + "\nPlease select a folder in which the ROM data is saved."
-				);
-			}
+				"Following files for submission will be made. \n\n"
+				+ srlfile    + " (Master ROM)\n"
+				+ delivfile  + " (Submission Sheet)\n"
+				+ middlefile + " (Middleware List)\n"
+				+ middlefilePrint + " (Middleware List For Print)\n"
+				+ "\n"
+			);
 
 			// ダイアログからSRLを保存するディレクトリを取得する
-			System::String ^delivfile;
+			System::String ^dir = this->saveDirDlg( "保存先フォルダを選択してください。", "Please select a folder for saving files" );
+			if( !dir )
 			{
-				System::Windows::Forms::FolderBrowserDialog ^dlg = gcnew (System::Windows::Forms::FolderBrowserDialog);
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					this->errMsg( "フォルダの選択がキャンセルされましたので提出データ一式は作成されません。", 
-								  "A set of submission data can not be made, since selecting folder is canceled." );
-					return;
-				}
-				else
-				{
-					if( !dlg->SelectedPath->EndsWith("\\") )
-					{
-						srlfile = dlg->SelectedPath + "\\" + srlfile;
-					}
-					else
-					{
-						srlfile = dlg->SelectedPath + srlfile;
-					}
-				}
-				if( System::IO::File::Exists( srlfile ) )
-				{
-					System::String ^msg;
-					if( this->stripItemJapanese->Checked )
-						msg = gcnew System::String( srlfile + "はすでに存在します。上書きしますか?" );
-					else
-						msg = gcnew System::String( srlfile + "already exists. Overwrite it?" );
-					if( MessageBox::Show( msg, "Information", MessageBoxButtons::YesNo, MessageBoxIcon::None ) 
-						== System::Windows::Forms::DialogResult::No )
-					{
-						this->errMsg( "ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。", 
-									  "Since overwriting a file is canceled, a set of submission data can not be made." );
-						return;
-					}
-				}
-
+				this->errMsg( "フォルダの選択がキャンセルされましたので提出データ一式は作成されません。", 
+							  "A set of submission data can not be made, since selecting folder is canceled." );
+				return;
 			}
+			srlfile    = dir + srlfile;
+			delivfile  = dir + delivfile;
+			middlefile = dir + middlefile;
+			middlefilePrint = dir + middlefilePrint;
 
-			// 注意書き 
+			// ファイルが存在するかを調べて上書き確認をする
+			if( !this->isOverwriteFile(srlfile)    || !this->isOverwriteFile(delivfile) ||
+				!this->isOverwriteFile(middlefile) || !this->isOverwriteFile(middlefilePrint) )
 			{
-				this->sucMsg( 
-					"Step2/3: 続いて、使用されているミドルウェアのリストを作成します。\nここでキャンセルされたとき、提出データ一式は作成されませんのでご注意ください。",
-					"Step2/3: Secondly, We should make a list of middlewares used by the ROM. \n(CAUTION: When it is canceled, A set of submission data is not made.)"
-				);
+				this->errMsg( "ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。", 
+							  "Since overwriting a file is canceled, a set of submission data can not be made." );
+				return;
 			}
-			// ダイアログでファイルパスを決定
-			System::String ^middlefile;
-			{
-				System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
-
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "xml format (*.xml)|*.xml";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					this->errMsg( "ミドルウェアリストの作成がキャンセルされました。提出データ一式は作成されません。", 
-						          "Making a list of middlewares is canceled. A set of submission data is not made." );
-					return;
-				}
-				middlefile = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".xml" )) )
-				{
-					middlefile += ".xml";
-				}
-			}
-
-			// 注意書き 
-			{
-				this->sucMsg( 
-					"Step3/3: 続いて、提出確認書を作成します。\nここでキャンセルされたとき、提出データ一式は作成されませんのでご注意ください。",
-					"Step3/3: Finally, We should make a submission sheet. \n(CAUTION: When it is canceled, A set of submission data is not made, but also the master ROM data and a list of middleware are not made.)"
-				);
-			}
-			// ダイアログでファイルパスを決定
-			{
-				System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
-
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "xml format (*.xml)|*.xml";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					this->errMsg( "提出確認書の作成がキャンセルされました。提出データ一式は作成されません。", 
-						          "Making a submission sheet is canceled. A set of submission data is not made." );
-					return;
-				}
-				delivfile = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".xml" )) )
-				{
-					delivfile += ".xml";
-				}
-			}
-
+			
 			// マスタ提出確認書に必要な情報をフォームから取得して更新
 			this->setSrlProperties();	// 先にSrlを更新しておく
 			this->setDeliverableProperties();
@@ -3375,8 +3325,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			{
 				if( !this->saveSrl( srlfile ) )
 				{
-					this->errMsg( "マスターROMの作成に失敗しました。提出確認書およびミドルウェアリストは作成されません。",
-								  "Making a master ROM failed. And a submission sheet and a list of middlewares are not made." );
+					this->errMsg( "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。",
+								  "Making a master ROM failed. Therefore, a part of files can't be made." );
 					return;
 				}
 				this->tboxFile->Text = srlfile;
@@ -3384,15 +3334,15 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			catch( System::Exception ^ex )
 			{
 				(void)ex;
-				this->errMsg( "マスターROMの作成に失敗しました。提出確認書およびミドルウェアリストは作成されません。",
-							  "Making a master ROM failed. And a submission sheet and a list of middlewares are not made." );
+				this->errMsg( "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。",
+							  "Making a master ROM failed. Therefore, a part of files can't be made." );
 				return;
 			}
 			u16  crc;			// SRL全体のCRCを計算する(書類に記述するため)
 			if( !getWholeCRCInFile( srlfile, &crc ) )
 			{
-				this->errMsg( "CRCの計算に失敗しました。提出確認書およびミドルウェアリストは作成されません。", 
-							  "Calc CRC is failed. Therefore, And a submission sheet and a list of middlewares are not made." );
+				this->errMsg( "CRCの計算に失敗しました。作成を中止するため一部のファイルは作成されません。", 
+							  "Calculating CRC is failed. Therefore, a part of files can't be made." );
 				return;
 			}
 			System::UInt16 ^hcrc = gcnew System::UInt16( crc );
@@ -3401,18 +3351,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->tboxWholeCRC->AppendText( hcrc->ToString("X") );
 
 			// ミドルウェアのリストを作成
-			if( !this->saveMiddlewareListXmlEmbeddedXsl( middlefile ) )
+			if( !this->saveMiddlewareListXmlEmbeddedXsl( middlefile ) || !this->saveMiddlewareListHtml( middlefilePrint ) )
 			{
-				this->errMsg( "ミドルウェアのリストが作成できませんでした。提出確認書は作成されません。",
-							  "Making a list of middleware failed. And a submission sheet is not made.");
+				this->errMsg( "ミドルウェアのリストが作成できませんでした。作成を中止するため一部のファイルは作成されません。",
+							  "Making a list of middleware failed. Therefore, a part of files can't be made.");
 				return;
 			}
 
 			// 書類作成
-			cli::array<System::String^> ^paths = srlfile->Split(L'\\');			// 余分なパスを削除
-			srlfile = paths[ paths->Length - 1 ];
-			//result = this->hDeliv->write( delivfile, this->hSrl, hcrc, srlfile, !(this->stripItemJapanese->Checked) );
-			result = this->hDeliv->writeSpreadsheet( delivfile, this->hSrl, hcrc, srlfile, !(this->stripItemJapanese->Checked) );
+			srlfile = System::IO::Path::GetFileName( srlfile );
+			//result = this->hDeliv->write( delivfile, this->hSrl, hcrc, srlfile, !this->isJapanese() );
+			result = this->hDeliv->writeSpreadsheet( delivfile, this->hSrl, hcrc, srlfile, !this->isJapanese() );
 			if( result != ECDeliverableResult::NOERROR )
 			{
 				switch( result )
@@ -3433,33 +3382,18 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				}
 				return;
 			}
-			this->sucMsg( "提出データ一式の作成に成功しました。", "The submission sheet is made successfully." );
+			this->sucMsg( "提出データ一式の作成に成功しました。", "A set of submission data is made successfully." );
 
 		} //stripItemSheet_Click()
 
 	private:
 		System::Void stripItemSaveTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			System::String ^filename = gcnew System::String("");
+			System::String ^filename = this->saveFileDlg( "xml format (*.xml)|*.xml", ".xml" );
 
-			// ダイアログでファイルパスを決定
+			if( !filename )
 			{
-				System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
-
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "xml format (*.xml)|*.xml";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					return;
-				}
-				filename = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".xml" )) )
-				{
-					filename += ".xml";
-				}
+				return;
 			}
 			this->saveTmp( filename );
 		} //stripItemSaveTemp_Click()
@@ -3467,26 +3401,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 	private:
 		System::Void stripItemLoadTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			System::String ^filename = gcnew System::String("");
+			System::String ^filename = this->openFileDlg( "xml format (*.xml)|*.xml" );
 
-			// ダイアログでファイルパスを決定
+			if( filename == nullptr )
 			{
-				System::Windows::Forms::OpenFileDialog ^dlg = gcnew (OpenFileDialog);
-
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "xml format (*.xml)|*.xml";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					return;
-				}
-				filename = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".xml" )) )
-				{
-					filename += ".xml";
-				}
+				return;
 			}
 			this->loadTmp( filename );
 		} //stripItemLoadTemp_Click()
@@ -3494,34 +3413,15 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 	private:
 		System::Void stripItemMiddlewareXml_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			System::String ^filename = gcnew System::String("");
-
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
 			{
 				this->errMsg( "ROMデータファイルが読み込まれていません。", "ROM file has not opened yet." );
 				return;
 			}
 
-			// ダイアログでファイルパスを決定
-			{
-				System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
+			System::String ^filename = this->saveFileDlg( "xml format (*.xml)|*.xml", ".xml" );
 
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "xml format (*.xml)|*.xml";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					return;
-				}
-				filename = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".xml" )) )
-				{
-					filename += ".xml";
-				}
-			}
-			if( !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
+			if( !filename || !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
 			{
 				this->errMsg( "ミドルウェアリストの作成に失敗しました。","Making a middleware list failed." );
 			}
@@ -3530,34 +3430,15 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 	private:
 		System::Void stripItemMiddlewareHtml_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			System::String ^filename = gcnew System::String("");
-
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
 			{
 				this->errMsg( "ROMデータファイルがオープンされていません。", "ROM file has not opened yet." );
 				return;
 			}
 
-			// ダイアログでファイルパスを決定
-			{
-				System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
+			System::String ^filename = this->saveFileDlg( "html format (*.html)|*.html", ".html" );
 
-				dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );//"c:\\";
-				dlg->Filter      = "html format (*.html)|*.html";
-				dlg->FilterIndex = 1;
-				dlg->RestoreDirectory = true;
-
-				if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
-				{
-					return;
-				}
-				filename = dlg->FileName;
-				if( !(dlg->FileName->EndsWith( ".html" )) )
-				{
-					filename += ".html";
-				}
-			}
-			if( !this->saveMiddlewareListHtml(filename) )
+			if( !filename || !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
 			{
 				this->errMsg( "ミドルウェアリストの作成に失敗しました。","Making a middleware list failed." );
 			}
@@ -3591,6 +3472,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				return;
 			}
 			this->loadSrl( filename );			// ドラッグアンドドロップの時点でボタンを押さなくてもファイルを開く
+			this->tboxFile->Text = filename;
 			this->clearOtherForms();
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 		}
@@ -3635,8 +3517,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 	private:
 		System::Void cboxRemasterVerE_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
-			//this->numRemasterVer->Enabled = !(this->cboxRemasterVerE->Checked);
-			//if( this->cboxRemasterVerE->Checked == false )
+			//this->numRemasterVer->Enabled = !(this->isEngilsh());
+			//if( this->isEngilsh() == false )
 			//{
 			//	this->numRemasterVer->Value = 0;
 			//}
@@ -3725,10 +3607,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->setParentalForms();
 			this->loadOtherForms();		// SRLに登録されていないROM仕様のフォームも戻す
 		}
-
-
-
-
 
 }; // enf of ref class Form1
 

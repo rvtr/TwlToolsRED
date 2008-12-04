@@ -34,7 +34,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, root, "Srl", this->tboxFile->Text );
 
 	// 言語
-	MasterEditorTWL::appendXmlTag( doc, root, "Lang", (this->stripItemJapanese->Checked)?"J":"E" );
+	MasterEditorTWL::appendXmlTag( doc, root, "Lang", (this->isJapanese())?"J":"E" );
 
 	// フォーム
 	System::Xml::XmlElement ^form = doc->CreateElement( "Form" );
@@ -136,6 +136,7 @@ void Form1::loadTmp( System::String ^filename )
 	if( !System::String::IsNullOrEmpty(text) )		// SRLファイル名がないときはスルー
 	{
 		this->loadSrl(text);
+		this->tboxFile->Text = filename;
 	}
 
 	// 言語

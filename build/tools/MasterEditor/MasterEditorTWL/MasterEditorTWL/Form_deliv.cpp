@@ -104,7 +104,7 @@ void Form1::setDeliverableProperties(void)
 	// 会社情報
 	this->hDeliv->hCompany1    = this->tboxCompany1->Text + " " + this->tboxDepart1->Text;
 	this->hDeliv->hPerson1     = this->tboxPerson1->Text;
-	if( this->stripItemJapanese->Checked == true )
+	if( this->isJapanese() == true )
 	{
 		this->hDeliv->hFurigana1 = this->tboxFurigana1->Text;
 	}
@@ -115,7 +115,7 @@ void Form1::setDeliverableProperties(void)
 	this->hDeliv->hTel1        = this->tboxTel1->Text;
 	this->hDeliv->hFax1        = this->tboxFax1->Text;
 	this->hDeliv->hMail1       = this->tboxMail1->Text;
-	if( this->stripItemJapanese->Checked == true )
+	if( this->isJapanese() == true )
 	{
 		this->hDeliv->hNTSC1 = this->tboxNTSC1->Text;
 	}
@@ -127,7 +127,7 @@ void Form1::setDeliverableProperties(void)
 	{
 		this->hDeliv->hCompany2    = this->tboxCompany2->Text + " " + this->tboxDepart2->Text;
 		this->hDeliv->hPerson2     = this->tboxPerson2->Text;
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 		{
 			this->hDeliv->hFurigana2 = this->tboxFurigana2->Text;
 		}
@@ -138,7 +138,7 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hTel2        = this->tboxTel2->Text;
 		this->hDeliv->hFax2        = this->tboxFax2->Text;
 		this->hDeliv->hMail2       = this->tboxMail2->Text;
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 		{
 			this->hDeliv->hNTSC2 = this->tboxNTSC2->Text;
 		}
@@ -202,7 +202,7 @@ void Form1::setDeliverableProperties(void)
 	// SRL情報を文字列で登録
 	if( this->combRegion->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hRegion = gcnew System::String("不明");
 		else
 			this->hDeliv->hRegion = gcnew System::String("Undefined");
@@ -213,7 +213,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combCERO->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hCERO = gcnew System::String("不可");
 		else
 			this->hDeliv->hCERO = gcnew System::String("Undefined");
@@ -224,7 +224,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combESRB->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hESRB = gcnew System::String("不可");
 		else
 			this->hDeliv->hESRB = gcnew System::String("Undefined");
@@ -235,7 +235,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combUSK->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hUSK = gcnew System::String("不可");
 		else
 			this->hDeliv->hUSK = gcnew System::String("Undefined");
@@ -246,7 +246,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combPEGI->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hPEGI = gcnew System::String("不可");
 		else
 			this->hDeliv->hPEGI = gcnew System::String("Undefined");
@@ -257,7 +257,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combPEGI_PRT->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hPEGI_PRT = gcnew System::String("不可");
 		else
 			this->hDeliv->hPEGI_PRT = gcnew System::String("Undefined");
@@ -268,7 +268,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combPEGI_BBFC->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hPEGI_BBFC = gcnew System::String("不可");
 		else
 			this->hDeliv->hPEGI_BBFC = gcnew System::String("Undefined");
@@ -279,7 +279,7 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->combOFLC->SelectedIndex < 0 )
 	{
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 			this->hDeliv->hOFLC = gcnew System::String("不可");
 		else
 			this->hDeliv->hOFLC = gcnew System::String("Undefined");
@@ -321,14 +321,14 @@ System::Boolean Form1::checkDeliverableForms(void)
 	this->checkTextForm( this->tboxPerson1->Text, LANG_PERSON_J, LANG_PERSON_E, false );
 	this->checkTextForm( this->tboxCompany1->Text, LANG_COMPANY_J, LANG_COMPANY_E, false );
 	this->checkTextForm( this->tboxDepart1->Text, LANG_DEPART_J, LANG_DEPART_E, false );
-	if( this->stripItemJapanese->Checked == true )
+	if( this->isJapanese() == true )
 	{
 		this->checkTextForm( this->tboxFurigana1->Text, LANG_FURIGANA_J, LANG_FURIGANA_J, false );
 	}
 	this->checkTextForm( this->tboxTel1->Text, LANG_TEL_J, LANG_TEL_E, false );
 	//this->checkTextForm( this->tboxFax1->Text, LANG_FAX_J, LANG_FAX_E, false );
 	this->checkTextForm( this->tboxMail1->Text, LANG_MAIL_J, LANG_MAIL_E, false );
-	//if( this->stripItemJapanese->Checked == true )
+	//if( this->isJapanese() == true )
 	//{
 	//	this->checkTextForm( this->tboxNTSC1->Text, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, false );
 	//}
@@ -338,14 +338,14 @@ System::Boolean Form1::checkDeliverableForms(void)
 		this->checkTextForm( this->tboxPerson2->Text, LANG_PERSON_J, LANG_PERSON_E, false );
 		this->checkTextForm( this->tboxCompany2->Text, LANG_COMPANY_J, LANG_COMPANY_E, false );
 		this->checkTextForm( this->tboxDepart2->Text, LANG_DEPART_J, LANG_DEPART_E, false );
-		if( this->stripItemJapanese->Checked == true )
+		if( this->isJapanese() == true )
 		{
 			this->checkTextForm( this->tboxFurigana2->Text, LANG_FURIGANA_J, LANG_FURIGANA_J, false );
 		}
 		this->checkTextForm( this->tboxTel2->Text, LANG_TEL_J, LANG_TEL_E, false );
 		//this->checkTextForm( this->tboxFax2->Text, LANG_FAX_J, LANG_FAX_E, false );
 		this->checkTextForm( this->tboxMail2->Text, LANG_MAIL_J, LANG_MAIL_E, false );
-		//if( this->stripItemJapanese->Checked == true )
+		//if( this->isJapanese() == true )
 		//{
 		//	this->checkTextForm( this->tboxNTSC2->Text, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, false );
 		//}

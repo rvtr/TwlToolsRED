@@ -248,6 +248,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\split_tad.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\split_tad_util.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\srl.cpp"
 				>
 			</File>
@@ -332,6 +340,14 @@
 			</File>
 			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\split_tad.h"
+				>
+			</File>
+			<File
+				RelativePath=".\split_tad_util.h"
 				>
 			</File>
 			<File

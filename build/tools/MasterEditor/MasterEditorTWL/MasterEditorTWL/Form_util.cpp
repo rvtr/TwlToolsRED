@@ -90,7 +90,7 @@ void Form1::setGridError( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hErrorList )
 		{
-			this->gridError->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+			this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
 			this->colorGridError( err );
 		}
 	}
@@ -103,7 +103,7 @@ void Form1::setGridWarn( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hWarnList )
 		{
-			this->gridWarn->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+			this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
 			this->colorGridWarn( err );
 		}
 	}
@@ -119,7 +119,7 @@ void Form1::overloadGridError( void )
 		{
 			if( !err->EnableModify )	// 修正可能な情報は表示しない
 			{
-				this->gridError->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+				this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
 				this->colorGridError( err );
 			}
 		}
@@ -128,7 +128,7 @@ void Form1::overloadGridError( void )
 	{
 		for each( RCMrcError ^err in this->hErrorList )
 		{
-			this->gridError->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+			this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
 			this->colorGridError( err );
 		}
 	}
@@ -142,7 +142,7 @@ void Form1::overloadGridWarn( void )
 		{
 			if( !err->EnableModify )
 			{
-				this->gridWarn->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+				this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
 				this->colorGridWarn( err );
 			}
 		}
@@ -151,7 +151,7 @@ void Form1::overloadGridWarn( void )
 	{
 		for each( RCMrcError ^err in this->hWarnList )
 		{
-			this->gridWarn->Rows->Add( err->getAll( this->stripItemJapanese->Checked ) );
+			this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
 			this->colorGridWarn( err );
 		}
 	}
@@ -261,5 +261,126 @@ System::Boolean Form1::isValidAffectRomModified(void)
 	}
 	return (count == 0);
 }
+
+// ----------------------------------------------
+// ファイル操作ユーティリティ
+// ----------------------------------------------
+
+// ファイルをダイアログで取得
+// @arg [in] 拡張子フィルタ
+// @ret 取得したファイル名 エラーのとき nullptr
+System::String^ Form1::openFileDlg( System::String ^filter )
+{
+	System::Windows::Forms::OpenFileDialog ^dlg = gcnew (OpenFileDialog);
+	if( System::String::IsNullOrEmpty( this->prevDir ) || !System::IO::Directory::Exists( this->prevDir ) )
+	{
+		dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );
+	}
+	else
+	{
+		dlg->InitialDirectory = this->prevDir;	// 前に選んだディレクトリをデフォルトにする
+	}
+	dlg->Filter      = filter;
+	dlg->FilterIndex = 1;
+	dlg->RestoreDirectory = true;
+
+	if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
+	{
+		return nullptr;
+	}
+	this->prevDir = System::IO::Path::GetDirectoryName( dlg->FileName );	// デフォルトディレクトリの更新
+	return System::String::Copy(dlg->FileName);
+}
+
+// セーブするファイルをダイアログで取得
+// @arg [in] 拡張子フィルタ
+// @arg [in] ファイルの拡張子が不正なときに追加するときの正しい拡張子
+// @ret 取得したファイル名 エラーのとき nullptr
+System::String^ Form1::saveFileDlg( System::String ^filter, System::String ^extension )
+{
+	System::String ^retfile;
+	System::Windows::Forms::SaveFileDialog ^dlg = gcnew (SaveFileDialog);
+
+	if( System::String::IsNullOrEmpty( this->prevDir ) || !System::IO::Directory::Exists( this->prevDir ) )
+	{
+		dlg->InitialDirectory = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );
+	}
+	else
+	{
+		dlg->InitialDirectory = this->prevDir;
+	}
+	dlg->Filter      = filter;
+	dlg->FilterIndex = 1;
+	dlg->RestoreDirectory = true;
+
+	if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
+	{
+		return nullptr;
+	}
+	this->prevDir = System::IO::Path::GetDirectoryName( dlg->FileName );
+	retfile = dlg->FileName;
+	if( !System::String::IsNullOrEmpty(extension) && !(dlg->FileName->EndsWith( extension )) )
+	{
+		retfile += extension;
+	}
+	return retfile;
+}
+
+// セーブするディレクトリをダイアログで取得
+// @ret 取得したディレクトリ名(\\で終わるように調整される) エラーのときnullptr
+System::String^ Form1::saveDirDlg( System::String ^msgJ, System::String ^msgE )
+{
+	System::String ^dir;
+	System::Windows::Forms::FolderBrowserDialog ^dlg = gcnew (System::Windows::Forms::FolderBrowserDialog);
+
+	if( this->isEnglish() && msgE )
+	{
+		dlg->Description = msgE;
+	}
+	else if( msgJ )
+	{
+		dlg->Description = msgJ;
+	}
+
+	if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
+	{
+		return nullptr;
+	}
+
+	if( !dlg->SelectedPath->EndsWith("\\") )
+	{
+		dir = dlg->SelectedPath + "\\";
+	}
+	else
+	{
+		dir = System::String::Copy(dlg->SelectedPath);
+	}
+	return dir;
+}
+
+// ファイルが存在するかを調べて上書き確認をする
+bool Form1::isOverwriteFile( System::String ^path )
+{
+	if( System::IO::File::Exists( path ) )
+	{
+		System::String ^msg;
+		if( this->isJapanese() )
+		{
+			msg = gcnew System::String( path + "はすでに存在します。上書きしますか?" );
+		}
+		else
+		{
+			msg = gcnew System::String( path + "already exists. Overwrite it?" );
+		}
+
+		if( MessageBox::Show( msg, "Information", MessageBoxButtons::YesNo, MessageBoxIcon::None ) 
+			== System::Windows::Forms::DialogResult::No )
+		{
+			return false;
+		}
+	}
+	return true;	// ファイルが存在しない場合 || 上書きOKの場合 ファイルを作成してもよい
+}
+
 
 // end of file

@@ -10,6 +10,7 @@
 #include "crc_whole.h"
 #include "utility.h"
 #include "lang.h"
+#include "split_tad.h"
 #include "FormError.h"
 #include "Form1.h"
 
@@ -21,7 +22,10 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
+// ----------------------------------------------
 // 設定ファイルの読み込み
+// ----------------------------------------------
+
 void Form1::loadInit(void)
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
@@ -137,7 +141,10 @@ void Form1::loadInit(void)
 	}
 } // loadInit()
 
+// ----------------------------------------------
 // SRLのオープン
+// ----------------------------------------------
+
 System::Void Form1::loadSrl( System::String ^filename )
 {
 	ECSrlResult result = this->hSrl->readFromFile( filename );
@@ -163,7 +170,6 @@ System::Void Form1::loadSrl( System::String ^filename )
 		}
 		return;
 	}
-	this->tboxFile->Text = filename;
 
 	// GUIにROM情報を格納
 	this->setSrlForms();
@@ -203,7 +209,10 @@ System::Void Form1::loadSrl( System::String ^filename )
 	return;
 } // loadSrl()
 
+// ----------------------------------------------
 // SRLの保存
+// ----------------------------------------------
+
 System::Boolean Form1::saveSrl( System::String ^filename )
 {
 	// コピーしたファイルにROMヘッダを上書き
@@ -214,10 +223,10 @@ System::Boolean Form1::saveSrl( System::String ^filename )
 
 	// 再リード
 	this->loadSrl( filename );
+	this->tboxFile->Text = filename;
 	return true;
 } // saveSrl()
 
-// SRLの保存
 System::Boolean Form1::saveSrlCore( System::String ^filename )
 {
 	// ROM情報をフォームから取得してSRLバイナリに反映させる
@@ -237,7 +246,21 @@ System::Boolean Form1::saveSrlCore( System::String ^filename )
 	return true;
 }
 
+// ----------------------------------------------
+// tadのオープン
+// ----------------------------------------------
+
+System::Void Form1::loadTad( System::String ^tadfile )
+{
+	System::String ^srlfile = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
+		                      + "\\tmp.srl";
+	splitTad( tadfile, srlfile );
+}
+
+// ----------------------------------------------
 // ミドルウェアリストの作成
+// ----------------------------------------------
+
 System::Void Form1::makeMiddlewareListXml(System::Xml::XmlDocument^ doc)
 {
 	System::Xml::XmlElement ^root = doc->CreateElement( "twl-master-editor" );
@@ -276,7 +299,10 @@ System::Void Form1::makeMiddlewareListXml(System::Xml::XmlDocument^ doc)
 	}
 }
 
-// ミドルウェアリストの保存
+// ----------------------------------------------
+// ミドルウェアリストの保存(XML)
+// ----------------------------------------------
+
 System::Boolean Form1::saveMiddlewareListXml( System::String ^filename )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
@@ -296,7 +322,10 @@ System::Boolean Form1::saveMiddlewareListXml( System::String ^filename )
 	return true;
 }
 
-// ミドルウェアリストの保存
+// ----------------------------------------------
+// ミドルウェアリストの保存(XSL埋め込みXML)
+// ----------------------------------------------
+
 System::Boolean Form1::saveMiddlewareListXmlEmbeddedXsl( System::String ^filename )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
@@ -336,7 +365,10 @@ System::Boolean Form1::saveMiddlewareListXmlEmbeddedXsl( System::String ^filenam
 	return true;
 }
 
+// ----------------------------------------------
 // ミドルウェアリストの保存(XML->HTML変換)
+// ----------------------------------------------
+
 System::Boolean Form1::saveMiddlewareListHtml( System::String ^filename )
 {
 	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
@@ -361,3 +393,4 @@ System::Boolean Form1::saveMiddlewareListHtml( System::String ^filename )
 	System::IO::File::Delete( tmpxml );
 	return true;
 }
+

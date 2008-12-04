@@ -223,7 +223,6 @@ System::Boolean Form1::saveSrl( System::String ^filename )
 
 	// ÄƒŠ[ƒh
 	this->loadSrl( filename );
-	this->tboxFile->Text = filename;
 	return true;
 } // saveSrl()
 

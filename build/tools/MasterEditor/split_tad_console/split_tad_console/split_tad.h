@@ -9,13 +9,20 @@
 // APIs
 // ------------------------------------------------------
 
+//
 // tad ファイルから srl(0番目のコンテンツ)を抜き出す
 // (split_tad_dev.pl の移植)
-int splitTad( System::String ^filename );
+//
+// @arg [in]  入力 tad ファイルのパス
+// @arg [out] 出力 srl ファイルのパス
+//
+// @ret 成功したとき0 失敗したら負の値
+//
+int splitTad( System::String ^tadpath, System::String ^srlpath );
 
 
 // ------------------------------------------------------
-// 内部処理用の構造体(宣言だけできないのでヘッダに置く)
+// 内部処理用の構造体(プロトタイプ宣言できないのでヘッダに置く)
 // ------------------------------------------------------
 
 // コンテンツ情報の構造体
@@ -30,11 +37,11 @@ private:
 public:
 	rcContentsInfo()
 	{
-		this->h_cid  = gcnew System::UInt32;
+		this->h_cid  = gcnew System::UInt32;				// 解放の必要なし
 		this->h_idx  = gcnew System::UInt16;
 		this->h_type = gcnew System::UInt16;
 		this->h_size = gcnew System::UInt32;
-		this->h_hash = gcnew cli::array<System::Byte>(20);	// 固定長 : 解放の必要なし
+		this->h_hash = gcnew cli::array<System::Byte>(20);	// 固定長
 	}
 public:
 	property System::UInt32 cid

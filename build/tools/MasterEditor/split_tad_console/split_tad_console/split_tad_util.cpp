@@ -56,7 +56,7 @@ int saveFile( System::String ^filename, cli::array<System::Byte> ^bytes )
 		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( filename ).ToPointer();
 
 	// ファイルにROMヘッダをライト
-	if( fopen_s( &fp, pchFilename, "wb" ) != NULL )	// 上書き・バイナリ
+	if( fopen_s( &fp, pchFilename, "wb" ) != NULL )	// 同名ファイルを削除して新規にライト・バイナリ
 	{
 		return -1;
 	}

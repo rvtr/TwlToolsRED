@@ -10,8 +10,24 @@ using namespace System;
 
 int main(array<System::String ^> ^args)
 {
-	splitTad( args[0] );
+	if( args->Length < 1 )
+	{
+		printf( "argument error\n" );
+		return -1;
+	}
+	System::String ^tad = args[0];
+	System::String ^srl = (args->Length >=2)?args[1]:"out.srl";
 
-	return 0;
+	int result = splitTad( tad, srl );
+	if( result < 0 )
+	{
+		printf( "\nerror\n" );
+	}
+	else
+	{
+		printf( "\nsucceeded\n" );
+	}
+
+	return result;
 }
 

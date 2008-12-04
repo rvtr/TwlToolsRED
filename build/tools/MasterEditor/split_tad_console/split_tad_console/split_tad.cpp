@@ -23,19 +23,23 @@ const u8 commonKey[] =
 
 
 // ------------------------------------------------------
-// tad外し処理本体(split_tad_dev.pl の移植)
+// tad外し処理本体
 // ------------------------------------------------------
 
 //
 // tad ファイルから srl(0番目のコンテンツ)を抜き出す
+// (split_tad_dev.pl の移植)
+//
+// @arg [in]  入力 tad ファイル名
+// @arg [out] 出力 srl ファイル名
 //
 // @ret 成功したとき0 失敗したら負の値
 //
-int splitTad( System::String ^filename )
+int splitTad( System::String ^tadpath, System::String ^srlpath )
 {
 	FILE       *fp = NULL;
 	const char *pchFilename = 
-		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( filename ).ToPointer();
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( tadpath ).ToPointer();
 
 	if( fopen_s( &fp, pchFilename, "rb" ) != NULL )
 	{
@@ -84,23 +88,31 @@ int splitTad( System::String ^filename )
 	cli::array<System::Byte> ^tmd     = subStr( fp, tmdOffset, tmdSize );
 	cli::array<System::Byte> ^content = subStr( fp, contentOffset, contentSize );
 
-	//saveFile( "cert.bin", 	subStr( fp, certOffset, certSize ) );
+	//saveFile( "cert.bin", subStr( fp, certOffset, certSize ) );
 	//saveFile( "crl.bin", 	subStr( fp, crlOffset,  crlSize ) );
 	//saveFile( "ticket.bin", ticket );
 	//saveFile( "tmd.bin", 	tmd );
 	//saveFile( "meta.bin",	subStr( fp, metaOffset, metaSize ) );
 
-	cli::array<System::Byte>    ^titleKey = readTitleKey( ticket );
+	cli::array<System::Byte>    ^title_key = readTitleKey( ticket );
 	cli::array<rcContentsInfo^> ^rci = readContentsInfo( tmd );
-	dumpBytes( titleKey );
+	dumpBytes( title_key );
 
+	// 通常は tad は srl (コンテンツ No.0) しか含まないが
+	// マルチコンテンツ を含む場合のために No.1 以降も別ファイルとして保存する
+	// srl 名が out.srl のとき out_1.bin out_2.bin ... として出力する
+	System::String ^srl_dir    = System::IO::Path::GetDirectoryName( srlpath );				// 格納ディレクトリ名
+	System::String ^srl_prefix = System::IO::Path::GetFileNameWithoutExtension( srlpath );	// 拡張子よりも前のファイル名
+	System::String ^srl_ext    = System::IO::Path::GetExtension( srlpath );					// 拡張子
+
+	int result = 0;
 	u32 offset = 0;
 	for each( rcContentsInfo ^ci in rci )
 	{
 		u32 size = roundUp( (u32)ci->size, 16 );
 		cli::array<System::Byte> ^enc_content_x = subStr( content, offset, size );
 		cli::array<System::Byte> ^content_x_iv  = resizeBytes( pack16( reverseEndian(ci->idx) ), 14 );	// ビッグエンディアンにしておく
-		cli::array<System::Byte> ^dec_content_x = decCBC( titleKey, content_x_iv, enc_content_x );
+		cli::array<System::Byte> ^dec_content_x = decCBC( title_key, content_x_iv, enc_content_x );
 		cli::array<System::Byte> ^dec_content   = subStr( dec_content_x, 0, ci->size );
 		System::Security::Cryptography::SHA1 ^sha1 = gcnew System::Security::Cryptography::SHA1Managed();
 		cli::array<System::Byte> ^hash = sha1->ComputeHash( dec_content );
@@ -115,13 +127,24 @@ int splitTad( System::String ^filename )
 		else
 		{
 			printf( "hash mismatch\n" );
+			result = -1;							// エラーとする 中断はせず最後まで作成
 		}
-		saveFile( "content_" + ci->idx.ToString() + ".encrypted.bin", enc_content_x );
-		saveFile( "content_" + ci->idx.ToString() + ".bin", dec_content );
+
+		//saveFile( "content_" + ci->idx.ToString() + ".encrypted.bin", enc_content_x );
+		//saveFile( "content_" + ci->idx.ToString() + ".bin", dec_content );
+		if( ci->idx == 0 )
+		{
+			saveFile( srlpath, dec_content );		// コンテンツ No.0 が srl にあたる
+		}
+		else
+		{
+			System::String ^tmppath = srl_dir + "\\" + srl_prefix + "_" + ci->idx.ToString() + ".bin";
+			saveFile( tmppath, dec_content );
+		}
 		offset += roundUp( size, 64 );
 	}
 	fclose( fp );
-	return 0;
+	return result;
 }
 
 // ------------------------------------------------------
@@ -149,7 +172,7 @@ cli::array<System::Byte>^ readTitleKey( cli::array<System::Byte> ^ticket )
 	}
 	catch (System::Exception ^ e)
     {
-		System::Console::WriteLine("Error: {0}", e->Message);
+		System::Console::WriteLine("Exception in readTitleKey(): {0}", e->Message);
     }
 	return plain;
 }

@@ -27,7 +27,7 @@ void DeleteECDirectory(void);
 void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds);
 FSFile *hatamotolib_log_start(char *log_file_name );
 void hatamotolib_log_end(void);
-
+BOOL Tid_To_GameCode(u64 tid, char *gcode);
 
 #ifdef __cplusplus
 }

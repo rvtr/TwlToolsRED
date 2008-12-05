@@ -9,6 +9,7 @@ extern "C" {
 void Gfx_Init(void);
 void Gfx_Render(int main_no, int sub_no);
 void Gfx_Set_BG1_Color(u16 col);
+void Gfx_Set_BG1_line_Color(int vram_num, int num_of_line, u16 col);
 
 #ifdef __cplusplus
 }

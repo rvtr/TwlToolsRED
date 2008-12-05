@@ -83,7 +83,8 @@ static volatile BOOL reboot_flag;
 
 static int miya_debug_level = 0;
 
-
+static OSHeapHandle hHeap;
+static u32 allocator_total_size = 0;
 
 static u8 WorkForNA[NA_VERSION_DATA_WORK_SIZE];
 
@@ -201,71 +202,73 @@ static BOOL LoadWlanConfig(void)
   int i;  /* ユーザーデータ書き込みモード */
   if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
     OS_TPrintf("SSID = %s\n", GetWlanSSID()); 
-    mfprintf(tc[3],"SSID = %s\n", GetWlanSSID()); 
     OS_TPrintf("MODE = ");
+#if 0
+    mfprintf(tc[3],"SSID = %s\n", GetWlanSSID()); 
     mfprintf(tc[3],"MODE = ");
-
+#endif
     switch( GetWlanMode() ) {
     case WCM_WEPMODE_NONE:
       OS_TPrintf("NONE\n");
-      mfprintf(tc[3],"NONE\n");
+      //      mfprintf(tc[3],"NONE\n");
       break;
     case WM_WEPMODE_40BIT:
-      OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
+      OS_TPrintf("WEP40\n");
+      //      mfprintf(tc[3],"WEP128\n");
       break;
     case WM_WEPMODE_104BIT:
-      OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
+      OS_TPrintf("WEP104\n");
+      //      mfprintf(tc[3],"WEP128\n");
       break;
     case WM_WEPMODE_128BIT:
       OS_TPrintf("WEP128\n");
-      mfprintf(tc[3],"WEP128\n");
+      //      mfprintf(tc[3],"WEP128\n");
       break;
     case WCM_WEPMODE_WPA_TKIP:
       OS_TPrintf("WPA-TKIP\n");
-      mfprintf(tc[3],"WPA-TKIP\n");
+      //      mfprintf(tc[3],"WPA-TKIP\n");
       break;
     case WCM_WEPMODE_WPA2_TKIP:
       OS_TPrintf("WPA2-TKIP\n");
-      mfprintf(tc[3],"WPA2-TKIP\n");
+      //      mfprintf(tc[3],"WPA2-TKIP\n");
       break;
     case WCM_WEPMODE_WPA_AES:
       OS_TPrintf("WPA-AES\n");
-      mfprintf(tc[3],"WPA-AES\n");
+      //      mfprintf(tc[3],"WPA-AES\n");
       break;
     case WCM_WEPMODE_WPA2_AES :
       OS_TPrintf("WPA2-AES\n");
-      mfprintf(tc[3],"WPA2-AES\n");
+      //      mfprintf(tc[3],"WPA2-AES\n");
       break;
     defalut:
       OS_TPrintf("Unknow mode..\n");
-      mfprintf(tc[3],"Unknow mode..\n");
+      //      mfprintf(tc[3],"Unknow mode..\n");
       break;
     }
 
     if( TRUE == GetKeyModeStr() ) {
       OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
-      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
+      //      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
     }
     else {
       len = GetWlanKEYBIN(buf);
       if( len ) {
 	OS_TPrintf("KEY BIN = 0x");
-	mfprintf(tc[3],"KEY BIN = 0x");
+	//	mfprintf(tc[3],"KEY BIN = 0x");
 	for( i = 0 ; i < len ; i++ ) {
 	  OS_TPrintf("%02X",buf[i]);
-	  mfprintf(tc[3],"%02X",buf[i]);
+	  //	  mfprintf(tc[3],"%02X",buf[i]);
 	}
 	OS_TPrintf("\n");
-	mfprintf(tc[3],"\n");
+	//	mfprintf(tc[3],"\n");
       }
     }
-    mfprintf(tc[3],"\n");
+    //    mfprintf(tc[3],"\n");
 
     if( TRUE == GetDhcpMODE() ) {
-      mfprintf(tc[3],"DHCP client\n");
+      //      mfprintf(tc[3],"DHCP client\n");
     }
+#if 0
     else {
       u32 addr_temp;
       addr_temp = GetIPAddr();
@@ -289,12 +292,12 @@ static BOOL LoadWlanConfig(void)
 	       (u32)((addr_temp >> 8) & 0xff),(u32)(addr_temp & 0xff) );
     }
     mfprintf(tc[3],"\n");
-
+#endif
 
   }
   else {
     OS_TPrintf("Invalid wlan cfg file\n");
-    mfprintf(tc[3],"Invalid wlan cfg file\n");
+    //    mfprintf(tc[3],"Invalid wlan cfg file\n");
     mprintf("Invalid wlan cfg file\n");
     return FALSE;
   }
@@ -506,6 +509,7 @@ static BOOL RestoreFromSDCard7(void)
   BOOL ret_flag = TRUE;
   FSFile *log_fd;
   int ec_download_ret;
+  char game_code_buf[5];
 
   title_id_buf_ptr = NULL;
   title_id_count = 0;
@@ -540,8 +544,10 @@ static BOOL RestoreFromSDCard7(void)
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 	for( i = 0; i < title_id_count ; i++ ) {
 	  u64 tid = *(title_id_buf_ptr + i );
-	  mprintf(" id %02d %08X %08X\n", i,(u32)(tid >> 32), (u32)tid);
-	  miya_log_fprintf(log_fd," id %02d %08X %08X\n", i,(u32)(tid >> 32), (u32)tid);
+	  (void)Tid_To_GameCode(tid, game_code_buf);
+	  game_code_buf[4] = '\0';
+	  mprintf(" id %08X %08X [%s]\n", (u32)(tid >> 32), (u32)tid, game_code_buf);
+	  miya_log_fprintf(log_fd," id %08X %08X [%s]\n", (u32)(tid >> 32), (u32)tid, game_code_buf);
 	}
       }
       else {
@@ -804,6 +810,8 @@ static void MyThreadProc(void *arg)
   BOOL twl_card_validation_flag;
   u32 command;
 
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
@@ -813,9 +821,19 @@ static void MyThreadProc(void *arg)
     command = (u32)message;
     switch( command ) {
     case THREAD_COMMAND_FULL_FUNCTION:
+      if( miya_debug_level == 1 ) {
+	m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+	mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
       for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
 	if( FALSE == (function_table[function_counter])() ) {
 	  flag = FALSE;
+	}
+	if( miya_debug_level == 1 ) {
+	  m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+	  mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 	}
       }
       break;
@@ -923,6 +941,8 @@ static void MyThreadProcNuc(void *arg)
   FSFile *log_fd;
   BOOL ret_flag;
 
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
@@ -938,7 +958,6 @@ static void MyThreadProcNuc(void *arg)
       mprintf("%s unknown command!\n",__FUNCTION__);
       continue;
     }
-
 
     mprintf("-Wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
@@ -1061,7 +1080,6 @@ static BOOL myTWLCardCallback( void )
 void TwlMain(void)
 {
   void* newArenaLo;
-  OSHeapHandle hHeap;
   u16 keyData;
   int loop_counter = 0;
   int save_dir_info = 0;
@@ -1120,6 +1138,9 @@ void TwlMain(void)
   // メインアリーナ上にヒープを作成
   hHeap = OS_CreateHeap(OS_ARENA_MAIN, OS_GetMainArenaLo(), OS_GetMainArenaHi());
   OS_SetCurrentHeap(OS_ARENA_MAIN, hHeap);
+
+  allocator_total_size = OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap);
+
 
   Gfx_Init();
 
@@ -1344,6 +1365,9 @@ void TwlMain(void)
   }
 
  loop_start:
+
+  Gfx_Set_BG1_line_Color(1, 2, (u16)M_TEXT_COLOR_ORANGE);
+
   while( 1 ) {
     Gfx_Render( vram_num_main , vram_num_sub );
     OS_WaitVBlankIntr();
@@ -1568,6 +1592,8 @@ void TwlMain(void)
     }
 #endif
     else if ( keyData & PAD_BUTTON_SELECT ) {
+      miya_debug_level ^= 1;
+      mprintf("debug level %d\n", miya_debug_level );
     }
     else if ( keyData & PAD_BUTTON_X ) {
       if( TRUE == reboot_flag ) {

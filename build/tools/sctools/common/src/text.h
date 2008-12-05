@@ -60,6 +60,7 @@ typedef struct {
 typedef struct {
   TEXT_BUF text_buf;
   u16 *screen;
+  u16 *screen_bg1;
   u16 x_line;
   u16 y_line;
   u16 palette;
@@ -78,7 +79,7 @@ int init_text_buf_sys(void *heap_start, void *heap_end);
 void m_putchar(TEXT_CTRL *tc, int c);
 void m_set_palette(TEXT_CTRL *tc, u16 num);
 u16 m_get_palette(TEXT_CTRL *tc);
-void init_text(TEXT_CTRL *tc, u16 *screen, u16 palette);
+void init_text(TEXT_CTRL *tc, u16 *screen, u16 *screen_bg1, u16 palette);
 void m_set_display_offset_y(TEXT_CTRL *tc, int offset);
 int m_get_display_offset_y(TEXT_CTRL *tc);
 void m_set_display_offset_x(TEXT_CTRL *tc, int offset);

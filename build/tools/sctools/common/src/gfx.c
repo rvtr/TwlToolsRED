@@ -9,20 +9,6 @@
 #define DPR_HEIGHT_MAX			24
 #define DPR_WIDTH_MAX			32
 
-static u16 sDPRScrnBuffer[DPR_HEIGHT_MAX * DPR_WIDTH_MAX] ATTRIBUTE_ALIGN(32);
-
-
-
-void Gfx_Set_BG1_Color(u16 col)
-{
-  int i,j;
-  for( i = 0 ; i < DPR_HEIGHT_MAX ; i++ ) {
-    for( j = 0 ; j < DPR_WIDTH_MAX ; j++ ) {
-      sDPRScrnBuffer[i*DPR_WIDTH_MAX + j] = (u16)( ((col & 0xf) << 12) | ((u16)0x80) );
-    }
-  }
-  DC_FlushRange( (void *)&(sDPRScrnBuffer),sizeof(sDPRScrnBuffer));
-}
 
 
 
@@ -44,6 +30,32 @@ static void   VBlankIntr( void );
 static u32 v_blank_intr_counter = 0;
 
 static u32 g_screen[MAX_VRAM_NUM][VRAM_SIZE/sizeof(u32)]  ATTRIBUTE_ALIGN(32);
+static u16 g_screen_bg1[MAX_VRAM_NUM][DPR_HEIGHT_MAX * DPR_WIDTH_MAX]  ATTRIBUTE_ALIGN(32);
+
+void Gfx_Set_BG1_line_Color(int vram_num, int num_of_line, u16 col)
+{
+  int i,j;
+  for( i = 0 ; (i < num_of_line) && (i < DPR_HEIGHT_MAX); i++ ) {
+    for( j = 0 ; j < DPR_WIDTH_MAX ; j++ ) {
+      g_screen_bg1[vram_num][i*DPR_WIDTH_MAX + j] = (u16)( ((col & 0xf) << 12) | ((u16)0x01) );
+    }
+  }
+  DC_FlushRange( (void *)(g_screen_bg1[vram_num]),(sizeof(u16)*DPR_HEIGHT_MAX * DPR_WIDTH_MAX));
+}
+
+
+void Gfx_Set_BG1_Color(u16 col)
+{
+  int i,j,k;
+  for( k = 0 ; k < NUM_OF_SCREEN ; k++ ) {
+    for( i = 0 ; i < DPR_HEIGHT_MAX ; i++ ) {
+      for( j = 0 ; j < DPR_WIDTH_MAX ; j++ ) {
+	g_screen_bg1[k][i*DPR_WIDTH_MAX + j] = (u16)( ((col & 0xf) << 12) | ((u16)0x01) );
+      }
+    }
+    DC_FlushRange( (void *)(g_screen_bg1[k]),(sizeof(u16)*DPR_HEIGHT_MAX * DPR_WIDTH_MAX));
+  }
+}
 
 
 void Gfx_Init(void)
@@ -63,7 +75,7 @@ void Gfx_Init(void)
   // OS_TPrintf("Init start 1\n");
   for( i = 0 ; i < NUM_OF_SCREEN ; i++) {
     tc[i] = &(textctrl[i]);
-    init_text(tc[i],  (u16 *)&(g_screen[i]), palette_no);
+    init_text(tc[i],  (u16 *)&(g_screen[i]), (u16 *)&(g_screen_bg1[i]), palette_no);
   }
 
   Gfx_Set_BG1_Color(0);
@@ -186,8 +198,8 @@ static void VBlankIntr(void)
   GXS_LoadBG0Scr( (void *)&(g_screen[vram_num_sub]) , 0 , VRAM_SIZE );
 
 
-  GX_LoadBG1Scr(sDPRScrnBuffer, 0, sizeof(sDPRScrnBuffer));
-  GXS_LoadBG1Scr(sDPRScrnBuffer, 0, sizeof(sDPRScrnBuffer));
+  GX_LoadBG1Scr( &(g_screen_bg1[vram_num_main]),0,(sizeof(u16)*DPR_HEIGHT_MAX * DPR_WIDTH_MAX));
+  GXS_LoadBG1Scr( &(g_screen_bg1[vram_num_sub]),0,(sizeof(u16)*DPR_HEIGHT_MAX * DPR_WIDTH_MAX));
 
 
   // ‰¼‘zOAM‚ðVRAM‚É”½‰f

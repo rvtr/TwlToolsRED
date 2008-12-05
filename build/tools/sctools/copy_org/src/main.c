@@ -50,6 +50,8 @@ static BOOL development_console_flag = FALSE;
 
 //static int miya_debug_level = 0;
 
+static u32 allocator_total_size = 0;
+static OSHeapHandle hHeap;
 
 static void SDEvents(void *userdata, FSEvent event, void *arg)
 {
@@ -527,6 +529,12 @@ static void MyThreadProc(void *arg)
       (void)CleanSDCardFiles(NULL);
       mprintf("done.\n");
     }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+      mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
+      // OS_GetTotalAllocSize(OSArenaId id, OSHeapHandle heap)
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
 
     flag = TRUE;
     twl_card_validation_flag = TRUE;
@@ -542,6 +550,12 @@ static void MyThreadProc(void *arg)
     for( function_counter = 0 ; function_counter < function_table_max ; function_counter++ ) {
       if( FALSE == (function_table[function_counter])() ) {
 	flag = FALSE;
+      }
+      if( no_sd_clean_flag == TRUE ) {
+	m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+	mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
+	// OS_GetTotalAllocSize(OSArenaId id, OSHeapHandle heap)
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
     }
     mprintf("\n");
@@ -605,7 +619,6 @@ static BOOL myTWLCardCallback( void )
 void TwlMain(void)
 {
   void* newArenaLo;
-  OSHeapHandle hHeap;
   u16 keyData;
   int loop_counter = 0;
   int save_dir_info = 0;
@@ -649,6 +662,9 @@ void TwlMain(void)
   // メインアリーナ上にヒープを作成
   hHeap = OS_CreateHeap(OS_ARENA_MAIN, OS_GetMainArenaLo(), OS_GetMainArenaHi());
   OS_SetCurrentHeap(OS_ARENA_MAIN, hHeap);
+
+
+  allocator_total_size = OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap);
 
   Gfx_Init();
 
@@ -699,6 +715,7 @@ void TwlMain(void)
     m_set_palette(tc[0], M_TEXT_COLOR_BROWN );
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
+
 
 
   // 不要：NAM の初期化
@@ -848,6 +865,8 @@ void TwlMain(void)
   if( TRUE == stream_play_is_end() ) {
     stream_play0(); /* cursor.aiff */
   }
+
+  Gfx_Set_BG1_line_Color(1, 2, (u16)M_TEXT_COLOR_PURPLE);
 
   while( 1 ) {
     OS_WaitVBlankIntr();

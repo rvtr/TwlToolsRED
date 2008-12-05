@@ -134,9 +134,10 @@ static void init_text_buf(TEXT_BUF *tb)
 }
 
 
-void init_text(TEXT_CTRL *tc, u16 *screen, u16 palette)
+void init_text(TEXT_CTRL *tc, u16 *screen, u16 *screen_bg1, u16 palette)
 {
   tc->screen = screen;
+  tc->screen_bg1 = screen_bg1;
   tc->x_line = 0;
   tc->y_line = 0;
   tc->palette = palette;

@@ -633,7 +633,7 @@ static int a_to_int(char c)
   return -1;
 }
 
-static BOOL Tid_To_GameCode(u64 tid, char *gcode)
+BOOL Tid_To_GameCode(u64 tid, char *gcode)
 {
   u32 code;
   char *str;

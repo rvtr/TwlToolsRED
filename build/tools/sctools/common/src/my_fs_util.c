@@ -9,9 +9,10 @@
 
 #define ATTRIBUTE_BACK 1
 
-/* このフラグどこかまずい！！！*/
 #define COPY_FILE_ENCRYPTION 1
 
+#define LIMIT_BUF 1
+#define LIMIT_BUF_ALLOC 1
 
 static BOOL miya_debug_flag = FALSE;
 static int miya_debug_counter = 0;
@@ -107,8 +108,6 @@ typedef struct FSPathInfo
 } FSPathInfo;
 */
 
-
-static const u32 BUF_SIZE = 256;
 
 typedef struct {
   FSResult result;
@@ -282,7 +281,7 @@ s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size)
   return writtenSize; 
 }
 
-
+#if 0
 static BOOL LoadFile(const char* path, char **alloc_ptr, int *alloc_size, FSFile *log_fd)
 {
     FSFile f;
@@ -399,40 +398,201 @@ static BOOL SaveFile(const char* path, void* pData, u32 size, FSFile *log_fd)
 
   return TRUE;
 }
+#endif
+
+
+#ifdef LIMIT_BUF
+//#define BUF_SIZE (16*1024)
+//#define BUF_SIZE (512*1024)
+#define BUF_SIZE (1*1024*1024)
+#ifdef LIMIT_BUF_ALLOC
+static char *pBuffer = NULL;
+static char *pBuffer_crypto = NULL;
+#else
+static char pBuffer[BUF_SIZE];
+static char pBuffer_crypto[BUF_SIZE];
+#endif	/* LIMIT_BUF_ALLOC */
+#endif
+
 
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd )
 {
-  char *alloc_ptr = NULL;
+  BOOL ret_flag = TRUE;
+
+#ifdef LIMIT_BUF
+  FSFile f_src;
+  FSFile f_dst;
+  u32 restSize;
+  u32 tempSize;
+  u32 fileSize;
+  s32 readSize = 0;
+  FSResult fsResult;
+  s32 writtenSize;
+
+  FS_InitFile(&f_src);
+
+  if( FALSE == FS_OpenFileEx(&f_src, src_path, FS_FILEMODE_R) ) {
+    miya_log_fprintf(log_fd, "%s Failed Open File\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", src_path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(src_path) ));
+    return FALSE;
+  }
+
+  fileSize = FS_GetFileLength(&f_src);
+
+  FS_InitFile(&f_dst);
+  if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+    FSResult res = FS_GetArchiveResultCode(dst_path);
+    if( res == FS_RESULT_NO_ENTRY ) {
+      /* 本来ここで問題なし */
+    }
+    else {
+      miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+      miya_log_fprintf(log_fd, " %s\n", dst_path );
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
+    }
+  }
+  else {
+    FS_CloseFile(&f_dst);
+    /* backup バックアップを取っておくべき？？ */
+    FS_DeleteFile(dst_path);
+  }
+  
+  FS_CreateFile(dst_path, (FS_PERMIT_R|FS_PERMIT_W));
+  if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+    miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " %s\n", dst_path );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+    ret_flag = FALSE;
+    goto exit_label;
+
+  }
+  else {
+    fsResult = FS_SetFileLength(&f_dst, 0);
+    if( fsResult != FS_RESULT_SUCCESS ) {
+      miya_log_fprintf(log_fd, "%s Error: Set file len\n", __FUNCTION__);
+      miya_log_fprintf(log_fd, " %s\n", dst_path );
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(fsResult) );
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+  }
+
+#ifdef LIMIT_BUF_ALLOC
+  if( pBuffer == NULL ) {
+    pBuffer = (char*)OS_Alloc( BUF_SIZE );
+    if( pBuffer == NULL ) {
+      miya_log_fprintf(log_fd, "%s Mem alloc error: line %d size %d\n", __FUNCTION__, __LINE__,BUF_SIZE);
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+    else {
+      //      OS_TPrintf("pBuf addr = 0x%p\n",pBuffer);
+    }
+  }
+  if( pBuffer_crypto == NULL ) {
+    pBuffer_crypto = (char*)OS_Alloc( BUF_SIZE );
+    if( pBuffer_crypto == NULL ) {
+      miya_log_fprintf(log_fd, "%s Mem alloc error: line %d size %d\n", __FUNCTION__, __LINE__,BUF_SIZE);
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+    else {
+      //      OS_TPrintf("pBufCrypt addr = 0x%p\n",pBuffer_crypto);
+    }
+  }
+#endif
+
+  restSize = fileSize;
+
+  while( 1 ) {
+    if( restSize == 0 ) {
+      FS_FlushFile(&f_dst);
+      ret_flag = TRUE;
+      break;
+    }
+    else if( restSize > BUF_SIZE ) {
+      tempSize = BUF_SIZE;
+    }
+    else {
+      tempSize = restSize;
+    }
+    restSize -= tempSize;
+
+    readSize = FS_ReadFile(&f_src, pBuffer, (s32)tempSize);
+    if( readSize != tempSize ) {
+      miya_log_fprintf(log_fd, "%s Failed Read File:%s\n",__FUNCTION__ , src_path );
+      miya_log_fprintf(log_fd, " request size=%d read size=%d rest size %d\n", tempSize, readSize,restSize);
+      ret_flag = FALSE;
+      break;
+    }
+    else {
+      /* ここからWrite */
+      writtenSize = FS_WriteFile(&f_dst, pBuffer, readSize);
+      if( writtenSize != readSize ) {
+	miya_log_fprintf(log_fd, "%s Failed write file %d:\n", __FUNCTION__,__LINE__);
+	miya_log_fprintf(log_fd, " %s\n", dst_path );
+	miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+	ret_flag = FALSE;
+	break;
+      }
+    }
+  }
+ exit_label:
+
+  if( FALSE == FS_CloseFile(&f_src) ) {
+    miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(src_path)));
+  }
+  if( FALSE == FS_CloseFile(&f_dst) ) {
+    miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(dst_path)));
+  }
+
+
+#else
   int alloc_size = 0;
+  char *alloc_ptr = NULL;
+
 
   if( TRUE == LoadFile(src_path, &alloc_ptr, &alloc_size, log_fd) ) {
     if( TRUE == SaveFile(dst_path, alloc_ptr, (u32)alloc_size, log_fd) ) {
-      if( alloc_ptr ) {
-	OS_Free(alloc_ptr);
-      }
-      return TRUE;
     }
-    if( alloc_ptr ) {
-      OS_Free(alloc_ptr);
+    else {
+      ret_flag = FALSE;
     }
-    return FALSE;
   }
-  return FALSE;
+  else {
+    ret_flag = FALSE;
+  }
+  if( alloc_ptr ) {
+    OS_Free(alloc_ptr);
+  }
+#endif
+  return ret_flag;
 }
 
 
+
 #ifdef COPY_FILE_ENCRYPTION
+
 static BOOL CopyFileCrypto(const char *dst_path, const char *src_path, FSFile *log_fd )
 {
   FSFile f_src;
   FSFile f_dst;
+#ifdef LIMIT_BUF
+  u32 restSize;
+  u32 tempSize;
+#else
   char* pBuffer;
+  char* pBuffer_crypto;
+#endif
   u32 fileSize;
   s32 readSize = 0;
   FSResult fsResult;
   s32 writtenSize;
   CRYPTORC4FastContext context;
-  char* pBuffer_crypto;
+
   BOOL ret_flag = FALSE;
 
   if( miya_debug_flag ) {
@@ -454,6 +614,116 @@ static BOOL CopyFileCrypto(const char *dst_path, const char *src_path, FSFile *l
 
   fileSize = FS_GetFileLength(&f_src);
 
+
+#ifdef LIMIT_BUF
+
+  FS_InitFile(&f_dst);
+  if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+    FSResult res = FS_GetArchiveResultCode(dst_path);
+    if( res == FS_RESULT_NO_ENTRY ) {
+      /* 本来ここで問題なし */
+    }
+    else {
+      miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+      miya_log_fprintf(log_fd, " %s\n", dst_path );
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(res) );
+    }
+  }
+  else {
+    FS_CloseFile(&f_dst);
+    /* backup バックアップを取っておくべき？？ */
+    FS_DeleteFile(dst_path);
+  }
+  
+  FS_CreateFile(dst_path, (FS_PERMIT_R|FS_PERMIT_W));
+  if( FALSE == FS_OpenFileEx(&f_dst, dst_path, FS_FILEMODE_W) ) {
+    miya_log_fprintf(log_fd, "%s Failed open file %d:\n", __FUNCTION__,__LINE__);
+    miya_log_fprintf(log_fd, " %s\n", dst_path );
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+    ret_flag = FALSE;
+    goto exit_label;
+
+  }
+  else {
+    fsResult = FS_SetFileLength(&f_dst, 0);
+    if( fsResult != FS_RESULT_SUCCESS ) {
+      miya_log_fprintf(log_fd, "%s Error: Set file len\n", __FUNCTION__);
+      miya_log_fprintf(log_fd, " %s\n", dst_path );
+      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(fsResult) );
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+  }
+
+
+#ifdef LIMIT_BUF_ALLOC
+  if( pBuffer == NULL ) {
+    pBuffer = (char*)OS_Alloc( BUF_SIZE );
+    if( pBuffer == NULL ) {
+      miya_log_fprintf(log_fd, "%s Mem alloc error: line %d size %d\n", __FUNCTION__, __LINE__,BUF_SIZE);
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+    else {
+      // OS_TPrintf("pBuf addr = 0x%p\n",pBuffer);
+    }
+
+  }
+  if( pBuffer_crypto == NULL ) {
+    pBuffer_crypto = (char*)OS_Alloc( BUF_SIZE );
+    if( pBuffer_crypto == NULL ) {
+      miya_log_fprintf(log_fd, "%s Mem alloc error: line %d size %d\n", __FUNCTION__, __LINE__,BUF_SIZE);
+      ret_flag = FALSE;
+      goto exit_label;
+    }
+    else {
+      //      OS_TPrintf("pBufCrypt addr = 0x%p\n",pBuffer_crypto);
+    }
+  }
+#endif
+
+  CRYPTO_RC4FastInit(&context, my_fs_key, my_fs_GetStringLength(my_fs_key));
+
+  restSize = fileSize;
+
+  while( 1 ) {
+    if( restSize == 0 ) {
+      FS_FlushFile(&f_dst);
+      ret_flag = TRUE;
+      break;
+    }
+    else if( restSize > BUF_SIZE ) {
+      tempSize = BUF_SIZE;
+    }
+    else {
+      tempSize = restSize;
+    }
+    restSize -= tempSize;
+
+    readSize = FS_ReadFile(&f_src, pBuffer, (s32)tempSize);
+    if( readSize != tempSize ) {
+      miya_log_fprintf(log_fd, "%s Failed Read File:%s\n",__FUNCTION__ , src_path );
+      miya_log_fprintf(log_fd, " request size=%d read size=%d rest size %d\n", tempSize, readSize,restSize);
+      ret_flag = FALSE;
+      break;
+    }
+    else {
+      /* ここからWrite */
+      CRYPTO_RC4FastEncrypt(&context, pBuffer, (u32)readSize, pBuffer_crypto);
+
+      writtenSize = FS_WriteFile(&f_dst, pBuffer_crypto, readSize);
+      if( writtenSize != readSize ) {
+	miya_log_fprintf(log_fd, "%s Failed write file %d:\n", __FUNCTION__,__LINE__);
+	miya_log_fprintf(log_fd, " %s\n", dst_path );
+	miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word(FS_GetArchiveResultCode(dst_path)) );
+	ret_flag = FALSE;
+	break;
+      }
+    }
+  }
+
+
+#else  /* LIMIT_BUF */
   pBuffer = (char*)OS_Alloc( fileSize );
   if( pBuffer == NULL ) {
     miya_log_fprintf(log_fd, "%s Mem alloc error: %d\n", __FUNCTION__, fileSize);
@@ -534,7 +804,8 @@ static BOOL CopyFileCrypto(const char *dst_path, const char *src_path, FSFile *l
   if( pBuffer_crypto != NULL ) {
     OS_Free(pBuffer_crypto);
   }
-    
+#endif /* LIMIT_BUF */
+ exit_label:
   if( FALSE == FS_CloseFile(&f_src) ) {
     miya_log_fprintf(log_fd, "%s Failed Close File\n", __FUNCTION__ );
     miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(src_path)));

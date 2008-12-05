@@ -19,7 +19,6 @@
 #include <nitroWiFi.h>
 #include "sitedefs.h"
 
-
 /* 
    c:/twlsdk/include/nitro/env/env_system.h
 */

@@ -95,10 +95,24 @@ typedef struct
 
 #endif
 
+static u32 endian_conv(u32 addr)
+{
+  u32 temp = 0;
+  temp = ( addr >> 24 ) & 0xff;
+  temp |= ((( addr >> 16 ) & 0xff) << 8 );
+  temp |= ((( addr >> 8 ) & 0xff) << 16 );
+  temp |= (( addr & 0xff) << 24 );
+  return temp;
+}
+
+
+
 static int ncStartWiFi(void)
 {
     int result;
     int timeout_counter;
+    SOCInAddr dns1;
+    SOCInAddr dns2;
 
     if (previousAddr != 0)
     {
@@ -134,9 +148,10 @@ static int ncStartWiFi(void)
 	socl_config.host_ip.my_ip =  GetIPAddr();
 	socl_config.host_ip.dns_ip[0] = GetDNS1();
 	socl_config.host_ip.dns_ip[1] = GetDNS2();
-	
+	OS_TPrintf("DNS1 0x%08x\n",GetDNS1());
+	OS_TPrintf("DNS2 0x%08x\n",GetDNS2());
         
-        OS_TPrintf("SOCL_Startup....\n");
+        OS_TPrintf("SOCL_Startup1....\n");
         result = SOCL_Startup(&socl_config);
     }
     else
@@ -149,7 +164,7 @@ static int ncStartWiFi(void)
         soc_config.mtu = 0;
         soc_config.rwin = 0;
 
-        OS_TPrintf("SOC_Startup....\n");
+        OS_TPrintf("SOC_Startup2....\n");
         result = SOC_Startup(&soc_config);
     }
     if (result < 0)
@@ -184,11 +199,20 @@ static int ncStartWiFi(void)
       }
     }
 
+    //    int SOC_SetResolver(const SOCInAddr* dns1, const SOCInAddr* dns2)
+    if( GetDNS1() || GetDNS2()) {
+      dns1.addr = endian_conv(GetDNS1());
+      dns2.addr = endian_conv(GetDNS2());
+      (void)SOC_SetResolver(&dns1, &dns2);
+    }
+
     OS_TPrintf("IP addr = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSMyIp));
     OS_TPrintf("NetMask = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSNetMask));
     OS_TPrintf("GW addr = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSGatewayIp));
     OS_TPrintf("DNS[0]  = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSDnsIp[0]));
     OS_TPrintf("DNS[1]  = %3d.%3d.%3d.%3d\n", CPS_CV_IPv4(CPSDnsIp[1]));
+
+
     return 0;
 }
 

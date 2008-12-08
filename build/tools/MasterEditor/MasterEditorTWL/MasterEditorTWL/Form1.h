@@ -37,6 +37,9 @@ namespace MasterEditorTWL {
 		// マスタ書類
 		RCDeliverable ^hDeliv;
 
+		// TADを読み込んだかどうか(SRLを読み込んだ場合はfalse)
+		System::Boolean ^hIsLoadTad;
+
 		// 書類出力モード(ノーマルXML or XML Spread Sheet)
 		System::Boolean ^hIsSpreadSheet;
 
@@ -693,6 +696,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			//
 			this->hSrl   = gcnew (RCSrl);
 			this->hDeliv = gcnew (RCDeliverable);
+			this->hIsLoadTad = gcnew System::Boolean(false);
 			this->hErrorList = gcnew System::Collections::Generic::List<RCMrcError^>();
 			this->hErrorList->Clear();
 			this->hWarnList = gcnew System::Collections::Generic::List<RCMrcError^>();
@@ -704,6 +708,16 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			//this->labAssemblyVersion->Text = System::Windows::Forms::Application::ProductVersion;
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			this->labAssemblyVersion->Text = "ver." + this->getVersion();
+
+			// TAD読み込みの際に作成される一時ファイルと同名ファイルがあった場合には削除してよいか確認
+			System::Diagnostics::Debug::WriteLine( this->getSplitTadTmpFilename() );
+			if( System::IO::File::Exists( this->getSplitTadTmpFilename() ) )
+			{
+				this->sucMsg( "本プログラムで作成する一時ファイルと同名のファイルが存在します。このファイルを削除します。",
+							  "There is the file which has same name as temporary file made by this program. That file is deleted." );
+				System::IO::File::Delete( this->getSplitTadTmpFilename() );
+			}
+
 
 			// デフォルト値
 			this->hIsSpreadSheet = gcnew System::Boolean( true );
@@ -755,6 +769,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		/// </summary>
 		~Form1()
 		{
+			// TAD読み出しの際に作成される一時SRLファイルを削除(書き出しをせずに終了したときに起こりうる)
+			System::String ^srlfile = this->getSplitTadTmpFilename();
+			if( System::IO::File::Exists( srlfile ) )
+			{
+				System::IO::File::Delete( srlfile );	// すでに存在する場合は削除
+			}
+
 			if (components)
 			{
 				delete components;
@@ -2810,14 +2831,35 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// 設定ファイルの読み込み
 		void loadInit(void);
 
-		// SRLのオープン
-		System::Void loadSrl( System::String ^filename );
+		// ファイルの読み込み (TAD/SRL読み込みをラップ)
+		void loadRom( System::String ^infile );
 
-		// SRLの保存と再読み出し
-		System::Boolean saveSrl( System::String ^filename );
+		// ファイルの書き出し (SRL書き出しをラップ)
+		System::Boolean saveRom( System::String ^outname );
+
+		// SRLの読み込み
+		System::Void loadSrl( System::String ^srlfile );
+
+		// SRLの保存と再読み込み
+		System::Boolean saveSrl( System::String ^infile, System::String ^outfile );
 
 		// SRLの保存のみ @ret 成否
-		System::Boolean saveSrlCore( System::String ^filename );
+		System::Boolean saveSrlCore( System::String ^infile, System::String ^outfile );
+
+		// tadの読み込み
+		System::Void loadTad( System::String ^tadfile );
+
+		// tadの読み込みで生成する一時SRLファイル名を返す
+		System::String ^getSplitTadTmpFilename(void)
+		{
+			System::String ^dir = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location );
+			if( !dir->EndsWith("\\") )
+			{
+				dir = dir + "\\";
+			}
+			System::String ^tmpfile = dir + METWL_TAD_TMP_FILENAME;
+			return tmpfile;
+		}
 
 		// ミドルウェアリストの作成(XML形式)
 		System::Void makeMiddlewareListXml(System::Xml::XmlDocument^ doc);
@@ -2830,9 +2872,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 
 		// ミドルウェアリストの保存(XSL埋め込み)
 		System::Boolean saveMiddlewareListXmlEmbeddedXsl( System::String ^filename );
-
-		// tadの読み出し
-		System::Void loadTad( System::String ^tadfile );
 
 		// 提出ファイル名をゲームコードなどから決定
 		System::String^ getSubmitFilePrefix(void)
@@ -3156,14 +3195,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			}
 
 			// 拡張子で tad 読み込みにするかを判定
-			if( System::IO::Path::GetExtension( filename )->ToLower()->Equals( ".tad" ) )
-			{
-				this->loadTad( filename );
-			}
-			else
-			{
-				this->loadSrl( filename );
-			}
+			this->loadRom( filename );
 			this->tboxFile->Text = filename;
 
 			this->clearOtherForms();
@@ -3224,7 +3256,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 
 			try
 			{
-				if( !this->saveSrl( srlfile ) )
+				if( !this->saveRom( srlfile ) )
 				{
 					this->errMsg( "マスターROMの作成に失敗しました。",
 								  "Making a master ROM failed." );
@@ -3323,7 +3355,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			// 更新後のSRLを別ファイルに作成
 			try
 			{
-				if( !this->saveSrl( srlfile ) )
+				if( !this->saveRom( srlfile ) )
 				{
 					this->errMsg( "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。",
 								  "Making a master ROM failed. Therefore, a part of files can't be made." );
@@ -3471,7 +3503,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 							  "The ROM data file is not found. Therefore the file can not be opened." );
 				return;
 			}
-			this->loadSrl( filename );			// ドラッグアンドドロップの時点でボタンを押さなくてもファイルを開く
+			this->loadRom( filename );
 			this->tboxFile->Text = filename;
 			this->clearOtherForms();
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );

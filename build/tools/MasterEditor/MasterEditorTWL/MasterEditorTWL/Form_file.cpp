@@ -23,131 +23,72 @@ using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
 // ----------------------------------------------
-// 設定ファイルの読み込み
+// ファイルの読み込み (TAD/SRL読み込みをラップ)
 // ----------------------------------------------
 
-void Form1::loadInit(void)
+void Form1::loadRom( System::String ^infile )
 {
-	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
-
-	// xmlファイルの読み込み
-	try
+	this->hIsLoadTad = gcnew System::Boolean(false);
+	if( System::IO::Path::GetExtension( infile )->ToUpper()->Equals( ".TAD" ) )	// 拡張子で判別
 	{
-		doc->Load( "../resource/ini.xml" );
+		*this->hIsLoadTad = true;
+		this->loadTad( infile );
 	}
-	catch( System::IO::FileNotFoundException ^s )
+	else
 	{
-		(void)s;
-		this->errMsg( "設定ファイルが見つかりません。", "Setting file is not found." );
+		this->loadSrl( infile );
+	}
+}
+
+// ----------------------------------------------
+// ファイルの書き出し (TAD/SRL書き出しをラップ)
+// ----------------------------------------------
+
+System::Boolean Form1::saveRom( System::String ^outfile )
+{
+	System::Boolean result = false;
+	if( *this->hIsLoadTad )
+	{
+		// 一時ファイルにSRLを書き出しているのでその一時ファイルから出力ファイルを作成
+		System::String ^tmpsrl = this->getSplitTadTmpFilename();
+		result = this->saveSrl( tmpsrl, outfile );
+		System::IO::File::Delete( tmpsrl );
+	}
+	else
+	{
+		result = this->saveSrl( this->tboxFile->Text, outfile );
+	}
+	return result;
+}
+
+// ----------------------------------------------
+// tadの読み込み
+// ----------------------------------------------
+
+System::Void Form1::loadTad( System::String ^tadfile )
+{
+	// tadファイルを変換したSRLを一時ファイルに保存
+	System::String ^srlfile = this->getSplitTadTmpFilename();
+	if( System::IO::File::Exists( srlfile ) )
+	{
+		System::IO::File::Delete( srlfile );	// すでに存在する場合は削除(連続に読み込んだ場合に起こりうる)
+	}
+	if( splitTad( tadfile, srlfile ) != 0 )
+	{
+		this->errMsg( "TADファイルの読み出しに失敗しました。", "Reading TAD file failed." );
+		System::IO::File::Delete( srlfile );
 		return;
 	}
-	catch( System::Exception ^s )
-	{
-		(void)s;
-		this->errMsg( "設定ファイルを開くことができませんでした。", "Setting file can't be opened." );
-		return;
-	}
-
-	// <init>タグ : ルート
-	System::Xml::XmlElement ^root = doc->DocumentElement;
-
-	// <rw>タグ
-	System::Boolean bReadOnly = MasterEditorTWL::isXmlEqual( root, "rw", "r" );
-	this->hIsReadOnly = System::Boolean( bReadOnly );
-	if( bReadOnly )
-	{
-		this->readOnly();
-	}
-
-	// <lang>タグ
-	if( MasterEditorTWL::isXmlEqual( root, "lang", "E" ) )
-	{
-		this->stripItemEnglish->Checked  = true;
-		this->stripItemJapanese->Checked = false;
-		this->changeEnglish();
-	}
-
-	// <output>タグ
-	System::Boolean bXML = MasterEditorTWL::isXmlEqual( root, "output", "XML" );
-
-	// <spcheck>タグ
-	System::Boolean bCheck = MasterEditorTWL::isXmlEqual( root, "spcheck", "ON" );
-
-	if( bCheck )	// チェックするときのみ追加チェック項目を設定
-	{
-		// チェックするかどうか
-		this->hSrl->hMrcSpecialList->hIsCheck = gcnew System::Boolean( true );
-
-		// SDK
-		try
-		{
-			u32 major   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/major" ) );
-			u32 minor   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/minor" ) );
-			u32 relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/relstep" ) );
-			u32 sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
-			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( sdkver );
-		}
-		catch ( System::Exception ^ex )
-		{
-			(void)ex;
-			this->errMsg( "設定ファイル中のSDKバージョンが読み込めませんでした。バージョンは0とみなされます。", 
-				          "SDK ver. can't be read from setting file. Therefore it is set by 0." );
-			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( 0 );
-		}
-
-		// Shared2File
-		try
-		{
-			System::Int32 i;
-			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
-			{
-				u32 size = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/shared2/size" + i.ToString() ) );
-				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( size );
-			}
-		}
-		catch ( System::Exception ^ex )
-		{
-			(void)ex;
-			this->errMsg( "設定ファイル中のShared2ファイルサイズが読み込めませんでした。サイズはすべて0とみなされます。", 
-				          "One of shared2 file sizes can't be read from setting file. Therefore they are set by 0." );
-			System::Int32 i;
-			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
-			{
-				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( 0 );
-			}
-		}
-	} //if( bCheck )
-
-	if( bReadOnly || bXML | bCheck )
-	{
-		System::String ^msgJ = gcnew System::String("[動作モード]");
-		System::String ^msgE = gcnew System::String("[Processing Mode]");
-		if( bReadOnly )
-		{
-			msgJ += "\nリードオンリーモード";
-			msgE += "\nRead Only Mode";
-		}
-		if( bXML )
-		{
-			msgJ += "\nXML出力モード";
-			msgE += "\nXML Output Mode";
-		}
-		if( bCheck )
-		{
-			msgJ += "\n追加チェックモード";
-			msgE += "\nExtra Check Mode";
-		}
-		this->sucMsg( msgJ, msgE );
-	}
-} // loadInit()
+	this->loadSrl( srlfile );	// 一時保存したSRLを読み込み
+}
 
 // ----------------------------------------------
-// SRLのオープン
+// SRLの読み込み
 // ----------------------------------------------
 
-System::Void Form1::loadSrl( System::String ^filename )
+System::Void Form1::loadSrl( System::String ^srlfile )
 {
-	ECSrlResult result = this->hSrl->readFromFile( filename );
+	ECSrlResult result = this->hSrl->readFromFile( srlfile );
 	if( result != ECSrlResult::NOERROR )
 	{
 		switch( result )
@@ -184,7 +125,7 @@ System::Void Form1::loadSrl( System::String ^filename )
 
 	// 全体のCRCを算出
 	u16  crc;
-	if( !getWholeCRCInFile( filename, &crc ) )
+	if( !getWholeCRCInFile( srlfile, &crc ) )
 	{
 		this->errMsg( "ROMデータのCRC計算に失敗しました。ROMデータの読み込みはキャンセルされました。",
 			          "Calculating CRC of the ROM data failed. Therefore reading ROM data is canceled." );
@@ -213,47 +154,41 @@ System::Void Form1::loadSrl( System::String ^filename )
 // SRLの保存
 // ----------------------------------------------
 
-System::Boolean Form1::saveSrl( System::String ^filename )
+System::Boolean Form1::saveSrl( System::String ^infile, System::String ^outfile )
 {
+	if( !System::IO::File::Exists( infile ) )
+	{
+		return false;
+	}
+
 	// コピーしたファイルにROMヘッダを上書き
-	if( !this->saveSrlCore( filename ) )
+	if( !this->saveSrlCore( infile, outfile ) )
 	{
 		return false;
 	}
 
 	// 再リード
-	this->loadSrl( filename );
+	this->loadSrl( outfile );
 	return true;
 } // saveSrl()
 
-System::Boolean Form1::saveSrlCore( System::String ^filename )
+System::Boolean Form1::saveSrlCore( System::String ^infile, System::String ^outfile )
 {
 	// ROM情報をフォームから取得してSRLバイナリに反映させる
 	this->setSrlProperties();
 
 	// ファイルをコピー
-	if( !(filename->Equals( this->tboxFile->Text )) )
+	if( !(outfile->Equals( infile )) )
 	{
-		System::IO::File::Copy( this->tboxFile->Text, filename, true );
+		System::IO::File::Copy( infile, outfile, true );
 	}
 
 	// コピーしたファイルにROMヘッダを上書き
-	if( this->hSrl->writeToFile( filename ) != ECSrlResult::NOERROR )
+	if( this->hSrl->writeToFile( outfile ) != ECSrlResult::NOERROR )
 	{
 		return false;
 	}
 	return true;
-}
-
-// ----------------------------------------------
-// tadのオープン
-// ----------------------------------------------
-
-System::Void Form1::loadTad( System::String ^tadfile )
-{
-	System::String ^srlfile = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
-		                      + "\\tmp.srl";
-	splitTad( tadfile, srlfile );
 }
 
 // ----------------------------------------------
@@ -393,3 +328,121 @@ System::Boolean Form1::saveMiddlewareListHtml( System::String ^filename )
 	return true;
 }
 
+// ----------------------------------------------
+// 設定ファイルの読み込み
+// ----------------------------------------------
+
+void Form1::loadInit(void)
+{
+	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
+
+	// xmlファイルの読み込み
+	try
+	{
+		doc->Load( "../resource/ini.xml" );
+	}
+	catch( System::IO::FileNotFoundException ^s )
+	{
+		(void)s;
+		this->errMsg( "設定ファイルが見つかりません。", "Setting file is not found." );
+		return;
+	}
+	catch( System::Exception ^s )
+	{
+		(void)s;
+		this->errMsg( "設定ファイルを開くことができませんでした。", "Setting file can't be opened." );
+		return;
+	}
+
+	// <init>タグ : ルート
+	System::Xml::XmlElement ^root = doc->DocumentElement;
+
+	// <rw>タグ
+	System::Boolean bReadOnly = MasterEditorTWL::isXmlEqual( root, "rw", "r" );
+	this->hIsReadOnly = System::Boolean( bReadOnly );
+	if( bReadOnly )
+	{
+		this->readOnly();
+	}
+
+	// <lang>タグ
+	if( MasterEditorTWL::isXmlEqual( root, "lang", "E" ) )
+	{
+		this->stripItemEnglish->Checked  = true;
+		this->stripItemJapanese->Checked = false;
+		this->changeEnglish();
+	}
+
+	// <output>タグ
+	System::Boolean bXML = MasterEditorTWL::isXmlEqual( root, "output", "XML" );
+
+	// <spcheck>タグ
+	System::Boolean bCheck = MasterEditorTWL::isXmlEqual( root, "spcheck", "ON" );
+
+	if( bCheck )	// チェックするときのみ追加チェック項目を設定
+	{
+		// チェックするかどうか
+		this->hSrl->hMrcSpecialList->hIsCheck = gcnew System::Boolean( true );
+
+		// SDK
+		try
+		{
+			u32 major   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/major" ) );
+			u32 minor   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/minor" ) );
+			u32 relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/relstep" ) );
+			u32 sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
+			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( sdkver );
+		}
+		catch ( System::Exception ^ex )
+		{
+			(void)ex;
+			this->errMsg( "設定ファイル中のSDKバージョンが読み込めませんでした。バージョンは0とみなされます。", 
+				          "SDK ver. can't be read from setting file. Therefore it is set by 0." );
+			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( 0 );
+		}
+
+		// Shared2File
+		try
+		{
+			System::Int32 i;
+			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
+			{
+				u32 size = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/shared2/size" + i.ToString() ) );
+				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( size );
+			}
+		}
+		catch ( System::Exception ^ex )
+		{
+			(void)ex;
+			this->errMsg( "設定ファイル中のShared2ファイルサイズが読み込めませんでした。サイズはすべて0とみなされます。", 
+				          "One of shared2 file sizes can't be read from setting file. Therefore they are set by 0." );
+			System::Int32 i;
+			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
+			{
+				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( 0 );
+			}
+		}
+	} //if( bCheck )
+
+	if( bReadOnly || bXML | bCheck )
+	{
+		System::String ^msgJ = gcnew System::String("[動作モード]");
+		System::String ^msgE = gcnew System::String("[Processing Mode]");
+		if( bReadOnly )
+		{
+			msgJ += "\nリードオンリーモード";
+			msgE += "\nRead Only Mode";
+		}
+		if( bXML )
+		{
+			msgJ += "\nXML出力モード";
+			msgE += "\nXML Output Mode";
+		}
+		if( bCheck )
+		{
+			msgJ += "\n追加チェックモード";
+			msgE += "\nExtra Check Mode";
+		}
+		this->sucMsg( msgJ, msgE );
+	}
+} // loadInit()

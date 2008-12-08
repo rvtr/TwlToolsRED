@@ -115,7 +115,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	}
 } //saveTmp()
 
-// 一時ファイルの読み出し
+// 一時ファイルの読み込み
 void Form1::loadTmp( System::String ^filename )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;

@@ -60,6 +60,17 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 	{
 		return (ECSrlResult::ERROR_FILE_READ);
 	}
+
+#ifdef METWL_WHETHER_SIGN_DECRYPT
+	// まず署名チェック
+	r = this->decryptRomHeader();
+	if( r != ECSrlResult::NOERROR )
+	{
+		(void)fclose(fp);
+		return r;
+	}
+#endif //#ifdef METWL_WHETHER_SIGN_DECRYPT
+
 	{
 		// ファイルを閉じる前にROMヘッダ以外の領域から設定を取り出す
 		(void)this->hasDSDLPlaySign( fp );
@@ -76,16 +87,6 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 			return r;
 		}
 	}
-
-#ifdef METWL_WHETHER_SIGN_DECRYPT
-	// まず署名チェック
-	r = this->decryptRomHeader();
-	if( r != ECSrlResult::NOERROR )
-	{
-		(void)fclose(fp);
-		return r;
-	}
-#endif //#ifdef METWL_WHETHER_SIGN_DECRYPT
 
 	// エラーリストをクリア
 	this->hErrorList = gcnew System::Collections::Generic::List<RCMrcError^>;

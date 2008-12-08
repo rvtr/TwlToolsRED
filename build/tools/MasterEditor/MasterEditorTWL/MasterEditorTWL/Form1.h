@@ -38,21 +38,21 @@ namespace MasterEditorTWL {
 		RCDeliverable ^hDeliv;
 
 		// TADを読み込んだかどうか(SRLを読み込んだ場合はfalse)
-		System::Boolean ^hIsLoadTad;
+		System::Boolean IsLoadTad;
 
 		// 書類出力モード(ノーマルXML or XML Spread Sheet)
-		System::Boolean ^hIsSpreadSheet;
+		System::Boolean IsSpreadSheet;
 
 		// リードオンリーモード
-		System::Boolean ^hIsReadOnly;
+		System::Boolean IsReadOnly;
 
 		// 入力エラー情報
 		System::Collections::Generic::List<RCMrcError ^> ^hErrorList;
 		System::Collections::Generic::List<RCMrcError ^> ^hWarnList;
 
 		// SRLに登録されないROM仕様を読み込み時の状態に戻せる仕組み
-		System::Boolean ^hIsCheckedUGC;			// 読み込み時にチェックされていたか
-		System::Boolean ^hIsCheckedPhotoEx;
+		System::Boolean IsCheckedUGC;			// 読み込み時にチェックされていたか
+		System::Boolean IsCheckedPhotoEx;
 
 	// VC自動追加フィールド
 	private: System::Windows::Forms::GroupBox^  gboxCRC;
@@ -696,13 +696,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			//
 			this->hSrl   = gcnew (RCSrl);
 			this->hDeliv = gcnew (RCDeliverable);
-			this->hIsLoadTad = gcnew System::Boolean(false);
+			this->IsLoadTad = false;
 			this->hErrorList = gcnew System::Collections::Generic::List<RCMrcError^>();
 			this->hErrorList->Clear();
 			this->hWarnList = gcnew System::Collections::Generic::List<RCMrcError^>();
 			this->hWarnList->Clear();
-			this->hIsCheckedUGC     = gcnew System::Boolean(false);
-			this->hIsCheckedPhotoEx = gcnew System::Boolean(false);
+			this->IsCheckedUGC     = false;
+			this->IsCheckedPhotoEx = false;
 
 			// バージョン情報を表示
 			//this->labAssemblyVersion->Text = System::Windows::Forms::Application::ProductVersion;
@@ -720,8 +720,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 
 
 			// デフォルト値
-			this->hIsSpreadSheet = gcnew System::Boolean( true );
-			this->hIsReadOnly    = gcnew System::Boolean( false );
+			this->IsSpreadSheet = true;
+			this->IsReadOnly    = false;
 			this->dateRelease->Value = System::DateTime::Now;
 			this->dateSubmit->Value  = System::DateTime::Now;
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
@@ -2832,22 +2832,22 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		void loadInit(void);
 
 		// ファイルの読み込み (TAD/SRL読み込みをラップ)
-		void loadRom( System::String ^infile );
+		System::Boolean loadRom( System::String ^infile );
 
 		// ファイルの書き出し (SRL書き出しをラップ)
 		System::Boolean saveRom( System::String ^outname );
 
 		// SRLの読み込み
-		System::Void loadSrl( System::String ^srlfile );
+		System::Boolean loadSrl( System::String ^srlfile );
 
-		// SRLの保存と再読み込み
+		// SRLの書き出しと再読み込み
 		System::Boolean saveSrl( System::String ^infile, System::String ^outfile );
 
-		// SRLの保存のみ @ret 成否
+		// SRLの書き出しのみ @ret 成否
 		System::Boolean saveSrlCore( System::String ^infile, System::String ^outfile );
 
 		// tadの読み込み
-		System::Void loadTad( System::String ^tadfile );
+		System::Boolean loadTad( System::String ^tadfile );
 
 		// tadの読み込みで生成する一時SRLファイル名を返す
 		System::String ^getSplitTadTmpFilename(void)
@@ -2864,19 +2864,19 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// ミドルウェアリストの作成(XML形式)
 		System::Void makeMiddlewareListXml(System::Xml::XmlDocument^ doc);
 
-		// ミドルウェアリストの保存
+		// ミドルウェアリストの書き出し
 		System::Boolean saveMiddlewareListXml( System::String ^filename );
 
-		// ミドルウェアリストの保存(XML->HTML変換)
+		// ミドルウェアリストの書き出し(XML->HTML変換)
 		System::Boolean saveMiddlewareListHtml( System::String ^filename );
 
-		// ミドルウェアリストの保存(XSL埋め込み)
+		// ミドルウェアリストの書き出し(XSL埋め込み)
 		System::Boolean saveMiddlewareListXmlEmbeddedXsl( System::String ^filename );
 
 		// 提出ファイル名をゲームコードなどから決定
 		System::String^ getSubmitFilePrefix(void)
 		{
-			System::Byte romver = *this->hSrl->hRomVersion & 0x0F;		// 下位1桁
+			System::Byte romver = this->hSrl->RomVersion & 0x0F;		// 下位1桁
 			System::Byte subver = System::Decimal::ToByte(this->numSubmitVersion->Value) & 0x0F;
 
 			System::String ^prefix = "T" + this->hSrl->hGameCode + romver.ToString("X") + subver.ToString("X");
@@ -2948,18 +2948,18 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		{
 			this->cboxIsUGC->Checked     = false;
 			this->cboxIsPhotoEx->Checked = false;
-			this->hIsCheckedUGC     = gcnew System::Boolean(false);
-			this->hIsCheckedPhotoEx = gcnew System::Boolean(false);
+			this->IsCheckedUGC     = false;
+			this->IsCheckedPhotoEx = false;
 		}
 		void saveOtherForms(void)
 		{
-			this->hIsCheckedUGC     = gcnew System::Boolean(this->cboxIsUGC->Checked);
-			this->hIsCheckedPhotoEx = gcnew System::Boolean(this->cboxIsPhotoEx->Checked);
+			this->IsCheckedUGC     = this->cboxIsUGC->Checked;
+			this->IsCheckedPhotoEx = this->cboxIsPhotoEx->Checked;
 		}
 		void loadOtherForms(void)
 		{
-			this->cboxIsUGC->Checked     = *(this->hIsCheckedUGC);
-			this->cboxIsPhotoEx->Checked = *(this->hIsCheckedPhotoEx);
+			this->cboxIsUGC->Checked     = this->IsCheckedUGC;
+			this->cboxIsPhotoEx->Checked = this->IsCheckedPhotoEx;
 		}
 
 	private:
@@ -3195,15 +3195,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			}
 
 			// 拡張子で tad 読み込みにするかを判定
-			this->loadRom( filename );
+			if( !this->loadRom( filename ) )
+			{
+				return;
+			}
 			this->tboxFile->Text = filename;
-
-			this->clearOtherForms();
+			this->clearOtherForms();			// ROMヘッダには反映されない編集情報を更新
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 		} //stripItemOpenRom_Click()
 
 	private:
-		System::Void stripItemMasterRom_Click(System::Object^  sender, System::EventArgs^  e)
+		System::Void stripItemMasterRom_Click(System::Object^  sender, System::EventArgs^  e)		// SRLのみ出力
 		{
 			// SRLが読み込まれていないときにはリードさせない
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
@@ -3275,7 +3277,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		} //stripItemMasterRom_Click()
 
 	private:
-		System::Void stripItemSheet_Click(System::Object^  sender, System::EventArgs^  e)
+		System::Void stripItemSheet_Click(System::Object^  sender, System::EventArgs^  e)	// 一式を出力
 		{
 			ECDeliverableResult  result;
 
@@ -3377,10 +3379,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 							  "Calculating CRC is failed. Therefore, a part of files can't be made." );
 				return;
 			}
-			System::UInt16 ^hcrc = gcnew System::UInt16( crc );
 			this->tboxWholeCRC->Clear();
 			this->tboxWholeCRC->AppendText( "0x" );
-			this->tboxWholeCRC->AppendText( hcrc->ToString("X") );
+			this->tboxWholeCRC->AppendText( crc.ToString("X4") );	// 書き出したSRLを再読み込みするのでCRCを再計算する
 
 			// ミドルウェアのリストを作成
 			if( !this->saveMiddlewareListXmlEmbeddedXsl( middlefile ) || !this->saveMiddlewareListHtml( middlefilePrint ) )
@@ -3393,7 +3394,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			// 書類作成
 			srlfile = System::IO::Path::GetFileName( srlfile );
 			//result = this->hDeliv->write( delivfile, this->hSrl, hcrc, srlfile, !this->isJapanese() );
-			result = this->hDeliv->writeSpreadsheet( delivfile, this->hSrl, hcrc, srlfile, !this->isJapanese() );
+			result = this->hDeliv->writeSpreadsheet( delivfile, this->hSrl, crc, srlfile, !this->isJapanese() );
 			if( result != ECDeliverableResult::NOERROR )
 			{
 				switch( result )
@@ -3422,7 +3423,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		System::Void stripItemSaveTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			System::String ^filename = this->saveFileDlg( "xml format (*.xml)|*.xml", ".xml" );
-
 			if( !filename )
 			{
 				return;
@@ -3434,7 +3434,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		System::Void stripItemLoadTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			System::String ^filename = this->openFileDlg( "xml format (*.xml)|*.xml" );
-
 			if( filename == nullptr )
 			{
 				return;
@@ -3503,7 +3502,10 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 							  "The ROM data file is not found. Therefore the file can not be opened." );
 				return;
 			}
-			this->loadRom( filename );
+			if( !this->loadRom( filename ) )
+			{
+				return;
+			}
 			this->tboxFile->Text = filename;
 			this->clearOtherForms();
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
@@ -3621,13 +3623,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				return;
 
 			// 編集可能情報を読み込み時の設定に戻す
-			this->cboxIsEULA->Checked       = *(this->hSrl->hIsEULA);
-			if( (  *this->hSrl->hIsWiFiIcon  &&   *this->hSrl->hIsWirelessIcon) ||
-				(!(*this->hSrl->hIsWiFiIcon) && !(*this->hSrl->hIsWirelessIcon)) )
+			this->cboxIsEULA->Checked = this->hSrl->IsEULA;
+			if( ( this->hSrl->IsWiFiIcon &&  this->hSrl->IsWirelessIcon) ||
+				(!this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon) )
 			{
 				this->rIsNoIcon->Checked = true;
 			}
-			else if( *(this->hSrl->hIsWiFiIcon) && !*(this->hSrl->hIsWirelessIcon) )
+			else if( this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
 			{
 				this->rIsWiFiIcon->Checked = true;
 			}

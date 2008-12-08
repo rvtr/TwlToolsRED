@@ -25,7 +25,7 @@ using namespace MasterEditorTWL;
 // @arg [in]  英語フラグ
 //
 ECDeliverableResult RCDeliverable::writeSpreadsheet(
-	System::String ^hFilename, MasterEditorTWL::RCSrl ^hSrl, System::UInt16 ^hCRC, System::String ^hSrlFilename, System::Boolean english )
+	System::String ^hFilename, MasterEditorTWL::RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english )
 {
 	// テンプレートを読み込む
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
@@ -53,24 +53,24 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 
 	// アプリ種別
 	System::String ^apptype = gcnew System::String("");
-	if( *hSrl->hIsAppLauncher )
+	if( hSrl->IsAppLauncher )
 	{
 		apptype = gcnew System::String( "Launcher" );
 	}
-	else if( *hSrl->hIsAppSecure )
+	else if( hSrl->IsAppSecure )
 	{
 		apptype = gcnew System::String( "Secure" );
 	}
-	else if( *hSrl->hIsAppSystem )
+	else if( hSrl->IsAppSystem )
 	{
 		apptype = gcnew System::String( "System" );
 	}
-	else if( *hSrl->hIsAppUser )
+	else if( hSrl->IsAppUser )
 	{
 		apptype = gcnew System::String( "User" );
 	}
 	System::String ^media = gcnew System::String("");
-	if( *hSrl->hIsMediaNand )
+	if( hSrl->IsMediaNand )
 	{
 		media = gcnew System::String( "NAND" );
 	}
@@ -79,42 +79,42 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 		media = gcnew System::String( "Game Card" );
 	}
 	System::String ^appother = gcnew System::String("");
-	if( *(hSrl->hIsLaunch) == false )
+	if( !hSrl->IsLaunch )
 	{
 		appother += "ランチャー非表示.";
 	}
-	if( *(hSrl->hIsDataOnly) == true )
+	if( hSrl->IsDataOnly )
 	{
 		apptype += "データ専用.";
 	}
 
 	// アクセスコントロール その他
 	System::String ^access = gcnew System::String("");
-	if( *(hSrl->hIsCommonClientKey) == true )
+	if( hSrl->IsCommonClientKey )
 	{
 		access += "commonClientKey. ";
 	}
-	if( *(hSrl->hIsAesSlotBForES) == true )
+	if( hSrl->IsAesSlotBForES )
 	{
 		access += "AES-SlotB(ES). ";
 	}
-	if( *(hSrl->hIsAesSlotCForNAM) == true )
+	if( hSrl->IsAesSlotCForNAM )
 	{
 		access += "AES-SlotC(NAM). ";
 	}
-	if( *(hSrl->hIsAesSlotBForJpegEnc) == true )
+	if( hSrl->IsAesSlotBForJpegEnc )
 	{
 		access += "AES-SlotB(Jpeg Launcher). ";
 	}
-	if( *(hSrl->hIsAesSlotBForJpegEncUser) == true )
+	if( hSrl->IsAesSlotBForJpegEncUser )
 	{
 		access += "AES-SlotB(Jpeg User). ";
 	}
-	if( *(hSrl->hIsAesSlotAForSSL) == true )
+	if( hSrl->IsAesSlotAForSSL )
 	{
 		access += "AES-SlotA(SSL). ";
 	}
-	if( *(hSrl->hIsCommonClientKeyForDebugger) == true )
+	if( hSrl->IsCommonClientKeyForDebugger )
 	{
 		access += "commonClientKey(Debug). ";
 	}
@@ -153,7 +153,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagReleaseForeign" ) )
 			{
-				if( *(this->hReleaseForeign) )
+				if( this->IsReleaseForeign )
 					node->FirstChild->Value = gcnew System::String( "○" );
 				else
 					node->FirstChild->Value = nullptr;
@@ -172,27 +172,27 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagSubmitYear" ) )
 			{
-				node->FirstChild->Value = this->hSubmitYear->ToString();
+				node->FirstChild->Value = this->SubmitYear.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagSubmitMonth" ) )
 			{
-				node->FirstChild->Value = this->hSubmitMonth->ToString();
+				node->FirstChild->Value = this->SubmitMonth.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagSubmitDay" ) )
 			{
-				node->FirstChild->Value = this->hSubmitDay->ToString();
+				node->FirstChild->Value = this->SubmitDay.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagReleaseYear" ) )
 			{
-				node->FirstChild->Value = this->hReleaseYear->ToString();
+				node->FirstChild->Value = this->ReleaseYear.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagReleaseMonth" ) )
 			{
-				node->FirstChild->Value = this->hReleaseMonth->ToString();
+				node->FirstChild->Value = this->ReleaseMonth.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagReleaseDay" ) )
 			{
-				node->FirstChild->Value = this->hReleaseDay->ToString();
+				node->FirstChild->Value = this->ReleaseDay.ToString();
 			}
 			if( node->FirstChild->Value->Equals( "TagSubmitWay" ) )
 			{
@@ -208,8 +208,8 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagRomVersion" ) )
 			{
-				node->FirstChild->Value = hSrl->hRomVersion->ToString("X2");
-				if( *(hSrl->hRomVersion) == 0xE0 )
+				node->FirstChild->Value = hSrl->RomVersion.ToString("X2");
+				if( hSrl->RomVersion == 0xE0 )
 				{
 					if( english )
 						node->FirstChild->Value += "(Preliminary ver.)";
@@ -219,7 +219,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagSubmitVersion" ) )
 			{
-				node->FirstChild->Value = this->hSubmitVersion->ToString("X");
+				node->FirstChild->Value = this->SubmitVersion.ToString("X");
 			}
 			if( node->FirstChild->Value->Equals( "TagSrlFilename" ) )
 			{
@@ -227,7 +227,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagCRC" ) )
 			{
-				node->FirstChild->Value = "0x" + hCRC->ToString("X");
+				node->FirstChild->Value = "0x" + CRC.ToString("X4");
 			}
 			// ROM情報
 			if( node->FirstChild->Value->Equals( "TagLatency" ) )
@@ -261,7 +261,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagTitleIDHi" ) )
 			{
-				node->FirstChild->Value = "0x" + hSrl->hTitleIDHi->ToString("X8");
+				node->FirstChild->Value = "0x" + hSrl->TitleIDHi.ToString("X8");
 			}
 			if( node->FirstChild->Value->Equals( "TagAppType" ) )
 			{
@@ -277,102 +277,102 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagIsNormalJump" ) )
 			{
-				if( *(hSrl->hIsNormalJump) == true )
+				if( hSrl->IsNormalJump )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsTmpJump" ) )
 			{
-				if( *(hSrl->hIsTmpJump) == true )
+				if( hSrl->IsTmpJump )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagNormalRomOffset" ) )
 			{
-				node->FirstChild->Value = "0x" + hSrl->hNormalRomOffset->ToString("X8");
+				node->FirstChild->Value = "0x" + hSrl->NormalRomOffset.ToString("X8");
 			}
 			if( node->FirstChild->Value->Equals( "TagKeyTableRomOffset" ) )
 			{
-				node->FirstChild->Value = "0x" + hSrl->hKeyTableRomOffset->ToString("X8");
+				node->FirstChild->Value = "0x" + hSrl->KeyTableRomOffset.ToString("X8");
 			}
 			if( node->FirstChild->Value->Equals( "TagPublicSize" ) )
 			{
-				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->hPublicSize );
+				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->PublicSize );
 			}
 			if( node->FirstChild->Value->Equals( "TagPrivateSize" ) )
 			{
-				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->hPrivateSize );
+				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->PrivateSize );
 			}
 			if( node->FirstChild->Value->Equals( "TagIsCodec" ) )
 			{
-				if( *(hSrl->hIsCodecTWL) == true )
+				if( hSrl->IsCodecTWL )
 					node->FirstChild->Value = gcnew System::String("TWL");
 				else
 					node->FirstChild->Value = gcnew System::String("NTR");
 			}
 			if( node->FirstChild->Value->Equals( "TagIsEULA" ) )
 			{
-				if( *(hSrl->hIsEULA) == true )
+				if( hSrl->IsEULA )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsSubBanner" ) )
 			{
-				if( *(hSrl->hIsSubBanner) == true )
+				if( hSrl->IsSubBanner )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsWiFiIcon" ) )
 			{
-				if( *(hSrl->hIsWiFiIcon) == true )
+				if( hSrl->IsWiFiIcon )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsWirelessIcon" ) )
 			{
-				if( *(hSrl->hIsWirelessIcon) == true )
+				if( hSrl->IsWirelessIcon )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsWL" ) )
 			{
-				if( *(hSrl->hIsWL) == true )
+				if( hSrl->IsWL )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsSD" ) )
 			{
-				if( *(hSrl->hIsSD) == true )
+				if( hSrl->IsSD )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsNAND" ) )
 			{
-				if( *(hSrl->hIsNAND) == true )
+				if( hSrl->IsNAND )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsShared2" ) )
 			{
-				if( *(hSrl->hIsShared2) == true )
+				if( hSrl->IsShared2 )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsGameCardOn" ) )
 			{
-				if( *(hSrl->hIsGameCardNitro) == true )
+				if( hSrl->IsGameCardNitro )
 					node->FirstChild->Value = gcnew System::String("ON(NTR)");
-				else if( *(hSrl->hIsGameCardOn) == true )
+				else if( hSrl->IsGameCardOn )
 					node->FirstChild->Value = gcnew System::String("ON(normal)");
 				else
 					node->FirstChild->Value = gcnew System::String("OFF");;
@@ -509,14 +509,14 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			// SRLに登録されないROM仕様
 			if( node->FirstChild->Value->Equals( "TagIsUGC" ) )
 			{
-				if( *(this->hIsUGC) == true )
+				if( this->IsUGC )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
 			}
 			if( node->FirstChild->Value->Equals( "TagIsPhotoEx" ) )
 			{
-				if( *(this->hIsPhotoEx) == true )
+				if( this->IsPhotoEx )
 					node->FirstChild->Value = gcnew System::String("○");
 				else
 					node->FirstChild->Value = nullptr;
@@ -525,7 +525,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			// ROM内登録データを1バイトずつ表に書き込む
 			if( node->FirstChild->Value->Equals( "TagRomVersionHex" ) )
 			{
-				node->FirstChild->Value = hSrl->hRomVersion->ToString("X2");
+				node->FirstChild->Value = hSrl->RomVersion.ToString("X2");
 			}
 			System::Int32  byte;
 			for( byte=0; byte < TITLE_NAME_MAX; byte++ )

@@ -26,18 +26,20 @@ using namespace MasterEditorTWL;
 // ファイルの読み込み (TAD/SRL読み込みをラップ)
 // ----------------------------------------------
 
-void Form1::loadRom( System::String ^infile )
+System::Boolean Form1::loadRom( System::String ^infile )
 {
-	this->hIsLoadTad = gcnew System::Boolean(false);
+	System::Boolean result = false;
+	this->IsLoadTad = false;
 	if( System::IO::Path::GetExtension( infile )->ToUpper()->Equals( ".TAD" ) )	// 拡張子で判別
 	{
-		*this->hIsLoadTad = true;
-		this->loadTad( infile );
+		this->IsLoadTad = true;
+		result = this->loadTad( infile );
 	}
 	else
 	{
-		this->loadSrl( infile );
+		result = this->loadSrl( infile );
 	}
+	return result;
 }
 
 // ----------------------------------------------
@@ -47,7 +49,7 @@ void Form1::loadRom( System::String ^infile )
 System::Boolean Form1::saveRom( System::String ^outfile )
 {
 	System::Boolean result = false;
-	if( *this->hIsLoadTad )
+	if( this->IsLoadTad )
 	{
 		// 一時ファイルにSRLを書き出しているのでその一時ファイルから出力ファイルを作成
 		System::String ^tmpsrl = this->getSplitTadTmpFilename();
@@ -65,7 +67,7 @@ System::Boolean Form1::saveRom( System::String ^outfile )
 // tadの読み込み
 // ----------------------------------------------
 
-System::Void Form1::loadTad( System::String ^tadfile )
+System::Boolean Form1::loadTad( System::String ^tadfile )
 {
 	// tadファイルを変換したSRLを一時ファイルに保存
 	System::String ^srlfile = this->getSplitTadTmpFilename();
@@ -77,16 +79,17 @@ System::Void Form1::loadTad( System::String ^tadfile )
 	{
 		this->errMsg( "TADファイルの読み出しに失敗しました。", "Reading TAD file failed." );
 		System::IO::File::Delete( srlfile );
-		return;
+		return false;
 	}
-	this->loadSrl( srlfile );	// 一時保存したSRLを読み込み
+	System::Boolean result = this->loadSrl( srlfile );	// 一時保存したSRLを読み込み
+	return result;
 }
 
 // ----------------------------------------------
 // SRLの読み込み
 // ----------------------------------------------
 
-System::Void Form1::loadSrl( System::String ^srlfile )
+System::Boolean Form1::loadSrl( System::String ^srlfile )
 {
 	ECSrlResult result = this->hSrl->readFromFile( srlfile );
 	if( result != ECSrlResult::NOERROR )
@@ -109,12 +112,12 @@ System::Void Form1::loadSrl( System::String ^srlfile )
 					          "Reading the ROM data file failed. \nPlease read a ROM data file again, with \"Open a ROM data file\"" );
 			break;
 		}
-		return;
+		return false;
 	}
 
 	// GUIにROM情報を格納
 	this->setSrlForms();
-	if( *(this->hIsReadOnly) )
+	if( this->IsReadOnly )
 	{
 		this->readOnly();	// リードオンリーモードのときフォームをEnableにする
 	}
@@ -129,7 +132,7 @@ System::Void Form1::loadSrl( System::String ^srlfile )
 	{
 		this->errMsg( "ROMデータのCRC計算に失敗しました。ROMデータの読み込みはキャンセルされました。",
 			          "Calculating CRC of the ROM data failed. Therefore reading ROM data is canceled." );
-		return;
+		return false;
 	}
 	System::UInt16 ^hcrc = gcnew System::UInt16( crc );
 	this->tboxWholeCRC->Clear();
@@ -140,14 +143,8 @@ System::Void Form1::loadSrl( System::String ^srlfile )
 	this->rErrorReading->Checked = true;
 	this->setGridError();
 	this->setGridWarn();
-	//if( this->hSrl->hErrorList->Count > 0 )
-	//{
-	//	this->errMsg( "ROMデータにエラーがあります。「エラー情報」タブをご確認ください。",
-	//				  "ROM data include error. Please look the tab \"Setting Error\"." );
-	//	return;
-	//}
 
-	return;
+	return true;
 } // loadSrl()
 
 // ----------------------------------------------
@@ -359,7 +356,7 @@ void Form1::loadInit(void)
 
 	// <rw>タグ
 	System::Boolean bReadOnly = MasterEditorTWL::isXmlEqual( root, "rw", "r" );
-	this->hIsReadOnly = System::Boolean( bReadOnly );
+	this->IsReadOnly = bReadOnly;
 	if( bReadOnly )
 	{
 		this->readOnly();
@@ -382,7 +379,7 @@ void Form1::loadInit(void)
 	if( bCheck )	// チェックするときのみ追加チェック項目を設定
 	{
 		// チェックするかどうか
-		this->hSrl->hMrcSpecialList->hIsCheck = gcnew System::Boolean( true );
+		this->hSrl->hMrcSpecialList->IsCheck = true;
 
 		// SDK
 		try
@@ -391,14 +388,14 @@ void Form1::loadInit(void)
 			u32 minor   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/minor" ) );
 			u32 relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/relstep" ) );
 			u32 sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
-			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( sdkver );
+			this->hSrl->hMrcSpecialList->SDKVer = sdkver;
 		}
 		catch ( System::Exception ^ex )
 		{
 			(void)ex;
 			this->errMsg( "設定ファイル中のSDKバージョンが読み込めませんでした。バージョンは0とみなされます。", 
 				          "SDK ver. can't be read from setting file. Therefore it is set by 0." );
-			this->hSrl->hMrcSpecialList->hSDKVer = gcnew System::UInt32( 0 );
+			this->hSrl->hMrcSpecialList->SDKVer = 0;
 		}
 
 		// Shared2File
@@ -408,7 +405,7 @@ void Form1::loadInit(void)
 			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 			{
 				u32 size = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/shared2/size" + i.ToString() ) );
-				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( size );
+				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = size;
 			}
 		}
 		catch ( System::Exception ^ex )
@@ -419,7 +416,7 @@ void Form1::loadInit(void)
 			System::Int32 i;
 			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 			{
-				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = gcnew System::UInt32( 0 );
+				this->hSrl->hMrcSpecialList->hShared2SizeArray[i] = 0;
 			}
 		}
 	} //if( bCheck )

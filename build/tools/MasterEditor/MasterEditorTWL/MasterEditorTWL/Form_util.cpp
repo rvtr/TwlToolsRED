@@ -117,7 +117,7 @@ void Form1::overloadGridError( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hErrorList )
 		{
-			if( !err->EnableModify )	// 修正可能な情報は表示しない
+			if( !err->IsEnableModify )	// 修正可能な情報は表示しない
 			{
 				this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
 				this->colorGridError( err );
@@ -140,7 +140,7 @@ void Form1::overloadGridWarn( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hWarnList )
 		{
-			if( !err->EnableModify )
+			if( !err->IsEnableModify )
 			{
 				this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
 				this->colorGridWarn( err );
@@ -160,12 +160,12 @@ void Form1::overloadGridWarn( void )
 // セルの色を変える
 void Form1::colorGridError( RCMrcError ^err )
 {
-	if( err->AffectRom && !err->EnableModify )		// SRLに関係ありで修正不可
+	if( err->IsAffectRom && !err->IsEnableModify )		// SRLに関係ありで修正不可
 	{
 		System::Int32 last = this->gridError->Rows->Count - 2;	// 追加直後の行
 		this->gridError->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 	}
-	else if( err->AffectRom && err->EnableModify )	// SRLに関係ありで修正可
+	else if( err->IsAffectRom && err->IsEnableModify )	// SRLに関係ありで修正可
 	{
 		System::Int32 last = this->gridError->Rows->Count - 2;
 		this->gridError->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Blue;
@@ -173,12 +173,12 @@ void Form1::colorGridError( RCMrcError ^err )
 }
 void Form1::colorGridWarn( RCMrcError ^err )
 {
-	if( err->AffectRom && !err->EnableModify )
+	if( err->IsAffectRom && !err->IsEnableModify )
 	{
 		System::Int32 last = this->gridWarn->Rows->Count - 2;
 		this->gridWarn->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 	}
-	else if( err->AffectRom && err->EnableModify )
+	else if( err->IsAffectRom && err->IsEnableModify )
 	{
 		System::Int32 last = this->gridWarn->Rows->Count - 2;
 		this->gridWarn->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Blue;
@@ -220,7 +220,7 @@ System::Boolean Form1::isValidOnlyDeliverable(void)
 	// -> 入力エラーのみのチェックでよい
 	for each( RCMrcError ^err in this->hErrorList )
 	{
-		if( !err->AffectRom )
+		if( !err->IsAffectRom )
 			count++;
 	}
 	return (count == 0);
@@ -235,7 +235,7 @@ System::Boolean Form1::isValidAffectRom(void)
 	// (修正可エラーは入力によって修正されてるかもしれないのでチェックしない)
 	for each( RCMrcError ^err in this->hSrl->hErrorList )
 	{
-		if( !err->EnableModify )	// すべてSRLバイナリに影響する
+		if( !err->IsEnableModify )	// すべてSRLバイナリに影響する
 			count++;
 	}
 
@@ -244,7 +244,7 @@ System::Boolean Form1::isValidAffectRom(void)
 	// (エラーリストが更新されていることが前提)
 	for each( RCMrcError ^err in this->hErrorList )
 	{
-		if( err->AffectRom )		// 修正不可エラーは存在しない
+		if( err->IsAffectRom )		// 修正不可エラーは存在しない
 			count++;
 	}
 	return (count == 0);
@@ -256,7 +256,7 @@ System::Boolean Form1::isValidAffectRomModified(void)
 	System::Int32 count = 0;
 	for each( RCMrcError ^err in this->hErrorList )
 	{
-		if( err->AffectRom )		// 修正不可エラーは存在しない
+		if( err->IsAffectRom )		// 修正不可エラーは存在しない
 			count++;
 	}
 	return (count == 0);

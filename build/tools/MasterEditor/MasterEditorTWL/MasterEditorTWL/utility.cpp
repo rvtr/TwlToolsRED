@@ -64,14 +64,9 @@ System::String^ MasterEditorTWL::transRomSizeToString( System::Byte ^byte )
 //
 // @ret •¶Žš—ñ(’PˆÊ‚Â‚«)
 //
-System::String^ MasterEditorTWL::transSizeToString( System::UInt32 ^size )
+System::String^ MasterEditorTWL::transSizeToString( const System::UInt32 size )
 {
-	if( size == nullptr )
-	{
-		return (gcnew System::String(""));
-	}
-
-	System::UInt32  val = *size;
+	System::UInt32 val = size;
 
 	// Byte’PˆÊ
 	if( val == 0 )

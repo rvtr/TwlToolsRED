@@ -28,9 +28,9 @@ void Form1::setSrlProperties(void)
 	// ROMヘッダの[0,0x160)の領域はRead Onlyで変更しない
 
 	// TWL拡張領域のいくつかの情報をROMヘッダに反映させる
-	this->hSrl->hIsEULA         = this->cboxIsEULA->Checked;
-	this->hSrl->hIsWiFiIcon     = this->rIsWiFiIcon->Checked;
-	this->hSrl->hIsWirelessIcon = this->rIsWirelessIcon->Checked;
+	this->hSrl->IsEULA         = this->cboxIsEULA->Checked;
+	this->hSrl->IsWiFiIcon     = this->rIsWiFiIcon->Checked;
+	this->hSrl->IsWirelessIcon = this->rIsWirelessIcon->Checked;
 
 	// リージョン
 	this->setRegionSrlPropaties();
@@ -49,8 +49,8 @@ void Form1::setSrlForms(void)
 	this->tboxPlatform->Text  = this->hSrl->hPlatform;
 	this->tboxRomSize->Text   = this->hSrl->hRomSize;
 	this->tboxRomLatency->Text = this->hSrl->hLatency;
-	this->tboxRemasterVer->Text = this->hSrl->hRomVersion->ToString("X2");
-	if( *(this->hSrl->hRomVersion) == 0xE0 )
+	this->tboxRemasterVer->Text = this->hSrl->RomVersion.ToString("X2");
+	if( this->hSrl->RomVersion == 0xE0 )
 	{
 		this->cboxRemasterVerE->Checked = true;
 	}
@@ -61,7 +61,7 @@ void Form1::setSrlForms(void)
 
 	this->tboxHeaderCRC->Clear();
 	this->tboxHeaderCRC->AppendText( "0x" );
-	this->tboxHeaderCRC->AppendText( this->hSrl->hHeaderCRC->ToString("X") );
+	this->tboxHeaderCRC->AppendText( this->hSrl->HeaderCRC.ToString("X4") );
 
 	if( this->hSrl->hPlatform == nullptr )
 	{
@@ -71,16 +71,16 @@ void Form1::setSrlForms(void)
 
 	// TWL拡張情報
 	this->tboxTitleIDLo->Text = this->hSrl->hTitleIDLo;
-	this->tboxTitleIDHi->Text = this->hSrl->hTitleIDHi->ToString("X8");
-	this->tboxNormalRomOffset->Text   = this->hSrl->hNormalRomOffset->ToString("X8");
-	this->tboxKeyTableRomOffset->Text = this->hSrl->hKeyTableRomOffset->ToString("X8");
-	this->tboxPublicSize->Text  = MasterEditorTWL::transSizeToString( this->hSrl->hPublicSize );
-	this->tboxPrivateSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->hPrivateSize );
-	this->cboxIsNormalJump->Checked = *(this->hSrl->hIsNormalJump);
-	this->cboxIsTmpJump->Checked    = *(this->hSrl->hIsTmpJump);
-	this->cboxIsSubBanner->Checked  = *(this->hSrl->hIsSubBanner);
-	this->cboxIsWL->Checked         = *(this->hSrl->hIsWL);
-	if( *(this->hSrl->hIsCodecTWL) == true )
+	this->tboxTitleIDHi->Text = this->hSrl->TitleIDHi.ToString("X8");
+	this->tboxNormalRomOffset->Text   = this->hSrl->NormalRomOffset.ToString("X8");
+	this->tboxKeyTableRomOffset->Text = this->hSrl->KeyTableRomOffset.ToString("X8");
+	this->tboxPublicSize->Text  = MasterEditorTWL::transSizeToString( this->hSrl->PublicSize );
+	this->tboxPrivateSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->PrivateSize );
+	this->cboxIsNormalJump->Checked = this->hSrl->IsNormalJump;
+	this->cboxIsTmpJump->Checked    = this->hSrl->IsTmpJump;
+	this->cboxIsSubBanner->Checked  = this->hSrl->IsSubBanner;
+	this->cboxIsWL->Checked         = this->hSrl->IsWL;
+	if( this->hSrl->IsCodecTWL == true )
 	{
 		this->tboxIsCodec->Text = gcnew System::String( "TWL" );
 	}
@@ -88,13 +88,13 @@ void Form1::setSrlForms(void)
 	{
 		this->tboxIsCodec->Text = gcnew System::String( "NTR" );
 	}
-	this->cboxIsSD->Checked   = *(this->hSrl->hIsSD);
-	this->cboxIsNAND->Checked = *(this->hSrl->hIsNAND);
-	if( *(this->hSrl->hIsGameCardNitro) == true )
+	this->cboxIsSD->Checked   = this->hSrl->IsSD;
+	this->cboxIsNAND->Checked = this->hSrl->IsNAND;
+	if( this->hSrl->IsGameCardNitro )
 	{
 		this->tboxIsGameCardOn->Text = gcnew System::String( "ON(NTR)" );
 	}
-	else if( *(this->hSrl->hIsGameCardOn) == true )
+	else if( this->hSrl->IsGameCardOn == true )
 	{
 		this->tboxIsGameCardOn->Text = gcnew System::String( "ON(normal)" );
 	}
@@ -102,7 +102,7 @@ void Form1::setSrlForms(void)
 	{
 		this->tboxIsGameCardOn->Text = gcnew System::String( "OFF" );
 	}
-	this->cboxIsShared2->Checked = *(this->hSrl->hIsShared2);
+	this->cboxIsShared2->Checked = this->hSrl->IsShared2;
 	this->tboxShared2Size0->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[0] );
 	this->tboxShared2Size1->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[1] );
 	this->tboxShared2Size2->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[2] );
@@ -111,7 +111,7 @@ void Form1::setSrlForms(void)
 	this->tboxShared2Size5->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[5] );
 
 	// アプリ種別
-	if( *this->hSrl->hIsMediaNand )
+	if( this->hSrl->IsMediaNand )
 	{
 		this->tboxMedia->Text = gcnew System::String( "NAND" );
 	}
@@ -121,19 +121,19 @@ void Form1::setSrlForms(void)
 	}
 
 
-	if( *(this->hSrl->hIsAppLauncher) == true )
+	if( this->hSrl->IsAppLauncher == true )
 	{
 		this->tboxAppType->Text = gcnew System::String( "Launcher" );
 	}
-	else if( *(this->hSrl->hIsAppSecure) == true )
+	else if( this->hSrl->IsAppSecure == true )
 	{
 		this->tboxAppType->Text = gcnew System::String( "Secure" );
 	}
-	else if( *(this->hSrl->hIsAppSystem) == true )
+	else if( this->hSrl->IsAppSystem == true )
 	{
 		this->tboxAppType->Text = gcnew System::String( "System" );
 	}
-	else if( *(this->hSrl->hIsAppUser) == true )
+	else if( this->hSrl->IsAppUser == true )
 	{
 		this->tboxAppType->Text = gcnew System::String( "User" );
 	}
@@ -144,31 +144,31 @@ void Form1::setSrlForms(void)
 
 	// アクセスコントロール その他
 	System::String ^acc = gcnew System::String("");
-	if( *(this->hSrl->hIsCommonClientKey) == true )
+	if( this->hSrl->IsCommonClientKey == true )
 	{
 		acc += "commonClientKey.\r\n";
 	}
-	if( *(this->hSrl->hIsAesSlotBForES) == true )
+	if( this->hSrl->IsAesSlotBForES == true )
 	{
 		acc += "AES-SlotB(ES).\r\n";
 	}
-	if( *(this->hSrl->hIsAesSlotCForNAM) == true )
+	if( this->hSrl->IsAesSlotCForNAM == true )
 	{
 		acc += "AES-SlotC(NAM).\r\n";
 	}
-	if( *(this->hSrl->hIsAesSlotBForJpegEnc) == true )
+	if( this->hSrl->IsAesSlotBForJpegEnc == true )
 	{
 		acc += "AES-SlotB(Jpeg Launcher).\r\n";
 	}
-	if( *(this->hSrl->hIsAesSlotBForJpegEncUser) == true )
+	if( this->hSrl->IsAesSlotBForJpegEncUser == true )
 	{
 		acc += "AES-SlotB(Jpeg User).\r\n";
 	}
-	if( *(this->hSrl->hIsAesSlotAForSSL) == true )
+	if( this->hSrl->IsAesSlotAForSSL == true )
 	{
 		acc += "AES-SlotA(SSL).\r\n";
 	}
-	if( *(this->hSrl->hIsCommonClientKeyForDebugger) == true )
+	if( this->hSrl->IsCommonClientKeyForDebugger == true )
 	{
 		acc += "commonClientKey(Debug).\r\n";
 	}
@@ -204,13 +204,13 @@ void Form1::setSrlForms(void)
 	}
 
 	// 編集可能情報
-	this->cboxIsEULA->Checked       = *(this->hSrl->hIsEULA);
-	if( (  *this->hSrl->hIsWiFiIcon  &&   *this->hSrl->hIsWirelessIcon) ||
-		(!(*this->hSrl->hIsWiFiIcon) && !(*this->hSrl->hIsWirelessIcon)) )
+	this->cboxIsEULA->Checked = this->hSrl->IsEULA;
+	if( ( this->hSrl->IsWiFiIcon &&  this->hSrl->IsWirelessIcon) ||
+		(!this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon) )
 	{
 		this->rIsNoIcon->Checked = true;
 	}
-	else if( *(this->hSrl->hIsWiFiIcon) && !*(this->hSrl->hIsWirelessIcon) )
+	else if( this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
 	{
 		this->rIsWiFiIcon->Checked = true;
 	}
@@ -230,14 +230,14 @@ void Form1::setSrlFormsCaptionEx()
 		return;
 	}
 	System::String ^appother = gcnew System::String("");
-	if( *(this->hSrl->hIsLaunch) == false )
+	if( !this->hSrl->IsLaunch )
 	{
 		if( this->isJapanese() == true )
 			appother += "ランチャー非表示.\r\n";
 		else
 			appother += "Not Display On the Launcher.\r\n";
 	}
-	if( *(this->hSrl->hIsDataOnly) == true )
+	if( this->hSrl->IsDataOnly )
 	{
 		if( this->isJapanese() == true )
 			appother += "データ専用.\r\n";
@@ -247,14 +247,14 @@ void Form1::setSrlFormsCaptionEx()
 	this->tboxAppTypeOther->Text = appother;
 
 	this->tboxCaptionEx->Clear();
-	if( (this->hSrl->hHasDSDLPlaySign != nullptr) && (*(this->hSrl->hHasDSDLPlaySign) == true) )
+	if( this->hSrl->HasDSDLPlaySign )
 	{
 		if( this->isJapanese() == true )
 			this->tboxCaptionEx->Text += gcnew System::String( "DSクローンブート対応.\r\n" );
 		else
 			this->tboxCaptionEx->Text += gcnew System::String( "DS Clone Boot.\r\n" );
 	}
-	if( (this->hSrl->hIsSCFGAccess != nullptr) && (*(this->hSrl->hIsSCFGAccess) == true) )
+	if( this->hSrl->IsSCFGAccess )
 	{
 		if( this->isJapanese() == true )
 			this->tboxCaptionEx->Text += gcnew System::String( "SCFGレジスタアクセス可能.\r\n" );

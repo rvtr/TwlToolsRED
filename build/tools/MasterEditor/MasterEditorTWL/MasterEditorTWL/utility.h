@@ -39,7 +39,7 @@ namespace MasterEditorTWL
 	//
 	// @ret 文字列(単位つき)
 	//
-	System::String^ transSizeToString( System::UInt32 ^size );
+	System::String^ transSizeToString( const System::UInt32 size );
 
 	//
 	// ペアレンタルコントロールの各団体の設定可能年齢を取得する

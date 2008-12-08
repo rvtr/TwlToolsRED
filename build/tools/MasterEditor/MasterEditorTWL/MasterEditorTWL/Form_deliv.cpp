@@ -24,10 +24,10 @@ using namespace MasterEditorTWL;
 void Form1::setDeliverableProperties(void)
 {
 	// ’ñoî•ñ
-	this->hDeliv->hProductName    = this->tboxProductName->Text;
-	this->hDeliv->hProductCode1   = this->tboxProductCode1->Text;
-	this->hDeliv->hProductCode2   = this->tboxProductCode2->Text;
-	this->hDeliv->hReleaseForeign = gcnew System::Boolean( this->cboxReleaseForeign->Checked );
+	this->hDeliv->hProductName     = this->tboxProductName->Text;
+	this->hDeliv->hProductCode1    = this->tboxProductCode1->Text;
+	this->hDeliv->hProductCode2    = this->tboxProductCode2->Text;
+	this->hDeliv->IsReleaseForeign = this->cboxReleaseForeign->Checked;
 	if( this->cboxReleaseForeign->Checked == true )
 	{
 		this->hDeliv->hProductNameForeign  = this->tboxProductNameForeign->Text;
@@ -49,13 +49,13 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hProductCode1Foreign = nullptr;
 		this->hDeliv->hProductCode2Foreign = nullptr;
 	}
-	this->hDeliv->hReleaseYear   = gcnew System::Int32( this->dateRelease->Value.Year  );
-	this->hDeliv->hReleaseMonth  = gcnew System::Int32( this->dateRelease->Value.Month );
-	this->hDeliv->hReleaseDay    = gcnew System::Int32( this->dateRelease->Value.Day   );
-	this->hDeliv->hSubmitYear    = gcnew System::Int32( this->dateSubmit->Value.Year   );
-	this->hDeliv->hSubmitMonth   = gcnew System::Int32( this->dateSubmit->Value.Month  );
-	this->hDeliv->hSubmitDay     = gcnew System::Int32( this->dateSubmit->Value.Day    );
-	this->hDeliv->hSubmitVersion = gcnew System::Int32( System::Decimal::ToInt32( this->numSubmitVersion->Value ) );
+	this->hDeliv->ReleaseYear   = this->dateRelease->Value.Year;
+	this->hDeliv->ReleaseMonth  = this->dateRelease->Value.Month;
+	this->hDeliv->ReleaseDay    = this->dateRelease->Value.Day;
+	this->hDeliv->SubmitYear    = this->dateSubmit->Value.Year;
+	this->hDeliv->SubmitMonth   = this->dateSubmit->Value.Month;
+	this->hDeliv->SubmitDay     = this->dateSubmit->Value.Day;
+	this->hDeliv->SubmitVersion = System::Decimal::ToInt32( this->numSubmitVersion->Value );
 	// SDK
 	this->hDeliv->hSDK = nullptr;
 	if( this->hSrl->hSDKList )
@@ -290,8 +290,8 @@ void Form1::setDeliverableProperties(void)
 	}
 
 	// SRL‚É‚Í“o˜^‚³‚ê‚È‚¢ROMŽd—l
-	this->hDeliv->hIsUGC = System::Boolean( this->cboxIsUGC->Checked );
-	this->hDeliv->hIsPhotoEx = System::Boolean( this->cboxIsPhotoEx->Checked );
+	this->hDeliv->IsUGC     = this->cboxIsUGC->Checked;
+	this->hDeliv->IsPhotoEx = this->cboxIsPhotoEx->Checked;
 }
 
 // ----------------------------------------------

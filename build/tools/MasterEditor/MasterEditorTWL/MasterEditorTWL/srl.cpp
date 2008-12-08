@@ -172,9 +172,9 @@ ECSrlResult RCSrl::setRomInfo(void)
 	this->hRomSize = MasterEditorTWL::transRomSizeToString( this->pRomHeader->s.rom_size );
 	//this->hForKorea   = gcnew System::Byte( this->pRomHeader->s.for_korea );
 	//this->hForChina   = gcnew System::Byte( this->pRomHeader->s.for_china );
-	this->hRomVersion = gcnew System::Byte( this->pRomHeader->s.rom_version );
-	this->hHeaderCRC  = gcnew System::UInt16( this->pRomHeader->s.header_crc16 );
-	this->hIsOldDevEncrypt = gcnew System::Boolean( (this->pRomHeader->s.developer_encrypt_old != 0)?true:false ); 
+	this->RomVersion = this->pRomHeader->s.rom_version;
+	this->HeaderCRC  = this->pRomHeader->s.header_crc16;
+	this->IsOldDevEncrypt = (this->pRomHeader->s.developer_encrypt_old != 0)?true:false; 
 
 	switch( this->pRomHeader->s.game_cmd_param & CARD_LATENCY_MASK )
 	{
@@ -192,132 +192,132 @@ ECSrlResult RCSrl::setRomInfo(void)
 	}
 
 	// TWL専用情報
-	this->hIsNormalJump = gcnew System::Boolean( (this->pRomHeader->s.permit_landing_normal_jump != 0)?true:false );
-	this->hIsTmpJump    = gcnew System::Boolean( (this->pRomHeader->s.permit_landing_tmp_jump    != 0)?true:false );
-	this->hNormalRomOffset   = gcnew System::UInt32( (u32)(this->pRomHeader->s.twl_card_normal_area_rom_offset)   * 0x80000 );
-	this->hKeyTableRomOffset = gcnew System::UInt32( (u32)(this->pRomHeader->s.twl_card_keytable_area_rom_offset) * 0x80000 );
-	this->hPublicSize  = gcnew System::UInt32( this->pRomHeader->s.public_save_data_size );
-	this->hPrivateSize = gcnew System::UInt32( this->pRomHeader->s.private_save_data_size );
+	this->IsNormalJump = (this->pRomHeader->s.permit_landing_normal_jump != 0)?true:false;
+	this->IsTmpJump    = (this->pRomHeader->s.permit_landing_tmp_jump    != 0)?true:false;
+	this->NormalRomOffset   = (u32)(this->pRomHeader->s.twl_card_normal_area_rom_offset)   * 0x80000;
+	this->KeyTableRomOffset = (u32)(this->pRomHeader->s.twl_card_keytable_area_rom_offset) * 0x80000;
+	this->PublicSize  = this->pRomHeader->s.public_save_data_size;
+	this->PrivateSize = this->pRomHeader->s.private_save_data_size;
 
 	u8  *idL = this->pRomHeader->s.titleID_Lo;
 	u32  idH = this->pRomHeader->s.titleID_Hi;
 	//u32  val;
 	//val = ((u32)(idL[0]) << 24) | ((u32)(idL[1]) << 16) | ((u32)(idL[2]) << 8) | ((u32)(idL[3]));	// ビッグエンディアン
 	//this->hTitleIDLo   = gcnew System::UInt32( val );
-	this->hTitleIDLo   = gcnew System::String( (char*)idL, 0, 4, utf8 );
-	this->hTitleIDHi   = gcnew System::UInt32( idH );
+	this->hTitleIDLo  = gcnew System::String( (char*)idL, 0, 4, utf8 );
+	this->TitleIDHi   = idH;
 
 	// TitleIDからわかる情報
-	this->hIsAppLauncher = gcnew System::Boolean( false );
-	this->hIsAppUser     = gcnew System::Boolean( false );
-	this->hIsAppSystem   = gcnew System::Boolean( false );
-	this->hIsAppSecure   = gcnew System::Boolean( false );
-	this->hIsLaunch      = gcnew System::Boolean( false );
-	this->hIsMediaNand   = gcnew System::Boolean( false );
-	this->hIsDataOnly    = gcnew System::Boolean( false );
+	this->IsAppLauncher = false;
+	this->IsAppUser     = false;
+	this->IsAppSystem   = false;
+	this->IsAppSecure   = false;
+	this->IsLaunch      = false;
+	this->IsMediaNand   = false;
+	this->IsDataOnly    = false;
 	if( (idL[3]=='H') && (idL[2]=='N') && (idL[1]=='A') )	// ランチャアプリかどうかはTitleID_Loの値で決定
     {
-		*(this->hIsAppLauncher) = true;
+		this->IsAppLauncher = true;
     }
     else if( idH & TITLE_ID_HI_SECURE_FLAG_MASK )				// 各ビットは排他的とは限らないのでelse ifにはならない
     {
-		*(this->hIsAppSecure) = true;
+		this->IsAppSecure = true;
     }
     else if( (idH & TITLE_ID_HI_APP_TYPE_MASK) == 1 )
     {
-		*(this->hIsAppSystem) = true;
+		this->IsAppSystem = true;
     }
     else if( (idH & TITLE_ID_HI_APP_TYPE_MASK) == 0 )
     {
-		*(this->hIsAppUser) = true;
+		this->IsAppUser = true;
     }
 	if( idH & TITLE_ID_HI_DATA_ONLY_FLAG_MASK )
 	{
-		*(this->hIsDataOnly) = true;
+		this->IsDataOnly = true;
 	}
 	if( idH & TITLE_ID_HI_MEDIA_MASK )
 	{
-		*(this->hIsMediaNand) = true;
+		this->IsMediaNand = true;
 	}
 	if( (idH & TITLE_ID_HI_NOT_LAUNCH_FLAG_MASK) == 0 )		// ビットが0のときLaunch
 	{
-		*(this->hIsLaunch) = true;
+		this->IsLaunch = true;
 	}
 	u16 pub = (u16)((idH & TITLE_ID_HI_PUBLISHER_CODE_MASK) >> TITLE_ID_HI_PUBLISHER_CODE_SHIFT);
-	this->hPublisherCode = gcnew System::UInt16( pub );
+	this->PublisherCode = pub;
 
 	// TWL拡張フラグ
-	this->hIsCodecTWL  = gcnew System::Boolean( (this->pRomHeader->s.exFlags.codec_mode != 0)?true:false );
-	this->hIsEULA      = gcnew System::Boolean( (this->pRomHeader->s.exFlags.agree_EULA != 0)?true:false );
-	this->hIsSubBanner = gcnew System::Boolean( (this->pRomHeader->s.exFlags.availableSubBannerFile != 0)?true:false );
-	this->hIsWiFiIcon  = gcnew System::Boolean( (this->pRomHeader->s.exFlags.WiFiConnectionIcon != 0)?true:false );
-	this->hIsWirelessIcon = gcnew System::Boolean( (this->pRomHeader->s.exFlags.DSWirelessIcon != 0)?true:false );
-	this->hIsWL        = gcnew System::Boolean( (this->pRomHeader->s.exFlags.enable_nitro_whitelist_signature != 0)?true:false );
+	this->IsCodecTWL  = (this->pRomHeader->s.exFlags.codec_mode != 0)?true:false;
+	this->IsEULA      = (this->pRomHeader->s.exFlags.agree_EULA != 0)?true:false;
+	this->IsSubBanner = (this->pRomHeader->s.exFlags.availableSubBannerFile != 0)?true:false;
+	this->IsWiFiIcon  = (this->pRomHeader->s.exFlags.WiFiConnectionIcon != 0)?true:false;
+	this->IsWirelessIcon = (this->pRomHeader->s.exFlags.DSWirelessIcon != 0)?true:false;
+	this->IsWL        = (this->pRomHeader->s.exFlags.enable_nitro_whitelist_signature != 0)?true:false;
 
 	// TWLアクセスコントロール
-	this->hIsCommonClientKey = gcnew System::Boolean( (this->pRomHeader->s.access_control.common_client_key != 0)?true:false );
-	this->hIsAesSlotBForES   = gcnew System::Boolean( (this->pRomHeader->s.access_control.hw_aes_slot_B != 0)?true:false );
-	this->hIsAesSlotCForNAM  = gcnew System::Boolean( (this->pRomHeader->s.access_control.hw_aes_slot_C != 0)?true:false );
-	this->hIsSD              = gcnew System::Boolean( (this->pRomHeader->s.access_control.sd_card_access != 0)?true:false );
-	this->hIsNAND            = gcnew System::Boolean( (this->pRomHeader->s.access_control.nand_access != 0)?true:false );
-	this->hIsGameCardOn      = gcnew System::Boolean( (this->pRomHeader->s.access_control.game_card_on != 0)?true:false );
-	this->hIsShared2         = gcnew System::Boolean( (this->pRomHeader->s.access_control.shared2_file != 0)?true:false );
-	this->hIsAesSlotBForJpegEnc = gcnew System::Boolean( (this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForLauncher != 0)?true:false );
-	this->hIsAesSlotBForJpegEncUser = gcnew System::Boolean( (this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0)?true:false );
-	this->hIsGameCardNitro   = gcnew System::Boolean( (this->pRomHeader->s.access_control.game_card_nitro_mode != 0)?true:false );
-	this->hIsAesSlotAForSSL  = gcnew System::Boolean( (this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0)?true:false );
-	this->hIsCommonClientKeyForDebugger 
-		= gcnew System::Boolean( (this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0)?true:false );
+	this->IsCommonClientKey = (this->pRomHeader->s.access_control.common_client_key != 0)?true:false;
+	this->IsAesSlotBForES   = (this->pRomHeader->s.access_control.hw_aes_slot_B != 0)?true:false;
+	this->IsAesSlotCForNAM  = (this->pRomHeader->s.access_control.hw_aes_slot_C != 0)?true:false;
+	this->IsSD              = (this->pRomHeader->s.access_control.sd_card_access != 0)?true:false;
+	this->IsNAND            = (this->pRomHeader->s.access_control.nand_access != 0)?true:false;
+	this->IsGameCardOn      = (this->pRomHeader->s.access_control.game_card_on != 0)?true:false;
+	this->IsShared2         = (this->pRomHeader->s.access_control.shared2_file != 0)?true:false;
+	this->IsAesSlotBForJpegEnc = (this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForLauncher != 0)?true:false;
+	this->IsAesSlotBForJpegEncUser = (this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0)?true:false;
+	this->IsGameCardNitro   = (this->pRomHeader->s.access_control.game_card_nitro_mode != 0)?true:false;
+	this->IsAesSlotAForSSL  = (this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0)?true:false;
+	this->IsCommonClientKeyForDebugger 
+		= (this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0)?true:false;
 
 	// SCFG がロックされるか
 	if( (this->pRomHeader->s.arm7_scfg_ext >> 31) != 0 )
 	{
-		this->hIsSCFGAccess = gcnew System::Boolean( true );
+		this->IsSCFGAccess = true;
 	}
 	else
 	{
-		this->hIsSCFGAccess = gcnew System::Boolean( false );
+		this->IsSCFGAccess = false;
 	}
 
 
 	// Shared2ファイルサイズ
-	this->hShared2SizeArray = gcnew cli::array<System::UInt32^>(METWL_NUMOF_SHARED2FILES);
+	this->hShared2SizeArray = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);
 	for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 	{
-		this->hShared2SizeArray[i] = gcnew System::UInt32( 0 );
+		this->hShared2SizeArray[i] = 0;
 	}
 	u32  unit = 16 * 1024;		// 16KBの乗数が格納されている
 	if( this->pRomHeader->s.shared2_file0_size != 0 )
 	{
-		*(this->hShared2SizeArray[0]) = (this->pRomHeader->s.shared2_file0_size * unit) + unit;
+		this->hShared2SizeArray[0] = (this->pRomHeader->s.shared2_file0_size * unit) + unit;
 	}
 	if( this->pRomHeader->s.shared2_file1_size != 0 )
 	{
-		*(this->hShared2SizeArray[1]) = (this->pRomHeader->s.shared2_file1_size * unit) + unit;
+		this->hShared2SizeArray[1] = (this->pRomHeader->s.shared2_file1_size * unit) + unit;
 	}
 	if( this->pRomHeader->s.shared2_file2_size != 0 )
 	{
-		*(this->hShared2SizeArray[2]) = (this->pRomHeader->s.shared2_file2_size * unit) + unit;
+		this->hShared2SizeArray[2] = (this->pRomHeader->s.shared2_file2_size * unit) + unit;
 	}
 	if( this->pRomHeader->s.shared2_file3_size != 0 )
 	{
-		*(this->hShared2SizeArray[3]) = (this->pRomHeader->s.shared2_file3_size * unit) + unit;
+		this->hShared2SizeArray[3] = (this->pRomHeader->s.shared2_file3_size * unit) + unit;
 	}
 	if( this->pRomHeader->s.shared2_file4_size != 0 )
 	{
-		*(this->hShared2SizeArray[4]) = (this->pRomHeader->s.shared2_file4_size * unit) + unit;
+		this->hShared2SizeArray[4] = (this->pRomHeader->s.shared2_file4_size * unit) + unit;
 	}
 	if( this->pRomHeader->s.shared2_file5_size != 0 )
 	{
-		*(this->hShared2SizeArray[5]) = (this->pRomHeader->s.shared2_file5_size * unit) + unit;
+		this->hShared2SizeArray[5] = (this->pRomHeader->s.shared2_file5_size * unit) + unit;
 	}
 
 	// カードリージョン
 	const u32  map           = this->pRomHeader->s.card_region_bitmap;
-	this->hIsRegionJapan     = gcnew System::Boolean( ((map & METWL_MASK_REGION_JAPAN)     != 0)?true:false );
-	this->hIsRegionAmerica   = gcnew System::Boolean( ((map & METWL_MASK_REGION_AMERICA)   != 0)?true:false );
-	this->hIsRegionEurope    = gcnew System::Boolean( ((map & METWL_MASK_REGION_EUROPE)    != 0)?true:false );
-	this->hIsRegionAustralia = gcnew System::Boolean( ((map & METWL_MASK_REGION_AUSTRALIA) != 0)?true:false );
+	this->IsRegionJapan     = ((map & METWL_MASK_REGION_JAPAN)     != 0)?true:false;
+	this->IsRegionAmerica   = ((map & METWL_MASK_REGION_AMERICA)   != 0)?true:false;
+	this->IsRegionEurope    = ((map & METWL_MASK_REGION_EUROPE)    != 0)?true:false;
+	this->IsRegionAustralia = ((map & METWL_MASK_REGION_AUSTRALIA) != 0)?true:false;
 
 	// ペアレンタルコントロール
 	this->setParentalControlInfo();
@@ -460,19 +460,19 @@ ECSrlResult RCSrl::setRomHeader(void)
 	// ROMヘッダの[0,0x160)の領域はRead Onlyで変更しない
 
 	// いくつかのフラグをROMヘッダに反映
-	this->pRomHeader->s.exFlags.agree_EULA = (*(this->hIsEULA) == true)?1:0;
-	this->pRomHeader->s.exFlags.WiFiConnectionIcon = (*(this->hIsWiFiIcon) == true)?1:0;
-	this->pRomHeader->s.exFlags.DSWirelessIcon     = (*(this->hIsWirelessIcon) == true)?1:0;
+	this->pRomHeader->s.exFlags.agree_EULA = (this->IsEULA == true)?1:0;
+	this->pRomHeader->s.exFlags.WiFiConnectionIcon = (this->IsWiFiIcon == true)?1:0;
+	this->pRomHeader->s.exFlags.DSWirelessIcon     = (this->IsWirelessIcon == true)?1:0;
 
 	// レーティング
 	u32  map = 0;
-	if( *(this->hIsRegionJapan)   == true )  { map |= METWL_MASK_REGION_JAPAN; }
-	if( *(this->hIsRegionAmerica) == true )  { map |= METWL_MASK_REGION_AMERICA; }
-	if( *(this->hIsRegionEurope)  == true )  { map |= METWL_MASK_REGION_EUROPE; }
-	if( *(this->hIsRegionAustralia) == true ){ map |= METWL_MASK_REGION_AUSTRALIA; }
+	if( this->IsRegionJapan   == true )  { map |= METWL_MASK_REGION_JAPAN; }
+	if( this->IsRegionAmerica == true )  { map |= METWL_MASK_REGION_AMERICA; }
+	if( this->IsRegionEurope  == true )  { map |= METWL_MASK_REGION_EUROPE; }
+	if( this->IsRegionAustralia == true ){ map |= METWL_MASK_REGION_AUSTRALIA; }
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-	if( (*(this->hIsRegionJapan) == true ) && (*(this->hIsRegionAmerica) == true)
-		&& (*(this->hIsRegionEurope) == true ) && (*(this->hIsRegionAustralia) == true)
+	if( (this->IsRegionJapan == true ) && (this->IsRegionAmerica == true)
+		&& (this->IsRegionEurope == true ) && (this->IsRegionAustralia == true)
 	  )
 	{
 		map |= METWL_MASK_REGION_ALL;	// オールリージョンを許す
@@ -594,7 +594,7 @@ ECSrlResult RCSrl::signRomHeader(void)
 
 	// 鍵を選ぶ
 #ifdef METWL_VER_APPTYPE_LAUNCHER
-	if( *this->hIsAppLauncher )
+	if( this->IsAppLauncher )
 	{
 		privateKey = (u8*)g_devPrivKey_DER_launcher;
 		publicKey  = (u8*)g_devPubKey_DER_launcher;
@@ -602,7 +602,7 @@ ECSrlResult RCSrl::signRomHeader(void)
 	else
 #endif //METWL_VER_APPTYPE_LAUNCHER
 #ifdef METWL_VER_APPTYPE_SECURE
-	if( *this->hIsAppSecure )
+	if( this->IsAppSecure )
 	{
 		privateKey = (u8*)g_devPrivKey_DER_secure;
 		publicKey  = (u8*)g_devPubKey_DER_secure;
@@ -610,7 +610,7 @@ ECSrlResult RCSrl::signRomHeader(void)
 	else
 #endif //METWL_VER_APPTYPE_SECURE
 #ifdef METWL_VER_APPTYPE_SYSTEM
-	if( *this->hIsAppSystem )
+	if( this->IsAppSystem )
 	{
 		privateKey = (u8*)g_devPrivKey_DER_system;
 		publicKey  = (u8*)g_devPubKey_DER_system;
@@ -761,23 +761,23 @@ ECSrlResult RCSrl::hasDSDLPlaySign( FILE *fp )
 	offset = this->pRomHeader->s.rom_valid_size;
 	if( fseek( fp, offset, SEEK_SET ) != 0 )
 	{
-		this->hHasDSDLPlaySign = gcnew System::Boolean( false );	// 署名はNTRのROM領域の最後に入るので
-		return ECSrlResult::ERROR_FILE_READ;						// NTRのSRLに署名が格納されていない場合はシークもリードもできない
+		this->HasDSDLPlaySign = false;			// 署名はNTRのROM領域の最後に入るので
+		return ECSrlResult::ERROR_FILE_READ;	// NTRのSRLに署名が格納されていない場合はシークもリードもできない
 	}
 	if( DSDLPLAY_SIZE != fread( buf, 1, DSDLPLAY_SIZE, fp ) )
 	{
-		this->hHasDSDLPlaySign = gcnew System::Boolean( false );
+		this->HasDSDLPlaySign = false;
 		return ECSrlResult::ERROR_FILE_READ;
 	}
 
 	// 最初の2バイトが固定の値となることが保証されているのでその値かどうかで判定
 	if( (buf[0] == 'a') && (buf[1] == 'c') )
 	{
-		this->hHasDSDLPlaySign = gcnew System::Boolean( true );
+		this->HasDSDLPlaySign = true;
 	}
 	else
 	{
-		this->hHasDSDLPlaySign = gcnew System::Boolean( false );
+		this->HasDSDLPlaySign = false;
 	}
 	return (ECSrlResult::NOERROR);
 }
@@ -1068,7 +1068,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	// CRC
 	u16  crc;
 	// セキュア領域
-	if( *this->hIsMediaNand == false )	// カードアプリのときのみ
+	if( !this->IsMediaNand )	// カードアプリのときのみ
 	{
 		// セキュア領域はROMヘッダ外
 		u8     *secures;
@@ -1159,7 +1159,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	}
 #endif
 
-	if( *this->hIsOldDevEncrypt && *this->hHasDSDLPlaySign )
+	if( this->IsOldDevEncrypt && this->HasDSDLPlaySign )
 	{
 		this->hErrorList->Add( gcnew RCMrcError( 
 			"旧開発用暗号フラグ", 0x1c, 0x1c,
@@ -1174,7 +1174,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	fseek( fp, 0, SEEK_END );
 	u32  filesize = ftell(fp);	// 実ファイルサイズ(単位Mbit)
 	u32  romsize = 1 << (this->pRomHeader->s.rom_size);	// ROM容量
-	if( *(this->hIsMediaNand) == false )		// カードアプリのときのみのチェック
+	if( !this->IsMediaNand )		// カードアプリのときのみのチェック
 	{
 		u32 filesizeMb = (filesize / (1024*1024)) * 8;
 		if( romsize < filesizeMb )
@@ -1246,7 +1246,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
-	if( *this->hIsAppLauncher || *this->hIsAppSecure || *this->hIsAppSystem )
+	if( this->IsAppLauncher || this->IsAppSecure || this->IsAppSystem )
 	{
 		if( this->pRomHeader->s.disable_debug == 0 )
 		{
@@ -1272,7 +1272,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 			"ROM Control Info.", "Mask ROM can be set. Please set One-time PROM.", false, true ) );
 	}
 
-	if( *this->hIsMediaNand == false )
+	if( !this->IsMediaNand )
 	{
 		if( (this->pRomHeader->s.enable_aes == 0) || (this->pRomHeader->s.aes_target_size == 0) )
 		{
@@ -1407,7 +1407,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				"Access Control Info.", "Sizes of shared2 files is setting, but using them is not enabled.", false, true ) );
 		}
 	}
-	if( *this->hIsMediaNand == false )	// カードアプリのときのみ
+	if( !this->IsMediaNand )	// カードアプリのときのみ
 	{
 		if( (this->pRomHeader->s.access_control.nand_access != 0) || (this->pRomHeader->s.access_control.sd_card_access != 0) )
 		{
@@ -1420,7 +1420,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
-	if( (*this->hIsWiFiIcon == true) && (*this->hIsWirelessIcon == true) )
+	if( this->IsWiFiIcon && this->IsWirelessIcon )
 	{
 		this->hErrorList->Add( gcnew RCMrcError( 
 			"アイコン表示フラグ", 0x1bf, 0x1bf, 
@@ -1430,7 +1430,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 			true, true ) );		// 修正可能
 	}
 
-	if( *this->hIsMediaNand == false )	// カードアプリのときのみ
+	if( !this->IsMediaNand )	// カードアプリのときのみ
 	{
 		u32 ideal  = (this->pRomHeader->s.twl_card_keytable_area_rom_offset * 0x80000) + 0x3000;	// TWL KeyTable領域の開始 + KeyTableサイズ
 		u32 actual = this->pRomHeader->s.main_ltd_rom_offset;
@@ -1445,7 +1445,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
-	if( (*this->hIsAppLauncher == false) && (*this->hIsSCFGAccess == true) )
+	if( !this->IsAppLauncher && this->IsSCFGAccess )
 	{
 		this->hWarnList->Add( gcnew RCMrcError( 
 			"SCFG設定", 0x1b8, 0x1bb, "SCFGレジスタへアクセス可能になっています。",
@@ -1468,13 +1468,13 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	this->mrcReservedArea(fp);
 
 	// 追加チェック
-	if( *(this->hMrcSpecialList->hIsCheck) == true )
+	if( this->hMrcSpecialList->IsCheck )
 	{
 		// SDKバージョン
 		System::Boolean match = true;
 		for each( RCSDKVersion ^sdk in this->hSDKList )
 		{
-			if( sdk->IsStatic && (sdk->Code != *(this->hMrcSpecialList->hSDKVer) ) )
+			if( sdk->IsStatic && (sdk->Code != this->hMrcSpecialList->SDKVer) )
 			{
 				match = false;
 			}
@@ -1489,9 +1489,9 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		// Shared2ファイルサイズ
 		for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 		{
-			if( *(this->hShared2SizeArray[i]) > 0 )	// 0は未使用を表すのでチェックしない
+			if( this->hShared2SizeArray[i] > 0 )	// 0は未使用を表すのでチェックしない
 			{
-				if( *(this->hShared2SizeArray[i]) != *(this->hMrcSpecialList->hShared2SizeArray[i]) )
+				if( this->hShared2SizeArray[i] != this->hMrcSpecialList->hShared2SizeArray[i] )
 				{
 					this->hWarnList->Add( gcnew RCMrcError( 
 						"Shared2ファイル" + i.ToString(), METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, 

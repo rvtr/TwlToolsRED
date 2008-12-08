@@ -45,18 +45,18 @@ namespace MasterEditorTWL
 		property System::String ^hProductName;		// 製品名
 		property System::String ^hProductCode1;		// 製品コード
 		property System::String ^hProductCode2;		// 製品コード
-		property System::Int32  ^hReleaseYear;		// 発売予定日
-		property System::Int32  ^hReleaseMonth;
-		property System::Int32  ^hReleaseDay;
-		property System::Int32  ^hSubmitYear;		// 提出日
-		property System::Int32  ^hSubmitMonth;
-		property System::Int32  ^hSubmitDay;
+		property System::Int32   ReleaseYear;		// 発売予定日
+		property System::Int32   ReleaseMonth;
+		property System::Int32   ReleaseDay;
+		property System::Int32   SubmitYear;		// 提出日
+		property System::Int32   SubmitMonth;
+		property System::Int32   SubmitDay;
 		property System::String ^hSubmitWay;		// 提出方法
 		property System::String ^hUsage;			// 用途
 		property System::String ^hUsageOther;		// その他の用途
-		property System::Int32  ^hSubmitVersion;	// 提出バージョン
+		property System::Int32   SubmitVersion;		// 提出バージョン
 		property System::String ^hSDK;				// SDKバージョン
-		property System::Boolean ^hReleaseForeign;	// 海外版の予定
+		property System::Boolean  IsReleaseForeign;	// 海外版の予定
 		property System::String  ^hProductNameForeign;
 		property System::String  ^hProductCode1Foreign;
 		property System::String  ^hProductCode2Foreign;
@@ -98,8 +98,8 @@ namespace MasterEditorTWL
 		property System::String  ^hAppTypeOther;		// 特記事項
 
 		// SRLには登録されないROM仕様
-		property System::Boolean  ^hIsUGC;
-		property System::Boolean  ^hIsPhotoEx;
+		property System::Boolean  IsUGC;
+		property System::Boolean  IsPhotoEx;
 
 		// constructor and destructor
 	public:
@@ -117,7 +117,7 @@ namespace MasterEditorTWL
 		// @arg [in]  英語フラグ
 		//
 		ECDeliverableResult writeSpreadsheet( 
-			System::String ^hFilename, RCSrl ^hSrl, System::UInt16 ^hCRC, System::String ^hSrlFilename, System::Boolean english );
+			System::String ^hFilename, RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english );
 
 	}; // end of ref class RCDeliverable
 

@@ -294,7 +294,7 @@ namespace MasterEditorTWL {
 			{
 				for each( RCMrcError ^err in listLo )
 				{
-					if( !err->EnableModify )	// C³‰Â”\‚Èî•ñ‚Í•\Ž¦‚µ‚È‚¢
+					if( !err->IsEnableModify )	// C³‰Â”\‚Èî•ñ‚Í•\Ž¦‚µ‚È‚¢
 						this->gridError->Rows->Add( err->getAll( isJapanese ) );
 				}
 			}
@@ -316,7 +316,7 @@ namespace MasterEditorTWL {
 			{
 				for each( RCMrcError ^err in listLo )
 				{
-					if( !err->EnableModify )	// C³‰Â”\‚Èî•ñ‚Í•\Ž¦‚µ‚È‚¢
+					if( !err->IsEnableModify )	// C³‰Â”\‚Èî•ñ‚Í•\Ž¦‚µ‚È‚¢
 						this->gridWarn->Rows->Add( err->getAll( isJapanese ) );
 				}
 			}

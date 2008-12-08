@@ -28,39 +28,39 @@ using namespace MasterEditorTWL;
 // フォーム入力をSRLに反映させる
 void Form1::setRegionSrlPropaties(void)
 {
-	this->hSrl->hIsRegionJapan     = gcnew System::Boolean(false);
-	this->hSrl->hIsRegionAmerica   = gcnew System::Boolean(false);
-	this->hSrl->hIsRegionEurope    = gcnew System::Boolean(false);
-	this->hSrl->hIsRegionAustralia = gcnew System::Boolean(false);
+	this->hSrl->IsRegionJapan     = false;
+	this->hSrl->IsRegionAmerica   = false;
+	this->hSrl->IsRegionEurope    = false;
+	this->hSrl->IsRegionAustralia = false;
 	switch( this->combRegion->SelectedIndex )
 	{
 		case 0:
-			this->hSrl->hIsRegionJapan = gcnew System::Boolean(true);
+			this->hSrl->IsRegionJapan = true;
 		break;
 
 		case 1:
-			this->hSrl->hIsRegionAmerica = gcnew System::Boolean(true);
+			this->hSrl->IsRegionAmerica = true;
 		break;
 
 		case 2:
-			this->hSrl->hIsRegionEurope = gcnew System::Boolean(true);
+			this->hSrl->IsRegionEurope = true;
 		break;
 
 		case 3:
-			this->hSrl->hIsRegionAustralia = gcnew System::Boolean(true);
+			this->hSrl->IsRegionAustralia = true;
 		break;
 
 		case 4:
-			this->hSrl->hIsRegionEurope    = gcnew System::Boolean(true);
-			this->hSrl->hIsRegionAustralia = gcnew System::Boolean(true);
+			this->hSrl->IsRegionEurope    = true;
+			this->hSrl->IsRegionAustralia = true;
 		break;
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case 5:
-			this->hSrl->hIsRegionJapan     = gcnew System::Boolean(true);
-			this->hSrl->hIsRegionAmerica   = gcnew System::Boolean(true);
-			this->hSrl->hIsRegionEurope    = gcnew System::Boolean(true);
-			this->hSrl->hIsRegionAustralia = gcnew System::Boolean(true);
+			this->hSrl->IsRegionJapan     = true;
+			this->hSrl->IsRegionAmerica   = true;
+			this->hSrl->IsRegionEurope    = true;
+			this->hSrl->IsRegionAustralia = true;
 		break;
 #endif //defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		default:
@@ -75,10 +75,10 @@ void Form1::setRegionSrlPropaties(void)
 // SRL情報をフォームに反映させる
 void Form1::setRegionForms(void)
 {
-	System::Boolean isJapan   = *(this->hSrl->hIsRegionJapan);			// リージョン
-	System::Boolean isAmerica = *(this->hSrl->hIsRegionAmerica);
-	System::Boolean isEurope  = *(this->hSrl->hIsRegionEurope);
-	System::Boolean isAustralia = *(this->hSrl->hIsRegionAustralia);
+	System::Boolean isJapan   = this->hSrl->IsRegionJapan;			// リージョン
+	System::Boolean isAmerica = this->hSrl->IsRegionAmerica;
+	System::Boolean isEurope  = this->hSrl->IsRegionEurope;
+	System::Boolean isAustralia = this->hSrl->IsRegionAustralia;
 	System::Int32  index;
 	if( isJapan && !isAmerica && !isEurope && !isAustralia )
 		index = 0;

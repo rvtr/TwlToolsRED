@@ -65,8 +65,8 @@ namespace MasterEditorTWL
 	{
 	private:
 		System::String  ^hVersion;
-		System::UInt32  ^hCode;
-		System::Boolean ^hIsStatic;
+		System::UInt32   code;
+		System::Boolean  isStatic;
 	private:
 		RCSDKVersion(){}	// 封じる
 	public:
@@ -76,23 +76,23 @@ namespace MasterEditorTWL
 				this->hVersion = gcnew System::String("");	// NULL参照バグを避ける
 			else
 				this->hVersion  = ver;
-			this->hCode     = gcnew System::UInt32( code );
-			this->hIsStatic = gcnew System::Boolean( isStatic );
+			this->code     = code;
+			this->isStatic = isStatic;
 		}
 	public:
 		property System::String ^Version	// 生成後にはフィールドはRead Only
 		{
-			System::String^ get(){ return this->hVersion; }
+			System::String^ get(){ return System::String::Copy(this->hVersion); }
 		}
 	public:
 		property System::Boolean IsStatic
 		{
-			System::Boolean get(){ return *(this->hIsStatic); }
+			System::Boolean get(){ return (this->isStatic); }
 		}
 	public:
 		property System::UInt32 Code
 		{
-			System::UInt32 get(){ return *(this->hCode); }
+			System::UInt32 get(){ return (this->code); }
 		}
 	};
 
@@ -127,12 +127,12 @@ namespace MasterEditorTWL
 	public:
 		property System::String ^Name	// 生成後にはフィールドはRead Only
 		{
-			System::String^ get(){ return this->hName; }
+			System::String^ get(){ return System::String::Copy(this->hName); }
 		}
 	public:
 		property System::String ^Publisher
 		{
-			System::String^ get(){ return this->hPublisher; }
+			System::String^ get(){ return System::String::Copy(this->hPublisher); }
 		}
 	};
 
@@ -148,19 +148,19 @@ namespace MasterEditorTWL
 	{
 	private:
 		System::String  ^hName;		// 項目名
-		System::UInt32  ^hBegin;	// 開始アドレス
-		System::UInt32  ^hEnd;		// 終了アドレス
+		System::UInt32   begin;		// 開始アドレス
+		System::UInt32   end;		// 終了アドレス
 		System::String  ^hMsg;		// エラーメッセージ
 		System::String  ^hNameE;	// 英語版
 		System::String  ^hMsgE;
-		System::Boolean ^hEnableModify;	// マスタエディタで修正可能かどうか
-		System::Boolean ^hAffectRom;	// 変更するとSRL(ROMバイナリ)が変更されるか
+		System::Boolean  isEnableModify;	// マスタエディタで修正可能かどうか
+		System::Boolean  isAffectRom;		// 変更するとSRL(ROMバイナリ)が変更されるか
 	private:
 		RCMrcError(){}		// 封じる
 	public:
 		RCMrcError( 
 			System::String ^name,  System::UInt32 beg,   System::UInt32 end, System::String ^msg, 
-			System::String ^nameE, System::String ^msgE, System::Boolean enableModify, System::Boolean affectRom )
+			System::String ^nameE, System::String ^msgE, System::Boolean isEnableModify, System::Boolean isAffectRom )
 		{
 			if( name == nullptr )
 				this->hName = gcnew System::String("");
@@ -172,8 +172,8 @@ namespace MasterEditorTWL
 			else
 				this->hNameE = nameE;
 
-			this->hBegin = gcnew System::UInt32( beg );
-			this->hEnd   = gcnew System::UInt32( end );
+			this->begin = beg;
+			this->end   = end;
 
 			if( msg == nullptr )
 				this->hMsg = gcnew System::String("");
@@ -185,23 +185,23 @@ namespace MasterEditorTWL
 			else
 				this->hMsgE = msgE;
 
-			this->hEnableModify = gcnew System::Boolean( enableModify );
-			this->hAffectRom    = gcnew System::Boolean( affectRom );
+			this->isEnableModify = isEnableModify;
+			this->isAffectRom    = isAffectRom;
 		}
 	public:
-		property System::Boolean EnableModify
+		property System::Boolean IsEnableModify
 		{
-			System::Boolean get(){ return *(this->hEnableModify); }		// Read Only
+			System::Boolean get(){ return this->isEnableModify; }		// Read Only
 		}
-		property System::Boolean AffectRom
+		property System::Boolean IsAffectRom
 		{
-			System::Boolean get(){ return *(this->hAffectRom); }
+			System::Boolean get(){ return this->isAffectRom; }
 		}
 	public:
 		// gridViewの表示形式にあわせる
 		cli::array<System::Object^>^ getAll( System::Boolean isJapanese )
 		{
-			if( (*this->hBegin == METWL_ERRLIST_NORANGE) && (*this->hEnd == METWL_ERRLIST_NORANGE) )
+			if( (this->begin == METWL_ERRLIST_NORANGE) && (this->end == METWL_ERRLIST_NORANGE) )
 			{
 				if( isJapanese )
 					return (gcnew array<System::Object^>{this->hName,  "-", "-", this->hMsg});
@@ -210,9 +210,9 @@ namespace MasterEditorTWL
 			}
 
 			if( isJapanese )
-				return (gcnew array<System::Object^>{this->hName,  this->hBegin->ToString("X04")+"h", this->hEnd->ToString("X04")+"h", this->hMsg});
+				return (gcnew array<System::Object^>{this->hName,  this->begin.ToString("X04")+"h", this->end.ToString("X04")+"h", this->hMsg});
 			else
-				return (gcnew array<System::Object^>{this->hNameE, this->hBegin->ToString("X04")+"h", this->hEnd->ToString("X04")+"h", this->hMsgE});
+				return (gcnew array<System::Object^>{this->hNameE, this->begin.ToString("X04")+"h", this->end.ToString("X04")+"h", this->hMsgE});
 		}
 	};
 
@@ -227,20 +227,21 @@ namespace MasterEditorTWL
 	ref class RCMrcSpecialList
 	{
 	public:
-		property System::Boolean ^hIsCheck;
-		property System::UInt32  ^hSDKVer;
-		property System::Byte    ^hEULAVer;
-		property cli::array<System::UInt32^> ^hShared2SizeArray;
+		property System::Boolean  IsCheck;
+		property System::UInt32   SDKVer;
+		property System::Byte     EULAVer;
+		property cli::array<System::UInt32> ^hShared2SizeArray;
 	public:
 		RCMrcSpecialList()
 		{
-			this->hIsCheck = gcnew System::Boolean( false );
-			this->hSDKVer  = gcnew System::UInt32( 0 );
-			this->hShared2SizeArray = gcnew cli::array<System::UInt32^>(METWL_NUMOF_SHARED2FILES);	// ファイルサイズの数に合わせる
+			this->IsCheck = false;
+			this->SDKVer  = 0;
+			this->EULAVer = 0;
+			this->hShared2SizeArray = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);	// ファイルサイズの数に合わせる
 			System::Int32 i;
 			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 			{
-				this->hShared2SizeArray[i] = gcnew System::UInt32( 0 );
+				this->hShared2SizeArray[i] = 0;
 			}
 		}
 	};
@@ -269,64 +270,64 @@ namespace MasterEditorTWL
 		property System::String  ^hMakerCode;
 		property System::String  ^hPlatform;
 		property System::String  ^hRomSize;
-		property System::Byte    ^hRomVersion;
-		property System::UInt16  ^hHeaderCRC;
+		property System::Byte     RomVersion;
+		property System::UInt16   HeaderCRC;
 		property System::String  ^hLatency;		// MROM/1TROM/Illegal
 
 		// ペアレンタルコントロール
 		property cli::array<System::Int32> ^hArrayParentalIndex;		// 表示用のコンボボックスのインデックス
 
 		// TWL専用情報 一部編集可能
-		property System::UInt32  ^hNormalRomOffset;
-		property System::UInt32  ^hKeyTableRomOffset;
+		property System::UInt32   NormalRomOffset;
+		property System::UInt32   KeyTableRomOffset;
 		property System::String  ^hTitleIDLo;
-		property System::UInt32  ^hTitleIDHi;
-		property System::Boolean ^hIsAppLauncher;	// TitleIDLoからわかるアプリ種別
-		property System::Boolean ^hIsAppUser;		// TitleIDHiからわかるアプリ種別
-		property System::Boolean ^hIsAppSystem;		//
-		property System::Boolean ^hIsAppSecure;		//
-		property System::Boolean ^hIsLaunch;		//
-		property System::Boolean ^hIsMediaNand;		//
-		property System::Boolean ^hIsDataOnly;		//
-		property System::UInt16  ^hPublisherCode;	//
-		property System::UInt32  ^hPublicSize;
-		property System::UInt32  ^hPrivateSize;
-		property System::Boolean ^hIsNormalJump;
-		property System::Boolean ^hIsTmpJump;
-		property System::Boolean ^hHasDSDLPlaySign;	// ROMヘッダ外のSRLからわかる署名の有無
-		property System::Boolean ^hIsOldDevEncrypt;	// 旧開発用暗号フラグが立っている
-		property System::Boolean ^hIsSCFGAccess;		// SCFGレジスタをロックしている
+		property System::UInt32   TitleIDHi;
+		property System::Boolean  IsAppLauncher;	// TitleIDLoからわかるアプリ種別
+		property System::Boolean  IsAppUser;		// TitleIDHiからわかるアプリ種別
+		property System::Boolean  IsAppSystem;	//
+		property System::Boolean  IsAppSecure;	//
+		property System::Boolean  IsLaunch;		//
+		property System::Boolean  IsMediaNand;	//
+		property System::Boolean  IsDataOnly;	//
+		property System::UInt16   PublisherCode;	//
+		property System::UInt32   PublicSize;
+		property System::UInt32   PrivateSize;
+		property System::Boolean  IsNormalJump;
+		property System::Boolean  IsTmpJump;
+		property System::Boolean  HasDSDLPlaySign;	// ROMヘッダ外のSRLからわかる署名の有無
+		property System::Boolean  IsOldDevEncrypt;	// 旧開発用暗号フラグが立っている
+		property System::Boolean  IsSCFGAccess;		// SCFGレジスタをロックしている
 
 		// TWL拡張フラグ 一部編集可能
-		property System::Boolean ^hIsCodecTWL;
-		property System::Boolean ^hIsEULA;			// 編集可能
-		property System::Boolean ^hIsSubBanner;
-		property System::Boolean ^hIsWiFiIcon;		// 編集可能
-		property System::Boolean ^hIsWirelessIcon;	// 編集可能
-		property System::Boolean ^hIsWL;
+		property System::Boolean IsCodecTWL;
+		property System::Boolean IsEULA;			// 編集可能
+		property System::Boolean IsSubBanner;
+		property System::Boolean IsWiFiIcon;		// 編集可能
+		property System::Boolean IsWirelessIcon;	// 編集可能
+		property System::Boolean IsWL;
 
 		// TWLアクセスコントロール Read Only
-		property System::Boolean ^hIsCommonClientKey;
-		property System::Boolean ^hIsAesSlotBForES;
-		property System::Boolean ^hIsAesSlotCForNAM;
-		property System::Boolean ^hIsSD;
-		property System::Boolean ^hIsNAND;
-		property System::Boolean ^hIsGameCardOn;
-		property System::Boolean ^hIsShared2;
-		property System::Boolean ^hIsAesSlotBForJpegEnc;
-		property System::Boolean ^hIsAesSlotBForJpegEncUser;
-		property System::Boolean ^hIsGameCardNitro;
-		property System::Boolean ^hIsAesSlotAForSSL;
-		property System::Boolean ^hIsCommonClientKeyForDebugger;
+		property System::Boolean IsCommonClientKey;
+		property System::Boolean IsAesSlotBForES;
+		property System::Boolean IsAesSlotCForNAM;
+		property System::Boolean IsSD;
+		property System::Boolean IsNAND;
+		property System::Boolean IsGameCardOn;
+		property System::Boolean IsShared2;
+		property System::Boolean IsAesSlotBForJpegEnc;
+		property System::Boolean IsAesSlotBForJpegEncUser;
+		property System::Boolean IsGameCardNitro;
+		property System::Boolean IsAesSlotAForSSL;
+		property System::Boolean IsCommonClientKeyForDebugger;
 
 		// Shared2ファイルサイズ Read Only
-		property cli::array<System::UInt32^> ^hShared2SizeArray;
+		property cli::array<System::UInt32> ^hShared2SizeArray;
 
 		// カードリージョン Read Only
-		property System::Boolean ^hIsRegionJapan;
-		property System::Boolean ^hIsRegionAmerica;
-		property System::Boolean ^hIsRegionEurope;
-		property System::Boolean ^hIsRegionAustralia;
+		property System::Boolean IsRegionJapan;
+		property System::Boolean IsRegionAmerica;
+		property System::Boolean IsRegionEurope;
+		property System::Boolean IsRegionAustralia;
 
 		// SDKバージョンと使用ライブラリのリスト
 		property System::Collections::Generic::List<RCSDKVersion^> ^hSDKList;

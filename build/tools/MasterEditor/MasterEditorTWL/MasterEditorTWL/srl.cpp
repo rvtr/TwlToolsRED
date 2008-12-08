@@ -1467,6 +1467,18 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	this->mrcBanner( fp );
 	this->mrcReservedArea(fp);
 
+	for each( RCLicense ^lic in this->hLicenseList )
+	{
+		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->Equals( "DEBUG" ) )
+		{
+			this->hErrorList->Add( gcnew RCMrcError( 
+				"Debug/Releaseビルド", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+				"FINALROMビルドのROMではありません。必ずFINALROMビルドのROMを作成してご提出ください。",
+				"Debug/Release Build",
+				"This ROM isn't FINALROM-build. Please submit a FINALROM-build ROM.", false, true ) );
+		}
+	}
+
 	// 追加チェック
 	if( this->hMrcSpecialList->IsCheck )
 	{

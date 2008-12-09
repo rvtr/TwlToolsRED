@@ -1062,7 +1062,7 @@ void TwlMain(void)
 	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
 	break;
       default:
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	m_set_palette(tc[1], M_TEXT_COLOR_GREEN );
 	break;
       }
       mfprintf(tc[1], "%d/5\n\n" , BatterylevelBuf); 

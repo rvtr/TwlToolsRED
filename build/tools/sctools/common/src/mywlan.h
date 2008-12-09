@@ -25,6 +25,10 @@ u32 GetDNS2(void);
 
 BOOL GetKeyModeStr(void);
 
+
+char *GetNTPSRV(void);
+int GetTimeZone(void);
+
 #ifdef __cplusplus
 }
 #endif

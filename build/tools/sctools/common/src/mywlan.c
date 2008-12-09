@@ -19,6 +19,9 @@ static char SSID_STR[256];
 static int SSID_LEN = 0;
 static int key_mode = 0; /* 0->str 1->bin */
 static char KEY_STR[256];
+static char NTPSRV_STR[256];
+static int NTPSRV_LEN = 0;
+static int TIME_ZONE = 0;
 
 static u8 KEY_BIN[MAX_KEY_BIN_BUF];
 static int KEY_STR_LEN = 0;
@@ -75,9 +78,25 @@ u32 GetDNS2(void)
   return DNS2;
 }
 
+int GetTimeZone(void)
+{
+  return TIME_ZONE;
+}
+
+char *GetNTPSRV(void)
+{
+  if( NTPSRV_LEN ) {
+    return NTPSRV_STR;
+  }
+  return NULL;
+}
+
 char *GetWlanSSID(void)
 {
-  return SSID_STR;
+  if( SSID_LEN ) {
+    return SSID_STR;
+  }
+  return NULL;
 }
 
 char *GetWlanKEYSTR(void)
@@ -253,6 +272,13 @@ BOOL LoadWlanConfigFile(char *path)
   BOOL dns1_flag;
   BOOL dns2_flag;
 
+  BOOL ntpsrv_flag;
+  BOOL timezone_flag;
+  int time_zone_minus;
+  int time_zone_hour_min;
+  int time_zone_hour;
+  int time_zone_min;
+
   BOOL ret_flag = FALSE;
   u8 hex;
   char c;
@@ -281,7 +307,8 @@ BOOL LoadWlanConfigFile(char *path)
   gw_flag = FALSE;
   dns1_flag = FALSE;
   dns2_flag = FALSE;
-
+  ntpsrv_flag = FALSE;
+  timezone_flag = FALSE;
 
   while( 1 ) {
     readSize = ReadLine(&f, line_buf, LINE_BUF_SIZE );
@@ -309,6 +336,77 @@ BOOL LoadWlanConfigFile(char *path)
 	      DHCP_MODE = 1;
 	      OS_TPrintf("DHCP ON %s %d\n",__FUNCTION__,__LINE__);
 	    }
+	  }
+	}
+      }
+      else if( !ntpsrv_flag  &&  !STD_StrNCmp( line_buf, "NTPSRV:" , STD_StrLen("NTPSRV:")) ) {
+	count = STD_StrLen("NTPSRV:");
+	if( line_buf[count] == '\"' /* ‚PŒÂ–Ú */) {
+	  count++;
+	  count2 = count;
+	  while( readSize > count ) {
+	    if( line_buf[count] == '\"' /* ‚QŒÂ–Ú */) {
+	      NTPSRV_LEN = count - 1;
+	      NTPSRV_STR[count - count2] = '\0';
+	      ntpsrv_flag = TRUE;
+	      break;
+	    }
+	    NTPSRV_STR[count - count2] = line_buf[count];
+	    count++;
+	  }
+	}
+      }
+      else if( !timezone_flag  &&  !STD_StrNCmp( line_buf, "TIMEZONE:" , STD_StrLen("TIMEZONE:")) ) {
+	count = STD_StrLen("TIMEZONE:");
+	if( line_buf[count] == '\"' /* ‚PŒÂ–Ú */) {
+	  count++;
+	  count2 = count;
+
+	  time_zone_minus = 0;
+	  time_zone_hour_min = 0;
+	  time_zone_hour = 0;
+	  time_zone_min = 0;
+	  TIME_ZONE = 0;
+
+	  if( line_buf[count] == '+' ) {
+	    count++;
+	  }
+	  else if( line_buf[count] == '-' ) {
+	    time_zone_minus = 1;
+	    count++;
+	  }
+
+	  while( readSize > count ) {
+	    if( line_buf[count] == '\"' /* ‚QŒÂ–Ú */) {
+	      
+	      TIME_ZONE = time_zone_hour * 60;
+	      TIME_ZONE += time_zone_min;
+
+	      if( time_zone_minus ) {
+		TIME_ZONE *= -1;
+	      }
+	      timezone_flag = TRUE;
+	      break;
+	    }
+	    else if( line_buf[count] == ':' ) {
+	      time_zone_hour_min = 1;
+	    }
+	    else if( ('0' <= line_buf[count]) && ( line_buf[count] <= '9') ) {
+	      if( time_zone_hour_min == 0) {
+		time_zone_hour *= 10;
+		time_zone_hour += (line_buf[count] - '0');
+	      }
+	      else {
+		time_zone_min *= 10;
+		time_zone_min += (line_buf[count] - '0');
+	      }
+	    }
+	    else {
+	      /* error */
+	      TIME_ZONE = 0;
+	      break;
+	    }
+	    count++;
 	  }
 	}
       }

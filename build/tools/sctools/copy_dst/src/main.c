@@ -53,6 +53,7 @@
 #include        "mfiler.h"
 #include        "menu_version.h"
 
+#include        "ntp.h"
 
 //================================================================================
 #define THREAD_COMMAND_NUP_FUNCTION               0
@@ -146,12 +147,13 @@ static int vram_num_sub = 0;
 static  LCFGTWLHWNormalInfo hwn_info;
 static  LCFGTWLHWSecureInfo hws_info;
 
-
-
 #define	MY_STACK_SIZE  (1024*64) /* Ç≈Ç©Ç¢ÇŸÇ§Ç™Ç¢Ç¢ */
-#define	MY_THREAD_PRIO        20
+//#define	MY_THREAD_PRIO        20
+
+#define	MY_THREAD_PRIO        10
+
 static OSThread MyThread;
-static u64 MyStack[MY_STACK_SIZE / sizeof(u64)];
+static u64 MyStack[MY_STACK_SIZE/sizeof(u64)];
 static void MyThreadProc(void *arg);
 static void MyThreadProcNuc(void *arg);
 
@@ -162,12 +164,11 @@ static OSMessageQueue MyMesgQueue_response;
 
 static void init_my_thread(void)
 {
-
   OS_InitMessageQueue(&MyMesgQueue_request, &MyMesgBuffer_request[0], 1);
   OS_InitMessageQueue(&MyMesgQueue_response, &MyMesgBuffer_response[0], 1);
 
   OS_CreateThread(&MyThread, MyThreadProc,
-		  NULL, MyStack + MY_STACK_SIZE / sizeof(u64),
+		  NULL, MyStack + MY_STACK_SIZE /sizeof(u64),
 		  MY_STACK_SIZE, MY_THREAD_PRIO);
   OS_WakeupThreadDirect(&MyThread);
 }
@@ -941,13 +942,13 @@ static void MyThreadProcNuc(void *arg)
   FSFile *log_fd;
   BOOL ret_flag;
 
-  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
   while( 1 ) {
     (void)OS_SendMessage(&MyMesgQueue_response, (OSMessage)0, OS_MESSAGE_NOBLOCK);
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
 
     if( (u32)message == THREAD_COMMAND_REBOOT_FUNCTION ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       mprintf("%s Power button pressed!\n",__FUNCTION__);
       OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
       MCU_SetFreeRegister( 0x00 );
@@ -955,9 +956,13 @@ static void MyThreadProcNuc(void *arg)
       pushed_power_button = FALSE;
     }
     else if( (u32)message != THREAD_COMMAND_NUP_FUNCTION ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
       mprintf("%s unknown command!\n",__FUNCTION__);
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       continue;
     }
+
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
     mprintf("-Wireless AP conf. load      ");
     if( TRUE == LoadWlanConfig() ) {
@@ -997,6 +1002,66 @@ static void MyThreadProcNuc(void *arg)
 	mprintf("OK.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
+
+
+      
+      /* miya */
+      OS_TPrintf("ntp start\n");
+      if( TRUE == my_ntp_init() ) {
+	RTCDate rtc_date;
+	RTCTime rtc_time;
+	rtc_date.year = (u32)( my_ntp_get_year() - 2000 );
+	rtc_date.month = (u32)(my_ntp_get_month() + 1 );
+	rtc_date.day = (u32)my_ntp_get_day();
+
+	rtc_time.hour = (u32)my_ntp_get_hour();
+	rtc_time.minute = (u32)my_ntp_get_min();
+	rtc_time.second = (u32)my_ntp_get_sec();
+
+	//RTCDate rtc_date;
+	//RTCTime rtc_time;
+	/*
+	  typedef enum RTCWeek
+	  {
+	  RTC_WEEK_SUNDAY = 0,               // ì˙ójì˙
+	  RTC_WEEK_MONDAY,                   // åéójì˙
+	  RTC_WEEK_TUESDAY,                  // âŒójì˙
+	  RTC_WEEK_WEDNESDAY,                // êÖójì˙
+	  RTC_WEEK_THURSDAY,                 // ñÿójì˙
+	  RTC_WEEK_FRIDAY,                   // ã‡ójì˙
+	  RTC_WEEK_SATURDAY,                 // ìyójì˙
+	  RTC_WEEK_MAX
+	  }
+	  RTCWeek;
+
+
+	  typedef struct RTCDate
+	  {
+	  u32     year;                      // îN ( 0 ~ 99 )
+	  u32     month;                     // åé ( 1 ~ 12 )
+	  u32     day;                       // ì˙ ( 1 ~ 31 )
+	  RTCWeek week;                      // ójì˙
+	  
+	  }
+	  RTCDate;
+	  
+	  // éûçèç\ë¢ëÃ
+	  typedef struct RTCTime
+	  {
+	  u32     hour;                      // éû ( 0 ~ 23 )
+	  u32     minute;                    // ï™ ( 0 ~ 59 )
+	  u32     second;                    // ïb ( 0 ~ 59 )
+	  
+	  }
+	  RTCTime;
+	*/
+	
+	if( RTC_RESULT_SUCCESS != RTC_SetDate( &rtc_date ) ) {
+	}
+	if( RTC_RESULT_SUCCESS != RTC_SetTime( &rtc_time ) ) {
+	}
+      }
+      OS_TPrintf("ntp end\n");
 
 
       /* NSSL_Init()åƒÇÒÇ≈ÇÕÉ_ÉÅÅI */
@@ -1771,7 +1836,7 @@ void TwlMain(void)
 	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW );
 	break;
       default:
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	m_set_palette(tc[1], M_TEXT_COLOR_GREEN );
 	break;
       }
       mfprintf(tc[1], "%d/5\n\n" , BatterylevelBuf); 

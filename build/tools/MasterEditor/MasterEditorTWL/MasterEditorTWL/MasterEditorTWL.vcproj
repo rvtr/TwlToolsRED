@@ -220,7 +220,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Form_init.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Form_lang.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Form_mwlist.cpp"
 				>
 			</File>
 			<File

@@ -21,7 +21,10 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
+
+// ----------------------------------------------
 // 一時保存
+// ----------------------------------------------
 System::Void Form1::saveTmp( System::String ^filename )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
@@ -107,7 +110,9 @@ System::Void Form1::saveTmp( System::String ^filename )
 	}
 } //saveTmp()
 
+// ----------------------------------------------
 // 一時ファイルの読み込み
+// ----------------------------------------------
 void Form1::loadTmp( System::String ^filename )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;
@@ -243,7 +248,9 @@ void Form1::loadTmp( System::String ^filename )
 
 } //loadTmp()
 
+// ----------------------------------------------
 // 一時保存情報をフォーム情報に変換
+// ----------------------------------------------
 System::Boolean Form1::parseTmp( System::Xml::XmlElement ^root, System::String ^xpath, System::Windows::Forms::ComboBox ^comb )
 {
 	// コンボボックスの保存情報 - インデックスの範囲に含まれるか調べる(含まれない場合は-1)

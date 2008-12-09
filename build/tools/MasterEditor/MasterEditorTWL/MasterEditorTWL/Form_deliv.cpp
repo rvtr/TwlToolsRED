@@ -21,6 +21,11 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
+
+// ----------------------------------------------
+// [sheet <= Form]
+// 提出確認書にフォームを反映
+// ----------------------------------------------
 void Form1::setDeliverableProperties(void)
 {
 	// 提出情報
@@ -297,7 +302,6 @@ void Form1::setDeliverableProperties(void)
 // ----------------------------------------------
 // マスタ書類情報(SRL影響なし)のフォームチェック
 // ----------------------------------------------
-
 System::Boolean Form1::checkDeliverableForms(void)
 {
 	// 不正な場合はダイアログで注意してreturn

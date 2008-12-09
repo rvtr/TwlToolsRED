@@ -21,7 +21,10 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
-// 日本語版と英語版でテキストボックスの文字列制限が変わる
+// ----------------------------------------------
+// テキストボックスの文字列制限を変える
+// (日本語版と英語版で文字列制限を変えたい)
+// ----------------------------------------------
 void Form1::changeMaxLength( System::Windows::Forms::TextBox ^tbox, System::Int32 maxlen )
 {
 	if( tbox->Text->Length > maxlen )
@@ -30,7 +33,9 @@ void Form1::changeMaxLength( System::Windows::Forms::TextBox ^tbox, System::Int3
 	tbox->MaxLength = maxlen;
 }
 
+// ----------------------------------------------
 // 日本語版への切り替え
+// ----------------------------------------------
 void Form1::changeJapanese(void)
 {
 	// 入力文字数制限を変更する
@@ -41,7 +46,9 @@ void Form1::changeJapanese(void)
 	this->changeLanguage( "ja" );
 }
 
+// ----------------------------------------------
 // 英語版への切り替え
+// ----------------------------------------------
 void  Form1::changeEnglish(void)
 {
 	this->changeMaxLength( this->tboxCompany1, 40 );
@@ -51,7 +58,9 @@ void  Form1::changeEnglish(void)
 	this->changeLanguage( "en" );
 }
 
+// ----------------------------------------------
 // 言語リソース切り替え
+// ----------------------------------------------
 void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 {
 	int  index;

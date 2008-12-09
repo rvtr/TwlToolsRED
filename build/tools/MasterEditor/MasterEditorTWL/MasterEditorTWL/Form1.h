@@ -771,7 +771,12 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 				this->stripItemEnglish->Checked  = true;
 			}
 
-			this->loadInit();	// 設定ファイルの読み込み
+			// 非表示項目
+			this->changeVisibleForms( false );
+
+			// 設定ファイルの読み込み
+			this->loadInit();
+			this->loadAppendInit();	// 追加設定ファイル
 		}
 
 	protected:
@@ -815,10 +820,10 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle7 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle8 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -2336,15 +2341,15 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle5;
 			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
@@ -2373,6 +2378,7 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			// 
 			// tabTWLInfo
 			// 
+			this->tabTWLInfo->Controls->Add(this->cboxIsNormalJump);
 			this->tabTWLInfo->Controls->Add(this->gboxLaunch);
 			this->tabTWLInfo->Controls->Add(this->tboxGuideTWLInfo);
 			this->tabTWLInfo->Controls->Add(this->gboxExFlags);
@@ -2413,7 +2419,6 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			// 
 			// gboxExFlags
 			// 
-			this->gboxExFlags->Controls->Add(this->cboxIsNormalJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsTmpJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsSubBanner);
 			resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
@@ -2636,15 +2641,15 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle6;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->Name = L"gridWarn";
@@ -2679,22 +2684,22 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			// 
 			// gridError
 			// 
-			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle7->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle8->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle8->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle8->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle8->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle8->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle8->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle8->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle8;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->Name = L"gridError";
@@ -2813,16 +2818,21 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 	/////////////////////////////////////////////
 	private:
 		// ----------------------------------------------
-		// ファイルのR/W
+		// 設定ファイルの読み込み
 		// ----------------------------------------------
 
-		// 設定ファイルの読み込み
-		void loadInit(void);
+		void loadInit(void);		// 設定ファイル
+		void loadAppendInit(void);	// 追加設定ファイル(内部向け)
 
-		// ファイルの読み込み (TAD/SRL読み込みをラップ)
+	private:
+		// ----------------------------------------------
+		// ROMファイルのR/W
+		// ----------------------------------------------
+
+		// ROMファイルの読み込み (TAD/SRL読み込みをラップ)
 		System::Boolean loadRom( System::String ^infile );
 
-		// ファイルの書き出し (SRL書き出しをラップ)
+		// ROMファイルの書き出し (SRL書き出しをラップ)
 		System::Boolean saveRom( System::String ^outname );
 
 		// SRLの読み込み
@@ -2849,18 +2859,6 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			return tmpfile;
 		}
 
-		// ミドルウェアリストの作成(XML形式)
-		System::Void makeMiddlewareListXml(System::Xml::XmlDocument^ doc);
-
-		// ミドルウェアリストの書き出し
-		System::Boolean saveMiddlewareListXml( System::String ^filename );
-
-		// ミドルウェアリストの書き出し(XML->HTML変換)
-		System::Boolean saveMiddlewareListHtml( System::String ^filename );
-
-		// ミドルウェアリストの書き出し(XSL埋め込み)
-		System::Boolean saveMiddlewareListXmlEmbeddedXsl( System::String ^filename );
-
 		// 提出ファイル名をゲームコードなどから決定
 		System::String^ getSubmitFilePrefix(void)
 		{
@@ -2874,6 +2872,23 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			}
 			return prefix;
 		}
+
+	private:
+		// ----------------------------------------------
+		// ミドルウェアリストの書き出し
+		// ----------------------------------------------
+
+		// XML形式のリストを作成
+		System::Void makeMiddlewareListXml(System::Xml::XmlDocument^ doc);
+
+		// XML形式で書き出し
+		System::Boolean saveMiddlewareListXml( System::String ^filename );
+
+		// HTML形式で書き出し(XML->HTML変換)
+		System::Boolean saveMiddlewareListHtml( System::String ^filename );
+
+		// XSL埋め込みXML形式で書き出し
+		System::Boolean saveMiddlewareListXmlEmbeddedXsl( System::String ^filename );
 
 	private:
 		// ----------------------------------------------
@@ -2900,10 +2915,19 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 		// フォームの初期設定
 		// ----------------------------------------------
 
+		// 非表示項目の表示切替
+		void changeVisibleForms( System::Boolean visible )
+		{
+			this->gboxShared2Size->Visible  = visible;
+			this->cboxIsNormalJump->Visible = visible;
+			this->tboxIsGameCardOn->Visible = visible;
+			this->labIsGameCardOn->Visible  = visible;
+			this->labIsGameCardOn2->Visible = visible;
+		}
+
 		// 設定/選択可能なフォームをすべて disable にする
 		void readOnly( void )
 		{
-			this->cboxIsEULA->Enabled = false;
 			this->cboxIsUGC->Enabled       = false;
 			this->cboxIsPhotoEx->Enabled   = false;
 

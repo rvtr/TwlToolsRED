@@ -340,13 +340,6 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				else
 					node->FirstChild->Value = nullptr;
 			}
-			if( node->FirstChild->Value->Equals( "TagIsWL" ) )
-			{
-				if( hSrl->IsWL )
-					node->FirstChild->Value = gcnew System::String("›");
-				else
-					node->FirstChild->Value = nullptr;
-			}
 			if( node->FirstChild->Value->Equals( "TagIsSD" ) )
 			{
 				if( hSrl->IsSD )

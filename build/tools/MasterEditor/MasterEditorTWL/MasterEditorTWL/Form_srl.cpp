@@ -21,8 +21,12 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
-// ROM情報をフォームから取得してSRLクラスのプロパティに反映させる
+// ----------------------------------------------
+// [SRL <= Form]
+// ROM情報をフォームから取得して
+// SRLクラスのプロパティに反映させる
 // (ROMヘッダへの反映やCRCと署名の再計算をしない)
+// ----------------------------------------------
 void Form1::setSrlProperties(void)
 {
 	// ROMヘッダの[0,0x160)の領域はRead Onlyで変更しない
@@ -34,7 +38,11 @@ void Form1::setSrlProperties(void)
 	this->setParentalSrlProperties();
 } //setSrlProperties()
 
-// SRLのROM情報をフォームに反映させる(ファイルが読み込まれていることが前提)
+// ----------------------------------------------
+// [SRL => Form]
+// SRLのROM情報をフォームに反映させる
+// (ファイルが読み込まれていることが前提)
+// ----------------------------------------------
 void Form1::setSrlForms(void)
 {
 	// NTR互換情報
@@ -217,7 +225,11 @@ void Form1::setSrlForms(void)
 	}
 } // setSrlForms()
 
-// SRLの特殊な設定をフォームにセットする(言語切り替えで表示を変えたいので独立させる)
+// ----------------------------------------------
+// [SRL => Form]
+// SRLの特殊な設定をフォームにセットする
+// (言語切り替えで表示を変えたいので独立させる)
+// ----------------------------------------------
 void Form1::setSrlFormsTextBox()
 {
 	if( !this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
@@ -283,7 +295,9 @@ void Form1::setSrlFormsTextBox()
 	}
 } // setSrlFormsTextBox()
 
+// ----------------------------------------------
 // フォームの入力をチェックする
+// ----------------------------------------------
 System::Boolean Form1::checkSrlForms(void)
 {
 	// リージョン

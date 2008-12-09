@@ -403,7 +403,7 @@ private: System::Windows::Forms::Label^  labNormalRomOffset;
 private: System::Windows::Forms::TextBox^  tboxNormalRomOffset;
 private: System::Windows::Forms::CheckBox^  cboxIsSubBanner;
 private: System::Windows::Forms::Label^  labKeyTableRomOffset;
-private: System::Windows::Forms::CheckBox^  cboxIsWL;
+
 private: System::Windows::Forms::TextBox^  tboxPrivateSize;
 private: System::Windows::Forms::Label^  labPrivateSize;
 private: System::Windows::Forms::TextBox^  tboxKeyTableRomOffset;
@@ -484,8 +484,8 @@ private: System::Windows::Forms::GroupBox^  gboxExFlags;
 
 
 
-private: System::Windows::Forms::GroupBox^  gboxEULA;
-private: System::Windows::Forms::GroupBox^  gboxIcon;
+
+
 private: System::Windows::Forms::GroupBox^  gboxParental;
 private: System::Windows::Forms::TextBox^  tboxGuideRomInfo;
 private: System::Windows::Forms::TextBox^  tboxGuideTWLInfo;
@@ -563,12 +563,12 @@ private: System::Windows::Forms::TextBox^  tboxAppType;
 private: System::Windows::Forms::TextBox^  tboxMedia;
 private: System::Windows::Forms::Label^  labProductNameLimit;
 private: System::Windows::Forms::Label^  labProductNameLimitForeign;
-private: System::Windows::Forms::RadioButton^  rIsWiFiIcon;
 
 
 
-private: System::Windows::Forms::RadioButton^  rIsWirelessIcon;
-private: System::Windows::Forms::RadioButton^  rIsNoIcon;
+
+
+
 
 
 
@@ -607,6 +607,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnName;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnBegin;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnEnd;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
+private: System::Windows::Forms::GroupBox^  gboxLaunch;
+private: System::Windows::Forms::Label^  labConnectIcon;
+private: System::Windows::Forms::TextBox^  tboxConnectIcon;
+private: System::Windows::Forms::Label^  labIsGameCardOn2;
+
+
+
+
+
+
+
 
 
 
@@ -951,19 +962,19 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->labHex3 = (gcnew System::Windows::Forms::Label());
 			this->tboxIsCodec = (gcnew System::Windows::Forms::TextBox());
 			this->labIsCodec = (gcnew System::Windows::Forms::Label());
+			this->tboxPrivateSize = (gcnew System::Windows::Forms::TextBox());
+			this->labPrivateSize = (gcnew System::Windows::Forms::Label());
 			this->labNormalRomOffset = (gcnew System::Windows::Forms::Label());
 			this->tboxNormalRomOffset = (gcnew System::Windows::Forms::TextBox());
 			this->labKeyTableRomOffset = (gcnew System::Windows::Forms::Label());
-			this->tboxPrivateSize = (gcnew System::Windows::Forms::TextBox());
-			this->labPrivateSize = (gcnew System::Windows::Forms::Label());
-			this->tboxKeyTableRomOffset = (gcnew System::Windows::Forms::TextBox());
 			this->labPublicSize = (gcnew System::Windows::Forms::Label());
 			this->tboxPublicSize = (gcnew System::Windows::Forms::TextBox());
+			this->tboxKeyTableRomOffset = (gcnew System::Windows::Forms::TextBox());
 			this->cboxIsSubBanner = (gcnew System::Windows::Forms::CheckBox());
-			this->cboxIsWL = (gcnew System::Windows::Forms::CheckBox());
 			this->cboxIsNormalJump = (gcnew System::Windows::Forms::CheckBox());
 			this->cboxIsTmpJump = (gcnew System::Windows::Forms::CheckBox());
 			this->gboxAccess = (gcnew System::Windows::Forms::GroupBox());
+			this->labIsGameCardOn2 = (gcnew System::Windows::Forms::Label());
 			this->labAccessOther = (gcnew System::Windows::Forms::Label());
 			this->tboxAccessOther = (gcnew System::Windows::Forms::TextBox());
 			this->tboxIsGameCardOn = (gcnew System::Windows::Forms::TextBox());
@@ -1007,6 +1018,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->colLibName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->tboxGuideRomInfo = (gcnew System::Windows::Forms::TextBox());
 			this->tabTWLInfo = (gcnew System::Windows::Forms::TabPage());
+			this->gboxLaunch = (gcnew System::Windows::Forms::GroupBox());
+			this->labConnectIcon = (gcnew System::Windows::Forms::Label());
+			this->tboxConnectIcon = (gcnew System::Windows::Forms::TextBox());
 			this->tboxGuideTWLInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxExFlags = (gcnew System::Windows::Forms::GroupBox());
 			this->tabRomEditInfo = (gcnew System::Windows::Forms::TabPage());
@@ -1016,11 +1030,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->butSetBack = (gcnew System::Windows::Forms::Button());
 			this->tboxGuideRomEditInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxParental = (gcnew System::Windows::Forms::GroupBox());
-			this->gboxIcon = (gcnew System::Windows::Forms::GroupBox());
-			this->rIsNoIcon = (gcnew System::Windows::Forms::RadioButton());
-			this->rIsWiFiIcon = (gcnew System::Windows::Forms::RadioButton());
-			this->rIsWirelessIcon = (gcnew System::Windows::Forms::RadioButton());
-			this->gboxEULA = (gcnew System::Windows::Forms::GroupBox());
 			this->tabSubmitInfo = (gcnew System::Windows::Forms::TabPage());
 			this->labProductNameLimit = (gcnew System::Windows::Forms::Label());
 			this->tboxGuideSubmitInfo = (gcnew System::Windows::Forms::TextBox());
@@ -1065,12 +1074,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->tabRomInfo->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->gridLibrary))->BeginInit();
 			this->tabTWLInfo->SuspendLayout();
+			this->gboxLaunch->SuspendLayout();
 			this->gboxExFlags->SuspendLayout();
 			this->tabRomEditInfo->SuspendLayout();
 			this->gboxOtherSpec->SuspendLayout();
 			this->gboxParental->SuspendLayout();
-			this->gboxIcon->SuspendLayout();
-			this->gboxEULA->SuspendLayout();
 			this->tabSubmitInfo->SuspendLayout();
 			this->gboxForeign->SuspendLayout();
 			this->tabCompanyInfo->SuspendLayout();
@@ -1950,14 +1958,14 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->gboxTWLExInfo->Controls->Add(this->labHex3);
 			this->gboxTWLExInfo->Controls->Add(this->tboxIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labIsCodec);
+			this->gboxTWLExInfo->Controls->Add(this->tboxPrivateSize);
+			this->gboxTWLExInfo->Controls->Add(this->labPrivateSize);
 			this->gboxTWLExInfo->Controls->Add(this->labNormalRomOffset);
 			this->gboxTWLExInfo->Controls->Add(this->tboxNormalRomOffset);
 			this->gboxTWLExInfo->Controls->Add(this->labKeyTableRomOffset);
-			this->gboxTWLExInfo->Controls->Add(this->tboxPrivateSize);
-			this->gboxTWLExInfo->Controls->Add(this->labPrivateSize);
-			this->gboxTWLExInfo->Controls->Add(this->tboxKeyTableRomOffset);
 			this->gboxTWLExInfo->Controls->Add(this->labPublicSize);
 			this->gboxTWLExInfo->Controls->Add(this->tboxPublicSize);
+			this->gboxTWLExInfo->Controls->Add(this->tboxKeyTableRomOffset);
 			resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
 			this->gboxTWLExInfo->Name = L"gboxTWLExInfo";
 			this->gboxTWLExInfo->TabStop = false;
@@ -1988,6 +1996,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			resources->ApplyResources(this->labIsCodec, L"labIsCodec");
 			this->labIsCodec->Name = L"labIsCodec";
 			// 
+			// tboxPrivateSize
+			// 
+			resources->ApplyResources(this->tboxPrivateSize, L"tboxPrivateSize");
+			this->tboxPrivateSize->Name = L"tboxPrivateSize";
+			this->tboxPrivateSize->ReadOnly = true;
+			// 
+			// labPrivateSize
+			// 
+			resources->ApplyResources(this->labPrivateSize, L"labPrivateSize");
+			this->labPrivateSize->Name = L"labPrivateSize";
+			// 
 			// labNormalRomOffset
 			// 
 			resources->ApplyResources(this->labNormalRomOffset, L"labNormalRomOffset");
@@ -2004,23 +2023,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			resources->ApplyResources(this->labKeyTableRomOffset, L"labKeyTableRomOffset");
 			this->labKeyTableRomOffset->Name = L"labKeyTableRomOffset";
 			// 
-			// tboxPrivateSize
-			// 
-			resources->ApplyResources(this->tboxPrivateSize, L"tboxPrivateSize");
-			this->tboxPrivateSize->Name = L"tboxPrivateSize";
-			this->tboxPrivateSize->ReadOnly = true;
-			// 
-			// labPrivateSize
-			// 
-			resources->ApplyResources(this->labPrivateSize, L"labPrivateSize");
-			this->labPrivateSize->Name = L"labPrivateSize";
-			// 
-			// tboxKeyTableRomOffset
-			// 
-			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
-			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
-			this->tboxKeyTableRomOffset->ReadOnly = true;
-			// 
 			// labPublicSize
 			// 
 			resources->ApplyResources(this->labPublicSize, L"labPublicSize");
@@ -2032,17 +2034,17 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->tboxPublicSize->Name = L"tboxPublicSize";
 			this->tboxPublicSize->ReadOnly = true;
 			// 
+			// tboxKeyTableRomOffset
+			// 
+			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
+			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
+			this->tboxKeyTableRomOffset->ReadOnly = true;
+			// 
 			// cboxIsSubBanner
 			// 
 			resources->ApplyResources(this->cboxIsSubBanner, L"cboxIsSubBanner");
 			this->cboxIsSubBanner->Name = L"cboxIsSubBanner";
 			this->cboxIsSubBanner->UseVisualStyleBackColor = true;
-			// 
-			// cboxIsWL
-			// 
-			resources->ApplyResources(this->cboxIsWL, L"cboxIsWL");
-			this->cboxIsWL->Name = L"cboxIsWL";
-			this->cboxIsWL->UseVisualStyleBackColor = true;
 			// 
 			// cboxIsNormalJump
 			// 
@@ -2058,6 +2060,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			// 
 			// gboxAccess
 			// 
+			this->gboxAccess->Controls->Add(this->labIsGameCardOn2);
 			this->gboxAccess->Controls->Add(this->labAccessOther);
 			this->gboxAccess->Controls->Add(this->tboxAccessOther);
 			this->gboxAccess->Controls->Add(this->tboxIsGameCardOn);
@@ -2067,6 +2070,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			resources->ApplyResources(this->gboxAccess, L"gboxAccess");
 			this->gboxAccess->Name = L"gboxAccess";
 			this->gboxAccess->TabStop = false;
+			// 
+			// labIsGameCardOn2
+			// 
+			resources->ApplyResources(this->labIsGameCardOn2, L"labIsGameCardOn2");
+			this->labIsGameCardOn2->Name = L"labIsGameCardOn2";
 			// 
 			// labAccessOther
 			// 
@@ -2365,6 +2373,7 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			// 
 			// tabTWLInfo
 			// 
+			this->tabTWLInfo->Controls->Add(this->gboxLaunch);
 			this->tabTWLInfo->Controls->Add(this->tboxGuideTWLInfo);
 			this->tabTWLInfo->Controls->Add(this->gboxExFlags);
 			this->tabTWLInfo->Controls->Add(this->gboxShared2Size);
@@ -2374,6 +2383,26 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
 			this->tabTWLInfo->Name = L"tabTWLInfo";
 			this->tabTWLInfo->UseVisualStyleBackColor = true;
+			// 
+			// gboxLaunch
+			// 
+			this->gboxLaunch->Controls->Add(this->labConnectIcon);
+			this->gboxLaunch->Controls->Add(this->tboxConnectIcon);
+			this->gboxLaunch->Controls->Add(this->cboxIsEULA);
+			resources->ApplyResources(this->gboxLaunch, L"gboxLaunch");
+			this->gboxLaunch->Name = L"gboxLaunch";
+			this->gboxLaunch->TabStop = false;
+			// 
+			// labConnectIcon
+			// 
+			resources->ApplyResources(this->labConnectIcon, L"labConnectIcon");
+			this->labConnectIcon->Name = L"labConnectIcon";
+			// 
+			// tboxConnectIcon
+			// 
+			resources->ApplyResources(this->tboxConnectIcon, L"tboxConnectIcon");
+			this->tboxConnectIcon->Name = L"tboxConnectIcon";
+			this->tboxConnectIcon->ReadOnly = true;
 			// 
 			// tboxGuideTWLInfo
 			// 
@@ -2386,7 +2415,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			// 
 			this->gboxExFlags->Controls->Add(this->cboxIsNormalJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsTmpJump);
-			this->gboxExFlags->Controls->Add(this->cboxIsWL);
 			this->gboxExFlags->Controls->Add(this->cboxIsSubBanner);
 			resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
 			this->gboxExFlags->Name = L"gboxExFlags";
@@ -2398,8 +2426,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->tabRomEditInfo->Controls->Add(this->butSetBack);
 			this->tabRomEditInfo->Controls->Add(this->tboxGuideRomEditInfo);
 			this->tabRomEditInfo->Controls->Add(this->gboxParental);
-			this->tabRomEditInfo->Controls->Add(this->gboxIcon);
-			this->tabRomEditInfo->Controls->Add(this->gboxEULA);
 			resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
 			this->tabRomEditInfo->Name = L"tabRomEditInfo";
 			this->tabRomEditInfo->UseVisualStyleBackColor = true;
@@ -2460,42 +2486,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			resources->ApplyResources(this->gboxParental, L"gboxParental");
 			this->gboxParental->Name = L"gboxParental";
 			this->gboxParental->TabStop = false;
-			// 
-			// gboxIcon
-			// 
-			this->gboxIcon->Controls->Add(this->rIsNoIcon);
-			this->gboxIcon->Controls->Add(this->rIsWiFiIcon);
-			this->gboxIcon->Controls->Add(this->rIsWirelessIcon);
-			resources->ApplyResources(this->gboxIcon, L"gboxIcon");
-			this->gboxIcon->Name = L"gboxIcon";
-			this->gboxIcon->TabStop = false;
-			// 
-			// rIsNoIcon
-			// 
-			resources->ApplyResources(this->rIsNoIcon, L"rIsNoIcon");
-			this->rIsNoIcon->Checked = true;
-			this->rIsNoIcon->Name = L"rIsNoIcon";
-			this->rIsNoIcon->TabStop = true;
-			this->rIsNoIcon->UseVisualStyleBackColor = true;
-			// 
-			// rIsWiFiIcon
-			// 
-			resources->ApplyResources(this->rIsWiFiIcon, L"rIsWiFiIcon");
-			this->rIsWiFiIcon->Name = L"rIsWiFiIcon";
-			this->rIsWiFiIcon->UseVisualStyleBackColor = true;
-			// 
-			// rIsWirelessIcon
-			// 
-			resources->ApplyResources(this->rIsWirelessIcon, L"rIsWirelessIcon");
-			this->rIsWirelessIcon->Name = L"rIsWirelessIcon";
-			this->rIsWirelessIcon->UseVisualStyleBackColor = true;
-			// 
-			// gboxEULA
-			// 
-			this->gboxEULA->Controls->Add(this->cboxIsEULA);
-			resources->ApplyResources(this->gboxEULA, L"gboxEULA");
-			this->gboxEULA->Name = L"gboxEULA";
-			this->gboxEULA->TabStop = false;
 			// 
 			// tabSubmitInfo
 			// 
@@ -2790,6 +2780,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->gridLibrary))->EndInit();
 			this->tabTWLInfo->ResumeLayout(false);
 			this->tabTWLInfo->PerformLayout();
+			this->gboxLaunch->ResumeLayout(false);
+			this->gboxLaunch->PerformLayout();
 			this->gboxExFlags->ResumeLayout(false);
 			this->gboxExFlags->PerformLayout();
 			this->tabRomEditInfo->ResumeLayout(false);
@@ -2798,10 +2790,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 			this->gboxOtherSpec->PerformLayout();
 			this->gboxParental->ResumeLayout(false);
 			this->gboxParental->PerformLayout();
-			this->gboxIcon->ResumeLayout(false);
-			this->gboxIcon->PerformLayout();
-			this->gboxEULA->ResumeLayout(false);
-			this->gboxEULA->PerformLayout();
 			this->tabSubmitInfo->ResumeLayout(false);
 			this->tabSubmitInfo->PerformLayout();
 			this->gboxForeign->ResumeLayout(false);
@@ -2916,9 +2904,6 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		void readOnly( void )
 		{
 			this->cboxIsEULA->Enabled = false;
-			this->rIsWirelessIcon->Enabled = false;
-			this->rIsWiFiIcon->Enabled     = false;
-			this->rIsNoIcon->Enabled       = false;
 			this->cboxIsUGC->Enabled       = false;
 			this->cboxIsPhotoEx->Enabled   = false;
 
@@ -2974,8 +2959,8 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 		// SRLのROM情報をフォームに反映させる(ファイルが読み込まれていることが前提)
 		void setSrlForms(void);
 
-		// SRLの特殊な設定をフォームにセットする(言語切り替えで表示を変えたいので独立させる)
-		void setSrlFormsCaptionEx();
+		// ROM情報のうちテキストボックスを更新する(言語切り替えで表示を変えたいので独立させる)
+		void setSrlFormsTextBox();
 
 		// フォームの入力をチェックする
 		System::Boolean checkSrlForms(void);
@@ -3623,24 +3608,13 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
 				return;
 
 			// 編集可能情報を読み込み時の設定に戻す
-			this->cboxIsEULA->Checked = this->hSrl->IsEULA;
-			if( ( this->hSrl->IsWiFiIcon &&  this->hSrl->IsWirelessIcon) ||
-				(!this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon) )
-			{
-				this->rIsNoIcon->Checked = true;
-			}
-			else if( this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
-			{
-				this->rIsWiFiIcon->Checked = true;
-			}
-			else
-			{
-				this->rIsWirelessIcon->Checked = true;
-			}
 			this->setRegionForms();
 			this->setParentalForms();
 			this->loadOtherForms();		// SRLに登録されていないROM仕様のフォームも戻す
 		}
+
+
+
 
 }; // enf of ref class Form1
 

@@ -298,12 +298,12 @@ namespace MasterEditorTWL
 		property System::Boolean  IsOldDevEncrypt;	// 旧開発用暗号フラグが立っている
 		property System::Boolean  IsSCFGAccess;		// SCFGレジスタをロックしている
 
-		// TWL拡張フラグ 一部編集可能
+		// TWL拡張フラグ Read Only
 		property System::Boolean IsCodecTWL;
-		property System::Boolean IsEULA;			// 編集可能
+		property System::Boolean IsEULA;
 		property System::Boolean IsSubBanner;
-		property System::Boolean IsWiFiIcon;		// 編集可能
-		property System::Boolean IsWirelessIcon;	// 編集可能
+		property System::Boolean IsWiFiIcon;
+		property System::Boolean IsWirelessIcon;
 		property System::Boolean IsWL;
 
 		// TWLアクセスコントロール Read Only

@@ -341,10 +341,10 @@
     <value>リージョン</value>
   </data>
   <data name="cboxIsEULA.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 16</value>
+    <value>213, 16</value>
   </data>
   <data name="cboxIsEULA.Text" xml:space="preserve">
-    <value>EULAへの同意を必要とする</value>
+    <value>EULA(利用規約)への同意を必要とする</value>
   </data>
   <data name="combRegion.Items" xml:space="preserve">
     <value>日本のみ</value>
@@ -589,12 +589,6 @@
   <data name="cboxIsSubBanner.Text" xml:space="preserve">
     <value>サブバナーファイル有効</value>
   </data>
-  <data name="cboxIsWL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>155, 16</value>
-  </data>
-  <data name="cboxIsWL.Text" xml:space="preserve">
-    <value>NTRホワイトリスト署名有効</value>
-  </data>
   <data name="cboxIsNormalJump.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 16</value>
   </data>
@@ -607,6 +601,12 @@
   <data name="cboxIsTmpJump.Text" xml:space="preserve">
     <value>tmpジャンプ許可</value>
   </data>
+  <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>98, 12</value>
+  </data>
+  <data name="labIsGameCardOn2.Text" xml:space="preserve">
+    <value>(NANDアプリからの)</value>
+  </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>36, 12</value>
   </data>
@@ -614,10 +614,10 @@
     <value>その他</value>
   </data>
   <data name="labIsGameCardOn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 12</value>
+    <value>99, 12</value>
   </data>
   <data name="labIsGameCardOn.Text" xml:space="preserve">
-    <value>ゲームカード電源</value>
+    <value>ゲームカードアクセス</value>
   </data>
   <data name="cboxIsNAND.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 16</value>
@@ -706,6 +706,12 @@
   <data name="tabRomInfo.Text" xml:space="preserve">
     <value>ROM基本情報(確認用)</value>
   </data>
+  <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>173, 12</value>
+  </data>
+  <data name="labConnectIcon.Text" xml:space="preserve">
+    <value>DSiメニュー上での通信アイコン表示</value>
+  </data>
   <data name="tboxGuideTWLInfo.Text" xml:space="preserve">
     <value>このタブの情報は編集不可です。データに誤りがある場合にはROMデータの作成時の設定を見直してください。</value>
   </data>
@@ -738,30 +744,6 @@
   </data>
   <data name="gboxParental.Text" xml:space="preserve">
     <value>リージョンとレーティング情報</value>
-  </data>
-  <data name="rIsNoIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 16</value>
-  </data>
-  <data name="rIsNoIcon.Text" xml:space="preserve">
-    <value>通信アイコンを表示しない</value>
-  </data>
-  <data name="rIsWiFiIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 16</value>
-  </data>
-  <data name="rIsWiFiIcon.Text" xml:space="preserve">
-    <value>Wi-Fi通信アイコン表示</value>
-  </data>
-  <data name="rIsWirelessIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>167, 16</value>
-  </data>
-  <data name="rIsWirelessIcon.Text" xml:space="preserve">
-    <value>DSワイヤレス通信アイコン表示</value>
-  </data>
-  <data name="gboxIcon.Text" xml:space="preserve">
-    <value>メニュー上での通信アイコン表示</value>
-  </data>
-  <data name="gboxEULA.Text" xml:space="preserve">
-    <value>EULA(利用規約)</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
     <value>ROM登録情報(編集可)</value>

@@ -84,14 +84,6 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "Mail2", this->tboxMail2->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "NTSC2", this->tboxNTSC2->Text );
 
-	if( this->rIsWirelessIcon->Checked )
-		MasterEditorTWL::appendXmlTag( doc, form, "DisplayIcon", "Wireless" );
-	else if( this->rIsWiFiIcon->Checked )
-		MasterEditorTWL::appendXmlTag( doc, form, "DisplayIcon", "WiFi" );
-	else
-		MasterEditorTWL::appendXmlTag( doc, form, "DisplayIcon", "None" );
-
-	MasterEditorTWL::appendXmlTag( doc, form, "IsEULA", (this->cboxIsEULA->Checked)?"Y":"N" );
 	MasterEditorTWL::appendXmlTag( doc, form, "Region", this->combRegion->SelectedIndex.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "RatingCERO", this->combCERO->SelectedIndex.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "RatingESRB", this->combESRB->SelectedIndex.ToString() );
@@ -159,9 +151,10 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/ProductCode1", this->tboxProductCode1 );
 	this->parseTmp( root, "/MasterEditorTWL/Form/ProductCode2", this->tboxProductCode2 );
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitVersion", this->numSubmitVersion );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Backup", this->combBackup );
 	this->parseTmp( root, "/MasterEditorTWL/Form/ReleaseDate", this->dateRelease );
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitDate",  this->dateSubmit );
+	this->parseTmp( root, "/MasterEditorTWL/Form/Backup", this->combBackup );
+	this->combBackup->Enabled = true;
 
 	this->tboxBackupOther->Enabled = false;
 	this->tboxBackupOther->Clear();
@@ -234,11 +227,6 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/Mail2", this->tboxMail2 );
 	this->parseTmp( root, "/MasterEditorTWL/Form/NTSC2", this->tboxNTSC2 );
 
-	rbuts = gcnew cli::array<System::Windows::Forms::RadioButton^>{this->rIsWirelessIcon, this->rIsWiFiIcon, this->rIsNoIcon};
-	strs  = gcnew cli::array<System::String^>{"Wireless","WiFi","None"};
-	this->parseTmp( root, "/MasterEditorTWL/Form/DisplayIcon", rbuts, strs );
-
-	this->parseTmp( root, "/MasterEditorTWL/Form/IsEULA", this->cboxIsEULA );
 	this->parseTmp( root, "/MasterEditorTWL/Form/Region", this->combRegion );
 	this->parseTmp( root, "/MasterEditorTWL/Form/RatingCERO", this->combCERO );
 	this->parseTmp( root, "/MasterEditorTWL/Form/RatingESRB", this->combESRB );

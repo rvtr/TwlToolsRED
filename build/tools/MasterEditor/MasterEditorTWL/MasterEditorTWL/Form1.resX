@@ -1362,8 +1362,11 @@
   <data name="cboxIsEULA.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="cboxIsEULA.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="cboxIsEULA.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 20</value>
+    <value>8, 23</value>
   </data>
   <data name="cboxIsEULA.Size" type="System.Drawing.Size, System.Drawing">
     <value>155, 16</value>
@@ -1381,10 +1384,10 @@
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;cboxIsEULA.Parent" xml:space="preserve">
-    <value>gboxEULA</value>
+    <value>gboxLaunch</value>
   </data>
   <data name="&gt;&gt;cboxIsEULA.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="combRegion.Items" xml:space="preserve">
     <value>Japan Only</value>
@@ -3370,7 +3373,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 180</value>
+    <value>13, 169</value>
   </data>
   <data name="labShared2Size5.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3397,7 +3400,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 155</value>
+    <value>12, 144</value>
   </data>
   <data name="labShared2Size4.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3424,7 +3427,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 130</value>
+    <value>13, 119</value>
   </data>
   <data name="labShared2Size3.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3451,7 +3454,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 105</value>
+    <value>13, 94</value>
   </data>
   <data name="labShared2Size2.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3478,7 +3481,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 80</value>
+    <value>13, 69</value>
   </data>
   <data name="labShared2Size1.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3505,7 +3508,7 @@
     <value>True</value>
   </data>
   <data name="labShared2Size0.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 55</value>
+    <value>13, 44</value>
   </data>
   <data name="labShared2Size0.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 12</value>
@@ -3529,7 +3532,7 @@
     <value>5</value>
   </data>
   <data name="tboxShared2Size5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>46, 177</value>
+    <value>52, 166</value>
   </data>
   <data name="tboxShared2Size5.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 19</value>
@@ -3553,7 +3556,7 @@
     <value>6</value>
   </data>
   <data name="tboxShared2Size4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>47, 152</value>
+    <value>53, 141</value>
   </data>
   <data name="tboxShared2Size4.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 19</value>
@@ -3577,7 +3580,7 @@
     <value>7</value>
   </data>
   <data name="tboxShared2Size3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>47, 127</value>
+    <value>53, 116</value>
   </data>
   <data name="tboxShared2Size3.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 19</value>
@@ -3601,7 +3604,7 @@
     <value>8</value>
   </data>
   <data name="tboxShared2Size2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>47, 102</value>
+    <value>53, 91</value>
   </data>
   <data name="tboxShared2Size2.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 19</value>
@@ -3625,7 +3628,7 @@
     <value>9</value>
   </data>
   <data name="tboxShared2Size1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>47, 77</value>
+    <value>53, 66</value>
   </data>
   <data name="tboxShared2Size1.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 19</value>
@@ -3649,7 +3652,7 @@
     <value>10</value>
   </data>
   <data name="tboxShared2Size0.Location" type="System.Drawing.Point, System.Drawing">
-    <value>47, 52</value>
+    <value>53, 41</value>
   </data>
   <data name="tboxShared2Size0.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 19</value>
@@ -3679,7 +3682,7 @@
     <value>False</value>
   </data>
   <data name="cboxIsShared2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 25</value>
+    <value>14, 19</value>
   </data>
   <data name="cboxIsShared2.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 16</value>
@@ -3703,10 +3706,10 @@
     <value>12</value>
   </data>
   <data name="gboxShared2Size.Location" type="System.Drawing.Point, System.Drawing">
-    <value>547, 54</value>
+    <value>545, 147</value>
   </data>
   <data name="gboxShared2Size.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 220</value>
+    <value>181, 197</value>
   </data>
   <data name="gboxShared2Size.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -3724,7 +3727,7 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;gboxShared2Size.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="labLib.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3838,7 +3841,7 @@
     <value>True</value>
   </data>
   <data name="labHex4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>261, 46</value>
+    <value>257, 98</value>
   </data>
   <data name="labHex4.Size" type="System.Drawing.Size, System.Drawing">
     <value>11, 12</value>
@@ -3865,7 +3868,7 @@
     <value>True</value>
   </data>
   <data name="labHex3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>261, 21</value>
+    <value>257, 123</value>
   </data>
   <data name="labHex3.Size" type="System.Drawing.Size, System.Drawing">
     <value>11, 12</value>
@@ -3889,10 +3892,10 @@
     <value>2</value>
   </data>
   <data name="tboxIsCodec.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 118</value>
+    <value>179, 69</value>
   </data>
   <data name="tboxIsCodec.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 19</value>
+    <value>75, 19</value>
   </data>
   <data name="tboxIsCodec.TabIndex" type="System.Int32, mscorlib">
     <value>28</value>
@@ -3916,7 +3919,7 @@
     <value>True</value>
   </data>
   <data name="labIsCodec.Location" type="System.Drawing.Point, System.Drawing">
-    <value>55, 121</value>
+    <value>62, 72</value>
   </data>
   <data name="labIsCodec.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 12</value>
@@ -3939,89 +3942,11 @@
   <data name="&gt;&gt;labIsCodec.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="labNormalRomOffset.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 21</value>
-  </data>
-  <data name="labNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 12</value>
-  </data>
-  <data name="labNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="labNormalRomOffset.Text" xml:space="preserve">
-    <value>TWL Normal Area ROM Offset</value>
-  </data>
-  <data name="&gt;&gt;labNormalRomOffset.Name" xml:space="preserve">
-    <value>labNormalRomOffset</value>
-  </data>
-  <data name="&gt;&gt;labNormalRomOffset.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labNormalRomOffset.Parent" xml:space="preserve">
-    <value>gboxTWLExInfo</value>
-  </data>
-  <data name="&gt;&gt;labNormalRomOffset.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tboxNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 18</value>
-  </data>
-  <data name="tboxNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 19</value>
-  </data>
-  <data name="tboxNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="tboxNormalRomOffset.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxNormalRomOffset.Name" xml:space="preserve">
-    <value>tboxNormalRomOffset</value>
-  </data>
-  <data name="&gt;&gt;tboxNormalRomOffset.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxNormalRomOffset.Parent" xml:space="preserve">
-    <value>gboxTWLExInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxNormalRomOffset.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="labKeyTableRomOffset.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 46</value>
-  </data>
-  <data name="labKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>159, 12</value>
-  </data>
-  <data name="labKeyTableRomOffset.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="labKeyTableRomOffset.Text" xml:space="preserve">
-    <value>TWL Secure Area ROM Offset</value>
-  </data>
-  <data name="&gt;&gt;labKeyTableRomOffset.Name" xml:space="preserve">
-    <value>labKeyTableRomOffset</value>
-  </data>
-  <data name="&gt;&gt;labKeyTableRomOffset.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labKeyTableRomOffset.Parent" xml:space="preserve">
-    <value>gboxTWLExInfo</value>
-  </data>
-  <data name="&gt;&gt;labKeyTableRomOffset.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
   <data name="tboxPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 93</value>
+    <value>179, 44</value>
   </data>
   <data name="tboxPrivateSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 19</value>
+    <value>75, 19</value>
   </data>
   <data name="tboxPrivateSize.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
@@ -4039,13 +3964,16 @@
     <value>gboxTWLExInfo</value>
   </data>
   <data name="&gt;&gt;tboxPrivateSize.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>5</value>
   </data>
   <data name="labPrivateSize.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="labPrivateSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="labPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>31, 96</value>
+    <value>38, 47</value>
   </data>
   <data name="labPrivateSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 12</value>
@@ -4066,37 +3994,94 @@
     <value>gboxTWLExInfo</value>
   </data>
   <data name="&gt;&gt;labPrivateSize.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="labNormalRomOffset.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 123</value>
+  </data>
+  <data name="labNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>160, 12</value>
+  </data>
+  <data name="labNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
-  <data name="tboxKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 43</value>
+  <data name="labNormalRomOffset.Text" xml:space="preserve">
+    <value>TWL Normal Area ROM Offset</value>
   </data>
-  <data name="tboxKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 19</value>
+  <data name="&gt;&gt;labNormalRomOffset.Name" xml:space="preserve">
+    <value>labNormalRomOffset</value>
   </data>
-  <data name="tboxKeyTableRomOffset.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+  <data name="&gt;&gt;labNormalRomOffset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="tboxKeyTableRomOffset.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxKeyTableRomOffset.Name" xml:space="preserve">
-    <value>tboxKeyTableRomOffset</value>
-  </data>
-  <data name="&gt;&gt;tboxKeyTableRomOffset.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxKeyTableRomOffset.Parent" xml:space="preserve">
+  <data name="&gt;&gt;labNormalRomOffset.Parent" xml:space="preserve">
     <value>gboxTWLExInfo</value>
   </data>
-  <data name="&gt;&gt;tboxKeyTableRomOffset.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="&gt;&gt;labNormalRomOffset.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="tboxNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>179, 120</value>
+  </data>
+  <data name="tboxNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 19</value>
+  </data>
+  <data name="tboxNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="tboxNormalRomOffset.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxNormalRomOffset.Name" xml:space="preserve">
+    <value>tboxNormalRomOffset</value>
+  </data>
+  <data name="&gt;&gt;tboxNormalRomOffset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxNormalRomOffset.Parent" xml:space="preserve">
+    <value>gboxTWLExInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxNormalRomOffset.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="labKeyTableRomOffset.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 98</value>
+  </data>
+  <data name="labKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>159, 12</value>
+  </data>
+  <data name="labKeyTableRomOffset.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="labKeyTableRomOffset.Text" xml:space="preserve">
+    <value>TWL Secure Area ROM Offset</value>
+  </data>
+  <data name="&gt;&gt;labKeyTableRomOffset.Name" xml:space="preserve">
+    <value>labKeyTableRomOffset</value>
+  </data>
+  <data name="&gt;&gt;labKeyTableRomOffset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labKeyTableRomOffset.Parent" xml:space="preserve">
+    <value>gboxTWLExInfo</value>
+  </data>
+  <data name="&gt;&gt;labKeyTableRomOffset.ZOrder" xml:space="preserve">
+    <value>9</value>
   </data>
   <data name="labPublicSize.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="labPublicSize.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="labPublicSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>31, 71</value>
+    <value>38, 22</value>
   </data>
   <data name="labPublicSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>118, 12</value>
@@ -4117,13 +4102,13 @@
     <value>gboxTWLExInfo</value>
   </data>
   <data name="&gt;&gt;labPublicSize.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>10</value>
   </data>
   <data name="tboxPublicSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>172, 68</value>
+    <value>179, 19</value>
   </data>
   <data name="tboxPublicSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>87, 19</value>
+    <value>75, 19</value>
   </data>
   <data name="tboxPublicSize.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
@@ -4141,19 +4126,43 @@
     <value>gboxTWLExInfo</value>
   </data>
   <data name="&gt;&gt;tboxPublicSize.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="tboxKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
+    <value>179, 95</value>
+  </data>
+  <data name="tboxKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 19</value>
+  </data>
+  <data name="tboxKeyTableRomOffset.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="tboxKeyTableRomOffset.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxKeyTableRomOffset.Name" xml:space="preserve">
+    <value>tboxKeyTableRomOffset</value>
+  </data>
+  <data name="&gt;&gt;tboxKeyTableRomOffset.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxKeyTableRomOffset.Parent" xml:space="preserve">
+    <value>gboxTWLExInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxKeyTableRomOffset.ZOrder" xml:space="preserve">
     <value>12</value>
   </data>
   <data name="gboxTWLExInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>231, 54</value>
+    <value>251, 54</value>
   </data>
   <data name="gboxTWLExInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 146</value>
+    <value>280, 146</value>
   </data>
   <data name="gboxTWLExInfo.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
   </data>
   <data name="gboxTWLExInfo.Text" xml:space="preserve">
-    <value>TWL Extended Info.</value>
+    <value>TWL Extended Info</value>
   </data>
   <data name="&gt;&gt;gboxTWLExInfo.Name" xml:space="preserve">
     <value>gboxTWLExInfo</value>
@@ -4165,7 +4174,7 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;gboxTWLExInfo.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="cboxIsSubBanner.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4174,7 +4183,7 @@
     <value>False</value>
   </data>
   <data name="cboxIsSubBanner.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 62</value>
+    <value>14, 18</value>
   </data>
   <data name="cboxIsSubBanner.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 16</value>
@@ -4195,36 +4204,6 @@
     <value>gboxExFlags</value>
   </data>
   <data name="&gt;&gt;cboxIsSubBanner.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="cboxIsWL.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="cboxIsWL.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="cboxIsWL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 84</value>
-  </data>
-  <data name="cboxIsWL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 16</value>
-  </data>
-  <data name="cboxIsWL.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="cboxIsWL.Text" xml:space="preserve">
-    <value>Enable NTR WhiteList Signature</value>
-  </data>
-  <data name="&gt;&gt;cboxIsWL.Name" xml:space="preserve">
-    <value>cboxIsWL</value>
-  </data>
-  <data name="&gt;&gt;cboxIsWL.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cboxIsWL.Parent" xml:space="preserve">
-    <value>gboxExFlags</value>
-  </data>
-  <data name="&gt;&gt;cboxIsWL.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
   <data name="cboxIsNormalJump.AutoSize" type="System.Boolean, mscorlib">
@@ -4234,7 +4213,7 @@
     <value>False</value>
   </data>
   <data name="cboxIsNormalJump.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 18</value>
+    <value>14, 62</value>
   </data>
   <data name="cboxIsNormalJump.Size" type="System.Drawing.Size, System.Drawing">
     <value>154, 16</value>
@@ -4287,11 +4266,44 @@
   <data name="&gt;&gt;cboxIsTmpJump.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="labIsGameCardOn2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labIsGameCardOn2.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleRight</value>
+  </data>
+  <data name="labIsGameCardOn2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labIsGameCardOn2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 73</value>
+  </data>
+  <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>127, 12</value>
+  </data>
+  <data name="labIsGameCardOn2.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="labIsGameCardOn2.Text" xml:space="preserve">
+    <value>(For NAND Application)</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn2.Name" xml:space="preserve">
+    <value>labIsGameCardOn2</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn2.Parent" xml:space="preserve">
+    <value>gboxAccess</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn2.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="labAccessOther.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="labAccessOther.Location" type="System.Drawing.Point, System.Drawing">
-    <value>139, 20</value>
+    <value>145, 21</value>
   </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 12</value>
@@ -4312,16 +4324,16 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;labAccessOther.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="tboxAccessOther.Location" type="System.Drawing.Point, System.Drawing">
-    <value>141, 36</value>
+    <value>147, 36</value>
   </data>
   <data name="tboxAccessOther.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="tboxAccessOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 85</value>
+    <value>123, 85</value>
   </data>
   <data name="tboxAccessOther.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -4336,10 +4348,10 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;tboxAccessOther.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="tboxIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 102</value>
+    <value>6, 102</value>
   </data>
   <data name="tboxIsGameCardOn.Size" type="System.Drawing.Size, System.Drawing">
     <value>122, 19</value>
@@ -4360,22 +4372,22 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;tboxIsGameCardOn.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="labIsGameCardOn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="labIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 87</value>
+    <value>6, 87</value>
   </data>
   <data name="labIsGameCardOn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>64, 12</value>
+    <value>104, 12</value>
   </data>
   <data name="labIsGameCardOn.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
   </data>
   <data name="labIsGameCardOn.Text" xml:space="preserve">
-    <value>Card Power</value>
+    <value>Game Card Access</value>
   </data>
   <data name="&gt;&gt;labIsGameCardOn.Name" xml:space="preserve">
     <value>labIsGameCardOn</value>
@@ -4387,7 +4399,7 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;labIsGameCardOn.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="cboxIsNAND.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4417,7 +4429,7 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;cboxIsNAND.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="cboxIsSD.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4447,13 +4459,13 @@
     <value>gboxAccess</value>
   </data>
   <data name="&gt;&gt;cboxIsSD.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="gboxAccess.Location" type="System.Drawing.Point, System.Drawing">
-    <value>231, 211</value>
+    <value>251, 211</value>
   </data>
   <data name="gboxAccess.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 133</value>
+    <value>280, 133</value>
   </data>
   <data name="gboxAccess.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -4471,22 +4483,22 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;gboxAccess.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="labAppType.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="labAppType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>21, 98</value>
+    <value>12, 98</value>
   </data>
   <data name="labAppType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 12</value>
+    <value>91, 12</value>
   </data>
   <data name="labAppType.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
   <data name="labAppType.Text" xml:space="preserve">
-    <value>App. Type</value>
+    <value>Application Type</value>
   </data>
   <data name="&gt;&gt;labAppType.Name" xml:space="preserve">
     <value>labAppType</value>
@@ -4504,7 +4516,7 @@
     <value>True</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>39, 73</value>
+    <value>40, 73</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 12</value>
@@ -4528,7 +4540,7 @@
     <value>1</value>
   </data>
   <data name="tboxAppType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>83, 95</value>
+    <value>113, 95</value>
   </data>
   <data name="tboxAppType.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 19</value>
@@ -4552,7 +4564,7 @@
     <value>2</value>
   </data>
   <data name="tboxMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>83, 70</value>
+    <value>113, 70</value>
   </data>
   <data name="tboxMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 19</value>
@@ -4579,7 +4591,7 @@
     <value>True</value>
   </data>
   <data name="labHex2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>157, 48</value>
+    <value>189, 50</value>
   </data>
   <data name="labHex2.Size" type="System.Drawing.Size, System.Drawing">
     <value>11, 12</value>
@@ -4603,7 +4615,7 @@
     <value>4</value>
   </data>
   <data name="tboxTitleIDLo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>83, 20</value>
+    <value>113, 21</value>
   </data>
   <data name="tboxTitleIDLo.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 19</value>
@@ -4630,7 +4642,7 @@
     <value>True</value>
   </data>
   <data name="labTitleIDLo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 23</value>
+    <value>24, 24</value>
   </data>
   <data name="labTitleIDLo.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 12</value>
@@ -4657,7 +4669,7 @@
     <value>True</value>
   </data>
   <data name="labTitleIDHi.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 48</value>
+    <value>24, 48</value>
   </data>
   <data name="labTitleIDHi.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
@@ -4681,7 +4693,7 @@
     <value>7</value>
   </data>
   <data name="tboxTitleIDHi.Location" type="System.Drawing.Point, System.Drawing">
-    <value>83, 45</value>
+    <value>113, 45</value>
   </data>
   <data name="tboxTitleIDHi.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 19</value>
@@ -4711,7 +4723,7 @@
     <value>True</value>
   </data>
   <data name="tboxAppTypeOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>170, 34</value>
+    <value>186, 34</value>
   </data>
   <data name="tboxAppTypeOther.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -4735,13 +4747,13 @@
     <value>12, 122</value>
   </data>
   <data name="labAppTypeOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 12</value>
+    <value>56, 12</value>
   </data>
   <data name="labAppTypeOther.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
   <data name="labAppTypeOther.Text" xml:space="preserve">
-    <value>Other Info.</value>
+    <value>Other Info</value>
   </data>
   <data name="&gt;&gt;labAppTypeOther.Name" xml:space="preserve">
     <value>labAppTypeOther</value>
@@ -4759,7 +4771,7 @@
     <value>12, 54</value>
   </data>
   <data name="gboxTitleID.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 174</value>
+    <value>225, 174</value>
   </data>
   <data name="gboxTitleID.TabIndex" type="System.Int32, mscorlib">
     <value>23</value>
@@ -4777,7 +4789,7 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;gboxTitleID.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="labCaptionEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5046,6 +5058,78 @@
   <data name="&gt;&gt;tabRomInfo.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="labConnectIcon.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labConnectIcon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 50</value>
+  </data>
+  <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>200, 12</value>
+  </data>
+  <data name="labConnectIcon.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="labConnectIcon.Text" xml:space="preserve">
+    <value>Display Connection Icon On DSi Menu</value>
+  </data>
+  <data name="&gt;&gt;labConnectIcon.Name" xml:space="preserve">
+    <value>labConnectIcon</value>
+  </data>
+  <data name="&gt;&gt;labConnectIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labConnectIcon.Parent" xml:space="preserve">
+    <value>gboxLaunch</value>
+  </data>
+  <data name="&gt;&gt;labConnectIcon.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tboxConnectIcon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 65</value>
+  </data>
+  <data name="tboxConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
+    <value>192, 19</value>
+  </data>
+  <data name="tboxConnectIcon.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tboxConnectIcon.Name" xml:space="preserve">
+    <value>tboxConnectIcon</value>
+  </data>
+  <data name="&gt;&gt;tboxConnectIcon.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxConnectIcon.Parent" xml:space="preserve">
+    <value>gboxLaunch</value>
+  </data>
+  <data name="&gt;&gt;tboxConnectIcon.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="gboxLaunch.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 238</value>
+  </data>
+  <data name="gboxLaunch.Size" type="System.Drawing.Size, System.Drawing">
+    <value>225, 106</value>
+  </data>
+  <data name="gboxLaunch.TabIndex" type="System.Int32, mscorlib">
+    <value>37</value>
+  </data>
+  <data name="gboxLaunch.Text" xml:space="preserve">
+    <value>Launch Control On DSi Menu</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Name" xml:space="preserve">
+    <value>gboxLaunch</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="tboxGuideTWLInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>
   </data>
@@ -5068,13 +5152,13 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;tboxGuideTWLInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="gboxExFlags.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 236</value>
+    <value>545, 54</value>
   </data>
   <data name="gboxExFlags.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 108</value>
+    <value>181, 85</value>
   </data>
   <data name="gboxExFlags.TabIndex" type="System.Int32, mscorlib">
     <value>35</value>
@@ -5092,7 +5176,7 @@
     <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="tabTWLInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 21</value>
@@ -5125,7 +5209,7 @@
     <value>True</value>
   </data>
   <data name="cboxIsUGC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 18</value>
+    <value>15, 25</value>
   </data>
   <data name="cboxIsUGC.Size" type="System.Drawing.Size, System.Drawing">
     <value>229, 16</value>
@@ -5152,7 +5236,7 @@
     <value>True</value>
   </data>
   <data name="cboxIsPhotoEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 46</value>
+    <value>15, 56</value>
   </data>
   <data name="cboxIsPhotoEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>149, 16</value>
@@ -5176,10 +5260,10 @@
     <value>1</value>
   </data>
   <data name="gboxOtherSpec.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 225</value>
+    <value>445, 60</value>
   </data>
   <data name="gboxOtherSpec.Size" type="System.Drawing.Size, System.Drawing">
-    <value>266, 70</value>
+    <value>266, 90</value>
   </data>
   <data name="gboxOtherSpec.TabIndex" type="System.Int32, mscorlib">
     <value>41</value>
@@ -5200,7 +5284,7 @@
     <value>0</value>
   </data>
   <data name="butSetBack.Location" type="System.Drawing.Point, System.Drawing">
-    <value>51, 309</value>
+    <value>483, 185</value>
   </data>
   <data name="butSetBack.Size" type="System.Drawing.Size, System.Drawing">
     <value>185, 23</value>
@@ -5209,7 +5293,7 @@
     <value>38</value>
   </data>
   <data name="butSetBack.Text" xml:space="preserve">
-    <value>Set Back To Reading Settings</value>
+    <value>Set Back To Initial Settings</value>
   </data>
   <data name="&gt;&gt;butSetBack.Name" xml:space="preserve">
     <value>butSetBack</value>
@@ -5251,7 +5335,7 @@
     <value>2</value>
   </data>
   <data name="gboxParental.Location" type="System.Drawing.Point, System.Drawing">
-    <value>313, 60</value>
+    <value>24, 60</value>
   </data>
   <data name="gboxParental.Size" type="System.Drawing.Size, System.Drawing">
     <value>398, 272</value>
@@ -5273,135 +5357,6 @@
   </data>
   <data name="&gt;&gt;gboxParental.ZOrder" xml:space="preserve">
     <value>3</value>
-  </data>
-  <data name="rIsNoIcon.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rIsNoIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 25</value>
-  </data>
-  <data name="rIsNoIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 16</value>
-  </data>
-  <data name="rIsNoIcon.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="rIsNoIcon.Text" xml:space="preserve">
-    <value>Display No Icon</value>
-  </data>
-  <data name="&gt;&gt;rIsNoIcon.Name" xml:space="preserve">
-    <value>rIsNoIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsNoIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rIsNoIcon.Parent" xml:space="preserve">
-    <value>gboxIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsNoIcon.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="rIsWiFiIcon.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rIsWiFiIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 77</value>
-  </data>
-  <data name="rIsWiFiIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 16</value>
-  </data>
-  <data name="rIsWiFiIcon.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="rIsWiFiIcon.Text" xml:space="preserve">
-    <value>Display an Icon of Wi-Fi Connection</value>
-  </data>
-  <data name="&gt;&gt;rIsWiFiIcon.Name" xml:space="preserve">
-    <value>rIsWiFiIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsWiFiIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rIsWiFiIcon.Parent" xml:space="preserve">
-    <value>gboxIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsWiFiIcon.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="rIsWirelessIcon.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rIsWirelessIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 51</value>
-  </data>
-  <data name="rIsWirelessIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>182, 16</value>
-  </data>
-  <data name="rIsWirelessIcon.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="rIsWirelessIcon.Text" xml:space="preserve">
-    <value>Display an Icon of DS Wireless</value>
-  </data>
-  <data name="&gt;&gt;rIsWirelessIcon.Name" xml:space="preserve">
-    <value>rIsWirelessIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsWirelessIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rIsWirelessIcon.Parent" xml:space="preserve">
-    <value>gboxIcon</value>
-  </data>
-  <data name="&gt;&gt;rIsWirelessIcon.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="gboxIcon.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 114</value>
-  </data>
-  <data name="gboxIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>266, 105</value>
-  </data>
-  <data name="gboxIcon.TabIndex" type="System.Int32, mscorlib">
-    <value>32</value>
-  </data>
-  <data name="gboxIcon.Text" xml:space="preserve">
-    <value>Icons on the Menu</value>
-  </data>
-  <data name="&gt;&gt;gboxIcon.Name" xml:space="preserve">
-    <value>gboxIcon</value>
-  </data>
-  <data name="&gt;&gt;gboxIcon.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxIcon.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxIcon.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="gboxEULA.Location" type="System.Drawing.Point, System.Drawing">
-    <value>19, 60</value>
-  </data>
-  <data name="gboxEULA.Size" type="System.Drawing.Size, System.Drawing">
-    <value>266, 48</value>
-  </data>
-  <data name="gboxEULA.TabIndex" type="System.Int32, mscorlib">
-    <value>31</value>
-  </data>
-  <data name="gboxEULA.Text" xml:space="preserve">
-    <value>EULA</value>
-  </data>
-  <data name="&gt;&gt;gboxEULA.Name" xml:space="preserve">
-    <value>gboxEULA</value>
-  </data>
-  <data name="&gt;&gt;gboxEULA.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxEULA.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxEULA.ZOrder" xml:space="preserve">
-    <value>5</value>
   </data>
   <data name="tabRomEditInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 21</value>

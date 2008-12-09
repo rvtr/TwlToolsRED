@@ -1420,14 +1420,24 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
+	if( this->IsWL )
+	{
+		this->hErrorList->Add( gcnew RCMrcError( 
+			"TWL拡張諸フラグ", 0x1bf, 0x1bf, 
+			"本来、立つはずのないフラグが立てられています。ビルド時の設定をご確認ください。",
+			"TWL Extended Flag",
+			"Unavailable flag is set. Please check building option.",
+			false, true ) );
+	}
+
 	if( this->IsWiFiIcon && this->IsWirelessIcon )
 	{
 		this->hErrorList->Add( gcnew RCMrcError( 
 			"アイコン表示フラグ", 0x1bf, 0x1bf, 
-			"ワイヤレス通信アイコンとWi-Fi通信アイコンは同時に表示できません。設定を無視して読み込みます。",
-			"Icon Displaying",
-			"Icon displayed on menu is either Wireless Icon or Wi-Fi Icon. This setting was ignored in reading.",
-			true, true ) );		// 修正可能
+			"ワイヤレス通信アイコンとWi-Fi通信アイコンは同時に表示できません。",
+			"Icon Displaying Flag",
+			"Icon displayed on menu is either Wireless Icon or Wi-Fi Connection Icon.",
+			false, true ) );
 	}
 
 	if( !this->IsMediaNand )	// カードアプリのときのみ

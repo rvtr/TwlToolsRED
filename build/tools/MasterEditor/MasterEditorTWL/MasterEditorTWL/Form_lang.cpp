@@ -39,13 +39,6 @@ void Form1::changeJapanese(void)
 	this->changeMaxLength( this->tboxPerson1,  15 );
 
 	this->changeLanguage( "ja" );
-
-	// 特殊な設定用のテキストボックスの表記を変更
-	this->setSrlFormsCaptionEx();
-
-	// 複数行表示の改行を挿入
-	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
-	this->tboxGuideErrorInfo->Text   = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 }
 
 // 英語版への切り替え
@@ -56,11 +49,6 @@ void  Form1::changeEnglish(void)
 	this->changeMaxLength( this->tboxPerson1,  30 );
 
 	this->changeLanguage( "en" );
-
-	this->setSrlFormsCaptionEx();
-
-	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
-	this->tboxGuideErrorInfo->Text   = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 }
 
 // 言語リソース切り替え
@@ -298,7 +286,6 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labPublicSize, L"labPublicSize");
 	resources->ApplyResources(this->tboxPublicSize, L"tboxPublicSize");
 	resources->ApplyResources(this->cboxIsSubBanner, L"cboxIsSubBanner");
-	resources->ApplyResources(this->cboxIsWL, L"cboxIsWL");
 	resources->ApplyResources(this->cboxIsNormalJump, L"cboxIsNormalJump");
 	resources->ApplyResources(this->cboxIsTmpJump, L"cboxIsTmpJump");
 	resources->ApplyResources(this->gboxAccess, L"gboxAccess");
@@ -306,6 +293,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->tboxAccessOther, L"tboxAccessOther");
 	resources->ApplyResources(this->tboxIsGameCardOn, L"tboxIsGameCardOn");
 	resources->ApplyResources(this->labIsGameCardOn, L"labIsGameCardOn");
+	resources->ApplyResources(this->labIsGameCardOn2, L"labIsGameCardOn2");
 	resources->ApplyResources(this->cboxIsNAND, L"cboxIsNAND");
 	resources->ApplyResources(this->cboxIsSD, L"cboxIsSD");
 	resources->ApplyResources(this->gboxTitleID, L"gboxTitleID");
@@ -345,6 +333,8 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->colLibName, L"colLibName");
 	resources->ApplyResources(this->tboxGuideRomInfo, L"tboxGuideRomInfo");
 	resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
+	resources->ApplyResources(this->gboxLaunch, L"gboxLaunch");
+	resources->ApplyResources(this->labConnectIcon, L"labConnectIcon");
 	resources->ApplyResources(this->tboxGuideTWLInfo, L"tboxGuideTWLInfo");
 	resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
 	resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
@@ -354,11 +344,6 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->butSetBack, L"butSetBack");
 	resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
 	resources->ApplyResources(this->gboxParental, L"gboxParental");
-	resources->ApplyResources(this->gboxIcon, L"gboxIcon");
-	resources->ApplyResources(this->rIsNoIcon, L"rIsNoIcon");
-	resources->ApplyResources(this->rIsWiFiIcon, L"rIsWiFiIcon");
-	resources->ApplyResources(this->rIsWirelessIcon, L"rIsWirelessIcon");
-	resources->ApplyResources(this->gboxEULA, L"gboxEULA");
 	resources->ApplyResources(this->tabSubmitInfo, L"tabSubmitInfo");
 	resources->ApplyResources(this->labProductNameLimit, L"labProductNameLimit");
 	resources->ApplyResources(this->tboxGuideSubmitInfo, L"tboxGuideSubmitInfo");
@@ -387,6 +372,16 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->colWarnEnd, L"colWarnEnd");
 	resources->ApplyResources(this->colWarnCause, L"colWarnCause");
 	resources->ApplyResources(this, L"$this");
+
+	// テキストボックスの表記を変更
+	if( !System::String::IsNullOrEmpty( this->tboxFile->Text ) )
+	{
+		this->setSrlFormsTextBox();
+	}
+
+	// 複数行表示の改行を挿入
+	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
+	this->tboxGuideErrorInfo->Text   = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 }
 
 // end of file

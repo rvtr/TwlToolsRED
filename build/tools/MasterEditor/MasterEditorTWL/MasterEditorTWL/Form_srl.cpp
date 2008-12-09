@@ -27,11 +27,6 @@ void Form1::setSrlProperties(void)
 {
 	// ROMヘッダの[0,0x160)の領域はRead Onlyで変更しない
 
-	// TWL拡張領域のいくつかの情報をROMヘッダに反映させる
-	this->hSrl->IsEULA         = this->cboxIsEULA->Checked;
-	this->hSrl->IsWiFiIcon     = this->rIsWiFiIcon->Checked;
-	this->hSrl->IsWirelessIcon = this->rIsWirelessIcon->Checked;
-
 	// リージョン
 	this->setRegionSrlPropaties();
 
@@ -79,7 +74,6 @@ void Form1::setSrlForms(void)
 	this->cboxIsNormalJump->Checked = this->hSrl->IsNormalJump;
 	this->cboxIsTmpJump->Checked    = this->hSrl->IsTmpJump;
 	this->cboxIsSubBanner->Checked  = this->hSrl->IsSubBanner;
-	this->cboxIsWL->Checked         = this->hSrl->IsWL;
 	if( this->hSrl->IsCodecTWL == true )
 	{
 		this->tboxIsCodec->Text = gcnew System::String( "TWL" );
@@ -174,8 +168,11 @@ void Form1::setSrlForms(void)
 	}
 	this->tboxAccessOther->Text = acc;
 
+	// 起動制限
+	this->cboxIsEULA->Checked = this->hSrl->IsEULA;
+
 	// 特殊な設定をテキストボックスに反映
-	this->setSrlFormsCaptionEx();
+	this->setSrlFormsTextBox();
 
 	// SDKバージョンとライブラリ
 	this->tboxSDK->Clear();
@@ -204,31 +201,54 @@ void Form1::setSrlForms(void)
 	}
 
 	// 編集可能情報
-	this->cboxIsEULA->Checked = this->hSrl->IsEULA;
-	if( ( this->hSrl->IsWiFiIcon &&  this->hSrl->IsWirelessIcon) ||
-		(!this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon) )
+	this->setRegionForms();
+	this->setParentalForms();			// ペアレンタルコントロール関連
+
+	// ROMヘッダには関係ないが
+	// NANDアプリのときにバックアップメモリを自動的に「なし」にしておく
+	if( this->hSrl->IsMediaNand )
 	{
-		this->rIsNoIcon->Checked = true;
-	}
-	else if( this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
-	{
-		this->rIsWiFiIcon->Checked = true;
+		this->combBackup->SelectedIndex = this->combBackup->Items->Count - 2;
+		this->combBackup->Enabled = false;
 	}
 	else
 	{
-		this->rIsWirelessIcon->Checked = true;
+		this->combBackup->Enabled = true;
 	}
-	this->setRegionForms();
-	this->setParentalForms();			// ペアレンタルコントロール関連
 } // setSrlForms()
 
 // SRLの特殊な設定をフォームにセットする(言語切り替えで表示を変えたいので独立させる)
-void Form1::setSrlFormsCaptionEx()
+void Form1::setSrlFormsTextBox()
 {
-	if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
+	if( !this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
 	{
-		return;
+		if( this->isJapanese() )
+			this->tboxConnectIcon->Text = "アイコンを表示しない";
+		else
+			this->tboxConnectIcon->Text = "No Icon";
 	}
+	else if( this->hSrl->IsWiFiIcon && !this->hSrl->IsWirelessIcon )
+	{
+		if( this->isJapanese() )
+			this->tboxConnectIcon->Text = "Wi-Fiコネクションアイコン";
+		else
+			this->tboxConnectIcon->Text = "Wi-Fi Connection Icon";
+	}
+	else if( !this->hSrl->IsWiFiIcon && this->hSrl->IsWirelessIcon )
+	{
+		if( this->isJapanese() )
+			this->tboxConnectIcon->Text = "ワイヤレス通信アイコン";
+		else
+			this->tboxConnectIcon->Text = "Wireless Icon";
+	}
+	else
+	{
+		if( this->isJapanese() )
+			this->tboxConnectIcon->Text = "不正な設定";
+		else
+			this->tboxConnectIcon->Text = "Illegal Setting";
+	}
+
 	System::String ^appother = gcnew System::String("");
 	if( !this->hSrl->IsLaunch )
 	{
@@ -261,7 +281,7 @@ void Form1::setSrlFormsCaptionEx()
 		else
 			this->tboxCaptionEx->Text += gcnew System::String( "SDFC Register Accessible.\r\n" );
 	}
-} // setSrlFormsCaptionEx()
+} // setSrlFormsTextBox()
 
 // フォームの入力をチェックする
 System::Boolean Form1::checkSrlForms(void)

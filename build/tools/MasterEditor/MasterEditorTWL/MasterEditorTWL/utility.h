@@ -81,6 +81,31 @@ namespace MasterEditorTWL
 	//
 	System::Collections::Generic::List<u32>^ patternMatch( FILE *fp, const u8 *pattern, const u32 patternLen );
 
+	////
+	//// バイト列に特定のパターンが含まれるかどうかマッチングする (Boyer-Moore法)
+	////
+	//// @arg [in] テキスト
+	////      [in] テキストの長さ
+	////      [in] パターン
+	////      [in] パターンの長さ
+	////      [in] skipマップ(あらかじめ生成しておく)
+	////
+	//// @ret マッチしたテキストのインデックスをリストで返す。
+	////
+	//System::Collections::Generic::List<u32>^ patternMatchBM(
+	//	const u8 *text, const int textLen, const u8 *pattern, const int patternLen, const int skip[] );
+
+	////
+	//// Boyer-Moore法のskipマップの生成
+	////
+	//// @arg [in]  パターン
+	////      [in]  パターンの長さ
+	////      [out] skipマップの格納先
+	////
+	//// @ret なし
+	////
+	//void makeSkipBM( const u8 *pattern, const int patternLen, int skip[] );
+
 	//
 	// XMLのルートノードから指定した名前のタグを検索して返す
 	//

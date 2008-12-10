@@ -223,6 +223,63 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 	return list;
 } // MasterEditorTWL::patternMatch
 
+////
+//// バイト列に特定のパターンが含まれるかどうかマッチングする (Boyer-Moore法)
+////
+//// @arg [in] テキスト
+////      [in] テキストの長さ
+////      [in] パターン
+////      [in] パターンの長さ
+////      [in] skipマップ(あらかじめ生成しておく)
+////
+//// @ret マッチしたテキストのインデックスをリストで返す。
+////
+//System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatchBM(
+//	const u8 *text, const int textLen, const u8 *pattern, const int patternLen, const int skip[] )
+//{
+//	System::Collections::Generic::List<u32> ^list = gcnew System::Collections::Generic::List<u32>();
+//	list->Clear();
+//
+//	if( textLen < patternLen )
+//	{
+//		return list;
+//	}
+//
+//	int pos = patternLen-1;
+//	while( pos < textLen )		// イメージとしてはパターンを固定してテキストの方をずらしていく感じ
+//	{
+//		int first = pos - (patternLen-1);
+//		if( memcmp( text+first, pattern, patternLen ) == 0 )	// 本来は末尾から探索するがめんどうなので先頭からmemcmp
+//		{
+//			list->Add( first );
+//		}
+//		pos = pos + skip[ (int)text[pos] ];	// パターンの末尾と照合するテキスト位置をずらす
+//	}
+//	return list;
+//}
+//
+////
+//// Boyer-Moore法のskipマップの生成
+////
+//// @arg [in]  パターン
+////      [in]  パターンの長さ
+////      [out] skipマップの格納先
+////
+//// @ret なし
+////
+//void MasterEditorTWL::makeSkipBM( const u8 *pattern, const int patternLen, int skip[] )
+//{
+//	int i;
+//	for( i=0; i < 256; i++ )			// すべての文字(出現しうるデータ)についてマップを初期化
+//	{
+//		skip[i] = patternLen;			// パターンにない文字なのでパターンを丸ごとスキップできる
+//	}
+//	for( i=0; i < (patternLen-1); i++ )	// 末尾を除くすべてのパターン出現文字について(最後の)出現位置を登録
+//	{
+//		skip[ (int)pattern[i] ] = patternLen - 1 - i;
+//	}
+//}
+
 //
 // ファイルにバイト列のパターンが含まれるかどうかマッチングする
 //

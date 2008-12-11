@@ -56,6 +56,13 @@ namespace MasterEditorTWL
 	System::String^ getOgnName( int ogn );
 
 	//
+	// リージョンに含まれる団体のリストを返す(不正なリージョンのときはnullptr)
+	//
+	// @arg [in] リージョン
+	//
+	System::Collections::Generic::List<int>^ getOgnListInRegion( u32 region );
+
+	//
 	// バイト列に特定のパターンが含まれるかどうかマッチングする
 	//
 	// @arg [in] テキスト

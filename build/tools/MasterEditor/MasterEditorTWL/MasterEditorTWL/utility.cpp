@@ -182,6 +182,64 @@ System::String^ MasterEditorTWL::getOgnName( int ogn )
 }
 
 //
+// リージョンに含まれる団体のリストを返す(不正なリージョンのときはnullptr)
+//
+// @arg [in] リージョン
+//
+System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u32 region )
+{
+	System::Collections::Generic::List<int> ^list = gcnew System::Collections::Generic::List<int>;
+
+	switch( region )
+	{
+		case METWL_MASK_REGION_JAPAN:
+			list->Add( OS_TWL_PCTL_OGN_CERO );	// リージョンに含まれない団体の情報は読み込まない
+		break;
+
+		case METWL_MASK_REGION_AMERICA:
+			list->Add( OS_TWL_PCTL_OGN_ESRB );
+		break;
+
+		case METWL_MASK_REGION_EUROPE:
+			list->Add( OS_TWL_PCTL_OGN_USK );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
+		break;
+
+		case METWL_MASK_REGION_AUSTRALIA:
+			list->Add( OS_TWL_PCTL_OGN_OFLC );
+		break;
+
+		case (METWL_MASK_REGION_EUROPE|METWL_MASK_REGION_AUSTRALIA):
+			list->Add( OS_TWL_PCTL_OGN_USK );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
+			list->Add( OS_TWL_PCTL_OGN_OFLC );
+		break;
+
+#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+		case METWL_MASK_REGION_ALL:
+
+			list->Add( OS_TWL_PCTL_OGN_CERO );
+			list->Add( OS_TWL_PCTL_OGN_ESRB );
+			list->Add( OS_TWL_PCTL_OGN_USK );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
+			list->Add( OS_TWL_PCTL_OGN_OFLC );
+		break;
+#endif //#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+
+		default:
+			list = nullptr;
+		break;
+	}
+	return list;
+}
+
+//
 // バイト列に特定のパターンが含まれるかどうかマッチングする
 //
 // @arg [in] テキスト

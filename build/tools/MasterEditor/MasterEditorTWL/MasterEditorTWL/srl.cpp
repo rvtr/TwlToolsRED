@@ -312,79 +312,100 @@ ECSrlResult RCSrl::setRomInfo(void)
 		this->hShared2SizeArray[5] = (this->pRomHeader->s.shared2_file5_size * unit) + unit;
 	}
 
-	// カードリージョン
-	const u32  map           = this->pRomHeader->s.card_region_bitmap;
-	this->IsRegionJapan     = ((map & METWL_MASK_REGION_JAPAN)     != 0)?true:false;
-	this->IsRegionAmerica   = ((map & METWL_MASK_REGION_AMERICA)   != 0)?true:false;
-	this->IsRegionEurope    = ((map & METWL_MASK_REGION_EUROPE)    != 0)?true:false;
-	this->IsRegionAustralia = ((map & METWL_MASK_REGION_AUSTRALIA) != 0)?true:false;
+	// ペアレンタルコントロール情報の取得
 
-	// ペアレンタルコントロール
-	this->setParentalControlInfo();
+	const u32  region = this->pRomHeader->s.card_region_bitmap;
 
-	return ECSrlResult::NOERROR;
-} // ECSrlResult RCSrl::setRomInfo(void)
-
-// ROMヘッダ内のペアレンタルコントロール情報をフィールドに反映させる
-void RCSrl::setParentalControlInfo(void)
-{
-	// リージョンに含まれていないものは読み込まない
+	// すべての団体を「不可」に初期化
 	this->hArrayParentalIndex = gcnew cli::array<int>(PARENTAL_CONTROL_INFO_SIZE);
-
-	int i;
 	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
 	{
 		this->hArrayParentalIndex[i] = -1;
 	}
 
-	// リージョンに含まれている団体をリストアップ
-	u32 region = this->pRomHeader->s.card_region_bitmap;
-	switch( region )
+	// リージョンとレーティングを取得
+	if( this->setRegionInfo( region ) )
 	{
-		case METWL_MASK_REGION_JAPAN:
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_CERO );	// リージョンに含まれない団体の情報は読み込まない
-		break;
+		this->setUnnecessaryRatingInfo( region );	// レーティング表示が不要かどうかを調べる(これがないと全年齢と区別できない)
+		if( !this->IsUnnecessaryRating )
+		{
+			this->setRatingInfo( region );			// リージョンに含まれる団体のレーティング情報を取得
+		}
+	}
 
-		case METWL_MASK_REGION_AMERICA:
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_ESRB );
-		break;
+	return ECSrlResult::NOERROR;
+} // ECSrlResult RCSrl::setRomInfo(void)
 
-		case METWL_MASK_REGION_EUROPE:
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_USK );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_GEN );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_PRT );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_BBFC );
-		break;
+// ROMヘッダ内のリージョン情報をフィールドに反映させる
+bool RCSrl::setRegionInfo( u32 region )
+{
+	this->IsRegionJapan     = ((region & METWL_MASK_REGION_JAPAN)     != 0)?true:false;
+	this->IsRegionAmerica   = ((region & METWL_MASK_REGION_AMERICA)   != 0)?true:false;
+	this->IsRegionEurope    = ((region & METWL_MASK_REGION_EUROPE)    != 0)?true:false;
+	this->IsRegionAustralia = ((region & METWL_MASK_REGION_AUSTRALIA) != 0)?true:false;
 
-		case METWL_MASK_REGION_AUSTRALIA:
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_OFLC );
-		break;
+	// リージョンに含まれる団体がなかったらリージョンは不正
+	if( MasterEditorTWL::getOgnListInRegion( region ) == nullptr )
+	{
+		this->hParentalErrorList->Add( gcnew RCMrcError( 
+			"カードリージョン", 0x1b0, 0x1b3, "仕向地の組み合わせが不正です。ペアレンタルコントロール情報は無視して読み込まれました。",
+			"Card Region", "Illigal Region. Parental Control Information is ignored in reading.", true, true ) );
+		return false;
+	}
+	return true;
+}
 
-		case (METWL_MASK_REGION_EUROPE|METWL_MASK_REGION_AUSTRALIA):
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_USK );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_GEN );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_PRT );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_BBFC );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_OFLC );
-		break;
+// ROMヘッダ内のレーティング表示不要フラグを調べてフィールドに反映させる
+void RCSrl::setUnnecessaryRatingInfo( u32 region )
+{
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	if( ognlist == nullptr )	// リストがnullptrなら不正
+	{
+		return;
+	}
 
-#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-		case METWL_MASK_REGION_ALL:
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_CERO );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_ESRB );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_USK );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_GEN );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_PRT );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_PEGI_BBFC );
-			this->setOneRatingOrgInfo( OS_TWL_PCTL_OGN_OFLC );
-		break;
-#endif //#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+	// ROMヘッダのフラグを調べる
+	this->IsUnnecessaryRating = (this->pRomHeader->s.unnecessary_rating_display != 0)?true:false;
+	if( !this->IsUnnecessaryRating )
+	{
+		return;		// 不要でないならこれ以降のチェックは必要ない(レーティング情報の取得に移る)
+	}
 
-		default:
-			this->hParentalErrorList->Add( gcnew RCMrcError( 
-				"カードリージョン", 0x1b0, 0x1b3, "仕向地の組み合わせが不正です。ペアレンタルコントロール情報は無視して読み込まれました。",
-				"Card Region", "Illigal Region. Parental Control Information is ignored in reading.", true, true ) );
-		break;
+	// リージョンに含まれる団体のレーティング情報に余計なデータが登録されていないかチェック
+	bool noerror = false;
+	for each( int ogn in ognlist )
+	{
+		bool b = false;
+		if( this->pRomHeader->s.parental_control_rating_info[ ogn ] == (OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0) )	// 全年齢しか許さない
+		{
+			b = true;
+		}
+		noerror = noerror | b;		// すべて全年齢となっていないときはエラーとみなす
+	}
+	if( !noerror )
+	{
+		this->IsUnnecessaryRating = false;	// エラーのときはROMヘッダに不要と登録されていても無視する
+		this->hParentalErrorList->Add( gcnew RCMrcError( 
+			"ペアレンタルコントロール情報", 0x1b0, 0x1b3, "レーティング表示が不要かどうかを判断できません。再設定してください。",
+			"Parental Control Info.", "Can't judge wheather rating display is unnecessary.", true, true ) );
+	}
+}
+
+// ROMヘッダ内のペアレンタルコントロール情報をフィールドに反映させる
+void RCSrl::setRatingInfo( u32 region )
+{
+	// リージョンに含まれている団体をリストアップ
+	// (含まれていない団体のレーティングを読み込まない)
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	if( ognlist == nullptr )	// リストがnullptrなら不正
+	{
+		return;
+	}
+
+	// リージョンに含まれる団体のレーティング情報を調べる
+	for each( int ogn in ognlist )
+	{
+		this->setOneRatingOrgInfo( ogn );
 	}
 }
 
@@ -504,23 +525,30 @@ void RCSrl::setParentalControlHeader(void)
 	int i;
 	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
 	{
-		cli::array<System::Byte> ^ages = MasterEditorTWL::getOgnRatingAges( i );	// 設定可能年齢リストを取得
-
 		u8 rating;
-		if( this->hArrayParentalIndex[i] < 0 )		// 未定義
+		if( this->IsUnnecessaryRating )
 		{
-			rating = 0x00;
+			rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;	// レーティング表示が不要のときは「全年齢」と同じ値にする
 		}
 		else
 		{
-			int index = this->hArrayParentalIndex[i];
-			if( index == ages->Length )				// 審査中
+			cli::array<System::Byte> ^ages = MasterEditorTWL::getOgnRatingAges( i );	// 設定可能年齢リストを取得
+
+			if( this->hArrayParentalIndex[i] < 0 )		// 未定義
 			{
-				rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | OS_TWL_PCTL_OGNINFO_ALWAYS_MASK;
+				rating = 0x00;
 			}
-			else									// レーティング年齢を設定
+			else
 			{
-				rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | ages[ index ];
+				int index = this->hArrayParentalIndex[i];
+				if( index == ages->Length )				// 審査中
+				{
+					rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | OS_TWL_PCTL_OGNINFO_ALWAYS_MASK;
+				}
+				else									// レーティング年齢を設定
+				{
+					rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | ages[ index ];
+				}
 			}
 		}
 		this->pRomHeader->s.parental_control_rating_info[i] = rating;

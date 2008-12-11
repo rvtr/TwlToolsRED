@@ -275,7 +275,8 @@ namespace MasterEditorTWL
 		property System::String  ^hLatency;		// MROM/1TROM/Illegal
 
 		// ペアレンタルコントロール
-		property cli::array<System::Int32> ^hArrayParentalIndex;		// 表示用のコンボボックスのインデックス
+		property cli::array<System::Int32> ^hArrayParentalIndex;	// 表示用のコンボボックスのインデックス
+		property System::Boolean  IsUnnecessaryRating;				// レーティング表示不要フラグ
 
 		// TWL専用情報 一部編集可能
 		property System::UInt32   NormalRomOffset;
@@ -364,9 +365,11 @@ namespace MasterEditorTWL
 		ECSrlResult setRomHeader(void);		// ROMヘッダにROM固有情報フィールドの値を反映させる
 
 		// ペアレンタルコントロールの設定
-		void setParentalControlInfo(void);
-		void setOneRatingOrgInfo( int ogn );
-		void setParentalControlHeader(void);
+		bool setRegionInfo( u32 region );				// リージョンを取得(エラー情報も登録) @ret リージョンが正しいかどうか
+		void setUnnecessaryRatingInfo( u32 region );	// レーティング情報が不要かどうかを取得(エラー情報も登録)
+		void setRatingInfo( u32 region );				// リージョンに含まれる団体のレーティングを取得
+		void setOneRatingOrgInfo( int ogn );			// 1つの団体のレーティングを取得(エラー情報も登録)
+		void setParentalControlHeader(void);			// ROMヘッダにフィールドの値を反映させる
 
 		// ROMヘッダの更新
 		ECSrlResult calcRomHeaderCRC(void);	// ROMヘッダのCRCを再計算

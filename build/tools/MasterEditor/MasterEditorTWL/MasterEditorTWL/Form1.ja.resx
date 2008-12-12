@@ -329,10 +329,10 @@
     <value>審査中</value>
   </data>
   <data name="labParentalRating.Size" type="System.Drawing.Size, System.Drawing">
-    <value>82, 12</value>
+    <value>58, 12</value>
   </data>
   <data name="labParentalRating.Text" xml:space="preserve">
-    <value>レーティング情報</value>
+    <value>レーティング</value>
   </data>
   <data name="labRegion.Size" type="System.Drawing.Size, System.Drawing">
     <value>47, 12</value>
@@ -741,6 +741,12 @@
   </data>
   <data name="tboxGuideRomEditInfo.Text" xml:space="preserve">
     <value>このタブの各項目への入力は提出確認書およびマスターROMの作成のために必要です。&lt;newline&gt;これらの情報はマスターROMの作成時にROM内登録データとして登録されます(「その他ROM仕様」を除く)。</value>
+  </data>
+  <data name="cboxIsUnnecessaryRating.Size" type="System.Drawing.Size, System.Drawing">
+    <value>235, 16</value>
+  </data>
+  <data name="cboxIsUnnecessaryRating.Text" xml:space="preserve">
+    <value>レーティング表示不要 (ツール類のみ選択可)</value>
   </data>
   <data name="gboxParental.Text" xml:space="preserve">
     <value>リージョンとレーティング情報</value>

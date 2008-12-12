@@ -216,87 +216,54 @@ void Form1::setDeliverableProperties(void)
 	{
 		this->hDeliv->hRegion = dynamic_cast<System::String^>(this->combRegion->SelectedItem);
 	}
-	if( this->combCERO->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hCERO = gcnew System::String("不可");
-		else
-			this->hDeliv->hCERO = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hCERO = dynamic_cast<System::String^>(this->combCERO->SelectedItem);
-	}
-	if( this->combESRB->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hESRB = gcnew System::String("不可");
-		else
-			this->hDeliv->hESRB = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hESRB = dynamic_cast<System::String^>(this->combESRB->SelectedItem);
-	}
-	if( this->combUSK->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hUSK = gcnew System::String("不可");
-		else
-			this->hDeliv->hUSK = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hUSK = dynamic_cast<System::String^>(this->combUSK->SelectedItem);
-	}
-	if( this->combPEGI->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hPEGI = gcnew System::String("不可");
-		else
-			this->hDeliv->hPEGI = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hPEGI = dynamic_cast<System::String^>(this->combPEGI->SelectedItem);
-	}
-	if( this->combPEGI_PRT->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hPEGI_PRT = gcnew System::String("不可");
-		else
-			this->hDeliv->hPEGI_PRT = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hPEGI_PRT = dynamic_cast<System::String^>(this->combPEGI_PRT->SelectedItem);
-	}
-	if( this->combPEGI_BBFC->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hPEGI_BBFC = gcnew System::String("不可");
-		else
-			this->hDeliv->hPEGI_BBFC = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hPEGI_BBFC = dynamic_cast<System::String^>(this->combPEGI_BBFC->SelectedItem);
-	}
-	if( this->combOFLC->SelectedIndex < 0 )
-	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hOFLC = gcnew System::String("不可");
-		else
-			this->hDeliv->hOFLC = gcnew System::String("Undefined");
-	}
-	else
-	{
-		this->hDeliv->hOFLC = dynamic_cast<System::String^>(this->combOFLC->SelectedItem);
-	}
+	this->hDeliv->hCERO = this->setDeliverableRatingOgnProperties( this->combCERO );
+	this->hDeliv->hESRB = this->setDeliverableRatingOgnProperties( this->combESRB );
+	this->hDeliv->hUSK  = this->setDeliverableRatingOgnProperties( this->combUSK );
+	this->hDeliv->hPEGI = this->setDeliverableRatingOgnProperties( this->combPEGI );
+	this->hDeliv->hPEGI_PRT  = this->setDeliverableRatingOgnProperties( this->combPEGI_PRT );
+	this->hDeliv->hPEGI_BBFC = this->setDeliverableRatingOgnProperties( this->combPEGI_BBFC );
+	this->hDeliv->hOFLC = this->setDeliverableRatingOgnProperties( this->combOFLC );
 
 	// SRLには登録されないROM仕様
 	this->hDeliv->IsUGC     = this->cboxIsUGC->Checked;
 	this->hDeliv->IsPhotoEx = this->cboxIsPhotoEx->Checked;
+}
+
+// ----------------------------------------------
+// 提出確認書にレーティング(1団体)のフォームを反映
+// ----------------------------------------------
+System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms::ComboBox ^box )
+{
+	System::String ^str;
+	if( this->cboxIsUnnecessaryRating->Checked )
+	{
+		if( box->Visible )
+		{
+			str = System::String::Copy( box->Text );	// テキスト入力可になっているので取得できるはず
+		}
+		else	// リージョンに含まれていない(コンボボックスが表示されていない)ときには不可とする
+		{
+			if( this->isJapanese() == true )
+				str = gcnew System::String("不可");
+			else
+				str = gcnew System::String("Undefined");
+		}
+	}
+	else
+	{
+		if( box->SelectedIndex < 0 )
+		{
+			if( this->isJapanese() == true )
+				str = gcnew System::String("不可");
+			else
+				str = gcnew System::String("Undefined");
+		}
+		else
+		{
+			str = dynamic_cast<System::String^>(this->combCERO->SelectedItem);
+		}
+	}
+	return str;
 }
 
 // ----------------------------------------------

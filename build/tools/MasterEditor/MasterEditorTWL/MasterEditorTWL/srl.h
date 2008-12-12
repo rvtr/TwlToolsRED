@@ -369,7 +369,7 @@ namespace MasterEditorTWL
 		void setUnnecessaryRatingInfo( u32 region );	// レーティング情報が不要かどうかを取得(エラー情報も登録)
 		void setRatingInfo( u32 region );				// リージョンに含まれる団体のレーティングを取得
 		void setOneRatingOrgInfo( int ogn );			// 1つの団体のレーティングを取得(エラー情報も登録)
-		void setParentalControlHeader(void);			// ROMヘッダにフィールドの値を反映させる
+		void setRatingRomHeader( u32 region );			// ROMヘッダにフィールドの値を反映させる
 
 		// ROMヘッダの更新
 		ECSrlResult calcRomHeaderCRC(void);	// ROMヘッダのCRCを再計算

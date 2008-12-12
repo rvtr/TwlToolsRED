@@ -35,7 +35,7 @@ void Form1::setSrlProperties(void)
 	this->setRegionSrlPropaties();
 
 	// ペアレンタルコントロール
-	this->setParentalSrlProperties();
+	this->setRatingSrlProperties();
 } //setSrlProperties()
 
 // ----------------------------------------------
@@ -210,7 +210,7 @@ void Form1::setSrlForms(void)
 
 	// 編集可能情報
 	this->setRegionForms();
-	this->setParentalForms();			// ペアレンタルコントロール関連
+	this->setRatingForms();			// ペアレンタルコントロール関連
 
 	// ROMヘッダには関係ないが
 	// NANDアプリのときにバックアップメモリを自動的に「なし」にしておく
@@ -341,13 +341,24 @@ System::Boolean Form1::checkSrlForms(void)
 	}
 
 	// ペアレンタルコントロール
-	this->checkParentalForms( bJapan, this->combCERO, this->labCERO->Text );
-	this->checkParentalForms( bAmerica, this->combESRB, this->labESRB->Text );
-	this->checkParentalForms( bEurope, this->combUSK, this->labUSK->Text );
-	this->checkParentalForms( bEurope, this->combPEGI, this->labPEGI->Text );
-	this->checkParentalForms( bEurope, this->combPEGI_PRT, this->labPEGI_PRT->Text );
-	this->checkParentalForms( bEurope, this->combPEGI_BBFC, this->labPEGI_BBFC->Text );
-	this->checkParentalForms( bAustralia, this->combOFLC, this->labOFLC->Text );
+	if( this->cboxIsUnnecessaryRating->Checked )
+	{
+		this->hWarnList->Add( gcnew RCMrcError( 
+			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+			"レーティング表示が不要であると指定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。",
+			"Parental Control",
+			"In your selection, rating is unnecessary. This selection is available for only tool application which is not game. Please contact Nintendo for checking validation of this selection", true, true ) );
+	}
+	else
+	{
+		this->checkRatingForms( bJapan, this->combCERO, this->labCERO->Text );
+		this->checkRatingForms( bAmerica, this->combESRB, this->labESRB->Text );
+		this->checkRatingForms( bEurope, this->combUSK, this->labUSK->Text );
+		this->checkRatingForms( bEurope, this->combPEGI, this->labPEGI->Text );
+		this->checkRatingForms( bEurope, this->combPEGI_PRT, this->labPEGI_PRT->Text );
+		this->checkRatingForms( bEurope, this->combPEGI_BBFC, this->labPEGI_BBFC->Text );
+		this->checkRatingForms( bAustralia, this->combOFLC, this->labOFLC->Text );
+	}
 
 	// ひととおりエラー登録をした後で
 	// SRLバイナリに影響を与えるエラーが存在するかチェック

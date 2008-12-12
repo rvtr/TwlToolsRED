@@ -611,6 +611,8 @@ private: System::Windows::Forms::GroupBox^  gboxLaunch;
 private: System::Windows::Forms::Label^  labConnectIcon;
 private: System::Windows::Forms::TextBox^  tboxConnectIcon;
 private: System::Windows::Forms::Label^  labIsGameCardOn2;
+private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
+
 
 
 
@@ -729,7 +731,6 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 				System::IO::File::Delete( this->getSplitTadTmpFilename() );
 			}
 
-
 			// デフォルト値
 			this->IsSpreadSheet = true;
 			this->IsReadOnly    = false;
@@ -820,10 +821,10 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle7 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle8 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -1035,6 +1036,7 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			this->butSetBack = (gcnew System::Windows::Forms::Button());
 			this->tboxGuideRomEditInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxParental = (gcnew System::Windows::Forms::GroupBox());
+			this->cboxIsUnnecessaryRating = (gcnew System::Windows::Forms::CheckBox());
 			this->tabSubmitInfo = (gcnew System::Windows::Forms::TabPage());
 			this->labProductNameLimit = (gcnew System::Windows::Forms::Label());
 			this->tboxGuideSubmitInfo = (gcnew System::Windows::Forms::TextBox());
@@ -2341,15 +2343,15 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle1;
 			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
@@ -2471,6 +2473,7 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			// 
 			// gboxParental
 			// 
+			this->gboxParental->Controls->Add(this->cboxIsUnnecessaryRating);
 			this->gboxParental->Controls->Add(this->labRegion);
 			this->gboxParental->Controls->Add(this->combRegion);
 			this->gboxParental->Controls->Add(this->labParentalRating);
@@ -2491,6 +2494,13 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			resources->ApplyResources(this->gboxParental, L"gboxParental");
 			this->gboxParental->Name = L"gboxParental";
 			this->gboxParental->TabStop = false;
+			// 
+			// cboxIsUnnecessaryRating
+			// 
+			resources->ApplyResources(this->cboxIsUnnecessaryRating, L"cboxIsUnnecessaryRating");
+			this->cboxIsUnnecessaryRating->Name = L"cboxIsUnnecessaryRating";
+			this->cboxIsUnnecessaryRating->UseVisualStyleBackColor = true;
+			this->cboxIsUnnecessaryRating->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxIsUnnecessaryRating_CheckedChanged);
 			// 
 			// tabSubmitInfo
 			// 
@@ -2641,15 +2651,15 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle6;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle2;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->Name = L"gridWarn";
@@ -2684,22 +2694,22 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 			// 
 			// gridError
 			// 
-			dataGridViewCellStyle7->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle8->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle8->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle8->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle8->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle8->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle8->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle8->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle8;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle4;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->Name = L"gridError";
@@ -3008,33 +3018,42 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 
 	private:
 		// ---------------------------------------------------------------------
-		// ペアレンタルコントロール設定は複雑なので別に切り出す
+		// レーティング設定は複雑なので別に切り出す
 		// ---------------------------------------------------------------------
 
 		// フォーム入力をSRLに反映させる
-		void setParentalSrlProperties(void);
+		void setRatingSrlProperties(void);
 
 		// SRL情報をフォームに反映させる
-		void setParentalForms(void);
+		void setRatingForms(void);
 
 		// リージョン情報からペアレンタルコントロールの編集可能団体をマスクする
-		void maskParentalForms(void);
+		void maskRatingForms(void);
 
 		// フォーム入力が正しいか書き込み前チェック
-		void checkParentalForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg );
+		void checkRatingForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg );
 
 		// クリアする
-		void clearParental( System::Windows::Forms::ComboBox ^comb );
+		void clearRating( System::Windows::Forms::ComboBox ^comb );
 
 		// 編集できるようにする
-		void enableParental( System::Windows::Forms::ComboBox ^comb, 
-							 System::Windows::Forms::Label    ^lab1, 
-							 System::Windows::Forms::Label    ^lab2 );
+		void enableRating( System::Windows::Forms::ComboBox ^comb, 
+						   System::Windows::Forms::Label    ^lab1, 
+						   System::Windows::Forms::Label    ^lab2 );
 
 		// 編集できなくする
-		void disableParental( System::Windows::Forms::ComboBox ^comb, 
-							  System::Windows::Forms::Label    ^lab1, 
-							  System::Windows::Forms::Label    ^lab2 );
+		void disableRating( System::Windows::Forms::ComboBox ^comb, 
+						    System::Windows::Forms::Label    ^lab1, 
+						    System::Windows::Forms::Label    ^lab2 );
+
+		// 全団体を「レーティング表示不要」の設定/解除をする
+		void changeUnnecessaryRatingForms( System::Boolean bInitial );
+
+		// 「レーティング表示不要」と表示して編集できなくする
+		void unnecessaryRating( System::Windows::Forms::ComboBox ^comb );
+
+		// 「レーティング表示不要」表示を消して通常の設定に戻す
+		void necessaryRating( System::Windows::Forms::ComboBox ^comb, System::Boolean bInitial );
 
 		// ----------------------------------------------
 		// フォームのチェック
@@ -3058,6 +3077,9 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 
 		// 提出確認書にフォームを反映
 		void setDeliverableProperties(void);
+
+		// 提出確認書に反映するレーティング(1団体)のフォームを返す
+		System::String^ setDeliverableRatingOgnProperties( System::Windows::Forms::ComboBox ^box );
 
 		// 提出情報のフォームチェック
 		System::Boolean checkDeliverableForms(void);
@@ -3582,7 +3604,26 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 	private:
 		System::Void combRegion_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
 		{
-			this->maskParentalForms();
+			this->maskRatingForms();
+			this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
+		}
+
+	private:
+		System::Void cboxIsUnnecessaryRating_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changeUnnecessaryRatingForms(false);
+		}
+
+	private:
+		System::Void butSetBack_Click(System::Object^  sender, System::EventArgs^  e)
+		{
+			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
+				return;
+
+			// 編集可能情報を読み込み時の設定に戻す
+			this->setRegionForms();
+			this->setRatingForms();
+			this->loadOtherForms();		// SRLに登録されていないROM仕様のフォームも戻す
 		}
 
 	private:
@@ -3624,21 +3665,6 @@ private: System::Windows::Forms::Label^  labIsGameCardOn2;
 				this->updateGrid();
 			}
 		}
-
-	private:
-		System::Void butSetBack_Click(System::Object^  sender, System::EventArgs^  e)
-		{
-			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
-				return;
-
-			// 編集可能情報を読み込み時の設定に戻す
-			this->setRegionForms();
-			this->setParentalForms();
-			this->loadOtherForms();		// SRLに登録されていないROM仕様のフォームも戻す
-		}
-
-
-
 
 }; // enf of ref class Form1
 

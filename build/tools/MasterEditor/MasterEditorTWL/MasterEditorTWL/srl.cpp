@@ -480,12 +480,7 @@ ECSrlResult RCSrl::setRomHeader(void)
 
 	// ROMヘッダの[0,0x160)の領域はRead Onlyで変更しない
 
-	// いくつかのフラグをROMヘッダに反映
-	this->pRomHeader->s.exFlags.agree_EULA = (this->IsEULA == true)?1:0;
-	this->pRomHeader->s.exFlags.WiFiConnectionIcon = (this->IsWiFiIcon == true)?1:0;
-	this->pRomHeader->s.exFlags.DSWirelessIcon     = (this->IsWirelessIcon == true)?1:0;
-
-	// レーティング
+	// リージョン
 	u32  map = 0;
 	if( this->IsRegionJapan   == true )  { map |= METWL_MASK_REGION_JAPAN; }
 	if( this->IsRegionAmerica == true )  { map |= METWL_MASK_REGION_AMERICA; }
@@ -501,8 +496,8 @@ ECSrlResult RCSrl::setRomHeader(void)
 #endif
 	this->pRomHeader->s.card_region_bitmap = map;
 
-	// ペアレンタルコントロール
-	this->setParentalControlHeader();
+	// レーティング
+	this->setRatingRomHeader( map );
 
 	// ROMヘッダのCRCと署名を更新する
 	result = this->calcRomHeaderCRC();
@@ -520,27 +515,38 @@ ECSrlResult RCSrl::setRomHeader(void)
 } // ECSrlResult RCSrl::setRomHeader(void)
 
 // ペアレンタルコントロールのプロパティをROMヘッダに反映させる
-void RCSrl::setParentalControlHeader(void)
+void RCSrl::setRatingRomHeader( u32 region )
 {
-	int i;
-	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
+	// リージョンに含まれない団体はすべて「不可」(未定義)
+	int j;
+	for( j=0; j < PARENTAL_CONTROL_INFO_SIZE; j++ )
 	{
-		u8 rating;
+		this->pRomHeader->s.parental_control_rating_info[j] = 0x00;
+	}
+
+	// 「レーティング表示不要」フラグを立てる
+	this->pRomHeader->s.unnecessary_rating_display = (this->IsUnnecessaryRating == true)?1:0;
+
+	// リージョンに含まれる団体のみを設定
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	for each( int ogn in ognlist )
+	{
+		u8 rating = 0;
 		if( this->IsUnnecessaryRating )
 		{
 			rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;	// レーティング表示が不要のときは「全年齢」と同じ値にする
 		}
 		else
 		{
-			cli::array<System::Byte> ^ages = MasterEditorTWL::getOgnRatingAges( i );	// 設定可能年齢リストを取得
+			cli::array<System::Byte> ^ages = MasterEditorTWL::getOgnRatingAges( ogn );	// 設定可能年齢リストを取得
 
-			if( this->hArrayParentalIndex[i] < 0 )		// 未定義
+			if( this->hArrayParentalIndex[ ogn ] < 0 )		// 未定義
 			{
 				rating = 0x00;
 			}
 			else
 			{
-				int index = this->hArrayParentalIndex[i];
+				int index = this->hArrayParentalIndex[ ogn ];
 				if( index == ages->Length )				// 審査中
 				{
 					rating = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | OS_TWL_PCTL_OGNINFO_ALWAYS_MASK;
@@ -551,7 +557,7 @@ void RCSrl::setParentalControlHeader(void)
 				}
 			}
 		}
-		this->pRomHeader->s.parental_control_rating_info[i] = rating;
+		this->pRomHeader->s.parental_control_rating_info[ ogn ] = rating;
 	}
 }
 

@@ -353,6 +353,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->butSetBack, L"butSetBack");
 	resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
 	resources->ApplyResources(this->gboxParental, L"gboxParental");
+	resources->ApplyResources(this->cboxIsUnnecessaryRating, L"cboxIsUnnecessaryRating");
 	resources->ApplyResources(this->tabSubmitInfo, L"tabSubmitInfo");
 	resources->ApplyResources(this->labProductNameLimit, L"labProductNameLimit");
 	resources->ApplyResources(this->tboxGuideSubmitInfo, L"tboxGuideSubmitInfo");
@@ -388,9 +389,26 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->setSrlFormsTextBox();
 	}
 
+	// 「レーティング表示不要」にチェックが入っているときのみレーティングのコンボボックスのテキストを変更
+	// (それ以外のときにはApplyResourcesで自動的に切り替わる)
+	if( this->cboxIsUnnecessaryRating->Checked )
+	{
+		this->unnecessaryRating( this->combCERO );
+		this->unnecessaryRating( this->combESRB );
+		this->unnecessaryRating( this->combUSK );
+		this->unnecessaryRating( this->combPEGI );
+		this->unnecessaryRating( this->combPEGI_PRT );
+		this->unnecessaryRating( this->combPEGI_BBFC );
+		this->unnecessaryRating( this->combOFLC );
+	}
+
 	// 複数行表示の改行を挿入
 	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideErrorInfo->Text   = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
+
+	// バージョンがなくなるので再設定
+	System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
+	this->labAssemblyVersion->Text = "ver." + this->getVersion();
 }
 
 // end of file

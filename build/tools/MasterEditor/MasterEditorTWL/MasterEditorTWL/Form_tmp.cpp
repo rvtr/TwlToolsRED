@@ -244,7 +244,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsUGC", this->cboxIsUGC );
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsPhotoEx", this->cboxIsPhotoEx );
 
-	this->maskParentalForms();	// ペアレンタルコントロール情報をリージョンに合わせる
+	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
 
 } //loadTmp()
 

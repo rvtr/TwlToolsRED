@@ -68,10 +68,6 @@ void Form1::setRegionSrlPropaties(void)
 	}
 }
 
-// ---------------------------------------------------------------------
-// ペアレンタルコントロール設定は複雑なので別に切り出す
-// ---------------------------------------------------------------------
-
 // SRL情報をフォームに反映させる
 void Form1::setRegionForms(void)
 {
@@ -97,12 +93,15 @@ void Form1::setRegionForms(void)
 	index = 5;
 #endif
 	this->combRegion->SelectedIndex = index;
-	this->maskParentalForms();		// ペアレンタルコントロール用フォームの表示/非表示切り替え
+	this->maskRatingForms();		// ペアレンタルコントロール用フォームの表示/非表示切り替え
 }
 
+// ---------------------------------------------------------------------
+// ペアレンタルコントロール設定は複雑なので別に切り出す
+// ---------------------------------------------------------------------
 
 // フォーム入力をSRLに反映させる
-void Form1::setParentalSrlProperties(void)
+void Form1::setRatingSrlProperties(void)
 {
 	// 各団体のフォーム入力を反映
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_CERO ] = this->combCERO->SelectedIndex;
@@ -112,11 +111,18 @@ void Form1::setParentalSrlProperties(void)
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ]  = this->combPEGI_PRT->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ] = this->combPEGI_BBFC->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_OFLC ] = this->combOFLC->SelectedIndex;
-} //setParentalSrlProperties()
+
+	// レーティング表示不要かどうかを設定
+	this->hSrl->IsUnnecessaryRating = this->cboxIsUnnecessaryRating->Checked;
+} //setRatingSrlProperties()
 
 // SRL内のペアレンタルコントロール情報を抜き出してフォームに反映させる
-void Form1::setParentalForms(void)
+void Form1::setRatingForms(void)
 {
+	// レーティング表示不要かどうかを判断
+	this->cboxIsUnnecessaryRating->Checked = this->hSrl->IsUnnecessaryRating;
+	this->changeUnnecessaryRatingForms( true );	// 不要かどうかに応じてフォームを設定
+
 	// 各団体のコンボボックスのインデックスを設定
 	this->combCERO->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_CERO ];
 	this->combESRB->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_ESRB ];
@@ -125,83 +131,108 @@ void Form1::setParentalForms(void)
 	this->combPEGI_PRT->SelectedIndex  = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ];
 	this->combPEGI_BBFC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ];
 	this->combOFLC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_OFLC ];
-} //setParentalForms()
+} //setRatingForms()
 
 // リージョン情報からペアレンタルコントロールの編集可能団体をマスクする
-void Form1::maskParentalForms(void)
+void Form1::maskRatingForms(void)
 {
-	this->enableParental( this->combCERO, this->labCERO, nullptr );
-	this->enableParental( this->combESRB, this->labESRB, nullptr );
-	this->enableParental( this->combUSK,  this->labUSK,  nullptr );
-	this->enableParental( this->combPEGI, this->labPEGI, nullptr );
-	this->enableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-	this->enableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-	this->enableParental( this->combOFLC, this->labOFLC, nullptr );
+	this->enableRating( this->combCERO, this->labCERO, nullptr );
+	this->enableRating( this->combESRB, this->labESRB, nullptr );
+	this->enableRating( this->combUSK,  this->labUSK,  nullptr );
+	this->enableRating( this->combPEGI, this->labPEGI, nullptr );
+	this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+	this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+	this->enableRating( this->combOFLC, this->labOFLC, nullptr );
 	switch( this->combRegion->SelectedIndex )
 	{
 		case 0:
 			// 日本
-			this->enableParental( this->combCERO, this->labCERO, nullptr );
-			this->disableParental( this->combESRB, this->labESRB, nullptr );
-			this->disableParental( this->combUSK,  this->labUSK,  nullptr );
-			this->disableParental( this->combPEGI, this->labPEGI, nullptr );
-			this->disableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-			this->disableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-			this->disableParental( this->combOFLC, this->labOFLC, nullptr );
+			this->enableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB, this->labESRB, nullptr );
+			this->disableRating( this->combUSK,  this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI, this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
 		break;
 
 		case 1:
 			// 米国
-			this->disableParental( this->combCERO, this->labCERO, nullptr );
-			this->enableParental( this->combESRB,  this->labESRB, nullptr );
-			this->disableParental( this->combUSK,  this->labUSK,  nullptr );
-			this->disableParental( this->combPEGI, this->labPEGI, nullptr );
-			this->disableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-			this->disableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-			this->disableParental( this->combOFLC, this->labOFLC, nullptr );
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->enableRating( this->combESRB,  this->labESRB, nullptr );
+			this->disableRating( this->combUSK,  this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI, this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
 		break;
 
 		case 2:
 			// 欧州
-			this->disableParental( this->combCERO, this->labCERO, nullptr );
-			this->disableParental( this->combESRB, this->labESRB, nullptr );
-			this->enableParental( this->combUSK,   this->labUSK,  nullptr );
-			this->enableParental( this->combPEGI,  this->labPEGI, nullptr );
-			this->enableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-			this->enableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-			this->disableParental( this->combOFLC, this->labOFLC, nullptr );
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB, this->labESRB, nullptr );
+			this->enableRating( this->combUSK,   this->labUSK,  nullptr );
+			this->enableRating( this->combPEGI,  this->labPEGI, nullptr );
+			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
 		break;
 
 		case 3:
 			// 豪州
-			this->disableParental( this->combCERO, this->labCERO, nullptr );
-			this->disableParental( this->combESRB, this->labESRB, nullptr );
-			this->disableParental( this->combUSK,  this->labUSK,  nullptr );
-			this->disableParental( this->combPEGI, this->labPEGI, nullptr );
-			this->disableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-			this->disableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-			this->enableParental( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB, this->labESRB, nullptr );
+			this->disableRating( this->combUSK,  this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI, this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
 		break;
 
 		case 4:
 			// 欧州と豪州
-			this->disableParental( this->combCERO, this->labCERO, nullptr );
-			this->disableParental( this->combESRB, this->labESRB, nullptr );
-			this->enableParental( this->combUSK,   this->labUSK,  nullptr );
-			this->enableParental( this->combPEGI,  this->labPEGI, nullptr );
-			this->enableParental( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
-			this->enableParental( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
-			this->enableParental( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB, this->labESRB, nullptr );
+			this->enableRating( this->combUSK,   this->labUSK,  nullptr );
+			this->enableRating( this->combPEGI,  this->labPEGI, nullptr );
+			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
 		break;
 
 		// 全リージョンのときは何もdisableにしない
 		default:
 		break;
 	}
-} //maskParentalForms()
+} //maskRatingForms()
+
+// 全団体を「レーティング表示不要」の設定/解除をする
+void Form1::changeUnnecessaryRatingForms( System::Boolean bInitial )
+{
+	if( this->cboxIsUnnecessaryRating->Checked )
+	{
+		this->unnecessaryRating( this->combCERO );		// マスクは別のところでするのでここでは全団体を不要にしてもかまわない
+		this->unnecessaryRating( this->combESRB );
+		this->unnecessaryRating( this->combUSK );
+		this->unnecessaryRating( this->combPEGI );
+		this->unnecessaryRating( this->combPEGI_PRT );
+		this->unnecessaryRating( this->combPEGI_BBFC );
+		this->unnecessaryRating( this->combOFLC );
+	}
+	else
+	{
+		this->necessaryRating( this->combCERO, bInitial );
+		this->necessaryRating( this->combESRB, bInitial );
+		this->necessaryRating( this->combUSK, bInitial );
+		this->necessaryRating( this->combPEGI, bInitial );
+		this->necessaryRating( this->combPEGI_PRT, bInitial );
+		this->necessaryRating( this->combPEGI_BBFC, bInitial );
+		this->necessaryRating( this->combOFLC, bInitial );
+	}
+}
 
 // ペアレンタルコントロール関連のフォーム入力が正しいか書き込み前チェック
-void Form1::checkParentalForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg )
+void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg )
 {
 	// リージョンに含まれていないとき: 0クリアが保証されるのでチェック必要なし
 	if( !inRegion )
@@ -225,18 +256,17 @@ void Form1::checkParentalForms( System::Boolean inRegion, System::Windows::Forms
 			msg + ": 審査中指定がされています。審査が決まりしだい、再提出してください。",
 			"Parental Control", msg + ": Save ROM data as Game soft which needs rating examinination.", true, true ) );
 	}
-} //checkParentalForms()
-
+} //checkRatingForms()
 
 // ペアレンタルコントロール情報をクリアする
-void Form1::clearParental( System::Windows::Forms::ComboBox ^comb )
+void Form1::clearRating( System::Windows::Forms::ComboBox ^comb )
 {
 	comb->SelectedIndex = -1;	// 空白にする
 }
 
 
 // ペアレンタルコントロール情報を編集できるようにする
-void Form1::enableParental( System::Windows::Forms::ComboBox ^comb, 
+void Form1::enableRating( System::Windows::Forms::ComboBox ^comb, 
 							System::Windows::Forms::Label    ^lab1, 
 							System::Windows::Forms::Label    ^lab2 )
 {
@@ -250,11 +280,11 @@ void Form1::enableParental( System::Windows::Forms::ComboBox ^comb,
 }
 
 // ペアレンタルコントロール情報を編集できなくする
-void Form1::disableParental( System::Windows::Forms::ComboBox ^comb, 
+void Form1::disableRating( System::Windows::Forms::ComboBox ^comb, 
 							 System::Windows::Forms::Label    ^lab1, 
 							 System::Windows::Forms::Label    ^lab2 )
 {
-	this->clearParental( comb );
+	this->clearRating( comb );
 	comb->Enabled   = false;
 	comb->Visible   = false;
 	lab1->Visible   = false;
@@ -262,6 +292,35 @@ void Form1::disableParental( System::Windows::Forms::ComboBox ^comb,
 	{
 		lab2->Visible   = false;
 	}
+}
+
+// 「レーティング表示不要」と表示して編集できなくする
+void Form1::unnecessaryRating( System::Windows::Forms::ComboBox ^comb )
+{
+	comb->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDown;	// 一時的にテキスト入力可能にする
+	comb->SelectedIndex = -1;	// 何も選択されていないとみなす
+	System::String ^msg;
+	if( this->isJapanese() )
+	{
+		msg = gcnew System::String( "レーティング表示不要(全年齢)" );
+	}
+	else
+	{
+		msg = gcnew System::String( "Unnecessary Rating(All ages)" );
+	}
+	comb->Text = msg;
+	comb->Enabled = false;		// 編集不可能にする
+}
+
+// 「レーティング表示不要」表示を消して通常の設定に戻す
+void Form1::necessaryRating( System::Windows::Forms::ComboBox ^comb, System::Boolean bInitial )
+{
+	comb->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+	if( !bInitial )
+	{
+		comb->SelectedIndex = -1;	// 読み込みの場合にはコンボボックスを初期化しない(せっかく読み込んだ情報を消してしまうため)
+	}
+	comb->Enabled = true;	// 編集不可能にする
 }
 
 // end of file

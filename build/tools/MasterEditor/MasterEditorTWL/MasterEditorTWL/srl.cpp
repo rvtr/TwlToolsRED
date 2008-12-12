@@ -1292,6 +1292,30 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				false, true ) );
 		}
 	}
+	else	// ユーザのときのみ
+	{
+		if( this->pRomHeader->s.disable_debug != 0 )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"デバッガ動作禁止フラグ", 0x1f, 0x1f, 
+				"デバッガ上で解析不可な設定になっています。この設定は許可されていません。",
+				"Disable Launch on Debugger Flag", 
+				"This ROM can't be analyzed on the debugger. This setting is unavailable.", 
+				false, true ) );
+		}
+
+		u8 okbits = 0x01 | 0x40 | 0x80;
+		u8 *p = (u8*)&(this->pRomHeader->s);
+		if( p[0x1d] & ~okbits )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"特定仕向地", 0x1d, 0x1d, 
+				"不正なビットが立っています。この設定は許可されていません。",
+				"Extra Region Code", 
+				"Illegal bit is setting. This setting is unavailable.", 
+				false, true ) );
+		}
+	}
 
 	if( this->pRomHeader->s.warning_no_spec_rom_speed != 0 )
 	{
@@ -1416,41 +1440,69 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 
 	} // アプリ種別のチェック
 
-	if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
-		(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
+	if( this->IsAppLauncher || this->IsAppSecure || this->IsAppSystem )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカード電源設定にノーマルモードとNTRモードの両方を設定することはできません。",
-			"Access Control Info.", "Game card power setting is either normal mode or NTR mode.", false, true ) );
-	}
-	if( ((this->pRomHeader->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK) == 0) &&		// カードアプリ
-		((this->pRomHeader->s.access_control.game_card_on != 0) || (this->pRomHeader->s.access_control.game_card_nitro_mode != 0)) )
-	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカード用ソフトに対してゲームカード電源設定をすることはできません。",
-			"Access Control Info.", "Game card power setting is not for Game Card Soft.", false, true ) );
-	}
-	if( this->pRomHeader->s.access_control.shared2_file == 0 )
-	{
-		if( (this->pRomHeader->s.shared2_file0_size != 0) || (this->pRomHeader->s.shared2_file1_size != 0) ||
-			(this->pRomHeader->s.shared2_file2_size != 0) || (this->pRomHeader->s.shared2_file3_size != 0) ||
-			(this->pRomHeader->s.shared2_file4_size != 0) || (this->pRomHeader->s.shared2_file5_size != 0) )
+		if( this->pRomHeader->s.access_control.shared2_file == 0 )
+		{
+			if( (this->pRomHeader->s.shared2_file0_size != 0) || (this->pRomHeader->s.shared2_file1_size != 0) ||
+				(this->pRomHeader->s.shared2_file2_size != 0) || (this->pRomHeader->s.shared2_file3_size != 0) ||
+				(this->pRomHeader->s.shared2_file4_size != 0) || (this->pRomHeader->s.shared2_file5_size != 0) )
+			{
+				this->hErrorList->Add( gcnew RCMrcError( 
+					"アクセスコントロール情報", 0x1b4, 0x1b7, "Shared2ファイルのサイズが設定されているにもかかわらず不使用設定になっています。",
+					"Access Control Info.", "Sizes of shared2 files is setting, but using them is not enabled.", false, true ) );
+			}
+		}
+		if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
+			(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
 		{
 			this->hErrorList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7, "Shared2ファイルのサイズが設定されているにもかかわらず不使用設定になっています。",
-				"Access Control Info.", "Sizes of shared2 files is setting, but using them is not enabled.", false, true ) );
+				"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。",
+				"Access Control Info.", "Game card access setting is either normal mode or NTR mode.", false, true ) );
+		}
+		if( ((this->pRomHeader->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK) == 0) &&		// カードアプリ
+			((this->pRomHeader->s.access_control.game_card_on != 0) || (this->pRomHeader->s.access_control.game_card_nitro_mode != 0)) )
+		{
+			this->hErrorList->Add( gcnew RCMrcError( 
+				"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカードアクセス設定が必要なのはNANDアプリのみです。カードアプリでは設定の必要はありません。",
+				"Access Control Info.", "Game card access setting is necessary for NAND application, not for Game Card Application.",
+				false, true ) );
 		}
 	}
-	if( !this->IsMediaNand )	// カードアプリのときのみ
+	else
 	{
-		if( (this->pRomHeader->s.access_control.nand_access != 0) || (this->pRomHeader->s.access_control.sd_card_access != 0) )
+		if( !this->IsMediaNand )	// カードアプリのときのみ
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7,
-				"ゲームカード用ソフトは、NANDフラッシュメモリとSDカードへアクセスできません。アクセスを希望される場合、弊社窓口にご相談ください。",
-				"Access Control Info.",
-				"Game soft for Game Card does'nt access to NAND frash memory and SD Card. If the soft wish to access them, please contact us.",
-				false, true ) );
+			if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+			{
+				this->hWarnList->Add( gcnew RCMrcError( 
+					"アクセスコントロール情報", 0x1b4, 0x1b7,
+					"ゲームカード用ソフトは、SDカードへのアクセスは許可されていません。",
+					"Access Control Info.",
+					"Application for Game Card doesn't access to NAND frash memory.",
+					false, true ) );
+			}
+			if( this->pRomHeader->s.access_control.nand_access != 0 )
+			{
+				this->hWarnList->Add( gcnew RCMrcError( 
+					"アクセスコントロール情報", 0x1b4, 0x1b7,
+					"ゲームカード用ソフトは、NANDフラッシュメモリへのアクセスは許可されていません。",
+					"Access Control Info.",
+					"Application for Game Card doesn't access to NAND frash memory.",
+					false, true ) );
+			}
+
+			u32 okbits = 0x00000008 | 0x00000010;
+			u32 *p = (u32*)&(this->pRomHeader->s);
+			if( p[ 0x1b4 / 4 ] & ~okbits )
+			{
+				this->hWarnList->Add( gcnew RCMrcError( 
+					"アクセスコントロール情報", 0x1b4, 0x1b7,
+					"許可されていないアクセスが設定されています。この設定は許可されていません。",
+					"Access Control Info.",
+					"Illegal Access is setting. This setting is unavailable.",
+					false, true ) );
+			}
 		}
 	}
 

@@ -1206,11 +1206,11 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	// 値チェック
 
 	fseek( fp, 0, SEEK_END );
-	u32  filesize = ftell(fp);	// 実ファイルサイズ(単位Mbit)
-	u32  romsize = 1 << (this->pRomHeader->s.rom_size);	// ROM容量
+	u32  filesize = ftell(fp);	// 実ファイルサイズ
+	u32  romsize = 1 << (this->pRomHeader->s.rom_size);	// ROM容量(単位Mbit)
 	if( !this->IsMediaNand )		// カードアプリのときのみのチェック
 	{
-		u32 filesizeMb = (filesize / (1024*1024)) * 8;
+		u32 filesizeMb = (filesize / (1024*1024)) * 8;	// 単位をMbitに直す
 		if( romsize < filesizeMb )
 		{
 			this->hErrorList->Add( gcnew RCMrcError( 
@@ -1269,8 +1269,8 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				"デバイス容量", 0x14, 0x14, "NANDアプリに対して指定可能な容量ではありません。",
 				"Device Capacity", "Invalid capacity.", false, true ) );
 		}
-		u32  allsizeMB = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
-		if( allsizeMB > METWL_ALLSIZE_MAX_NAND )
+		u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
+		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
 			this->hErrorList->Add( gcnew RCMrcError( 
 				"実ファイルサイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,

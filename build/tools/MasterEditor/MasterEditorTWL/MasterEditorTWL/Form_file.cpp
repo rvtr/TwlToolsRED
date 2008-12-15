@@ -32,8 +32,11 @@ System::Boolean Form1::loadRom( System::String ^infile )
 	this->IsLoadTad = false;
 	if( System::IO::Path::GetExtension( infile )->ToUpper()->Equals( ".TAD" ) )	// Šg’£Žq‚Å”»•Ê
 	{
-		this->IsLoadTad = true;
 		result = this->loadTad( infile );
+		if( result )
+		{
+			this->IsLoadTad = true;
+		}
 	}
 	else
 	{

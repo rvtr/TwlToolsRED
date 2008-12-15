@@ -56,7 +56,11 @@ System::Boolean Form1::saveRom( System::String ^outfile )
 		// 一時ファイルにSRLを書き出しているのでその一時ファイルから出力ファイルを作成
 		System::String ^tmpsrl = this->getSplitTadTmpFilename();
 		result = this->saveSrl( tmpsrl, outfile );
-		System::IO::File::Delete( tmpsrl );
+		if( result )
+		{
+			System::IO::File::Delete( tmpsrl );
+			this->IsLoadTad = false;			// 出力したSRLが次のソースとなる
+		}
 	}
 	else
 	{

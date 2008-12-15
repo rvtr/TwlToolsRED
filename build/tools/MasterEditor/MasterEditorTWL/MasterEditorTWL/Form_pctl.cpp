@@ -277,6 +277,11 @@ void Form1::enableRating( System::Windows::Forms::ComboBox ^comb,
 	{
 		lab2->Visible   = true;
 	}
+	// 本来は不必要な設定
+	//「レーティング表示不要」でEnableをfalseにするのでリージョンに含まれているのかどうかを知る術がない
+	// (Visibleは親タブが変わると勝手にFalseになってしまう)
+	// そのため無関係な設定を変えることでリージョンに含まれていることを表現する
+	comb->FlatStyle = System::Windows::Forms::FlatStyle::Standard;
 }
 
 // ペアレンタルコントロール情報を編集できなくする
@@ -292,6 +297,7 @@ void Form1::disableRating( System::Windows::Forms::ComboBox ^comb,
 	{
 		lab2->Visible   = false;
 	}
+	comb->FlatStyle = System::Windows::Forms::FlatStyle::Popup;		// Disableを表現
 }
 
 // 「レーティング表示不要」と表示して編集できなくする
@@ -320,7 +326,7 @@ void Form1::necessaryRating( System::Windows::Forms::ComboBox ^comb, System::Boo
 	{
 		comb->SelectedIndex = -1;	// 読み込みの場合にはコンボボックスを初期化しない(せっかく読み込んだ情報を消してしまうため)
 	}
-	comb->Enabled = true;	// 編集不可能にする
+	comb->Enabled = true;	// 編集可能にする
 }
 
 // end of file

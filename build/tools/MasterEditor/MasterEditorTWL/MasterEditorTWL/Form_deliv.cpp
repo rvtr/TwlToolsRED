@@ -237,7 +237,7 @@ System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms
 	System::String ^str;
 	if( this->cboxIsUnnecessaryRating->Checked )
 	{
-		if( box->Visible )
+		if( box->FlatStyle == System::Windows::Forms::FlatStyle::Standard )
 		{
 			str = System::String::Copy( box->Text );	// テキスト入力可になっているので取得できるはず
 		}

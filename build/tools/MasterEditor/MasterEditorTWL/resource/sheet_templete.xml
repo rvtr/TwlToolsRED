@@ -69,6 +69,28 @@
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
+  <Style ss:ID="m20928738">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
+  <Style ss:ID="m20928768">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
   <Style ss:ID="m20933904">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
    <Borders>
@@ -1389,17 +1411,6 @@
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
-  <Style ss:ID="m20926896">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-   <NumberFormat ss:Format="@"/>
-  </Style>
   <Style ss:ID="m20926906">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
    <Borders>
@@ -1550,17 +1561,6 @@
     <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="6"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-   <NumberFormat ss:Format="@"/>
-  </Style>
-  <Style ss:ID="m20926420">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
@@ -2717,9 +2717,9 @@
     <Cell ss:StyleID="s22"/>
     <Cell ss:StyleID="s22"/>
     <Cell ss:MergeAcross="16" ss:StyleID="m20926400"><Data ss:Type="String">ふりがな</Data></Cell>
-    <Cell ss:MergeAcross="29" ss:StyleID="s52"><Data ss:Type="String">TagFurigana1</Data><NamedCell
+    <Cell ss:MergeAcross="35" ss:StyleID="s52"><Data ss:Type="String">TagFurigana1</Data><NamedCell
       ss:Name="Furigana1"/></Cell>
-    <Cell ss:MergeAcross="13" ss:MergeDown="1" ss:StyleID="m20926420"><PhoneticText
+    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20928738"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">イン</PhoneticText><Data
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20926430"><Data ss:Type="String">TEL</Data></Cell>
@@ -2733,7 +2733,7 @@
     <Cell ss:MergeAcross="16" ss:StyleID="m20926562"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">ゴシメイ</PhoneticText><Data
       ss:Type="String">ご氏名</Data></Cell>
-    <Cell ss:MergeAcross="29" ss:StyleID="s120"><Data ss:Type="String">TagPerson1</Data><NamedCell
+    <Cell ss:MergeAcross="35" ss:StyleID="s120"><Data ss:Type="String">TagPerson1</Data><NamedCell
       ss:Name="Person1"/></Cell>
     <Cell ss:Index="64" ss:MergeAcross="4" ss:StyleID="m20926582"><Data
       ss:Type="String">FAX</Data></Cell>
@@ -2871,9 +2871,9 @@
     <Cell ss:StyleID="s22"/>
     <Cell ss:StyleID="s22"/>
     <Cell ss:MergeAcross="16" ss:StyleID="m20926876"><Data ss:Type="String">ふりがな</Data></Cell>
-    <Cell ss:MergeAcross="29" ss:StyleID="s52"><Data ss:Type="String">TagFurigana2</Data><NamedCell
+    <Cell ss:MergeAcross="35" ss:StyleID="s52"><Data ss:Type="String">TagFurigana2</Data><NamedCell
       ss:Name="Furigana2"/></Cell>
-    <Cell ss:MergeAcross="13" ss:MergeDown="1" ss:StyleID="m20926896"><PhoneticText
+    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20928768"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">イン</PhoneticText><Data
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20926906"><Data ss:Type="String">TEL</Data></Cell>
@@ -2887,7 +2887,7 @@
     <Cell ss:MergeAcross="16" ss:StyleID="m20926926"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">ゴシメイ</PhoneticText><Data
       ss:Type="String">ご氏名</Data></Cell>
-    <Cell ss:MergeAcross="29" ss:StyleID="s120"><Data ss:Type="String">TagPerson2</Data><NamedCell
+    <Cell ss:MergeAcross="35" ss:StyleID="s120"><Data ss:Type="String">TagPerson2</Data><NamedCell
       ss:Name="Person2"/></Cell>
     <Cell ss:Index="64" ss:MergeAcross="4" ss:StyleID="m20926946"><Data
       ss:Type="String">FAX</Data></Cell>

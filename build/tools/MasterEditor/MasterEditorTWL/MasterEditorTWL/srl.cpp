@@ -1460,49 +1460,40 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。",
 				"Access Control Info.", "Game card access setting is either normal mode or NTR mode.", false, true ) );
 		}
-		if( ((this->pRomHeader->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK) == 0) &&		// カードアプリ
-			((this->pRomHeader->s.access_control.game_card_on != 0) || (this->pRomHeader->s.access_control.game_card_nitro_mode != 0)) )
-		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカードアクセス設定が必要なのはNANDアプリのみです。カードアプリでは設定の必要はありません。",
-				"Access Control Info.", "Game card access setting is necessary for NAND application, not for Game Card Application.",
-				false, true ) );
-		}
 	}
 	else
 	{
+		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"アクセスコントロール情報", 0x1b4, 0x1b7,
+				"SDカードへのアクセスは許可されていません。",
+				"Access Control Info.",
+				"Application for Game Card doesn't access to NAND frash memory.",
+				false, true ) );
+		}
 		if( !this->IsMediaNand )	// カードアプリのときのみ
 		{
-			if( this->pRomHeader->s.access_control.sd_card_access != 0 )
-			{
-				this->hWarnList->Add( gcnew RCMrcError( 
-					"アクセスコントロール情報", 0x1b4, 0x1b7,
-					"ゲームカード用ソフトは、SDカードへのアクセスは許可されていません。",
-					"Access Control Info.",
-					"Application for Game Card doesn't access to NAND frash memory.",
-					false, true ) );
-			}
 			if( this->pRomHeader->s.access_control.nand_access != 0 )
 			{
 				this->hWarnList->Add( gcnew RCMrcError( 
 					"アクセスコントロール情報", 0x1b4, 0x1b7,
-					"ゲームカード用ソフトは、NANDフラッシュメモリへのアクセスは許可されていません。",
+					"ゲームカード用ソフトは、NANDフラッシュメモリへのアクセスを許可されていません。",
 					"Access Control Info.",
 					"Application for Game Card doesn't access to NAND frash memory.",
 					false, true ) );
 			}
-
-			u32 okbits = 0x00000008 | 0x00000010;
-			u32 *p = (u32*)&(this->pRomHeader->s);
-			if( p[ 0x1b4 / 4 ] & ~okbits )
-			{
-				this->hWarnList->Add( gcnew RCMrcError( 
-					"アクセスコントロール情報", 0x1b4, 0x1b7,
-					"許可されていないアクセスが設定されています。この設定は許可されていません。",
-					"Access Control Info.",
-					"Illegal Access is setting. This setting is unavailable.",
-					false, true ) );
-			}
+		}
+		u32 okbits = 0x00000008 | 0x00000010 | 0x00000400;
+		u32 *p = (u32*)&(this->pRomHeader->s);
+		if( p[ 0x1b4 / 4 ] & ~okbits )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"アクセスコントロール情報", 0x1b4, 0x1b7,
+				"許可されていないアクセスが設定されています。この設定は許可されていません。",
+				"Access Control Info.",
+				"Illegal Access is setting. This setting is unavailable.",
+				false, true ) );
 		}
 	}
 

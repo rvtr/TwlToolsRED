@@ -88,6 +88,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "NTSC2", this->tboxNTSC2->Text );
 
 	MasterEditorTWL::appendXmlTag( doc, form, "Region", this->combRegion->SelectedIndex.ToString() );
+	MasterEditorTWL::appendXmlTag( doc, form, "IsUnnecessaryRating", (this->cboxIsUnnecessaryRating->Checked)?"Y":"N" );
 	MasterEditorTWL::appendXmlTag( doc, form, "RatingCERO", this->combCERO->SelectedIndex.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "RatingESRB", this->combESRB->SelectedIndex.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "RatingUSK", this->combUSK->SelectedIndex.ToString() );
@@ -132,8 +133,8 @@ void Form1::loadTmp( System::String ^filename )
 	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Srl" );
 	if( !System::String::IsNullOrEmpty(text) )		// SRLファイル名がないときはスルー
 	{
-		this->loadSrl(text);
-		this->tboxFile->Text = filename;
+		this->loadRom(text);			// tad/srl両対応
+		this->tboxFile->Text = text;
 	}
 
 	// 言語
@@ -233,6 +234,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/NTSC2", this->tboxNTSC2 );
 
 	this->parseTmp( root, "/MasterEditorTWL/Form/Region", this->combRegion );
+	this->parseTmp( root, "/MasterEditorTWL/Form/IsUnnecessaryRating", this->cboxIsUnnecessaryRating );
 	this->parseTmp( root, "/MasterEditorTWL/Form/RatingCERO", this->combCERO );
 	this->parseTmp( root, "/MasterEditorTWL/Form/RatingESRB", this->combESRB );
 	this->parseTmp( root, "/MasterEditorTWL/Form/RatingUSK", this->combUSK );
@@ -245,6 +247,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsPhotoEx", this->cboxIsPhotoEx );
 
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
+	this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
 
 } //loadTmp()
 

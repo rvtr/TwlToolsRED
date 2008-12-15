@@ -1465,7 +1465,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
+			this->hErrorList->Add( gcnew RCMrcError( 
 				"アクセスコントロール情報", 0x1b4, 0x1b7,
 				"SDカードへのアクセスは許可されていません。",
 				"Access Control Info.",
@@ -1476,7 +1476,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		{
 			if( this->pRomHeader->s.access_control.nand_access != 0 )
 			{
-				this->hWarnList->Add( gcnew RCMrcError( 
+				this->hErrorList->Add( gcnew RCMrcError( 
 					"アクセスコントロール情報", 0x1b4, 0x1b7,
 					"ゲームカード用ソフトは、NANDフラッシュメモリへのアクセスを許可されていません。",
 					"Access Control Info.",
@@ -1484,11 +1484,19 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 					false, true ) );
 			}
 		}
-		u32 okbits = 0x00000008 | 0x00000010 | 0x00000400;
+		u32 okbits;
+		if( !this->IsMediaNand )
+		{
+			okbits = 0x00000008 | 0x00000010;
+		}
+		else
+		{
+			okbits = 0x00000008 | 0x00000010 | 0x00000400;		// NANDアプリのときはJpegSignフラグは許される
+		}
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
+			this->hErrorList->Add( gcnew RCMrcError( 
 				"アクセスコントロール情報", 0x1b4, 0x1b7,
 				"許可されていないアクセスが設定されています。この設定は許可されていません。",
 				"Access Control Info.",

@@ -3514,7 +3514,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 
 			System::String ^filename = this->saveFileDlg( "html format (*.html)|*.html", ".html" );
 
-			if( !filename || !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
+			if( !filename || !this->saveMiddlewareListHtml(filename) )
 			{
 				this->errMsg( "ミドルウェアリストの作成に失敗しました。","Making a middleware list failed." );
 			}

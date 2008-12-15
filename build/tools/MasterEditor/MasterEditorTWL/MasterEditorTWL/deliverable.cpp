@@ -498,6 +498,17 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = this->hOFLC;
 			}
+			if( node->FirstChild->Value->Equals( "TagIsUnnecessaryRating" ) )
+			{
+				if( hSrl->IsUnnecessaryRating )
+				{
+					node->FirstChild->Value = "›";
+				}
+				else
+				{
+					node->FirstChild->Value = nullptr;
+				}
+			}
 
 			// SRL‚É“o˜^‚³‚ê‚È‚¢ROMŽd—l
 			if( node->FirstChild->Value->Equals( "TagIsUGC" ) )

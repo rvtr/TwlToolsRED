@@ -33,6 +33,9 @@
 	<xsl:if test="$tag='Media'">
 		<Media><xsl:value-of select="ss:Data" /></Media>
 	</xsl:if>
+	<xsl:if test="$tag='IsUnnecessaryRating'">
+		<IsUnnecessaryRating><xsl:value-of select="ss:Data" /></IsUnnecessaryRating>
+	</xsl:if>
 </xsl:template>
 
 <!-- NamedCellノードの名前(属性で指定されている)を取得 -->

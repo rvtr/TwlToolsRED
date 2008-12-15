@@ -125,7 +125,7 @@ int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item,
 	tadver = (tadver << 8) | item->SubmitVersion;
 
 	// 通常の表示
-	if( !context->bSubmitVersion && !context->bResult && !context->bTadVersion )
+	if( !context->bSubmitVersion && !context->bResult && !context->bTadVersion && !context->bUnnecessaryRating )
 	{
 		Console::WriteLine( "" );
 		Console::WriteLine( "SRL:   " + srlfile );
@@ -139,6 +139,8 @@ int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item,
 			item->GameCode[0], item->GameCode[1], item->GameCode[2], item->GameCode[3] );
 		printf( "RemasterVersion: %02X        %02X\n", rh->s.rom_version, item->RomVersion );
 		printf( "File CRC:        %04X      %04X\n", srlcrc, item->FileCRC );
+		printf( "---------------------------------------\n" ); 
+		printf( "Rating Display:            %s\n", (item->IsUnnecessaryRating)?"Unnecessary":"Necessary" );
 		printf( "---------------------------------------\n" ); 
 		printf( "SubmitVersion:   -         %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
 		printf( "TAD Version:               %d (%04X)\n", tadver, tadver );
@@ -171,6 +173,17 @@ int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item,
 		if( context->ErrorCode == SheetCheckerError::NOERROR )
 		{
 			printf( "%d", tadver );
+		}
+		else
+		{
+			printf( "%d", context->ErrorCode );
+		}
+	}
+	if( context->bUnnecessaryRating )
+	{
+		if( context->ErrorCode == SheetCheckerError::NOERROR )
+		{
+			printf( "%d", (item->IsUnnecessaryRating)?1:0 );
 		}
 		else
 		{
@@ -298,6 +311,16 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 		{
 			item->SubmitVersion = System::Byte::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
 		}
+
+		text = getXPathText( root, "/Sheet/IsUnnecessaryRating" );
+		if( !System::String::IsNullOrEmpty( text ) && text->Equals( "○" ) )
+		{
+			item->IsUnnecessaryRating = true;
+		}
+		else
+		{
+			item->IsUnnecessaryRating = false;
+		}
 	}
 	catch( System::Exception ^ex )
 	{
@@ -340,6 +363,11 @@ System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^c
 		else if( args[i]->StartsWith( "-t" ) )
 		{
 			context->bTadVersion = true;
+			numopt++;
+		}
+		else if( args[i]->StartsWith( "-u" ) )
+		{
+			context->bUnnecessaryRating = true;
 			numopt++;
 		}
 		else if( !args[i]->StartsWith( "-" ) )	// オプションでない引数のindexを記録

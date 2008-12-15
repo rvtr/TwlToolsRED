@@ -28,6 +28,7 @@ private:
 	System::Boolean    ^hbSubmitVersion;	// オプションフラグ
 	System::Boolean    ^hbResult;
 	System::Boolean    ^hbTadVersion;
+	System::Boolean    ^hbUnnecessaryRating;
 	SheetCheckerError  ^hErrorCode;			// エラー情報
 public:
 	SheetCheckerContext()
@@ -52,6 +53,11 @@ public:
 		void set( System::Boolean flg ){ this->hbTadVersion = gcnew System::Boolean(flg); }
 		System::Boolean get(){ return *this->hbTadVersion; }
 	};
+	property System::Boolean bUnnecessaryRating
+	{
+		void set( System::Boolean flg ){ this->hbUnnecessaryRating = gcnew System::Boolean(flg); }
+		System::Boolean get(){ return *this->hbUnnecessaryRating; }
+	};
 	property SheetCheckerError ErrorCode
 	{
 		void set( SheetCheckerError code ){ this->hErrorCode = gcnew SheetCheckerError(code); }
@@ -67,6 +73,7 @@ private:
 	System::Byte   ^hRomVersion;
 	System::UInt16 ^hFileCRC;
 	System::Byte   ^hSubmitVersion;
+	System::Boolean ^hIsUnnecessaryRating;
 public:
 	System::String ^hMedia;
 public:
@@ -78,6 +85,7 @@ public:
 		this->hFileCRC    = gcnew System::UInt16(0);
 		this->hSubmitVersion = gcnew System::Byte(0);
 		this->hMedia      = gcnew System::String("");
+		this->hIsUnnecessaryRating = gcnew System::Boolean(false);
 	}
 	~SheetItem()
 	{
@@ -113,6 +121,11 @@ public:
 				this->hMedia = gcnew System::String("");
 		}
 		System::String^ get(){ return System::String::Copy( this->hMedia ); }
+	}
+	property System::Boolean IsUnnecessaryRating
+	{
+		void set( System::Boolean b ){ *this->hIsUnnecessaryRating = b; }
+		System::Boolean get(){ return *this->hIsUnnecessaryRating; }
 	}
 };
 

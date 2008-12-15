@@ -1296,7 +1296,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( this->pRomHeader->s.disable_debug != 0 )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
+			this->hErrorList->Add( gcnew RCMrcError( 
 				"デバッガ動作禁止フラグ", 0x1f, 0x1f, 
 				"デバッガ上で解析不可な設定になっています。この設定は許可されていません。",
 				"Disable Launch on Debugger Flag", 
@@ -1304,11 +1304,11 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				false, true ) );
 		}
 
-		u8 okbits = 0x01 | 0x40 | 0x80;
+		u8 okbits = 0x02 | 0x40 | 0x80;
 		u8 *p = (u8*)&(this->pRomHeader->s);
 		if( p[0x1d] & ~okbits )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
+			this->hErrorList->Add( gcnew RCMrcError( 
 				"特定仕向地", 0x1d, 0x1d, 
 				"不正なビットが立っています。この設定は許可されていません。",
 				"Extra Region Code", 

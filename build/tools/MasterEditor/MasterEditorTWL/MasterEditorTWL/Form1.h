@@ -2981,6 +2981,20 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->cboxIsPhotoEx->Checked = this->IsCheckedPhotoEx;
 		}
 
+		// バックアップメモリの表示をNANDアプリのときに「なし」にする
+		void maskBackupMemoryForms(void)
+		{
+			if( this->hSrl->IsMediaNand )
+			{
+				this->combBackup->SelectedIndex = this->combBackup->Items->Count - 2;
+				this->combBackup->Enabled = false;
+			}
+			else
+			{
+				this->combBackup->Enabled = true;
+			}
+		}
+
 	private:
 		// ----------------------------------------------
 		// フォームとSRL内情報を矛盾なく一致させる

@@ -214,15 +214,7 @@ void Form1::setSrlForms(void)
 
 	// ROMヘッダには関係ないが
 	// NANDアプリのときにバックアップメモリを自動的に「なし」にしておく
-	if( this->hSrl->IsMediaNand )
-	{
-		this->combBackup->SelectedIndex = this->combBackup->Items->Count - 2;
-		this->combBackup->Enabled = false;
-	}
-	else
-	{
-		this->combBackup->Enabled = true;
-	}
+	this->maskBackupMemoryForms();
 } // setSrlForms()
 
 // ----------------------------------------------

@@ -248,7 +248,7 @@ void Form1::loadTmp( System::String ^filename )
 
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
 	this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
-
+	this->maskBackupMemoryForms();				// NANDアプリのときのバックアップメモリの自動設定
 } //loadTmp()
 
 // ----------------------------------------------

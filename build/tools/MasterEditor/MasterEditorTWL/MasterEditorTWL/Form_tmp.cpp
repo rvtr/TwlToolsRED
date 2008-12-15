@@ -247,7 +247,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsPhotoEx", this->cboxIsPhotoEx );
 
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
-	this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
+	this->changeUnnecessaryRatingForms(true);	// 一度コンボボックスがenableになるので再設定
 	this->maskBackupMemoryForms();				// NANDアプリのときのバックアップメモリの自動設定
 } //loadTmp()
 

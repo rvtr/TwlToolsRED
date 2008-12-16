@@ -260,7 +260,7 @@ System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms
 		}
 		else
 		{
-			str = dynamic_cast<System::String^>(this->combCERO->SelectedItem);
+			str = dynamic_cast<System::String^>(box->SelectedItem);
 		}
 	}
 	return str;

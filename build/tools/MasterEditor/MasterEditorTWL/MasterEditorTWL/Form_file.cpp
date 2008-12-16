@@ -44,6 +44,11 @@ System::Boolean Form1::loadRom( System::String ^infile )
 		if( result )
 		{
 			this->IsLoadTad = false;
+			System::String ^tmpsrl = this->getSplitTadTmpFilename();
+			if( System::IO::File::Exists( tmpsrl ) )
+			{
+				System::IO::File::Delete( tmpsrl );		// SRLの読み込みが成功したら以前のTAD読み込みで使用した一時ファイルは不要
+			}
 		}
 	}
 	return result;

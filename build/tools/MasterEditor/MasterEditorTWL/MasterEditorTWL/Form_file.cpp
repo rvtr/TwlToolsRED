@@ -29,18 +29,22 @@ using namespace MasterEditorTWL;
 System::Boolean Form1::loadRom( System::String ^infile )
 {
 	System::Boolean result = false;
-	this->IsLoadTad = false;
 	if( System::IO::Path::GetExtension( infile )->ToUpper()->Equals( ".TAD" ) )	// 拡張子で判別
 	{
 		result = this->loadTad( infile );
 		if( result )
 		{
-			this->IsLoadTad = true;
+			this->IsLoadTad = true;		// 成功したときのみでないと次のTADの読み込みに失敗したときに
+										// リードフラグの情報が初期化されて失われてしまう
 		}
 	}
 	else
 	{
 		result = this->loadSrl( infile );
+		if( result )
+		{
+			this->IsLoadTad = false;
+		}
 	}
 	return result;
 }
@@ -76,14 +80,9 @@ System::Boolean Form1::loadTad( System::String ^tadfile )
 {
 	// tadファイルを変換したSRLを一時ファイルに保存
 	System::String ^srlfile = this->getSplitTadTmpFilename();
-	if( System::IO::File::Exists( srlfile ) )
-	{
-		System::IO::File::Delete( srlfile );	// すでに存在する場合は削除(連続に読み込んだ場合に起こりうる)
-	}
-	if( splitTad( tadfile, srlfile ) != 0 )
+	if( splitTad( tadfile, srlfile ) != 0 )		// 上書きで保存
 	{
 		this->errMsg( "TADファイルの読み出しに失敗しました。", "Reading TAD file failed." );
-		System::IO::File::Delete( srlfile );
 		return false;
 	}
 	System::Boolean result = this->loadSrl( srlfile );	// 一時保存したSRLを読み込み

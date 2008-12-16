@@ -87,7 +87,7 @@ System::Boolean Form1::loadTad( System::String ^tadfile )
 	System::String ^srlfile = this->getSplitTadTmpFilename();
 	if( splitTad( tadfile, srlfile ) != 0 )		// 上書きで保存
 	{
-		this->errMsg( "TADファイルの読み出しに失敗しました。", "Reading TAD file failed." );
+		this->errMsg( "TADファイルの読み込みに失敗しました。", "Reading TAD file failed." );
 		return false;
 	}
 	System::Boolean result = this->loadSrl( srlfile );	// 一時保存したSRLを読み込み

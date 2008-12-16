@@ -322,6 +322,7 @@ ECSrlResult RCSrl::setRomInfo(void)
 	{
 		this->hArrayParentalIndex[i] = -1;
 	}
+	this->IsUnnecessaryRating = false;	// リージョンが不正のときに設定されないので初期化しておく
 
 	// リージョンとレーティングを取得
 	if( this->setRegionInfo( region ) )

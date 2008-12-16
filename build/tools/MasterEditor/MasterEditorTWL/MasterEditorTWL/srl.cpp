@@ -56,20 +56,25 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 	(void)fseek( fp, 0, SEEK_SET );		// ROMヘッダはsrlの先頭から
 
 	// 1バイトをsizeof(~)だけリード (逆だと返り値がsizeof(~)にならないので注意)
-	if( fread( (void*)(this->pRomHeader), 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
+	ROM_Header tmprh;
+	if( fread( (void*)&tmprh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
 	{
 		return (ECSrlResult::ERROR_FILE_READ);
 	}
 
 #ifdef METWL_WHETHER_SIGN_DECRYPT
 	// まず署名チェック
-	r = this->decryptRomHeader();
+	r = this->decryptRomHeader( &tmprh );
 	if( r != ECSrlResult::NOERROR )
 	{
 		(void)fclose(fp);
 		return r;
 	}
 #endif //#ifdef METWL_WHETHER_SIGN_DECRYPT
+
+	// 署名チェックを通ってからフィールドのROMヘッダにコピー
+	// (そうしないと不正SRLを読み込んだときにROMヘッダが上書きされてしまう)
+	memcpy( this->pRomHeader, &tmprh, sizeof(ROM_Header) );
 
 	{
 		// ファイルを閉じる前にROMヘッダ以外の領域から設定を取り出す
@@ -687,13 +692,12 @@ ECSrlResult RCSrl::signRomHeader(void)
 //
 // ROMヘッダの署名を外す
 //
-ECSrlResult RCSrl::decryptRomHeader(void)
+ECSrlResult RCSrl::decryptRomHeader( ROM_Header *prh )
 {
 	u8     original[ RSA_KEY_LENGTH ];	// 署名外した後のデータ格納先
 	s32    pos = 0;						// ブロックの先頭アドレス
 	u8     digest[ DIGEST_SIZE_SHA1 ];	// ROMヘッダのダイジェスト
 	u8    *publicKey = (u8*)g_devPubKey_DER;
-	ROM_Header rh;
 
 	// <データの流れ>
 	// (1) 公開鍵で復号した結果(ブロック)をローカル変数(original)に格納
@@ -730,7 +734,7 @@ ECSrlResult RCSrl::decryptRomHeader(void)
 #endif //METWL_VER_APPTYPE_USER
 
 	// 署名の解除 = 公開鍵で復号
-	if( !ACSign_Decrypto( original, publicKey, this->pRomHeader->signature, RSA_KEY_LENGTH ) )
+	if( !ACSign_Decrypto( original, publicKey, prh->signature, RSA_KEY_LENGTH ) )
 	{
 		return ECSrlResult::ERROR_SIGN_DECRYPT;
 	}
@@ -745,8 +749,8 @@ ECSrlResult RCSrl::decryptRomHeader(void)
 	}
 	// ベリファイ
 	// ROMヘッダのダイジェストを算出(先頭から証明書領域の直前までが対象)
-	ACSign_DigestUnit( digest,	this->pRomHeader, (u32)&(rh.certificate) - (u32)&(rh) );
-		// this->pRomHeader はマネージヒープ上にあるので実アドレスを取得できない
+	ROM_Header tmprh;		// マネージヒープ上にある場合実アドレスを取得できないのでサイズ計算用のROMヘッダを用意
+	ACSign_DigestUnit( digest,	prh, (u32)&(tmprh.certificate) - (u32)&(tmprh) );
 	if( memcmp( &(original[pos+1]), digest, DIGEST_SIZE_SHA1 ) != 0 )
 	{
 		return ECSrlResult::ERROR_SIGN_VERIFY;

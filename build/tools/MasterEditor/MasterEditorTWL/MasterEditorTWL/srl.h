@@ -372,9 +372,9 @@ namespace MasterEditorTWL
 		void setRatingRomHeader( u32 region );			// ROMヘッダにフィールドの値を反映させる
 
 		// ROMヘッダの更新
-		ECSrlResult calcRomHeaderCRC(void);	// ROMヘッダのCRCを再計算
-		ECSrlResult signRomHeader(void);	// ROMヘッダ更新後の再署名
-		ECSrlResult decryptRomHeader(void);	// ROMヘッダの署名を外す
+		ECSrlResult calcRomHeaderCRC(void);					// ROMヘッダのCRCを再計算
+		ECSrlResult signRomHeader(void);					// ROMヘッダ更新後の再署名
+		ECSrlResult decryptRomHeader( ROM_Header *prh );	// ROMヘッダの署名を外す
 
 		// SRLバイナリから特殊な設定を調べる
 		ECSrlResult hasDSDLPlaySign( FILE *fp );

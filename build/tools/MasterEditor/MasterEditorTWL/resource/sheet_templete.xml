@@ -69,28 +69,6 @@
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
-  <Style ss:ID="m20928738">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-   <NumberFormat ss:Format="@"/>
-  </Style>
-  <Style ss:ID="m20928768">
-   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-   <NumberFormat ss:Format="@"/>
-  </Style>
   <Style ss:ID="m20933904">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
    <Borders>
@@ -1411,6 +1389,17 @@
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
+  <Style ss:ID="m20926896">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
   <Style ss:ID="m20926906">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
    <Borders>
@@ -1561,6 +1550,17 @@
     <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="6"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
+  <Style ss:ID="m20926420">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
@@ -2307,13 +2307,6 @@
  </Styles>
  <Names>
   <NamedRange ss:Name="AccessOther" ss:RefersTo="=マスターROM提出確認書!R35C18"/>
-  <NamedRange ss:Name="AlwaysCERO" ss:RefersTo="=マスターROM提出確認書!R38C21"/>
-  <NamedRange ss:Name="AlwaysESRB" ss:RefersTo="=マスターROM提出確認書!R38C70"/>
-  <NamedRange ss:Name="AlwaysOFLC" ss:RefersTo="=マスターROM提出確認書!R41C21"/>
-  <NamedRange ss:Name="AlwaysPEGI" ss:RefersTo="=マスターROM提出確認書!R39C70"/>
-  <NamedRange ss:Name="AlwaysPEGIBBFC" ss:RefersTo="=マスターROM提出確認書!R40C70"/>
-  <NamedRange ss:Name="AlwaysPEGIPRT" ss:RefersTo="=マスターROM提出確認書!R40C21"/>
-  <NamedRange ss:Name="AlwaysUSK" ss:RefersTo="=マスターROM提出確認書!R39C21"/>
   <NamedRange ss:Name="AppType" ss:RefersTo="=マスターROM提出確認書!R26C20"/>
   <NamedRange ss:Name="AppTypeOther" ss:RefersTo="=マスターROM提出確認書!R26C53"/>
   <NamedRange ss:Name="BackupMemory" ss:RefersTo="=マスターROM提出確認書!R24C86"/>
@@ -2321,13 +2314,6 @@
   <NamedRange ss:Name="Company1" ss:RefersTo="=マスターROM提出確認書!R8C20"/>
   <NamedRange ss:Name="Company2" ss:RefersTo="=マスターROM提出確認書!R13C20"/>
   <NamedRange ss:Name="CRC" ss:RefersTo="=マスターROM提出確認書!R21C53"/>
-  <NamedRange ss:Name="EnableCERO" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnableESRB" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnableOFLC" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnablePEGI" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnablePEGIBBFC" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnablePEGIPRT" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
-  <NamedRange ss:Name="EnableUSK" ss:RefersTo="=マスターROM提出確認書!#REF!"/>
   <NamedRange ss:Name="Fax1" ss:RefersTo="=マスターROM提出確認書!R10C69"/>
   <NamedRange ss:Name="Fax2" ss:RefersTo="=マスターROM提出確認書!R15C69"/>
   <NamedRange ss:Name="Furigana1" ss:RefersTo="=マスターROM提出確認書!R9C20"/>
@@ -2369,19 +2355,12 @@
   <NamedRange ss:Name="ProductNameForeign" ss:RefersTo="=マスターROM提出確認書!R5C50"/>
   <NamedRange ss:Name="PublicSize" ss:RefersTo="=マスターROM提出確認書!R28C36"/>
   <NamedRange ss:Name="RatingCERO" ss:RefersTo="=マスターROM提出確認書!R38C13"/>
-  <NamedRange ss:Name="RatingCEROStr" ss:RefersTo="=マスターROM提出確認書!R38C34"/>
   <NamedRange ss:Name="RatingESRB" ss:RefersTo="=マスターROM提出確認書!R38C62"/>
-  <NamedRange ss:Name="RatingESRBStr" ss:RefersTo="=マスターROM提出確認書!R38C83"/>
   <NamedRange ss:Name="RatingOFLC" ss:RefersTo="=マスターROM提出確認書!R41C13"/>
-  <NamedRange ss:Name="RatingOFLCStr" ss:RefersTo="=マスターROM提出確認書!R41C34"/>
   <NamedRange ss:Name="RatingPEGI" ss:RefersTo="=マスターROM提出確認書!R39C62"/>
   <NamedRange ss:Name="RatingPEGIBBFC" ss:RefersTo="=マスターROM提出確認書!R40C62"/>
-  <NamedRange ss:Name="RatingPEGIBBFCStr" ss:RefersTo="=マスターROM提出確認書!R40C83"/>
   <NamedRange ss:Name="RatingPEGIPRT" ss:RefersTo="=マスターROM提出確認書!R40C13"/>
-  <NamedRange ss:Name="RatingPEGIPRTStr" ss:RefersTo="=マスターROM提出確認書!R40C34"/>
-  <NamedRange ss:Name="RatingPEGIStr" ss:RefersTo="=マスターROM提出確認書!R39C83"/>
   <NamedRange ss:Name="RatingUSK" ss:RefersTo="=マスターROM提出確認書!R39C13"/>
-  <NamedRange ss:Name="RatingUSKStr" ss:RefersTo="=マスターROM提出確認書!R39C34"/>
   <NamedRange ss:Name="Region" ss:RefersTo="=マスターROM提出確認書!R32C28"/>
   <NamedRange ss:Name="ReleaseDay" ss:RefersTo="=マスターROM提出確認書!R19C46"/>
   <NamedRange ss:Name="ReleaseForeign" ss:RefersTo="=マスターROM提出確認書!R5C20"/>
@@ -2719,7 +2698,7 @@
     <Cell ss:MergeAcross="16" ss:StyleID="m20926400"><Data ss:Type="String">ふりがな</Data></Cell>
     <Cell ss:MergeAcross="35" ss:StyleID="s52"><Data ss:Type="String">TagFurigana1</Data><NamedCell
       ss:Name="Furigana1"/></Cell>
-    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20928738"><PhoneticText
+    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20926420"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">イン</PhoneticText><Data
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20926430"><Data ss:Type="String">TEL</Data></Cell>
@@ -2873,7 +2852,7 @@
     <Cell ss:MergeAcross="16" ss:StyleID="m20926876"><Data ss:Type="String">ふりがな</Data></Cell>
     <Cell ss:MergeAcross="35" ss:StyleID="s52"><Data ss:Type="String">TagFurigana2</Data><NamedCell
       ss:Name="Furigana2"/></Cell>
-    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20928768"><PhoneticText
+    <Cell ss:MergeAcross="7" ss:MergeDown="1" ss:StyleID="m20926896"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">イン</PhoneticText><Data
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20926906"><Data ss:Type="String">TEL</Data></Cell>
@@ -11850,11 +11829,11 @@
     <Cell ss:StyleID="s22"/>
     <Cell ss:StyleID="s22"/>
     <Cell ss:MergeAcross="73" ss:StyleID="s24"><PhoneticText
-      xmlns="urn:schemas-microsoft-com:office:excel">テイシュツカクニンショ</PhoneticText><Data
-      ss:Type="String">ニンテンドーDSiマスターROM提出確認書</Data></Cell>
+      xmlns="urn:schemas-microsoft-com:office:excel">テイシュツカクニンショツイカジョウホウ</PhoneticText><Data
+      ss:Type="String">ニンテンドーDSiマスターROM提出確認書 追加情報</Data></Cell>
     <Cell ss:MergeAcross="23" ss:StyleID="s26"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">ショシキゴウ</PhoneticText><Data
-      ss:Type="String">書式 2008-10号</Data></Cell>
+      ss:Type="String">書式 2008-12号</Data></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0">

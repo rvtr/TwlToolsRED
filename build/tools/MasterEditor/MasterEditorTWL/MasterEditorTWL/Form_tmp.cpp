@@ -224,14 +224,43 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/NTSC1", this->tboxNTSC1 );
 	this->parseTmp( root, "/MasterEditorTWL/Form/InputPerson2", this->cboxIsInputPerson2 );
 
-	this->parseTmp( root, "/MasterEditorTWL/Form/Company2", this->tboxCompany2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Depart2", this->tboxDepart2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Name2", this->tboxPerson2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Furigana2", this->tboxFurigana2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Tel2", this->tboxTel2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Fax2", this->tboxFax2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/Mail2", this->tboxMail2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/NTSC2", this->tboxNTSC2 );
+	this->gboxPerson2->Enabled   = false;
+	this->tboxCompany2->Enabled  = false;
+	this->tboxDepart2->Enabled   = false;
+	this->tboxPerson2->Enabled   = false;
+	this->tboxFurigana2->Enabled = false;
+	this->tboxTel2->Enabled      = false;
+	this->tboxFax2->Enabled      = false;
+	this->tboxMail2->Enabled     = false;
+	this->tboxNTSC2->Enabled     = false;
+	this->tboxCompany2->Clear();
+	this->tboxDepart2->Clear();
+	this->tboxPerson2->Clear();
+	this->tboxFurigana2->Clear();
+	this->tboxTel2->Clear();
+	this->tboxFax2->Clear();
+	this->tboxMail2->Clear();
+	this->tboxNTSC2->Clear();
+	if( this->cboxIsInputPerson2->Checked )
+	{
+		this->gboxPerson2->Enabled   = true;
+		this->tboxCompany2->Enabled  = true;
+		this->tboxDepart2->Enabled   = true;
+		this->tboxPerson2->Enabled   = true;
+		this->tboxFurigana2->Enabled = true;
+		this->tboxTel2->Enabled      = true;
+		this->tboxFax2->Enabled      = true;
+		this->tboxMail2->Enabled     = true;
+		this->tboxNTSC2->Enabled     = true;
+		this->parseTmp( root, "/MasterEditorTWL/Form/Company2", this->tboxCompany2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Depart2", this->tboxDepart2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Name2", this->tboxPerson2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Furigana2", this->tboxFurigana2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Tel2", this->tboxTel2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Fax2", this->tboxFax2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/Mail2", this->tboxMail2 );
+		this->parseTmp( root, "/MasterEditorTWL/Form/NTSC2", this->tboxNTSC2 );
+	}
 
 	this->parseTmp( root, "/MasterEditorTWL/Form/Region", this->combRegion );
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsUnnecessaryRating", this->cboxIsUnnecessaryRating );

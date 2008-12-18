@@ -342,10 +342,11 @@ namespace MasterEditorTWL
 		// MRCí«â¡çÄñ⁄
 		property RCMrcSpecialList ^hMrcSpecialList;
 
-		// constructor and destructor
+		// constructor / destructor / finalizer 
 	public:
 		RCSrl();
 		~RCSrl();
+		!RCSrl();
 
 		// method
 	public:

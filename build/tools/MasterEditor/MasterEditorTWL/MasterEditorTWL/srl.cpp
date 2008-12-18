@@ -32,6 +32,15 @@ RCSrl::RCSrl()
 // destructor
 RCSrl::~RCSrl()
 {
+	this->!RCSrl();
+}
+
+// finalizer
+RCSrl::!RCSrl()
+{
+	// destructorは明示的にdeleteされないと呼ばれない(GCからは呼ばれない)ようなので
+	// GCに解放してもらったときに資源を解放するには finalizer が必要
+
 	// ポインタは(たぶん) unmanaged なので自主的に解放する
 	delete (this->pRomHeader);
 }

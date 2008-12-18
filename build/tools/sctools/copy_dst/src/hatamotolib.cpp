@@ -439,6 +439,34 @@ BOOL WaitEC(ECOpId opId)
 	  miya_log_fprintf(log_fd, "%s Failed to EC_GetProgress, result=%d %s\n", 
 			   __FUNCTION__, result, GetECErrorString(result));
 	  mprintf("EC_GetProgress failed %d\n %s\n", result, GetECErrorString(result));
+
+	  if( MI_CpuComp8(&progress_prev, &progress, sizeof(progress)) != 0 ) {
+	    miya_log_fprintf(log_fd, "---------\n");
+	    miya_log_fprintf(log_fd, "progress report\n");
+	    miya_log_fprintf(log_fd, "  status            %5d %s\n", progress.status, 
+			     GetECErrorString(progress.status));
+	    miya_log_fprintf(log_fd, "  operation         %5d %s\n", progress.operation,
+			     GetECOperationString(progress.operation));
+	    miya_log_fprintf(log_fd, "  phase             %5d %s\n", progress.phase, 
+			     GetECOpPhaseString(progress.phase));
+	    miya_log_fprintf(log_fd, "  isCancelRequested %5d\n", progress.isCancelRequested);
+	    miya_log_fprintf(log_fd, "  totalSize         %5d\n", progress.totalSize);
+	    miya_log_fprintf(log_fd, "  downloadedSize    %5d\n", progress.downloadedSize);
+	    miya_log_fprintf(log_fd, "  errCode           %5d\n", progress.errCode);
+	    miya_log_fprintf(log_fd, "  errInfo           %s\n", progress.errInfo);
+	    progress_prev = progress;
+	    /*
+	      progress report
+	      status            -4015 EC_ERROR_WS_REPORT
+	      operation            12 EC_OP_Transfer
+	      phase                 2 EC_PHASE_Done
+	      isCancelRequested     0
+	      totalSize             0
+	      downloadedSize      553
+	      errCode           -5986
+	      errInfo           IAS - TWL device unmatched
+	     */ 
+	  }
 	  return FALSE;
         }
 
@@ -685,6 +713,8 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
   char challenge[EC_CHALLENGE_BUF_SIZE];
   char status;
   //  BOOL ret_flag;
+
+  STD_MemSet((void *)challenge,(int)0, EC_CHALLENGE_BUF_SIZE);
 
   mprintf("-check registration..        ");
   miya_log_fprintf(log_fd, "-check registration...");

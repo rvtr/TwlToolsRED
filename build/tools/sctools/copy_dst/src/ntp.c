@@ -13,7 +13,7 @@
 
 #define BUFSIZE		256		/* バッファサイズ */
 #define RECVSIZE	4096	/* 受信バッファサイズ */
-#define TIMEOUT		2		/* タイムアウト秒数 */
+#define TIMEOUT		3		/* タイムアウト秒数 */
 
 struct NTP_Packet{			/* NTPパケット */
 	int Control_Word;
@@ -158,26 +158,27 @@ int my_ntp_get_sec(void)
 
 BOOL my_ntp_init(void)
 {
-  SOCPollFD pfds[1];  
+  SOCPollFD pfds[1];
+  BOOL ret_flag = TRUE;
 
   if( GetNTPSRV() == NULL ) {
+    OS_TPrintf("no NTP server entry\n");
+    mprintf("no NTP server entry\n");
     return FALSE;
   }
 
   OS_TPrintf("NTP srv %s\n",GetNTPSRV() );
+  mprintf("NTP server: %s\n",GetNTPSRV() );
   
-
   //  STD_StrCpy(svName, "ntp.jst.mfeed.ad.jp" );
   STD_StrCpy(svName, GetNTPSRV() );
-  //Name:    ntp.jst.mfeed.ad.jp
-  //Addresses:  210.173.160.57, 210.173.160.87, 210.173.160.27
-
 
   /* ソケットを作成する処理 */
   /* UDPモードでsocにソケットを作成します */
   soc = SOC_Socket(SOC_PF_INET, SOC_SOCK_DGRAM, 0);
   if(soc < 0 ){
     OS_TPrintf("Error: create Socket\n");
+    mprintf("Error: create Socket\n");
     return FALSE;
   }
 
@@ -188,13 +189,15 @@ BOOL my_ntp_init(void)
   // int SOC_Bind(int s, const void* sockAddr);
   // SOC_HtoNs(hostshort)   
 
-  sockname.family	   = SOC_AF_INET;					/* インターネットの場合 */
-  sockname.addr.addr  = SOC_INADDR_ANY;				/* 自分のIPアドレスを使うようにする */
-  sockname.port	   = SOC_HtoNs((unsigned short)local_port);		/* 受信するポート番号 */
+  sockname.family    = SOC_AF_INET;		/* インターネットの場合 */
+  sockname.addr.addr = SOC_INADDR_ANY;		/* 自分のIPアドレスを使うようにする */
+  sockname.port	     = SOC_HtoNs((unsigned short)local_port); /* 受信するポート番号 */
   //  STD_MemSet((void *)sockname.zero,(int)0,sizeof(sockname.zero));
   if(SOC_Bind(soc, (void *)&sockname) < 0 ){
     OS_TPrintf("Error: specify recv port\n");
-    return FALSE;
+    mprintf("Error: invalid  recv port %d\n",local_port);
+    ret_flag = FALSE;
+    goto exit_label1;
   }
 
 
@@ -220,14 +223,16 @@ BOOL my_ntp_init(void)
   // int SOC_Close(int s);
 
   //  serveraddr = (210) | (173 << 8) | (160 << 16) | (57 << 24);
+  // Addresses:  210.173.160.57, 210.173.160.87, 210.173.160.27
+
 
   /* サーバ名(svName)からサーバのホスト情報を取得します */
   serverhostent = SOC_GetHostByName(svName);
   if(serverhostent == NULL) {
     OS_TPrintf("Error: SOC_GetHostByName %s\n",svName);
-    /* ソケットを破棄する */
-    (void)SOC_Close(soc);
-    return FALSE;
+    mprintf("Error: SOC_GetHostByName %s\n",svName);
+    ret_flag = FALSE;
+    goto exit_label1;
   } 
   else{
     /* サーバのホスト情報からIPアドレスをserveraddrにコピーします */
@@ -240,6 +245,12 @@ BOOL my_ntp_init(void)
 	     ((serveraddr >> 8) & 0xff),
 	     ((serveraddr >> 16) & 0xff),
 	     ((serveraddr >> 24) & 0xff) );
+
+  mprintf(" IP addr  : %d.%d.%d.%d\n",
+	  ((serveraddr >> 0) & 0xff),
+	  ((serveraddr >> 8) & 0xff),
+	  ((serveraddr >> 16) & 0xff),
+	  ((serveraddr >> 24) & 0xff) );
 #endif
 
 
@@ -263,15 +274,12 @@ BOOL my_ntp_init(void)
   NTP_Send.transmit_timestamp_fractions = 0;
 
 
-
-  // int SOC_SendTo(int s, const void* buf, int len, int flags, const void* sockTo)
-
   /* サーバを指定してNTPパケットを送信する */
   if(SOC_SendTo(soc,(const void *)&NTP_Send, sizeof( NTP_Send ),0,(const void *)&serversockaddr) < 0 ) {
     OS_TPrintf("Error: サーバへの送信失敗\n");
-    /* ソケットを破棄する */
-    (void)SOC_Close(soc);
-    return FALSE;
+    mprintf("Error: SOC_SendTo\n");
+    ret_flag = FALSE;
+    goto exit_label1;
   }
 
 
@@ -292,19 +300,26 @@ BOOL my_ntp_init(void)
   pfds[0].events = SOC_POLLRDNORM;
   if( SOC_Poll( pfds, 1, OS_MilliSecondsToTicks( TIMEOUT * 1000 ) ) < 0 ) {
     OS_TPrintf("Error: recv error\n");
-    /* ソケットを破棄する */
-    (void)SOC_Close(soc);
-    return FALSE;
+    mprintf("Error: recv error\n");
+    ret_flag = FALSE;
+    goto exit_label1;
   }
   switch( pfds[0].revents ) {
   case SOC_POLLERR: // ソケットにエラーが発生しました。 
     OS_TPrintf("Error: SOC_POLLERR  %s %d\n",__FUNCTION__,__LINE__);
+    mprintf("Error: SOC_POLLERR %s %d\n",__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+    goto exit_label1;
     break;
   case SOC_POLLHUP: // ストリーム・ソケットが未接続です。 
-    OS_TPrintf("Error: SOC_POLLHUP  %s %d\n",__FUNCTION__,__LINE__);
+    mprintf("Error: SOC_POLLHUP %s %d\n",__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+    goto exit_label1;
     break;
   case SOC_POLLNVAL: // 不正なソケット記述子です。
-    OS_TPrintf("Error: SOC_POLLNVAL %s %d\n",__FUNCTION__,__LINE__);
+    mprintf("Error: SOC_POLLNVAL %s %d\n",__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+    goto exit_label1;
     break;
   default:
     break;
@@ -315,21 +330,21 @@ BOOL my_ntp_init(void)
   /* サーバを指定して受信を行う */
   // int SOC_RecvFrom(int s, void* buf, int len, int flags, void* sockFrom);
   sockaddr_Size = sizeof(serversockaddr);
-  if(SOC_RecvFrom(soc, (char *)&NTP_Recv, sizeof(NTP_Recv), 0 ,(void *)&serversockaddr) < 0 ){
-    OS_TPrintf("Error: サーバからの受信失敗\n");
-    /* ソケットを破棄する */
-    (void)SOC_Close(soc);
-    return FALSE;
+  if( SOC_RecvFrom(soc, (char *)&NTP_Recv, sizeof(NTP_Recv), SOC_MSG_DONTWAIT ,(void *)&serversockaddr) < 0 ){
+    OS_TPrintf("Error: SOC_RecvFrom\n");
+    mprintf("Error: SOC_RecvFrom\n");
+    ret_flag = FALSE;
+    goto exit_label1;
   }
 
 
   /* NTPサーバから取得した時刻を現地時間に変換する */
-  // ntp_time = ntohl(NTP_Recv.transmit_timestamp_seconds) - 2208988800; /* 1970/01/01 からの秒数に変換 */
   ntp_time = SOC_NtoHl(NTP_Recv.transmit_timestamp_seconds) - 2208988800; /* 1970/01/01 からの秒数に変換 */
 
  OS_TPrintf("ntp_time = %d\n",ntp_time);
 
  OS_TPrintf("TimeZone %d\n", GetTimeZone());
+ mprintf(" TimeZone : %d:%02d\n", (GetTimeZone()/60), (GetTimeZone()%60));
 
  ntp_time += (60*GetTimeZone());
 
@@ -346,7 +361,9 @@ BOOL my_ntp_init(void)
  //   tm.tm_yday;
  //   tm.tm_isdst;
 
+ exit_label1:
   /* ソケットを破棄する処理 */
   (void)SOC_Close(soc);
-  return TRUE;
+
+  return ret_flag;
 }

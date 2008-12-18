@@ -22,6 +22,7 @@
 #include "ecdl.h"
 
 #include <NitroWiFi/nhttp.h>
+#include <NitroWiFi/ncfg.h>
 
 #include </twl/os/common/ownerInfoEx.h>
 
@@ -62,6 +63,11 @@
 #define THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION 3
 #define THREAD_COMMAND_REBOOT_FUNCTION            4
 
+
+#define FREE_REG_POWERON_REBOOT 0x00
+#define FREE_REG_RESTOREMODE_REBOOT 0x55
+#define FREE_REG_RESTOREMODE_AND_RTC_DONE_REBOOT 0x66
+
 // #define MIYA_MCU 1
 
 static BOOL only_wifi_config_data_trans_flag = FALSE;
@@ -70,7 +76,6 @@ static BOOL no_network_flag = FALSE;
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
 static BOOL sd_card_flag = FALSE;
-//static BOOL reboot_flag = FALSE;
 
 static BOOL ec_download_success_flag = TRUE;
 
@@ -81,6 +86,7 @@ static BOOL development_console_flag = FALSE;
 static u8 org_region = 0;
 static u64 org_fuseId = 0;
 static volatile BOOL reboot_flag;
+static BOOL reboot_rtc_adjust_done_flag;
 
 static int miya_debug_level = 0;
 
@@ -194,6 +200,80 @@ static BOOL start_my_thread(u32 command)
   }
   return FALSE;
 }
+
+
+static void RTC_NTP_SYNC(void)
+{
+  RTCDate rtc_date;
+  RTCTime rtc_time;
+  
+  if( TRUE == my_ntp_init() ) {
+    rtc_date.year = (u32)( my_ntp_get_year() - 2000 );
+    rtc_date.month = (u32)(my_ntp_get_month() + 1 );
+    rtc_date.day = (u32)my_ntp_get_day();
+    rtc_date.week = (RTCWeek)my_ntp_get_weekday();
+
+    rtc_time.hour = (u32)my_ntp_get_hour();
+    rtc_time.minute = (u32)my_ntp_get_min();
+    rtc_time.second = (u32)my_ntp_get_sec();
+
+    //RTCDate rtc_date;
+    //RTCTime rtc_time;
+    /*
+      typedef enum RTCWeek
+      {
+      RTC_WEEK_SUNDAY = 0,               // ì˙ójì˙
+      RTC_WEEK_MONDAY,                   // åéójì˙
+      RTC_WEEK_TUESDAY,                  // âŒójì˙
+      RTC_WEEK_WEDNESDAY,                // êÖójì˙
+      RTC_WEEK_THURSDAY,                 // ñÿójì˙
+      RTC_WEEK_FRIDAY,                   // ã‡ójì˙
+      RTC_WEEK_SATURDAY,                 // ìyójì˙
+      RTC_WEEK_MAX
+      }
+      RTCWeek;
+
+      typedef struct RTCDate
+      {
+      u32     year;                      // îN ( 0 ~ 99 )
+      u32     month;                     // åé ( 1 ~ 12 )
+      u32     day;                       // ì˙ ( 1 ~ 31 )
+      RTCWeek week;                      // ójì˙
+	  
+      }
+      RTCDate;
+	  
+      // éûçèç\ë¢ëÃ
+      typedef struct RTCTime
+      {
+      u32     hour;                      // éû ( 0 ~ 23 )
+      u32     minute;                    // ï™ ( 0 ~ 59 )
+      u32     second;                    // ïb ( 0 ~ 59 )
+	  
+      }
+      RTCTime;
+    */
+	
+    if( RTC_RESULT_SUCCESS != RTC_SetDate( &rtc_date ) ) {
+      mprintf("RTC data adjust error\n");
+    }
+    else {
+      mprintf("RTC data adjust success\n");
+    }
+
+    if( RTC_RESULT_SUCCESS != RTC_SetTime( &rtc_time ) ) {
+      mprintf("RTC time adjust error\n");
+    }
+    else {
+      mprintf("RTC time adjust success\n");
+    }
+    reboot_rtc_adjust_done_flag = TRUE;
+  }
+  else {
+    mprintf("RTC-NTP sync. NG\n");
+  }
+}
+
 
 
 static BOOL LoadWlanConfig(void)
@@ -313,7 +393,14 @@ static BOOL RestoreFromSDCard1(void)
      ÇøÇ»Ç›Ç…Ç∑Ç≈Ç…MydataLoadä÷êîÇÕê¨å˜ÇµÇƒÇ¢ÇÈÇ‡ÇÃÇ∆Ç∑ÇÈÅB
      ÇµÇΩÇ™Ç¡Çƒ MyData mydata Ç…ÇÕÉfÅ[É^Ç™ì¸Ç¡ÇƒÇ¢ÇÈÅB
   */
-  if( (mydata.rtc_date_flag == TRUE) && (mydata.rtc_time_flag == TRUE) ) {
+
+  if( reboot_rtc_adjust_done_flag == TRUE ) {
+    mprintf("RTC-NTP sync. already done.  ");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+  else if( (mydata.rtc_date_flag == TRUE) && (mydata.rtc_time_flag == TRUE) ) {
     mprintf("RTC data restore             ");
     if( RTC_RESULT_SUCCESS != RTC_SetDate( &(mydata.rtc_date) ) ) {
       flag = FALSE;
@@ -372,9 +459,16 @@ static BOOL RestoreFromSDCard2(void)
 static BOOL RestoreFromSDCard3(void)
 {
   // static BOOL SDBackupToSDCard2(void)
+  BOOL flag;
   if( mydata.wireless_lan_param_flag == TRUE ) {
     mprintf("WirelessLAN param. restore   ");
-    if( TRUE == nvram_restore( MyFile_GetWifiParamFileName() ) ) {
+    flag = nvram_restore( MyFile_GetWifiParamFileName() );
+    if( flag == 3 ) {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK*\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+    else if( TRUE == flag ) {
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -430,7 +524,8 @@ static BOOL RestoreFromSDCard5(void)
   if( mydata.num_of_shared2_files > 0 ) { 
     mprintf("App. shared files restore    ");
     if( TRUE == RestoreDirEntryList( MyFile_GetAppSharedListFileName(), 
-				     MyFile_GetAppSharedRestoreLogFileName(), &list_count, &error_count )) {
+				     MyFile_GetAppSharedRestoreLogFileName(), 
+				     &list_count, &error_count )) {
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -605,7 +700,8 @@ static BOOL RestoreFromSDCard7(void)
 	ret_flag = FALSE;
 	goto end_log_e;
       }
-    
+
+
       /******** ÉlÉbÉgÉèÅ[ÉNÇ…Ç¬Ç»Ç¢Çæ *************/
 
       // ïKê{ÅFHTTP Ç∆ SSL ÇÃèâä˙âª
@@ -861,7 +957,7 @@ static void MyThreadProc(void *arg)
     case THREAD_COMMAND_REBOOT_FUNCTION:
       mprintf("%s Power button pressed!\n",__FUNCTION__);
       OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
-      MCU_SetFreeRegister( 0x00 );
+      MCU_SetFreeRegister( FREE_REG_POWERON_REBOOT );
       PM_ReadyToExit();
       OS_Sleep(100000);
       break;
@@ -911,7 +1007,7 @@ static void MyThreadProc(void *arg)
 	}
 	if( pushed_power_button == TRUE ) {
 	  OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
-	  MCU_SetFreeRegister( 0x00 );
+	  MCU_SetFreeRegister( FREE_REG_POWERON_REBOOT );
 	  PM_ReadyToExit();
 	  pushed_power_button = FALSE;
 	}
@@ -951,7 +1047,7 @@ static void MyThreadProcNuc(void *arg)
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       mprintf("%s Power button pressed!\n",__FUNCTION__);
       OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
-      MCU_SetFreeRegister( 0x00 );
+      MCU_SetFreeRegister( FREE_REG_POWERON_REBOOT );
       PM_ReadyToExit();
       pushed_power_button = FALSE;
     }
@@ -989,7 +1085,7 @@ static void MyThreadProcNuc(void *arg)
 	  }
 	  if( pushed_power_button == TRUE ) {
 	    OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
-	    MCU_SetFreeRegister( 0x00 );
+	    MCU_SetFreeRegister( FREE_REG_POWERON_REBOOT );
 	    PM_ReadyToExit();
 	    pushed_power_button = FALSE;
 	  }
@@ -1004,64 +1100,7 @@ static void MyThreadProcNuc(void *arg)
       }
 
 
-      
-      /* miya */
-      OS_TPrintf("ntp start\n");
-      if( TRUE == my_ntp_init() ) {
-	RTCDate rtc_date;
-	RTCTime rtc_time;
-	rtc_date.year = (u32)( my_ntp_get_year() - 2000 );
-	rtc_date.month = (u32)(my_ntp_get_month() + 1 );
-	rtc_date.day = (u32)my_ntp_get_day();
-
-	rtc_time.hour = (u32)my_ntp_get_hour();
-	rtc_time.minute = (u32)my_ntp_get_min();
-	rtc_time.second = (u32)my_ntp_get_sec();
-
-	//RTCDate rtc_date;
-	//RTCTime rtc_time;
-	/*
-	  typedef enum RTCWeek
-	  {
-	  RTC_WEEK_SUNDAY = 0,               // ì˙ójì˙
-	  RTC_WEEK_MONDAY,                   // åéójì˙
-	  RTC_WEEK_TUESDAY,                  // âŒójì˙
-	  RTC_WEEK_WEDNESDAY,                // êÖójì˙
-	  RTC_WEEK_THURSDAY,                 // ñÿójì˙
-	  RTC_WEEK_FRIDAY,                   // ã‡ójì˙
-	  RTC_WEEK_SATURDAY,                 // ìyójì˙
-	  RTC_WEEK_MAX
-	  }
-	  RTCWeek;
-
-
-	  typedef struct RTCDate
-	  {
-	  u32     year;                      // îN ( 0 ~ 99 )
-	  u32     month;                     // åé ( 1 ~ 12 )
-	  u32     day;                       // ì˙ ( 1 ~ 31 )
-	  RTCWeek week;                      // ójì˙
-	  
-	  }
-	  RTCDate;
-	  
-	  // éûçèç\ë¢ëÃ
-	  typedef struct RTCTime
-	  {
-	  u32     hour;                      // éû ( 0 ~ 23 )
-	  u32     minute;                    // ï™ ( 0 ~ 59 )
-	  u32     second;                    // ïb ( 0 ~ 59 )
-	  
-	  }
-	  RTCTime;
-	*/
-	
-	if( RTC_RESULT_SUCCESS != RTC_SetDate( &rtc_date ) ) {
-	}
-	if( RTC_RESULT_SUCCESS != RTC_SetTime( &rtc_time ) ) {
-	}
-      }
-      OS_TPrintf("ntp end\n");
+      RTC_NTP_SYNC();
 
 
       /* NSSL_Init()åƒÇÒÇ≈ÇÕÉ_ÉÅÅI */
@@ -1085,7 +1124,12 @@ static void MyThreadProcNuc(void *arg)
 	mprintf("\n");
 	text_blink_current_line(tc[0]);
 	mprintf("press A button to start RESTORE\n\n");
-	MCU_SetFreeRegister( 0x55 );
+	if( reboot_rtc_adjust_done_flag == TRUE ) {
+	  MCU_SetFreeRegister( FREE_REG_RESTOREMODE_AND_RTC_DONE_REBOOT );
+	}
+	else {
+	  MCU_SetFreeRegister( FREE_REG_RESTOREMODE_REBOOT );
+	}
 	while( 1 ) {
 	  keyData = m_get_key_code();
 	  if ( keyData & (PAD_BUTTON_A | PAD_BUTTON_START) ) {
@@ -1093,7 +1137,7 @@ static void MyThreadProcNuc(void *arg)
 	  }
 	  if( pushed_power_button == TRUE ) {
 	    OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
-	    MCU_SetFreeRegister( 0x00 );
+	    MCU_SetFreeRegister( FREE_REG_POWERON_REBOOT );
 	    PM_ReadyToExit();
 	    pushed_power_button = FALSE;
 	  }
@@ -1227,15 +1271,26 @@ void TwlMain(void)
   /* OS_IsRebootedÇ»ÇÒÇ©Ç®Ç©ÇµÇ¢ÅEÅE */
 
 
+#if 1 /* miya */
+  OS_TPrintf("NCFGConfig = %d 0x%04x\n", sizeof(NCFGConfig),sizeof(NCFGConfig));
+  OS_TPrintf("NCFGConfigEx = %d 0x%04x\n", sizeof(NCFGConfigEx), sizeof(NCFGConfigEx));
+#endif
+
   MIYA_MCU_Init();
 
   OS_TPrintf("MCU Free Reg. 0x%02x\n", MCU_GetFreeReg());
   free_reg = MCU_GetFreeReg();
-  if( free_reg == 0x55 ) {
+  if( free_reg == FREE_REG_RESTOREMODE_REBOOT ) {
     reboot_flag = TRUE;
+    reboot_rtc_adjust_done_flag = FALSE;
   } 
+  else if( free_reg == FREE_REG_RESTOREMODE_AND_RTC_DONE_REBOOT ) {
+    reboot_flag = TRUE;
+    reboot_rtc_adjust_done_flag = TRUE;
+  }
   else {
     reboot_flag = FALSE;    
+    reboot_rtc_adjust_done_flag = FALSE;
   }
 
   development_console_flag = IsThisDevelopmentConsole();
@@ -1693,7 +1748,12 @@ void TwlMain(void)
     }
     else if ( keyData & PAD_BUTTON_Y ) {
       if( FALSE == reboot_flag ) {
-	MCU_SetFreeRegister( 0x55 );
+	if( reboot_rtc_adjust_done_flag == TRUE ) {
+	  MCU_SetFreeRegister( FREE_REG_RESTOREMODE_AND_RTC_DONE_REBOOT );
+	}
+	else {
+	  MCU_SetFreeRegister( FREE_REG_RESTOREMODE_REBOOT );
+	}
 	OS_RebootSystem();
       }
     }

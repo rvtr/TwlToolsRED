@@ -1,6 +1,7 @@
 
 #include <twl.h>
 #include <nitro/nvram/nvram.h>
+#include <nitroWiFi/ncfg.h>
 
 #include        "font.h"
 #include        "text.h"
@@ -133,16 +134,27 @@ static void ReportLastErrorPath(const char *path)
 
 }
 
+
+static u8 my_nor_buf[NVRAM_PERSONAL_DATA_SIZE] ATTRIBUTE_ALIGN(32);
+static u8 work_content[NCFG_CHECKCONFIGEX_WORK_SIZE];
+
 BOOL nvram_backup(char *path)
 {
   BOOL bSuccess;
+  BOOL ret_flag = TRUE;
   FSFile nor_fd;
   u32 offset;
-  u32 vol;
   int len;
-#define BUF_SIZE 0x100
-  u8 nor_buf[BUF_SIZE];
+
   char *nor_file_path = path;
+
+  void *work = (void *)work_content;
+
+  MI_CpuClear8(work, NCFG_CHECKCONFIGEX_WORK_SIZE);
+  if( NCFG_RESULT_INIT_OK != NCFG_CheckConfigEx( work ) ) {
+    return FALSE;
+  }
+
 
   FS_InitFile(&nor_fd);
 
@@ -167,29 +179,25 @@ BOOL nvram_backup(char *path)
 
   if( offset == 0 ) {
     OS_TPrintf( "nvram error: offset = 0x%02x\n", offset);
+    (void)FS_CloseFile(&nor_fd);
     return FALSE;
   }
 
   offset *= 8;
   offset -= 0xA00;
 
-  for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
-    if( TRUE !=  my_nvram_read( offset+vol , BUF_SIZE, (void* )nor_buf) ) {
-      OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
-    }
-    else {
-#if 0
-      len = FS_WriteFile(&nor_fd, nor_buf, BUF_SIZE);
-#else
-      len = my_fs_crypto_write(&nor_fd, nor_buf, BUF_SIZE);
-#endif
-      if (len != BUF_SIZE)
-	{
-	  OS_TPrintf("FS_WriteFile() failed.");
-	  break;
-	}
+  if( TRUE !=  my_nvram_read( offset , NVRAM_PERSONAL_DATA_SIZE, (void* )my_nor_buf) ) {
+    OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+  }
+  else {
+    len = my_fs_crypto_write(&nor_fd, my_nor_buf, NVRAM_PERSONAL_DATA_SIZE);
+    if (len != NVRAM_PERSONAL_DATA_SIZE) {
+      OS_TPrintf("FS_WriteFile() failed.");
+      ret_flag = FALSE;
     }
   }
+
   OS_TPrintf("\n");
 
   FS_FlushFile(&nor_fd);
@@ -197,21 +205,34 @@ BOOL nvram_backup(char *path)
   bSuccess = FS_CloseFile(&nor_fd);
 
   //  OS_TPrintf( "nvram read completed.\n");
-  return TRUE;
+  return ret_flag;
 }
+
+
+typedef struct  tagDWCWiFiInfo {
+  u64  attestedUserId;       // ユーザ ID (認証済み)
+  u64  notAttestedId;        // ユーザ ID (認証前)
+  u16  pass;                 // パスワード
+  u16  randomHistory;        // 乱数履歴
+} DWCWiFiInfo;
 
 BOOL nvram_restore(char *path)
 {
   BOOL bSuccess;
+  BOOL ret_flag = TRUE;
   FSFile nor_fd;
   u32 offset;
-  u32 vol;
   int len;
   //  char nor_file_path[FS_FILE_NAME_MAX];
   char *nor_file_path = path;
-
-#define BUF_SIZE 0x100
-  u8 nor_buf[BUF_SIZE];
+  NCFGConfig *p_ncfgc = NULL;
+#if 0
+  DWCWiFiInfo buf_content;
+  DWCWiFiInfo *buf = &buf_content;
+  u8 Wifi[14];
+#endif
+  u64 id1;
+  u64 id2;
 
   FS_InitFile(&nor_fd);
   //  STD_TSNPrintf(nor_file_path, sizeof(nor_file_path), path );
@@ -224,6 +245,7 @@ BOOL nvram_restore(char *path)
   /* offsetアドレスの取得 */
   if( TRUE !=  my_nvram_read( NVRAM_PERSONAL_DATA_OFFSET , sizeof(u16), (void* )&offset) ) {
     OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
   }
   else {
     OS_TPrintf( "nvram success: offset = 0x%02x\n", offset);
@@ -234,34 +256,114 @@ BOOL nvram_restore(char *path)
     return FALSE;
   }
 
+  /* offsetのチェックは？ */
   offset *= 8;
   offset -= 0xA00;
   
-  for( vol = 0 ; vol < NVRAM_PERSONAL_DATA_SIZE ; vol += BUF_SIZE ) {
-    OS_TPrintf(".");
+  len = my_fs_crypto_read(&nor_fd, my_nor_buf, NVRAM_PERSONAL_DATA_SIZE);
+  if (len != NVRAM_PERSONAL_DATA_SIZE) {
+    ret_flag = FALSE;
+    OS_TPrintf("FS_ReadFile() failed.");
+  }
+
+
+  p_ncfgc = (NCFGConfig *)my_nor_buf;
+  
+  // DWCWiFiInfo *buf;
+  //  u8 Wifi[14];
+
+  // > となります。DWCライブラリによる修復を使わない場合は
+  // > ・0x0f0と0x1f0にあるIDを確認して、両方のIDが同じ、かつ0でない場合にコピーする
+#if 0
+  MI_CpuCopy8(&p_ncfgc->slot[0].wifi[0], Wifi, 14);
+  MI_CpuCopy8(&Wifi[ 0], &buf->attestedUserId, 6);
+  buf->attestedUserId &= 0x07FFFFFFFFFF;
+
+  MI_CpuCopy8(&Wifi[ 5], &buf->notAttestedId, 6);
+  buf->notAttestedId >>= 3;
+  buf->notAttestedId  &= 0x07FFFFFFFFFF;
+  MI_CpuCopy8(&Wifi[10], &buf->pass, 2);
+  buf->pass >>= 6;
+  buf->pass  &= 0x03FF;
+  MI_CpuCopy8(&Wifi[12], &buf->randomHistory, 2);
+
+  id1 = buf->attestedUserId;
+#else
+  //  MI_CpuCopy8(&p_ncfgc->slot[0].wifi[0], &id1, 6);
+  MI_CpuCopy8(&my_nor_buf[0x600+ 0xf0], &id1, 6);
+  id1 &= 0x07FFFFFFFFFF;
+#endif
+
 
 #if 0
-    len = FS_ReadFile(&nor_fd, nor_buf, BUF_SIZE);
-#else
-    len = my_fs_crypto_read(&nor_fd, nor_buf, BUF_SIZE);
-#endif
-    if (len != BUF_SIZE) {
-      OS_TPrintf("FS_ReadFile() failed.");
-      break;
-    }
+  MI_CpuCopy8(&p_ncfgc->slot[1].wifi[0], Wifi, 14);
+  MI_CpuCopy8(&Wifi[ 0], &buf->attestedUserId, 6);
+  buf->attestedUserId &= 0x07FFFFFFFFFF;
+  MI_CpuCopy8(&Wifi[ 5], &buf->notAttestedId, 6);
+  buf->notAttestedId >>= 3;
+  buf->notAttestedId  &= 0x07FFFFFFFFFF;
+  MI_CpuCopy8(&Wifi[10], &buf->pass, 2);
+  buf->pass >>= 6;
+  buf->pass  &= 0x03FF;
+  MI_CpuCopy8(&Wifi[12], &buf->randomHistory, 2);
 
-    if( TRUE !=  my_nvram_write( offset+vol , BUF_SIZE, (void* )nor_buf) ) {
+  id2 = buf->attestedUserId;
+#else
+  //  MI_CpuCopy8(&p_ncfgc->slot[1].wifi[0], &id2, 6);
+  MI_CpuCopy8(&my_nor_buf[0x600+ 0x1f0], &id2, 6);
+  id2 &= 0x07FFFFFFFFFF;
+#endif
+
+  if( (id1 == id2) && (id1 != 0) ) {
+    if( TRUE !=  my_nvram_write( offset , /* size */ NVRAM_PERSONAL_DATA_SIZE, (void* )my_nor_buf) ) {
+      ret_flag = FALSE;
       OS_TPrintf( "nvram write error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
     }
-    else {
-    }
   }
+  else {
+    OS_TPrintf( "nvram write id1 id2 - 0 %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+    ret_flag = 3;
+  }
+
+  /*
+    #define NVRAM_PERSONAL_DATA_OFFSET 0x20
+    
+    Wifi設定だけなら0x0A00
+    #define NVRAM_PERSONAL_DATA_SIZE 0x0A00
+    #define NVRAM_INTERNAL_BUF_SIZE 0x100
+    
+    
+    ・NORの0x20から2byteを読み出し、8倍する（だいたい0x1fe00ぐらいになる）
+    ・そこから-0x400した値（だいたい0x1fa00）がWi-Fiユーザー情報の先頭となる
+    
+    
+    そして、本IDが有るか、無いかの確認は
+    Wi-Fiユーザー情報の0xf0から14byteがWi-FiコネクションID情報になります。
+    この14byteのWi-FiコネクションID情報の後ろ43bitが認証済みユーザーIDが格納される
+    場所となりますので、ここの値がすべて「0」の場合は、本IDが無いと見なす事ができます。
+    # 詳細は添付の資料をご確認ください。
+    # 資料はDSのものですが、Wi-FiコネクションID情報の部分は共通となります。
+    
+    そして、今回のツールで修正をお願いしたい内容としましては
+    ・上記のWi-FiコネクションID情報に本IDが存在しない場合は、
+    　Wi-Fiユーザー情報全てを移行しない
+    になります。
+    
+    移行しない領域は
+    ・Wi-Fiユーザー情報の先頭（だいたい0x1fa00）から更に-0x600したところ（だいたい0x1f400）
+    　から0x1000byte
+    　# -0x600にはTWLで拡張された領域が入ります。
+    と、なります。
+  */
+
+
+
 
   OS_TPrintf("\n");
   bSuccess = FS_CloseFile(&nor_fd);
 
   OS_TPrintf( "nvram write completed.\n");
 
-  return TRUE;
+  return ret_flag;
 }
 

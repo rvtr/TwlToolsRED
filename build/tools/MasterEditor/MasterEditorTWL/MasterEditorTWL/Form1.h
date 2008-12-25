@@ -2960,7 +2960,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "a" );
 		}
 
 		// SRLに登録されないROM仕様のフォーム入力を

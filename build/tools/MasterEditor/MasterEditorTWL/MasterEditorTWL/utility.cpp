@@ -492,3 +492,78 @@ u32 MasterEditorTWL::countBits( const u32 val )
     n = (n>>16) + (n & 0x0000ffff);
     return n;
 }
+
+//
+// SDKバージョンの大小判定をする
+//
+// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+// @arg [in] 判定基準のSDKバージョン(設定ファイルに記述されるもの)
+//
+// @ret 判定対象が基準よりも旧バージョンのとき(認められないとき) true 
+//
+System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion )
+{
+	// SDKバージョンからメジャーバージョン/マイナーバージョン/relstepを抽出
+	System::Byte   majorTar   = (System::Byte)(0xff & (target >> 24));
+	System::Byte   minorTar   = (System::Byte)(0xff & (target >> 16));
+	System::UInt16 relstepTar = (System::UInt16)(0xffff & target);
+
+	System::Byte   majorCri   = (System::Byte)(0xff & (criterion >> 24));
+	System::Byte   minorCri   = (System::Byte)(0xff & (criterion >> 16));
+	System::UInt16 relstepCri = (System::UInt16)(0xffff & criterion);
+
+	if( majorTar < majorCri )
+	{
+		return true;
+	}
+
+	// メジャーが一致するときマイナーを判定
+	if( (majorTar == majorCri) && (minorTar < minorCri) )
+	{
+		return true;
+	}
+
+	// メジャーもマイナーも一致するときrelstepを判定
+	if( (majorTar == majorCri) && (minorTar == minorCri) && (relstepTar < relstepCri) )
+	{
+		if( !MasterEditorTWL::IsSDKVersionPR(relstepTar) && !MasterEditorTWL::IsSDKVersionRC(relstepTar) )
+		{
+			return true;	// Release版のときのみ
+		}
+	}
+	return false;
+}
+
+//
+// SDKバージョンがPR版かどうか調べる
+//
+// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+//
+// @ret PR版のとき true 
+//
+System::Boolean MasterEditorTWL::IsSDKVersionPR( u32 target )
+{
+	System::UInt16 relstep = (System::UInt16)(0xffff & target);
+	if( (10000 <= relstep) && (relstep < 20000) )
+	{
+		return true;
+	}
+	return false;
+}
+
+//
+// SDKバージョンがRC版かどうか調べる
+//
+// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+//
+// @ret PR版のとき true 
+//
+System::Boolean MasterEditorTWL::IsSDKVersionRC( u32 target )
+{
+	System::UInt16 relstep = (System::UInt16)(0xffff & target);
+	if( (20000 <= relstep) && (relstep < 30000) )
+	{
+		return true;
+	}
+	return false;
+}

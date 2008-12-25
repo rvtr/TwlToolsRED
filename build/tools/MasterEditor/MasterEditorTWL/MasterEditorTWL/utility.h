@@ -165,4 +165,32 @@ namespace MasterEditorTWL
 	//
 	u32 countBits( const u32 val );
 
+	//
+	// SDKバージョンの大小判定をする
+	//
+	// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+	// @arg [in] 判定基準のSDKバージョン(設定ファイルに記述されるもの)
+	//
+	// @ret 判定対象が基準よりも旧バージョンのとき(認められないとき) true 
+	//
+	System::Boolean IsOldSDKVersion( u32 target, u32 criterion );
+
+	//
+	// SDKバージョンがPR版かどうか調べる
+	//
+	// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+	//
+	// @ret PR版のとき true 
+	//
+	System::Boolean IsSDKVersionPR( u32 target );
+
+	//
+	// SDKバージョンがRC版かどうか調べる
+	//
+	// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
+	//
+	// @ret PR版のとき true 
+	//
+	System::Boolean IsSDKVersionRC( u32 target );
+
 } // end of namespace MasterEditorTWL

@@ -1592,19 +1592,35 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	if( this->hMrcSpecialList->IsCheck )
 	{
 		// SDKバージョン
-		System::Boolean match = true;
+		System::Boolean isOld  = false;
+		System::Boolean isPR   = false;
+		System::Boolean isRC   = false;
 		for each( RCSDKVersion ^sdk in this->hSDKList )
 		{
-			if( sdk->IsStatic && (sdk->Code != this->hMrcSpecialList->SDKVer) )
+			if( sdk->IsStatic )
 			{
-				match = false;
+				isPR  = MasterEditorTWL::IsSDKVersionPR( sdk->Code );
+				isRC  = MasterEditorTWL::IsSDKVersionRC( sdk->Code );
+				isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcSpecialList->SDKVer );
 			}
 		}
-		if( !match )
+		if( isOld )
 		{
 			this->hWarnList->Add( gcnew RCMrcError( 
-				"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "本プログラムに登録されているバージョン情報と一致しません。",
-				"SDK Version", "The data doesn't match one registered in this program.", false, true ) );
+				"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "設定ファイルに登録されているバージョンよりも古いバージョンです。",
+				"SDK Version", "Older version (comparing with a setting file)", false, true ) );
+		}
+		if( isPR )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "ご使用のSDKバージョンはPR版です。",
+				"SDK Version", "Used version is PR.", false, true ) );
+		}
+		if( isRC )
+		{
+			this->hWarnList->Add( gcnew RCMrcError( 
+				"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "ご使用のSDKバージョンはRC版です。",
+				"SDK Version", "Used version is RC.", false, true ) );
 		}
 
 		// Shared2ファイルサイズ

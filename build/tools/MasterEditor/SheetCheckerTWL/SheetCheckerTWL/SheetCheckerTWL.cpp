@@ -14,7 +14,6 @@ using namespace SheetCheckerTWL;
 // 宣言
 // ------------------------------------------------------------------
 
-System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^context );
 int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^context );
 int consoleOptionRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^context );
 int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item, 
@@ -77,6 +76,14 @@ int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^co
 	System::String ^romfile   = args[0];
 	System::String ^sheetfile = args[1];
 
+	// 提出確認書の読み込み
+	if( !readSheet( sheetfile, item ) )
+	{
+		error = SheetCheckerError::ERROR_READ_SHEET;
+		printResult( context, &rh, item, romfile, sheetfile, 0, error );
+		return ((int)error);
+	}
+
 	// ROMヘッダの読み込み
 	if( !readRomHeader( romfile, &rh ) )
 	{
@@ -86,14 +93,6 @@ int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^co
 	}
 	System::UInt16 crc;
 	getWholeCRCInFile( romfile, &crc );
-
-	// 提出確認書の読み込み
-	if( !readSheet( sheetfile, item ) )
-	{
-		error = SheetCheckerError::ERROR_READ_SHEET;
-		printResult( context, &rh, item, romfile, sheetfile, crc, error );
-		return ((int)error);
-	}
 
 	// 一致判定
 	error = checkSheet( &rh, crc, item );
@@ -155,7 +154,7 @@ int consoleOptionRun( array<System::String ^> ^args, const int argc, SheetChecke
 		// ROMヘッダの読み込み
 		if( !readRomHeader( romfile, &rh ) )
 		{
-			error = SheetCheckerError::ERROR_READ_SHEET;
+			error = SheetCheckerError::ERROR_READ_SRL;
 			printf( "%d", (int)error );
 			return ((int)error);
 		}
@@ -167,7 +166,7 @@ int consoleOptionRun( array<System::String ^> ^args, const int argc, SheetChecke
 	}//if( argc == 2 )
 	
 	// 結果出力はオプションによって異なる(エラーのときには共通)
-	if( error != SheetCheckerError::NOERROR )
+	if( error == SheetCheckerError::NOERROR )
 	{
 		if( context->bResult )
 		{
@@ -196,32 +195,6 @@ int consoleOptionRun( array<System::String ^> ^args, const int argc, SheetChecke
 }
 
 // ------------------------------------------------------------------
-// 一致判定
-// ------------------------------------------------------------------
-
-SheetCheckerError checkSheet( ROM_Header *rh, System::UInt16 crc, SheetItem ^item )
-{
-	SheetCheckerError error;
-	if( memcmp( rh->s.game_code, item->GameCode, 4 ) != 0 )
-	{
-		error = SheetCheckerError::ERROR_VERIFY_GAME_CODE;
-	}
-	else if( rh->s.rom_version != item->RomVersion )
-	{
-		error = SheetCheckerError::ERROR_VERIFY_ROM_VERSION;
-	}
-	else if( crc != item->FileCRC )
-	{
-		error = SheetCheckerError::ERROR_VERIFY_CRC;
-	}
-	else
-	{
-		error = SheetCheckerError::NOERROR;
-	}
-	return error;
-}
-
-// ------------------------------------------------------------------
 // 結果表示
 // ------------------------------------------------------------------
 
@@ -231,25 +204,36 @@ int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item,
 	System::UInt16 tadver = item->RomVersion;
 	tadver = (tadver << 8) | item->SubmitVersion;
 
+	char media[255];
+	setStringToChars( media, item->Media, 255, 0 );
+
 	// 通常の表示
 	Console::WriteLine( "" );
 	Console::WriteLine( "SRL:   " + srlfile );
 	Console::WriteLine( "Sheet: " + sheetfile );
 	Console::WriteLine( "" );
 
-	printf( "                 SRL       Sheet\n" ); 
-	printf( "---------------------------------------\n" ); 
-	printf( "InitialCode:     %c%c%c%c      %c%c%c%c\n", 
+	printf( "                 SRL         Sheet\n" ); 
+	printf( "-----------------------------------------\n" ); 
+	printf( "InitialCode:     %c%c%c%c        %c%c%c%c\n", 
 		rh->s.game_code[0],  rh->s.game_code[1],  rh->s.game_code[2],  rh->s.game_code[3], 
 		item->GameCode[0], item->GameCode[1], item->GameCode[2], item->GameCode[3] );
-	printf( "RemasterVersion: %02X        %02X\n", rh->s.rom_version, item->RomVersion );
-	printf( "File CRC:        %04X      %04X\n", srlcrc, item->FileCRC );
-	printf( "---------------------------------------\n" ); 
-	printf( "Rating Display:            %s\n", (item->IsUnnecessaryRating)?"Unnecessary":"Necessary" );
-	printf( "---------------------------------------\n" ); 
-	printf( "SubmitVersion:   -         %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
-	printf( "TAD Version:               %d (%04X)\n", tadver, tadver );
-	printf( "---------------------------------------\n" ); 
+	printf( "RemasterVersion: %02X          %02X\n", rh->s.rom_version, item->RomVersion );
+	printf( "File CRC:        %04X        %04X\n", srlcrc, item->FileCRC );
+	if( rh->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK )
+	{
+		printf( "Media:           NAND        %s\n", media );
+	}
+	else
+	{
+		printf( "Media:           Game Card   %s\n", media );
+	}
+	printf( "-----------------------------------------\n" ); 
+	printf( "SubmitVersion:   -           %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
+	printf( "TAD Version:     -           %d (%04X)\n", tadver, tadver );
+	printf( "-----------------------------------------\n" ); 
+	printf( "TITLE_TYPE:      -           %s\n", (item->IsUnnecessaryRating)?"TWL_APP":"TWL_GAME" );
+	printf( "-----------------------------------------\n" ); 
 	printf( "Result:          " );
 	if( error == SheetCheckerError::NOERROR )
 	{

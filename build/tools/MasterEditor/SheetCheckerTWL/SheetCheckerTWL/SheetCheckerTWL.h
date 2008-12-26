@@ -94,6 +94,8 @@ public:
 System::Boolean readRomHeader( System::String ^srlfile, ROM_Header *rh );
 System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item );
 System::String^ getXPathText( System::Xml::XmlElement ^root, System::String ^xpath );
+void setStringToChars( char *pDst, System::String ^hSrc, const System::Int32 nMax, const System::SByte pad );
 SheetCheckerError checkSheet( ROM_Header *rh, System::UInt16 crc, SheetItem ^item );
+System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^context );
 
 // eof

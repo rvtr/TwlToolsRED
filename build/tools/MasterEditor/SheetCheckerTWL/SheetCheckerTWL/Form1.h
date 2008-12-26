@@ -107,12 +107,12 @@ namespace SheetCheckerTWL {
 			this->butSrl = (gcnew System::Windows::Forms::Button());
 			this->butSheet = (gcnew System::Windows::Forms::Button());
 			this->gridCompare = (gcnew System::Windows::Forms::DataGridView());
-			this->tboxResult = (gcnew System::Windows::Forms::TextBox());
-			this->labResult = (gcnew System::Windows::Forms::Label());
-			this->labVersion = (gcnew System::Windows::Forms::Label());
 			this->colTitle = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colSrl = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->colSheet = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->tboxResult = (gcnew System::Windows::Forms::TextBox());
+			this->labResult = (gcnew System::Windows::Forms::Label());
+			this->labVersion = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->gridCompare))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -176,34 +176,8 @@ namespace SheetCheckerTWL {
 			this->gridCompare->Name = L"gridCompare";
 			this->gridCompare->RowHeadersVisible = false;
 			this->gridCompare->RowTemplate->Height = 21;
-			this->gridCompare->Size = System::Drawing::Size(363, 170);
+			this->gridCompare->Size = System::Drawing::Size(363, 191);
 			this->gridCompare->TabIndex = 6;
-			// 
-			// tboxResult
-			// 
-			this->tboxResult->Location = System::Drawing::Point(294, 289);
-			this->tboxResult->Name = L"tboxResult";
-			this->tboxResult->ReadOnly = true;
-			this->tboxResult->Size = System::Drawing::Size(100, 19);
-			this->tboxResult->TabIndex = 7;
-			// 
-			// labResult
-			// 
-			this->labResult->AutoSize = true;
-			this->labResult->Location = System::Drawing::Point(235, 292);
-			this->labResult->Name = L"labResult";
-			this->labResult->Size = System::Drawing::Size(53, 12);
-			this->labResult->TabIndex = 8;
-			this->labResult->Text = L"判定結果";
-			// 
-			// labVersion
-			// 
-			this->labVersion->AutoSize = true;
-			this->labVersion->Location = System::Drawing::Point(353, 9);
-			this->labVersion->Name = L"labVersion";
-			this->labVersion->Size = System::Drawing::Size(41, 12);
-			this->labVersion->TabIndex = 9;
-			this->labVersion->Text = L"ver. 0.0";
 			// 
 			// colTitle
 			// 
@@ -231,11 +205,37 @@ namespace SheetCheckerTWL {
 			this->colSheet->Name = L"colSheet";
 			this->colSheet->Width = 120;
 			// 
+			// tboxResult
+			// 
+			this->tboxResult->Location = System::Drawing::Point(294, 315);
+			this->tboxResult->Name = L"tboxResult";
+			this->tboxResult->ReadOnly = true;
+			this->tboxResult->Size = System::Drawing::Size(100, 19);
+			this->tboxResult->TabIndex = 7;
+			// 
+			// labResult
+			// 
+			this->labResult->AutoSize = true;
+			this->labResult->Location = System::Drawing::Point(235, 318);
+			this->labResult->Name = L"labResult";
+			this->labResult->Size = System::Drawing::Size(53, 12);
+			this->labResult->TabIndex = 8;
+			this->labResult->Text = L"判定結果";
+			// 
+			// labVersion
+			// 
+			this->labVersion->AutoSize = true;
+			this->labVersion->Location = System::Drawing::Point(353, 9);
+			this->labVersion->Name = L"labVersion";
+			this->labVersion->Size = System::Drawing::Size(41, 12);
+			this->labVersion->TabIndex = 9;
+			this->labVersion->Text = L"ver. 0.0";
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(429, 321);
+			this->ClientSize = System::Drawing::Size(429, 347);
 			this->Controls->Add(this->labVersion);
 			this->Controls->Add(this->labResult);
 			this->Controls->Add(this->tboxResult);
@@ -311,23 +311,27 @@ private:
 			this->gridCompare->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 		}
 
+		tmp1 = (this->rh->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK)?"NAND":"Game Card";
+		tmp2 = this->sheet->Media;
+		this->gridCompare->Rows->Add( "メディア", tmp1, tmp2 );
+
 		tmp2 = this->sheet->SubmitVersion.ToString() + " (" + this->sheet->SubmitVersion.ToString( "X1" ) + ")";
 		this->gridCompare->Rows->Add( "提出バージョン", "-", tmp2 );
 
 		System::UInt16 tadver = sheet->RomVersion;
 		tadver = (tadver << 8) | sheet->SubmitVersion;
 		tmp2 = tadver.ToString() + " (" + tadver.ToString( "X04" ) + ")";
-		this->gridCompare->Rows->Add( "TADバージョン", "-", tmp2);
+		this->gridCompare->Rows->Add( "TADバージョン", "-", tmp2 );
 
 		if( this->sheet->IsUnnecessaryRating )
 		{
-			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_APP");
+			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_APP" );
 			System::Int32 last = this->gridCompare->Rows->Count - 2;
 			this->gridCompare->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Blue;	// 青色で強調
 		}
 		else
 		{
-			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_GAME");
+			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_GAME" );
 		}
 
 		if( *this->error == SheetCheckerError::NOERROR )

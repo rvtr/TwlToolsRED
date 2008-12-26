@@ -24,45 +24,19 @@ enum class SheetCheckerError
 // 実行Context
 ref class SheetCheckerContext
 {
-private:
-	System::Boolean    ^hbSubmitVersion;	// オプションフラグ
-	System::Boolean    ^hbResult;
-	System::Boolean    ^hbTadVersion;
-	System::Boolean    ^hbUnnecessaryRating;
-	SheetCheckerError  ^hErrorCode;			// エラー情報
+public:
+	property System::Boolean    bSubmitVersion;	// オプションフラグ
+	property System::Boolean    bResult;
+	property System::Boolean    bTadVersion;
+	property System::Boolean    bUnnecessaryRating;
 public:
 	SheetCheckerContext()
 	{
-		this->hbSubmitVersion = gcnew System::Boolean(false);
-		this->hbResult        = gcnew System::Boolean(false);
-		this->hbTadVersion    = gcnew System::Boolean(false);
-		this->hErrorCode      = gcnew SheetCheckerError( SheetCheckerError::NOERROR );
+		this->bSubmitVersion = false;
+		this->bResult        = false;
+		this->bTadVersion    = false;
+		this->bUnnecessaryRating = false;
 	}
-	property System::Boolean bSubmitVersion
-	{
-		void set( System::Boolean flg ){ this->hbSubmitVersion = gcnew System::Boolean(flg); }
-		System::Boolean get(){ return *this->hbSubmitVersion; }
-	};
-	property System::Boolean bResult
-	{
-		void set( System::Boolean flg ){ this->hbResult = gcnew System::Boolean(flg); }
-		System::Boolean get(){ return *this->hbResult; }
-	};
-	property System::Boolean bTadVersion
-	{
-		void set( System::Boolean flg ){ this->hbTadVersion = gcnew System::Boolean(flg); }
-		System::Boolean get(){ return *this->hbTadVersion; }
-	};
-	property System::Boolean bUnnecessaryRating
-	{
-		void set( System::Boolean flg ){ this->hbUnnecessaryRating = gcnew System::Boolean(flg); }
-		System::Boolean get(){ return *this->hbUnnecessaryRating; }
-	};
-	property SheetCheckerError ErrorCode
-	{
-		void set( SheetCheckerError code ){ this->hErrorCode = gcnew SheetCheckerError(code); }
-		SheetCheckerError get(){ return *this->hErrorCode; }
-	};
 };
 
 // 提出確認書内の情報
@@ -70,24 +44,28 @@ ref class SheetItem
 {
 private:
 	char           *pGameCode;
-	System::Byte   ^hRomVersion;
-	System::UInt16 ^hFileCRC;
-	System::Byte   ^hSubmitVersion;
-	System::Boolean ^hIsUnnecessaryRating;
-public:
 	System::String ^hMedia;
+public:
+	property System::Byte     RomVersion;
+	property System::UInt16   FileCRC;
+	property System::Byte     SubmitVersion;
+	property System::Boolean  IsUnnecessaryRating;
 public:
 	SheetItem()
 	{
 		this->pGameCode   = new char[4];
 		std::memset( this->pGameCode, 0, 4 );
-		this->hRomVersion = gcnew System::Byte(0);
-		this->hFileCRC    = gcnew System::UInt16(0);
-		this->hSubmitVersion = gcnew System::Byte(0);
-		this->hMedia      = gcnew System::String("");
-		this->hIsUnnecessaryRating = gcnew System::Boolean(false);
+		this->hMedia         = gcnew System::String("");
+		this->RomVersion    = 0;
+		this->FileCRC       = 0;
+		this->SubmitVersion = 0;
+		this->IsUnnecessaryRating = false;
 	}
 	~SheetItem()
+	{
+		this->!SheetItem();
+	}
+	!SheetItem()
 	{
 		delete []this->pGameCode;
 	}
@@ -96,21 +74,6 @@ public:
 		void set( char* p ){ memcpy( this->pGameCode, p, 4 ); }
 		char* get(){ return this->pGameCode; }
 	}
-	property System::Byte RomVersion
-	{
-		void set( System::Byte v ){ *this->hRomVersion = v; }
-		System::Byte get(){ return *this->hRomVersion; }
-	}
-	property System::UInt16 FileCRC
-	{
-		void set( System::UInt16 v ){ *this->hFileCRC = v; }
-		System::UInt16 get(){ return *this->hFileCRC; }
-	}
-	property System::Byte SubmitVersion
-	{
-		void set( System::Byte v ){ *this->hSubmitVersion = v; }
-		System::Byte get(){ return *this->hSubmitVersion; }
-	}
 	property System::String ^Media
 	{
 		void set( System::String ^str )
@@ -118,14 +81,9 @@ public:
 			if( str != nullptr )
 				this->hMedia = System::String::Copy(str);
 			else
-				this->hMedia = gcnew System::String("");
+				this->hMedia = gcnew System::String("");	// nullptrが代入されることはない
 		}
 		System::String^ get(){ return System::String::Copy( this->hMedia ); }
-	}
-	property System::Boolean IsUnnecessaryRating
-	{
-		void set( System::Boolean b ){ *this->hIsUnnecessaryRating = b; }
-		System::Boolean get(){ return *this->hIsUnnecessaryRating; }
 	}
 };
 

@@ -15,21 +15,35 @@ using namespace SheetCheckerTWL;
 // ------------------------------------------------------------------
 
 System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^context );
+int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^context );
+int consoleOptionRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^context );
 int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item, 
-				 System::String ^srlfile, System::String ^sheetfile, System::UInt16 srlcrc );
-int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^hContext );
+				System::String ^srlfile, System::String ^sheetfile, System::UInt16 srlcrc, SheetCheckerError error );
+
+// ------------------------------------------------------------------
+// main
+// ------------------------------------------------------------------
 
 [STAThreadAttribute]
 int main(array<System::String ^> ^args)
 {
-	SheetCheckerContext ^hContext = gcnew SheetCheckerContext;
+	SheetCheckerContext ^context = gcnew SheetCheckerContext;
 
 	// getopt
-	int argc = parseOption( args, hContext );
+	int argc = parseOption( args, context );
 
 	if( argc > 0 )
 	{
-		int ret = consoleRun( args, argc, hContext );
+		int ret;
+		if( context->bResult || context->bSubmitVersion || context->bTadVersion || 
+			context->bSubmitVersion || context->bUnnecessaryRating )
+		{
+			ret = consoleOptionRun( args, argc, context );
+		}
+		else
+		{
+			ret = consoleRun( args, argc, context );
+		}
 		return ret;
 	}
 
@@ -43,49 +57,142 @@ int main(array<System::String ^> ^args)
 }
 
 // ------------------------------------------------------------------
-// コンソール処理
+// コンソール処理 (ノーマル)
 // ------------------------------------------------------------------
 
-int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^hContext )
+int consoleRun( array<System::String ^> ^args, int argc, SheetCheckerContext ^context )
 {
+	SheetCheckerError error = SheetCheckerError::NOERROR;
 	ROM_Header rh;
 	memset( (void*)&rh, 0, sizeof(ROM_Header) );
-	SheetItem ^hItem = gcnew SheetItem;
+	SheetItem ^item = gcnew SheetItem;
 
 	// 引数処理
 	if( argc != 2 )
 	{
-		hContext->ErrorCode = SheetCheckerError::ERROR_ARG;
-		printResult( hContext, &rh, hItem, nullptr, nullptr, 0 );
-		return -1;
+		error = SheetCheckerError::ERROR_ARG;
+		printResult( context, &rh, item, nullptr, nullptr, 0, error );
+		return ((int)error);
 	}
-	System::String ^hSrlFile   = args[0];
-	System::String ^hSheetFile = args[1];
+	System::String ^romfile   = args[0];
+	System::String ^sheetfile = args[1];
 
 	// ROMヘッダの読み込み
-	if( !readRomHeader( hSrlFile, &rh ) )
+	if( !readRomHeader( romfile, &rh ) )
 	{
-		hContext->ErrorCode = SheetCheckerError::ERROR_READ_SRL;
-		printResult( hContext, &rh, hItem, hSrlFile, hSheetFile, 0 );
-		return -1;
+		error = SheetCheckerError::ERROR_READ_SRL;
+		printResult( context, &rh, item, romfile, sheetfile, 0, error );
+		return ((int)error);
 	}
 	System::UInt16 crc;
-	getWholeCRCInFile( hSrlFile, &crc );
+	getWholeCRCInFile( romfile, &crc );
 
 	// 提出確認書の読み込み
-	if( !readSheet( hSheetFile, hItem ) )
+	if( !readSheet( sheetfile, item ) )
 	{
-		hContext->ErrorCode = SheetCheckerError::ERROR_READ_SHEET;
-		printResult( hContext, &rh, hItem, hSrlFile, hSheetFile, crc );
-		return -1;
+		error = SheetCheckerError::ERROR_READ_SHEET;
+		printResult( context, &rh, item, romfile, sheetfile, crc, error );
+		return ((int)error);
 	}
 
 	// 一致判定
-	hContext->ErrorCode = checkSheet( &rh, crc, hItem );
+	error = checkSheet( &rh, crc, item );
+	printResult( context, &rh, item, romfile, sheetfile, crc, error );	// 結果を表形式で表示
 
-	// 結果表示
-	int ret = printResult( hContext, &rh, hItem, hSrlFile, hSheetFile, crc );
-	return ret;
+	return ((int)error);
+}
+
+// ------------------------------------------------------------------
+// コンソール処理 (オプション)
+// ------------------------------------------------------------------
+
+int consoleOptionRun( array<System::String ^> ^args, const int argc, SheetCheckerContext ^context )
+{
+	SheetCheckerError  error = SheetCheckerError::NOERROR;
+	System::String ^romfile;
+	System::String ^sheetfile;
+
+	// 引数解析
+	switch( argc )
+	{
+		case 1:
+			sheetfile = args[0];
+			if( context->bResult )		// このオプションのときだけは引数1つを許さない
+			{
+				error = SheetCheckerError::ERROR_ARG;
+				printf( "%d", (int)error );
+				return ((int)error);
+			}
+		break;
+
+		case 2:
+			romfile   = args[0];
+			sheetfile = args[1];
+		break;
+
+		default:
+			error = SheetCheckerError::ERROR_ARG;
+			printf( "%d", (int)error );
+			return ((int)error);
+		break;
+	}
+
+	// 提出確認書の読み込み
+	SheetItem ^item = gcnew SheetItem;
+	if( !readSheet( sheetfile, item ) )
+	{
+		error = SheetCheckerError::ERROR_READ_SHEET;
+		printf( "%d", (int)error );
+		return ((int)error);
+	}
+
+	// 引数が1つのときはSRLとの比較をしない
+	if( argc == 2 )
+	{
+		ROM_Header rh;
+		memset( (void*)&rh, 0, sizeof(ROM_Header) );
+
+		// ROMヘッダの読み込み
+		if( !readRomHeader( romfile, &rh ) )
+		{
+			error = SheetCheckerError::ERROR_READ_SHEET;
+			printf( "%d", (int)error );
+			return ((int)error);
+		}
+		System::UInt16 crc;
+		getWholeCRCInFile( romfile, &crc );
+
+		// 比較
+		error = checkSheet( &rh, crc, item );
+	}//if( argc == 2 )
+	
+	// 結果出力はオプションによって異なる(エラーのときには共通)
+	if( error != SheetCheckerError::NOERROR )
+	{
+		if( context->bResult )
+		{
+			printf( "0" );		// このパスは成功のときのみ
+		}
+		else if( context->bTadVersion )
+		{
+			System::UInt16 tadver = item->RomVersion;
+			tadver = (tadver << 8) | item->SubmitVersion;
+			printf( "%d", tadver );
+		}
+		else if( context->bSubmitVersion )
+		{
+			printf( "%d", item->SubmitVersion );
+		}
+		else if( context->bUnnecessaryRating )
+		{
+			printf( "%d", (item->IsUnnecessaryRating)?1:0 );
+		}
+	}
+	else
+	{
+		printf( "%d", (int)error );
+	}
+	return ((int)error);
 }
 
 // ------------------------------------------------------------------
@@ -119,282 +226,40 @@ SheetCheckerError checkSheet( ROM_Header *rh, System::UInt16 crc, SheetItem ^ite
 // ------------------------------------------------------------------
 
 int printResult( SheetCheckerContext ^context, ROM_Header *rh, SheetItem ^item, 
-				 System::String ^srlfile, System::String ^sheetfile, System::UInt16 srlcrc )
+				System::String ^srlfile, System::String ^sheetfile, System::UInt16 srlcrc, SheetCheckerError error )
 {
 	System::UInt16 tadver = item->RomVersion;
 	tadver = (tadver << 8) | item->SubmitVersion;
 
 	// 通常の表示
-	if( !context->bSubmitVersion && !context->bResult && !context->bTadVersion && !context->bUnnecessaryRating )
-	{
-		Console::WriteLine( "" );
-		Console::WriteLine( "SRL:   " + srlfile );
-		Console::WriteLine( "Sheet: " + sheetfile );
-		Console::WriteLine( "" );
+	Console::WriteLine( "" );
+	Console::WriteLine( "SRL:   " + srlfile );
+	Console::WriteLine( "Sheet: " + sheetfile );
+	Console::WriteLine( "" );
 
-		printf( "                 SRL       Sheet\n" ); 
-		printf( "---------------------------------------\n" ); 
-		printf( "InitialCode:     %c%c%c%c      %c%c%c%c\n", 
-			rh->s.game_code[0],  rh->s.game_code[1],  rh->s.game_code[2],  rh->s.game_code[3], 
-			item->GameCode[0], item->GameCode[1], item->GameCode[2], item->GameCode[3] );
-		printf( "RemasterVersion: %02X        %02X\n", rh->s.rom_version, item->RomVersion );
-		printf( "File CRC:        %04X      %04X\n", srlcrc, item->FileCRC );
-		printf( "---------------------------------------\n" ); 
-		printf( "Rating Display:            %s\n", (item->IsUnnecessaryRating)?"Unnecessary":"Necessary" );
-		printf( "---------------------------------------\n" ); 
-		printf( "SubmitVersion:   -         %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
-		printf( "TAD Version:               %d (%04X)\n", tadver, tadver );
-		printf( "---------------------------------------\n" ); 
-		printf( "Result:          " );
-		if( context->ErrorCode == SheetCheckerError::NOERROR )
-		{
-			printf( "OK\n" );
-		}
-		else
-		{
-			printf( "NG (%d)\n", context->ErrorCode );
-		}
-	}
-
-	// オプションのときの表示
-	if( context->bSubmitVersion )
+	printf( "                 SRL       Sheet\n" ); 
+	printf( "---------------------------------------\n" ); 
+	printf( "InitialCode:     %c%c%c%c      %c%c%c%c\n", 
+		rh->s.game_code[0],  rh->s.game_code[1],  rh->s.game_code[2],  rh->s.game_code[3], 
+		item->GameCode[0], item->GameCode[1], item->GameCode[2], item->GameCode[3] );
+	printf( "RemasterVersion: %02X        %02X\n", rh->s.rom_version, item->RomVersion );
+	printf( "File CRC:        %04X      %04X\n", srlcrc, item->FileCRC );
+	printf( "---------------------------------------\n" ); 
+	printf( "Rating Display:            %s\n", (item->IsUnnecessaryRating)?"Unnecessary":"Necessary" );
+	printf( "---------------------------------------\n" ); 
+	printf( "SubmitVersion:   -         %d (%02X)\n", item->SubmitVersion, item->SubmitVersion );
+	printf( "TAD Version:               %d (%04X)\n", tadver, tadver );
+	printf( "---------------------------------------\n" ); 
+	printf( "Result:          " );
+	if( error == SheetCheckerError::NOERROR )
 	{
-		if( context->ErrorCode == SheetCheckerError::NOERROR )
-		{
-			printf( "%d", item->SubmitVersion );
-		}
-		else
-		{
-			printf( "%d", context->ErrorCode );	// エラーのときはエラーコード
-		}
+		printf( "OK\n" );
 	}
-	if( context->bTadVersion )
+	else
 	{
-		if( context->ErrorCode == SheetCheckerError::NOERROR )
-		{
-			printf( "%d", tadver );
-		}
-		else
-		{
-			printf( "%d", context->ErrorCode );
-		}
-	}
-	if( context->bUnnecessaryRating )
-	{
-		if( context->ErrorCode == SheetCheckerError::NOERROR )
-		{
-			printf( "%d", (item->IsUnnecessaryRating)?1:0 );
-		}
-		else
-		{
-			printf( "%d", context->ErrorCode );
-		}
-	}
-	if( context->bResult )
-	{
-		printf( "%d", context->ErrorCode );
-	}
-
-	if( context->ErrorCode != SheetCheckerError::NOERROR )
-	{
-		return -1;
+		printf( "NG (%d)\n", (int)error );
 	}
 	return 0;
 }
 
 
-// ------------------------------------------------------------------
-// ROMヘッダの読み込み
-// ------------------------------------------------------------------
-
-System::Boolean readRomHeader( System::String ^srlfile, ROM_Header *rh )
-{
-	FILE       *fp = NULL;
-	const char *pchFilename = 
-		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlfile ).ToPointer();
-
-	// ファイルを開いてROMヘッダのみ読み出す
-	if( fopen_s( &fp, pchFilename, "rb" ) != NULL )
-	{
-		return false;
-	}
-	(void)fseek( fp, 0, SEEK_SET );		// ROMヘッダはsrlの先頭から
-
-	// 1バイトをsizeof(~)だけリード (逆だと返り値がsizeof(~)にならないので注意)
-	if( fread( (void*)rh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
-	{
-		fclose( fp );
-		return false;
-	}
-	fclose( fp );
-	return true;
-}
-
-// ------------------------------------------------------------------
-// 提出確認書の読み込み
-// ------------------------------------------------------------------
-
-System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
-{
-	// XSLによってXML変換
-	System::String ^tmpfile = ".\\temp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".xml";
-	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
-	System::String ^xslpath = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
-		                      + "\\extract_sheet.xsl";
-	try
-	{
-		//Console::WriteLine( "xslpath: " + xslpath );
-		xslt->Load( xslpath );
-		xslt->Transform( sheetfile, tmpfile );
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		//Console::WriteLine( "XSLT Error" );
-		return false;
-	}
-	// 変換したXMLを読み込み
-	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;
-	try
-	{
-		doc->Load( tmpfile );
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		//Console::WriteLine( "Load error" );
-		return false;
-	}
-
-	// XMLからデータを抽出
-	System::Xml::XmlElement  ^root = doc->DocumentElement;
-	System::String ^text;
-	try
-	{
-		item->Media = getXPathText( root, "/Sheet/Media" );
-
-		text = getXPathText( root, "/Sheet/GameCode" );
-		char code[4];
-		int  i;
-		for(i=0; i<4; i++ )
-		{
-			code[i] = (char)text[i];
-		}
-		item->GameCode = code;	// 代入したらコピーするように property を定義している
-
-		text = getXPathText( root, "/Sheet/RomVersion" );
-		if( text->Contains( "(" ) )	// 事前版のときには"(事前版)"が入る
-		{
-			text = text->Remove( text->IndexOf("(") );
-		}
-		text = text->Trim();
-		item->RomVersion = System::Byte::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
-
-		text = getXPathText( root, "/Sheet/CRC" );
-		if( text->Contains( "0x" ) )
-		{
-			text = text->Substring( text->IndexOf("x")+1 );
-		}
-		item->FileCRC = System::UInt16::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
-
-		text = getXPathText( root, "/Sheet/SubmitVersion" );
-		char c = (char)text[0];
-		if( ('G' <= c) && (c <= 'Z') )		// Fより上はG..Zで表現されていく(可能性あり)
-		{
-			item->SubmitVersion = c - 'G' + 16;
-		}
-		else if( ('g' <= c) && (c <= 'z') )
-		{
-			item->SubmitVersion = c - 'g' + 16;
-		}
-		else
-		{
-			item->SubmitVersion = System::Byte::Parse( text, System::Globalization::NumberStyles::AllowHexSpecifier );
-		}
-
-		text = getXPathText( root, "/Sheet/IsUnnecessaryRating" );
-		if( !System::String::IsNullOrEmpty( text ) && text->Equals( "○" ) )
-		{
-			item->IsUnnecessaryRating = true;
-		}
-		else
-		{
-			item->IsUnnecessaryRating = false;
-		}
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		return false;
-	}
-
-	// 中間ファイルを削除
-	if( System::IO::File::Exists( tmpfile ) )
-	{
-		System::IO::File::Delete( tmpfile );
-	}
-	return true;
-}
-
-// ------------------------------------------------------------------
-// getopt
-// ------------------------------------------------------------------
-
-// @ret オプションを除いたときのargc
-System::Int32 parseOption( array<System::String ^> ^args, SheetCheckerContext ^context )
-{
-	System::Collections::Generic::List<System::Int32> ^indexList
-		= gcnew System::Collections::Generic::List<System::Int32>;
-
-	int numopt = 0;
-	int i;
-	for( i=0; i < args->Length; i++ )
-	{
-		if( args[i]->StartsWith( "-s" ) )
-		{
-			context->bSubmitVersion = true;
-			numopt++;
-		}
-		else if( args[i]->StartsWith( "-r" ) )
-		{
-			context->bResult = true;
-			numopt++;
-		}
-		else if( args[i]->StartsWith( "-t" ) )
-		{
-			context->bTadVersion = true;
-			numopt++;
-		}
-		else if( args[i]->StartsWith( "-u" ) )
-		{
-			context->bUnnecessaryRating = true;
-			numopt++;
-		}
-		else if( !args[i]->StartsWith( "-" ) )	// オプションでない引数のindexを記録
-		{
-			indexList->Add(i);
-		}
-	}
-	i=0;
-	for each( System::Int32 index in indexList )	// オプションでない引数を前につめていく
-	{
-		args[i] = args[index];
-		i++;
-	}
-	return (args->Length - numopt);
-}
-
-// ------------------------------------------------------------------
-// XMLタグ検索
-// ------------------------------------------------------------------
-
-// @ret テキストが存在するときそのテキストを返す。存在しないときnullptr。
-System::String^ getXPathText( System::Xml::XmlElement ^root, System::String ^xpath )
-{
-	System::Xml::XmlNode ^tmp = root->SelectSingleNode( xpath );
-	if( tmp && tmp->FirstChild && tmp->FirstChild->Value )
-	{
-		return tmp->FirstChild->Value;
-	}
-	return nullptr;
-}

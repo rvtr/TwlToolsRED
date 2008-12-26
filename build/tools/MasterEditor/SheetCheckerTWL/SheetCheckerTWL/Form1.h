@@ -35,6 +35,12 @@ namespace SheetCheckerTWL {
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  colTitle;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  colSrl;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  colSheet;
+
+
+
+
+
+
 			 System::Boolean ^bReadSheet;
 
 	public:
@@ -92,10 +98,10 @@ namespace SheetCheckerTWL {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle17 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle18 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle19 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle20 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle7 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle8 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxSrl = (gcnew System::Windows::Forms::TextBox());
 			this->tboxSheet = (gcnew System::Windows::Forms::TextBox());
 			this->butSrl = (gcnew System::Windows::Forms::Button());
@@ -154,15 +160,15 @@ namespace SheetCheckerTWL {
 			// 
 			// gridCompare
 			// 
-			dataGridViewCellStyle17->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
-			dataGridViewCellStyle17->BackColor = System::Drawing::SystemColors::Control;
-			dataGridViewCellStyle17->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
+			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Control;
+			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle17->ForeColor = System::Drawing::SystemColors::WindowText;
-			dataGridViewCellStyle17->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle17->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle17->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridCompare->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::WindowText;
+			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridCompare->ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
 			this->gridCompare->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridCompare->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(3) {this->colTitle, 
 				this->colSrl, this->colSheet});
@@ -170,12 +176,12 @@ namespace SheetCheckerTWL {
 			this->gridCompare->Name = L"gridCompare";
 			this->gridCompare->RowHeadersVisible = false;
 			this->gridCompare->RowTemplate->Height = 21;
-			this->gridCompare->Size = System::Drawing::Size(363, 148);
+			this->gridCompare->Size = System::Drawing::Size(363, 170);
 			this->gridCompare->TabIndex = 6;
 			// 
 			// tboxResult
 			// 
-			this->tboxResult->Location = System::Drawing::Point(294, 273);
+			this->tboxResult->Location = System::Drawing::Point(294, 289);
 			this->tboxResult->Name = L"tboxResult";
 			this->tboxResult->ReadOnly = true;
 			this->tboxResult->Size = System::Drawing::Size(100, 19);
@@ -184,7 +190,7 @@ namespace SheetCheckerTWL {
 			// labResult
 			// 
 			this->labResult->AutoSize = true;
-			this->labResult->Location = System::Drawing::Point(235, 276);
+			this->labResult->Location = System::Drawing::Point(235, 292);
 			this->labResult->Name = L"labResult";
 			this->labResult->Size = System::Drawing::Size(53, 12);
 			this->labResult->TabIndex = 8;
@@ -201,26 +207,26 @@ namespace SheetCheckerTWL {
 			// 
 			// colTitle
 			// 
-			dataGridViewCellStyle18->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
-			dataGridViewCellStyle18->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)), 
+			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
+			dataGridViewCellStyle6->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)), 
 				static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)));
-			this->colTitle->DefaultCellStyle = dataGridViewCellStyle18;
+			this->colTitle->DefaultCellStyle = dataGridViewCellStyle6;
 			this->colTitle->HeaderText = L"";
 			this->colTitle->Name = L"colTitle";
 			this->colTitle->Width = 120;
 			// 
 			// colSrl
 			// 
-			dataGridViewCellStyle19->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
-			this->colSrl->DefaultCellStyle = dataGridViewCellStyle19;
+			dataGridViewCellStyle7->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
+			this->colSrl->DefaultCellStyle = dataGridViewCellStyle7;
 			this->colSrl->HeaderText = L"SRL";
 			this->colSrl->Name = L"colSrl";
 			this->colSrl->Width = 120;
 			// 
 			// colSheet
 			// 
-			dataGridViewCellStyle20->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
-			this->colSheet->DefaultCellStyle = dataGridViewCellStyle20;
+			dataGridViewCellStyle8->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleCenter;
+			this->colSheet->DefaultCellStyle = dataGridViewCellStyle8;
 			this->colSheet->HeaderText = L"提出確認書";
 			this->colSheet->Name = L"colSheet";
 			this->colSheet->Width = 120;
@@ -229,7 +235,7 @@ namespace SheetCheckerTWL {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 12);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(428, 302);
+			this->ClientSize = System::Drawing::Size(429, 321);
 			this->Controls->Add(this->labVersion);
 			this->Controls->Add(this->labResult);
 			this->Controls->Add(this->tboxResult);
@@ -312,6 +318,17 @@ private:
 		tadver = (tadver << 8) | sheet->SubmitVersion;
 		tmp2 = tadver.ToString() + " (" + tadver.ToString( "X04" ) + ")";
 		this->gridCompare->Rows->Add( "TADバージョン", "-", tmp2);
+
+		if( this->sheet->IsUnnecessaryRating )
+		{
+			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_APP");
+			System::Int32 last = this->gridCompare->Rows->Count - 2;
+			this->gridCompare->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Blue;	// 青色で強調
+		}
+		else
+		{
+			this->gridCompare->Rows->Add( "TITLE_TYPE", "-", "TWL_GAME");
+		}
 
 		if( *this->error == SheetCheckerError::NOERROR )
 		{

@@ -217,32 +217,68 @@ namespace MasterEditorTWL
 	};
 
 	// -------------------------------------------------------------------
-	// Type : ref class
-	// Name : RCMrcSpecialList
+	// Type : value class
+	// Name : VCReservedArea
 	//
-	// Description : MRCの追加エラー項目クラス
+	// Description : 予約領域の範囲クラス
 	// 
 	// Role : 構造体としてデータをまとめておく
 	// -------------------------------------------------------------------
-	ref class RCMrcSpecialList
+	value class VCReservedArea
+	{
+	private:
+		System::UInt32  begin;
+		System::UInt32  end;
+	public:
+		VCReservedArea( System::UInt32 begin, System::UInt32 end )
+		{
+			this->begin = begin;
+			this->end   = end;
+		}
+	public:
+		property System::UInt32 Begin		// read only
+		{
+			System::UInt32 get(){ return this->begin; }
+		}
+		property System::UInt32 End
+		{
+			System::UInt32 get(){ return this->end; }
+		}
+	};
+
+	// -------------------------------------------------------------------
+	// Type : ref class
+	// Name : RCMrcExternalCheckItems
+	//
+	// Description : MRCチェック項目の外部パラメータクラス
+	// 
+	// Role : 構造体としてデータをまとめておく
+	// -------------------------------------------------------------------
+	ref class RCMrcExternalCheckItems
 	{
 	public:
-		property System::Boolean  IsCheck;
-		property System::UInt32   SDKVer;
-		property System::Byte     EULAVer;
-		property cli::array<System::UInt32> ^hShared2SizeArray;
+		property System::Boolean  IsAppendCheck;						// 追加チェックをするかどうか(すべての項目が追加チェックとは限らない)
+		property System::UInt32   SDKVer;								// SDKのバージョン
+		property System::Boolean  IsPermitNormalJump;					// ノーマルジャンプがアクセス許可されているか
+		property cli::array<System::Boolean> ^hIsPermitShared2Array;	// Shared2ファイルアクセスが許可されているか
+		property cli::array<System::UInt32>  ^hShared2SizeArray;		// Shared2ファイルサイズ
+		property System::Collections::Generic::List<VCReservedArea> ^hReservedAreaList;	// 予約領域の範囲
 	public:
-		RCMrcSpecialList()
+		RCMrcExternalCheckItems()
 		{
-			this->IsCheck = false;
-			this->SDKVer  = 0;
-			this->EULAVer = 0;
-			this->hShared2SizeArray = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);	// ファイルサイズの数に合わせる
+			this->IsAppendCheck         = false;
+			this->SDKVer                = 0;
+			this->IsPermitNormalJump    = false;
+			this->hIsPermitShared2Array = gcnew cli::array<System::Boolean>(METWL_NUMOF_SHARED2FILES);
+			this->hShared2SizeArray     = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);
 			System::Int32 i;
 			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 			{
-				this->hShared2SizeArray[i] = 0;
+				this->hIsPermitShared2Array[i] = false;
+				this->hShared2SizeArray[i]     = 0;
 			}
+			this->hReservedAreaList = gcnew System::Collections::Generic::List<VCReservedArea>;
+			this->hReservedAreaList->Clear();
 		}
 	};
 
@@ -340,7 +376,7 @@ namespace MasterEditorTWL
 		property System::Collections::Generic::List<RCMrcError^> ^hParentalErrorList;	// ペアレンタルコントロールのチェックはsetと同時に行なう
 
 		// MRC追加項目
-		property RCMrcSpecialList ^hMrcSpecialList;
+		property RCMrcExternalCheckItems ^hMrcExternalCheckItems;
 
 		// constructor / destructor / finalizer 
 	public:
@@ -389,9 +425,13 @@ namespace MasterEditorTWL
 		ECSrlResult mrc( FILE *fp );
 		ECSrlResult mrcNTR( FILE *fp );
 		ECSrlResult mrcTWL( FILE *fp );
+		void mrcAppType( FILE *fp );
+		void mrcAccessControl( FILE *fp );
 		void mrcPadding( FILE *fp );
 		void mrcBanner( FILE *fp );
 		void mrcReservedArea( FILE *fp );
+		void mrcShared2( FILE *fp );
+		void mrcSDKVersion( FILE *fp );
 
 	}; // end of ref class RCSrl
 

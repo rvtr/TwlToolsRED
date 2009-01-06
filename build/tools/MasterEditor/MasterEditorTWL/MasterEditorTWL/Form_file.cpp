@@ -44,7 +44,7 @@ System::Boolean Form1::loadRom( System::String ^infile )
 		if( result )
 		{
 			this->IsLoadTad = false;
-			System::String ^tmpsrl = this->getSplitTadTmpFilename();
+			System::String ^tmpsrl = this->getSplitTadTmpFile();
 			if( System::IO::File::Exists( tmpsrl ) )
 			{
 				System::IO::File::Delete( tmpsrl );		// SRLの読み込みが成功したら以前のTAD読み込みで使用した一時ファイルは不要
@@ -63,7 +63,7 @@ System::Boolean Form1::saveRom( System::String ^outfile )
 	if( this->IsLoadTad )
 	{
 		// 一時ファイルにSRLを書き出しているのでその一時ファイルから出力ファイルを作成
-		System::String ^tmpsrl = this->getSplitTadTmpFilename();
+		System::String ^tmpsrl = this->getSplitTadTmpFile();
 		result = this->saveSrl( tmpsrl, outfile );
 		if( result )
 		{
@@ -84,7 +84,7 @@ System::Boolean Form1::saveRom( System::String ^outfile )
 System::Boolean Form1::loadTad( System::String ^tadfile )
 {
 	// tadファイルを変換したSRLを一時ファイルに保存
-	System::String ^srlfile = this->getSplitTadTmpFilename();
+	System::String ^srlfile = this->getSplitTadTmpFile();
 	if( splitTad( tadfile, srlfile ) != 0 )		// 上書きで保存
 	{
 		this->errMsg( "TADファイルの読み込みに失敗しました。", "Reading TAD file failed." );

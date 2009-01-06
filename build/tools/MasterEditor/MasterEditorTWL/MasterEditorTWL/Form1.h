@@ -723,12 +723,12 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->labAssemblyVersion->Text = "ver." + this->getVersion();
 
 			// TAD読み込みの際に作成される一時ファイルと同名ファイルがあった場合には削除してよいか確認
-			System::Diagnostics::Debug::WriteLine( this->getSplitTadTmpFilename() );
-			if( System::IO::File::Exists( this->getSplitTadTmpFilename() ) )
+			System::Diagnostics::Debug::WriteLine( this->getSplitTadTmpFile() );
+			if( System::IO::File::Exists( this->getSplitTadTmpFile() ) )
 			{
 				this->sucMsg( "本プログラムで作成する一時ファイルと同名のファイルが存在します。このファイルを削除します。",
 							  "There is the file which has same name as temporary file made by this program. That file is deleted." );
-				System::IO::File::Delete( this->getSplitTadTmpFilename() );
+				System::IO::File::Delete( this->getSplitTadTmpFile() );
 			}
 
 			// デフォルト値
@@ -787,7 +787,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		~Form1()
 		{
 			// TAD読み出しの際に作成される一時SRLファイルを削除(書き出しをせずに終了したときに起こりうる)
-			System::String ^srlfile = this->getSplitTadTmpFilename();
+			System::String ^srlfile = this->getSplitTadTmpFile();
 			if( System::IO::File::Exists( srlfile ) )
 			{
 				System::IO::File::Delete( srlfile );	// すでに存在する場合は削除
@@ -2857,18 +2857,6 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		// tadの読み込み
 		System::Boolean loadTad( System::String ^tadfile );
 
-		// tadの読み込みで生成する一時SRLファイル名を返す
-		System::String ^getSplitTadTmpFilename(void)
-		{
-			System::String ^dir = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location );
-			if( !dir->EndsWith("\\") )
-			{
-				dir = dir + "\\";
-			}
-			System::String ^tmpfile = dir + METWL_TAD_TMP_FILENAME;
-			return tmpfile;
-		}
-
 		// 提出ファイル名をゲームコードなどから決定
 		System::String^ getSubmitFilePrefix(void)
 		{
@@ -2929,7 +2917,21 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		void changeVisibleForms( System::Boolean visible )
 		{
 			this->gboxShared2Size->Visible  = visible;
+			this->cboxIsShared2->Visible    = visible;
+			this->tboxShared2Size0->Visible = visible;
+			this->labShared2Size0->Visible  = visible;
+			this->tboxShared2Size1->Visible = visible;
+			this->labShared2Size1->Visible  = visible;
+			this->tboxShared2Size2->Visible = visible;
+			this->labShared2Size2->Visible  = visible;
+			this->tboxShared2Size3->Visible = visible;
+			this->labShared2Size3->Visible  = visible;
+			this->tboxShared2Size4->Visible = visible;
+			this->labShared2Size4->Visible  = visible;
+			this->tboxShared2Size5->Visible = visible;
+			this->labShared2Size5->Visible  = visible;
 			this->cboxIsNormalJump->Visible = visible;
+
 			this->tboxIsGameCardOn->Visible = visible;
 			this->labIsGameCardOn->Visible  = visible;
 			this->labIsGameCardOn2->Visible = visible;
@@ -2960,7 +2962,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "a" );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
 		}
 
 		// SRLに登録されないROM仕様のフォーム入力を
@@ -2996,6 +2998,66 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			{
 				this->combBackup->Enabled = true;
 			}
+		}
+
+	private:
+		// ----------------------------------------------
+		// 固定ファイル名の取得
+		// ----------------------------------------------
+
+		// バイナリがあるディレクトリ
+		System::String^ getBinDir(void)
+		{
+			System::String ^dir = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location );
+			if( !dir->EndsWith("\\") )
+			{
+				dir = dir + "\\";
+			}
+			return dir;
+		}
+		// リソースファイルがあるディレクトリ
+		System::String^ getResDir(void)
+		{
+			System::String ^dir = System::IO::Directory::GetParent( this->getBinDir() )->Parent->FullName;
+			if( !dir->EndsWith("\\") )
+			{
+				dir = dir + "\\";
+			}
+			dir = dir + "resource\\";
+			return dir;
+		}
+		// 設定ファイル
+		System::String^ getIniFile(void)
+		{
+			return (this->getResDir() + "ini.xml");
+		}
+		System::String^ getAppendIniFile(void)
+		{
+			return (this->getResDir() + "append_ini.xml");
+		}
+		// 提出確認書テンプレート
+		System::String^ getSheetTemplateFile(void)
+		{
+			return (this->getResDir() + "sheet_templete.xml");
+		}
+		// ミドルウェアリスト作成用のXSL
+		System::String^ getMiddlewareListStyleFile(void)
+		{
+			return (this->getResDir() + "middleware.xsl");
+		}
+		System::String^ getMiddlewareListStyleFileEmbedded(void)
+		{
+			return (this->getResDir() + "middleware_e.xsl");
+		}
+		// ミドルウェアリスト作成時の一時ファイル
+		System::String^ getMiddlewareListTmpFile(void)
+		{
+			return (this->getBinDir() + "middleware-tmp.xml");
+		}
+		// tadの読み込みで生成する一時SRLファイル
+		System::String^ getSplitTadTmpFile(void)
+		{
+			return (this->getBinDir() + "tmp.srl");
 		}
 
 	private:
@@ -3442,7 +3504,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 書類作成
 			srlfile = System::IO::Path::GetFileName( srlfile );
 			//result = this->hDeliv->write( delivfile, this->hSrl, hcrc, srlfile, !this->isJapanese() );
-			result = this->hDeliv->writeSpreadsheet( delivfile, this->hSrl, crc, srlfile, !this->isJapanese() );
+			result = this->hDeliv->writeSpreadsheet( delivfile, this->getSheetTemplateFile(), this->hSrl, crc, srlfile, !this->isJapanese() );
 			if( result != ECDeliverableResult::NOERROR )
 			{
 				switch( result )

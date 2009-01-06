@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <init>
 	<rw>w</rw>
+	<access>
+		<!-- <shared2>0,1</shared2> -->
+		<!-- <normalJump>Permit</normalJump> -->
+	</access>
+	<shared2>
+		<size0>2097152</size0>
+	</shared2>
 	<reserved-list>
 		<reserved><begin>78</begin><end>7f</end></reserved>
 		<reserved><begin>160</begin><end>17f</end></reserved>

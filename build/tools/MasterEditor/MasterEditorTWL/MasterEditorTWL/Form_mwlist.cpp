@@ -106,7 +106,7 @@ System::Boolean Form1::saveMiddlewareListXmlEmbeddedXsl( System::String ^filenam
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 	try
 	{
-		xsl->Load("../resource/middleware_e.xsl");
+		xsl->Load( this->getMiddlewareListStyleFileEmbedded() );
 		root->AppendChild( doc->ImportNode(xsl->DocumentElement, true) );
 	}
 	catch ( System::Exception ^ex )
@@ -133,7 +133,7 @@ System::Boolean Form1::saveMiddlewareListXmlEmbeddedXsl( System::String ^filenam
 System::Boolean Form1::saveMiddlewareListHtml( System::String ^filename )
 {
 	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
-	System::String ^tmpxml = gcnew System::String( "middleware-tmp.xml" );
+	System::String ^tmpxml = gcnew System::String( this->getMiddlewareListTmpFile() );
 
 	if( !saveMiddlewareListXml(tmpxml) )
 	{
@@ -142,7 +142,7 @@ System::Boolean Form1::saveMiddlewareListHtml( System::String ^filename )
 
 	try
 	{
-		xslt->Load("../resource/middleware.xsl");
+		xslt->Load( this->getMiddlewareListStyleFile() );
 		xslt->Transform( tmpxml, filename );
 	}
 	catch (System::Exception ^s)

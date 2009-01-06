@@ -25,13 +25,14 @@ using namespace MasterEditorTWL;
 // @arg [in]  英語フラグ
 //
 ECDeliverableResult RCDeliverable::writeSpreadsheet(
-	System::String ^hFilename, MasterEditorTWL::RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english )
+	System::String ^hFilename, System::String ^hSheetTemplateFilename,
+	MasterEditorTWL::RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english )
 {
 	// テンプレートを読み込む
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
 	try
 	{
-		doc->Load( "../resource/sheet_templete.xml" );
+		doc->Load( hSheetTemplateFilename );
 	}
 	catch ( System::Exception ^ex )
 	{

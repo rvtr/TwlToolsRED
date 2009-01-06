@@ -108,16 +108,18 @@ namespace MasterEditorTWL
 	public:
 
 		//
-		// 書類出力
+		// 提出確認書出力
 		//
 		// @arg [out] 出力ファイル名
+		// @arg [in]  提出確認書のテンプレート
 		// @arg [in]  ROMバイナリ(SRL)固有情報
 		// @arg [in]  ファイル全体のCRC
 		// @arg [in]  SRLのファイル名(書類に記述するために使用)
 		// @arg [in]  英語フラグ
 		//
 		ECDeliverableResult writeSpreadsheet( 
-			System::String ^hFilename, RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english );
+			System::String ^hFilename, System::String ^hSheetTemplateFilename,
+			RCSrl ^hSrl, System::UInt16 CRC, System::String ^hSrlFilename, System::Boolean english );
 
 	}; // end of ref class RCDeliverable
 

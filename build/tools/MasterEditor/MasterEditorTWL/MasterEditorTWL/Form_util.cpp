@@ -333,6 +333,19 @@ System::String^ Form1::saveDirDlg( System::String ^msgJ, System::String ^msgE )
 	System::String ^dir;
 	System::Windows::Forms::FolderBrowserDialog ^dlg = gcnew (System::Windows::Forms::FolderBrowserDialog);
 
+	// デフォルトのフォルダを前に選択したフォルダにする
+	dlg->RootFolder = System::Environment::SpecialFolder::Desktop;
+	if( System::String::IsNullOrEmpty( this->prevDir ) || !System::IO::Directory::Exists( this->prevDir ) )
+	{
+		dlg->SelectedPath = System::Environment::GetFolderPath( System::Environment::SpecialFolder::Desktop );
+	}
+	else
+	{
+		dlg->SelectedPath = this->prevDir;
+	}
+	dlg->ShowNewFolderButton = true;
+
+	// ダイアログの上部に出るメッセージ
 	if( this->isEnglish() && msgE )
 	{
 		dlg->Description = msgE;
@@ -355,6 +368,7 @@ System::String^ Form1::saveDirDlg( System::String ^msgJ, System::String ^msgE )
 	{
 		dir = System::String::Copy(dlg->SelectedPath);
 	}
+	this->prevDir = dir;	// 選択したフォルダを次のフォルダにする
 	return dir;
 }
 

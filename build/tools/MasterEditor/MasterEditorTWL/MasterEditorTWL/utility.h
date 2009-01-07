@@ -42,14 +42,14 @@ namespace MasterEditorTWL
 	System::String^ transSizeToString( const System::UInt32 size );
 
 	//
-	// ペアレンタルコントロールの各団体の設定可能年齢を取得する
+	// 各レーティング団体の設定可能年齢を取得する
 	//
 	// @arg [in] 団体
 	//
 	cli::array<System::Byte>^ getOgnRatingAges( int ogn );
 
 	//
-	// ペアレンタルコントロールの各団体の団体名を取得する
+	// 各レーティング団体の団体名を取得する
 	//
 	// @arg [in] 団体
 	//

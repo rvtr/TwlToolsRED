@@ -10,14 +10,14 @@
 #include <twl/os/common/format_rom.h>
 #include <twl/os/common/ownerInfoEx.h>
 
-//
+// ----------------------------------------------------------------------
 // String を char 配列に格納
 //
 // @arg [out] 格納先
 // @arg [in]  格納元
 // @arg [in]  文字列長
 // @arg [in]  余りを埋める padding
-//
+// ----------------------------------------------------------------------
 void MasterEditorTWL::setStringToChars( char *pDst, System::String ^hSrc, 
 									    const System::Int32 nMax, const System::SByte pad )
 {
@@ -30,13 +30,13 @@ void MasterEditorTWL::setStringToChars( char *pDst, System::String ^hSrc,
 	}
 }
 
-//
+// ----------------------------------------------------------------------
 // ROMヘッダ中のROM容量設定バイトからROM容量を表す文字列を取得
 //
 // @arg [in]  ROM容量設定バイト
 //
 // @ret 文字列(単位つき)
-//
+// ----------------------------------------------------------------------
 System::String^ MasterEditorTWL::transRomSizeToString( System::Byte ^byte )
 {
 	System::UInt32  size;
@@ -57,13 +57,13 @@ System::String^ MasterEditorTWL::transRomSizeToString( System::Byte ^byte )
 	return (size.ToString() + unit);
 }
 
-//
+// ----------------------------------------------------------------------
 // サイズから単位つきの文字列を取得
 //
 // @arg [in] バイト数
 //
 // @ret 文字列(単位つき)
-//
+// ----------------------------------------------------------------------
 System::String^ MasterEditorTWL::transSizeToString( const System::UInt32 size )
 {
 	System::UInt32 val = size;
@@ -109,7 +109,11 @@ System::String^ MasterEditorTWL::transSizeToString( const System::UInt32 size )
 	return (val.ToString() + " GB");
 }
 
-// 設定可能なインデックスのリストを取得する
+// ----------------------------------------------------------------------
+// 各レーティング団体の設定可能年齢を取得する
+//
+// @arg [in] 団体No.
+// ----------------------------------------------------------------------
 cli::array<System::Byte>^ MasterEditorTWL::getOgnRatingAges( int ogn )
 {
 	cli::array<System::Byte> ^ages = gcnew cli::array<System::Byte>{0};
@@ -145,7 +149,11 @@ cli::array<System::Byte>^ MasterEditorTWL::getOgnRatingAges( int ogn )
 	return ages;
 }
 
-// 設定可能なインデックスのリストを取得する
+// ----------------------------------------------------------------------
+// 各レーティング団体の団体名を取得する
+//
+// @arg [in] 団体No.
+// ----------------------------------------------------------------------
 System::String^ MasterEditorTWL::getOgnName( int ogn )
 {
 	System::String ^name = gcnew System::String("");
@@ -181,11 +189,12 @@ System::String^ MasterEditorTWL::getOgnName( int ogn )
 	return name;
 }
 
-//
-// リージョンに含まれる団体のリストを返す(不正なリージョンのときはnullptr)
+// ----------------------------------------------------------------------
+// リージョンに含まれるレーティング団体のリストを返す
+// (不正なリージョンのときはnullptr)
 //
 // @arg [in] リージョン
-//
+// ----------------------------------------------------------------------
 System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u32 region )
 {
 	System::Collections::Generic::List<int> ^list = gcnew System::Collections::Generic::List<int>;
@@ -239,7 +248,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 	return list;
 }
 
-//
+// ----------------------------------------------------------------------
 // バイト列に特定のパターンが含まれるかどうかマッチングする
 //
 // @arg [in] テキスト
@@ -249,7 +258,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 //      [in] テキストの終端まで調べた時点でテキストが途中までマッチしていた場合を成功とみなすか
 //
 // @ret マッチしたテキストのオフセットをリストで返す。
-//
+// ----------------------------------------------------------------------
 System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch( 
 	const u8 *text, const u32 textLen, const u8 *pattern, const u32 patternLen, const System::Boolean enableLast )
 {
@@ -281,7 +290,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 	return list;
 } // MasterEditorTWL::patternMatch
 
-////
+//// ----------------------------------------------------------------------
 //// バイト列に特定のパターンが含まれるかどうかマッチングする (Boyer-Moore法)
 ////
 //// @arg [in] テキスト
@@ -291,7 +300,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 ////      [in] skipマップ(あらかじめ生成しておく)
 ////
 //// @ret マッチしたテキストのインデックスをリストで返す。
-////
+//// ----------------------------------------------------------------------
 //System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatchBM(
 //	const u8 *text, const int textLen, const u8 *pattern, const int patternLen, const int skip[] )
 //{
@@ -316,7 +325,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 //	return list;
 //}
 //
-////
+//// ----------------------------------------------------------------------
 //// Boyer-Moore法のskipマップの生成
 ////
 //// @arg [in]  パターン
@@ -324,7 +333,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 ////      [out] skipマップの格納先
 ////
 //// @ret なし
-////
+//// ----------------------------------------------------------------------
 //void MasterEditorTWL::makeSkipBM( const u8 *pattern, const int patternLen, int skip[] )
 //{
 //	int i;
@@ -338,7 +347,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 //	}
 //}
 
-//
+// ----------------------------------------------------------------------
 // ファイルにバイト列のパターンが含まれるかどうかマッチングする
 //
 // @arg [in] マッチ対象となるファイルポインタ
@@ -347,7 +356,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch(
 //
 // @ret マッチしたテキストのオフセットをリストで返す。
 //      最後までマッチした場合のみ成功したとみなす。
-//
+// ----------------------------------------------------------------------
 #define PATTERN_MATCH_LEN_MAX	(10*1024)
 System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch( FILE *fp, const u8 *pattern, const u32 patternLen )
 {
@@ -397,7 +406,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch( FILE *fp
 	return list;
 }
 
-//
+// ----------------------------------------------------------------------
 // XMLのルートノードから指定した名前のタグを検索して返す
 //
 // @arg [in] XMLのルートノード
@@ -405,7 +414,7 @@ System::Collections::Generic::List<u32>^ MasterEditorTWL::patternMatch( FILE *fp
 //
 // @ret 検索でマッチしたときノードを返す。ないときは nullptr。
 //      ただし、最初にマッチしたもののみ返す
-//
+// ----------------------------------------------------------------------
 System::Xml::XmlNode^ MasterEditorTWL::searchXmlNode( System::Xml::XmlElement ^root, System::String ^tag )
 {
 	System::Xml::XmlNodeList ^list = root->GetElementsByTagName( tag );
@@ -417,7 +426,7 @@ System::Xml::XmlNode^ MasterEditorTWL::searchXmlNode( System::Xml::XmlElement ^r
 	return item;
 }
 
-//
+// ----------------------------------------------------------------------
 // タグを検索してそのテキストが指定したテキストと一致するか調べる
 //
 // @arg [in] XMLのルートノード
@@ -425,7 +434,7 @@ System::Xml::XmlNode^ MasterEditorTWL::searchXmlNode( System::Xml::XmlElement ^r
 // @arg [in] 値
 //
 // @ret 一致するときtrue。一致しないとき、タグが存在しないときはfalse。
-//
+// ----------------------------------------------------------------------
 System::Boolean MasterEditorTWL::isXmlEqual( System::Xml::XmlElement ^root, System::String ^tag, System::String ^val )
 {
 	System::Xml::XmlNode ^item = MasterEditorTWL::searchXmlNode( root, tag );
@@ -436,14 +445,14 @@ System::Boolean MasterEditorTWL::isXmlEqual( System::Xml::XmlElement ^root, Syst
 	return false;
 }
 
-//
+// ----------------------------------------------------------------------
 // タグを検索してそのテキストを返す
 //
 // @arg [in] XMLのルートノード
 // @arg [in] タグのXPath
 //
 // @ret テキストが存在するときそのテキストを返す。存在しないときnullptr。
-//
+// ----------------------------------------------------------------------
 System::String^ MasterEditorTWL::getXPathText( System::Xml::XmlElement ^root, System::String ^xpath )
 {
 	System::Xml::XmlNode ^tmp = root->SelectSingleNode( xpath );
@@ -454,14 +463,14 @@ System::String^ MasterEditorTWL::getXPathText( System::Xml::XmlElement ^root, Sy
 	return nullptr;
 }
 
-//
+// ----------------------------------------------------------------------
 // XMLにタグを追加する
 //
 // @arg [in] XMLドキュメント
 // @arg [in] 親ノード
 // @arg [in] タグ名
 // @arg [in] テキスト
-//
+// ----------------------------------------------------------------------
 void MasterEditorTWL::appendXmlTag( System::Xml::XmlDocument ^doc, System::Xml::XmlElement ^parent,
 									System::String ^tag, System::String ^text )
 {
@@ -473,13 +482,13 @@ void MasterEditorTWL::appendXmlTag( System::Xml::XmlDocument ^doc, System::Xml::
 	parent->AppendChild( node );
 }
 
-//
+// ----------------------------------------------------------------------
 // ビット数をカウントする
 //
 // @arg [in] 値
 //
 // @ret ビット数
-//
+// ----------------------------------------------------------------------
 u32 MasterEditorTWL::countBits( const u32 val )
 {
 	// 分割統治法:隣り合うかたまりごとにビット数をカウントしていく
@@ -493,14 +502,14 @@ u32 MasterEditorTWL::countBits( const u32 val )
     return n;
 }
 
-//
+// ----------------------------------------------------------------------
 // SDKバージョンの大小判定をする
 //
 // @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
 // @arg [in] 判定基準のSDKバージョン(設定ファイルに記述されるもの)
 //
 // @ret 判定対象が基準よりも旧バージョンのとき(認められないとき) true 
-//
+// ----------------------------------------------------------------------
 System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion )
 {
 	// SDKバージョンからメジャーバージョン/マイナーバージョン/relstepを抽出
@@ -534,13 +543,13 @@ System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion )
 	return false;
 }
 
-//
+// ----------------------------------------------------------------------
 // SDKバージョンがPR版かどうか調べる
 //
 // @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
 //
 // @ret PR版のとき true 
-//
+// ----------------------------------------------------------------------
 System::Boolean MasterEditorTWL::IsSDKVersionPR( u32 target )
 {
 	System::UInt16 relstep = (System::UInt16)(0xffff & target);
@@ -551,13 +560,13 @@ System::Boolean MasterEditorTWL::IsSDKVersionPR( u32 target )
 	return false;
 }
 
-//
+// ----------------------------------------------------------------------
 // SDKバージョンがRC版かどうか調べる
 //
 // @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
 //
 // @ret PR版のとき true 
-//
+// ----------------------------------------------------------------------
 System::Boolean MasterEditorTWL::IsSDKVersionRC( u32 target )
 {
 	System::UInt16 relstep = (System::UInt16)(0xffff & target);

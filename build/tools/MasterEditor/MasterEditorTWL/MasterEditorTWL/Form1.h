@@ -3048,7 +3048,8 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		void maskRatingForms(void);
 
 		// フォーム入力が正しいか書き込み前チェック
-		void checkRatingForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg );
+		void checkRatingForms( System::Boolean inRegion, 
+							   System::Windows::Forms::ComboBox ^comb, System::String ^msg );
 
 		// クリアする
 		void clearRating( System::Windows::Forms::ComboBox ^comb );
@@ -3077,16 +3078,19 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		// ----------------------------------------------
 
 		// テキスト入力がされているかチェック
-		System::Boolean checkTextForm( System::String ^formtext, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+		System::Boolean checkTextForm( System::String ^formtext, 
+									   System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
 
 		// 数値入力が正常かどうかチェック
 		System::Boolean checkNumRange( 
-			System::Int32 val, System::Int32 min, System::Int32 max, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+			System::Int32 val, System::Int32 min, System::Int32 max, 
+			System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
 
 		System::Boolean checkNumRange( System::String ^strval, System::Int32 min, System::Int32 max, 
 									   System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
 		// コンボボックスをチェック
-		System::Boolean checkBoxIndex( System::Windows::Forms::ComboBox ^box, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+		System::Boolean checkBoxIndex( System::Windows::Forms::ComboBox ^box, 
+			                           System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
 
 		// -----------------------------------------------------------------
 		// 提出情報(SRLに影響しない箇所のみ)とフォーム間のデータのやりとり
@@ -3212,6 +3216,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 	/////////////////////////////////////////////
 
 	private:
+		// --------------------------------------------------------
+		// 言語切り替え
+		// --------------------------------------------------------
 		System::Void stripItemEnglish_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->stripItemEnglish->Checked  = true;
@@ -3219,8 +3226,6 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->changeEnglish();
 			this->updateGrid();
 		}
-
-	private:
 		System::Void stripItemJapanese_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->stripItemEnglish->Checked  = false;
@@ -3230,6 +3235,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		}
 
 	private:
+		// --------------------------------------------------------
+		// 「ROMファイルを開く」
+		// --------------------------------------------------------
 		System::Void stripItemOpenRom_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			System::String^ filename;
@@ -3253,7 +3261,10 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemOpenRom_Click()
 
 	private:
-		System::Void stripItemMasterRom_Click(System::Object^  sender, System::EventArgs^  e)		// SRLのみ出力
+		// --------------------------------------------------------
+		// 「SRLのみ作成する」
+		// --------------------------------------------------------
+		System::Void stripItemMasterRom_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			// SRLが読み込まれていないときにはリードさせない
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
@@ -3325,7 +3336,10 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemMasterRom_Click()
 
 	private:
-		System::Void stripItemSheet_Click(System::Object^  sender, System::EventArgs^  e)	// 一式を出力
+		// --------------------------------------------------------
+		// 「提出データ一式を作成する」
+		// --------------------------------------------------------
+		System::Void stripItemSheet_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			ECDeliverableResult  result;
 
@@ -3468,6 +3482,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemSheet_Click()
 
 	private:
+		// --------------------------------------------------------
+		// 「提出情報を一時保存する」
+		// --------------------------------------------------------
 		System::Void stripItemSaveTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			System::String ^filename = this->saveFileDlg( "xml format (*.xml)|*.xml", ".xml" );
@@ -3479,6 +3496,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemSaveTemp_Click()
 
 	private:
+		// --------------------------------------------------------
+		// 「一時保存した提出情報を開く」
+		// --------------------------------------------------------
 		System::Void stripItemLoadTemp_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			System::String ^filename = this->openFileDlg( "xml format (*.xml)|*.xml" );
@@ -3490,6 +3510,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemLoadTemp_Click()
 
 	private:
+		// --------------------------------------------------------
+		// 「ミドルウェアリストのみを作成する(XML形式)」
+		// --------------------------------------------------------
 		System::Void stripItemMiddlewareXml_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
@@ -3507,6 +3530,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		} //stripItemMiddlewareXml_Click()
 
 	private:
+		// --------------------------------------------------------
+		// 「ミドルウェアリストのみを作成する(HTML形式)」
+		// --------------------------------------------------------
 		System::Void stripItemMiddlewareHtml_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
@@ -3528,18 +3554,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 	// フォーム操作メソッド
 	/////////////////////////////////////////////
 
-	// ファイルパス表示用テキストボックス
-	//private:
-	//	// ドラッグされてまだマウスのボタンが離されていないとき
-	//	System::Void tboxFile_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e)
-	//	{
-	//	}
-	//	// ドラッグされたあとマウスのボタンが離されたとき
-	//	System::Void tboxFile_DragDrop(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e)
-	//	{
-	//	}
-
-	// ドラッグアンドドロップを受け付ける領域をフォーム全体にする
+	// ドラッグアンドドロップでSRLを読み込む
 	private:
 		// ドラッグされてまだマウスのボタンが離されていないとき
 		System::Void Form1_DragEnter(System::Object^  sender, System::Windows::Forms::DragEventArgs^  e)
@@ -3570,8 +3585,9 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 		}
 
-	// チェックボタンを押したときに他のフォームを有効にする
+	// フォームの状態に連動して他のフォームを有効/無効にする
 	private:
+		// 担当者2を入力することが選択されたときに入力用のテキストボックスを有効にする
 		System::Void cboxIsInputPerson2_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->gboxPerson2->Enabled = this->cboxIsInputPerson2->Checked;
@@ -3579,7 +3595,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			{
 				if( (this->tboxCompany1->Text != nullptr) && !(this->tboxCompany1->Text->Equals("")) )
 				{
-					this->tboxCompany2->Text = gcnew System::String( this->tboxCompany1->Text );
+					this->tboxCompany2->Text = gcnew System::String( this->tboxCompany1->Text );	// 会社と部署は担当者1と同じにする
 				}
 				if( (this->tboxDepart1->Text != nullptr) && !(this->tboxDepart1->Text->Equals("")) )
 				{
@@ -3599,6 +3615,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			}
 		}
 	private:
+		// 用途に「その他」が選択されたときに入力用のテキストボックスを有効にする
 		System::Void rUsageOther_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->tboxUsageOther->Enabled = this->rUsageOther->Checked;
@@ -3610,6 +3627,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 	private:
 		System::Void cboxRemasterVerE_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
+			// 設定不可になったため必要なし
 			//this->numRemasterVer->Enabled = !(this->isEngilsh());
 			//if( this->isEngilsh() == false )
 			//{
@@ -3617,6 +3635,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			//}
 		}
 	private:
+		// バックアップメモリに「その他」が選択されたときに入力用のテキストボックスを有効にする
 		System::Void combBackup_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			if( this->combBackup->SelectedIndex == (this->combBackup->Items->Count - 1) )
@@ -3626,35 +3645,35 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			else
 			{
 				this->tboxBackupOther->Enabled = false;
-				this->tboxBackupOther->Clear();
+				this->tboxBackupOther->Clear();			// 前にテキストボックスに書かれていた内容を消去
 			}
 		}
 	private:
+		// リージョン変更に連動して表示するレーティング団体を変更する
 		System::Void combRegion_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->maskRatingForms();
 			this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
 		}
-
 	private:
+		// レーティング表示不要が選択されたときにレーティングを選択不可にする
 		System::Void cboxIsUnnecessaryRating_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->changeUnnecessaryRatingForms(false);
 		}
-
 	private:
+		// レーティング情報をSRLを読み込んだ時点の情報に戻す
 		System::Void butSetBack_Click(System::Object^  sender, System::EventArgs^  e)
 		{
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
 				return;
 
-			// 編集可能情報を読み込み時の設定に戻す
-			this->setRegionForms();
+			this->setRegionForms();		// フォームが更新されてもSRLクラスの情報は更新されないので再度読み出すだけ
 			this->setRatingForms();
 			this->loadOtherForms();		// SRLに登録されていないROM仕様のフォームも戻す
 		}
-
 	private:
+		// 海外版を発売予定であると選択されたときに海外版の製品コードetc.を入力可能にする
 		System::Void cboxReleaseForeign_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->tboxProductNameForeign->Enabled   = this->cboxReleaseForeign->Checked;
@@ -3671,23 +3690,22 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 				this->tboxProductCode2Foreign3->Clear();
 			}
 		}
-
+	// エラー情報の更新
 	private:
 		System::Void rErrorReading_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->updateGrid();
 		}
-
 	private:
 		System::Void rErrorCurrent_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->updateGrid();
 		}
-
+	// エラー情報タブが選択されるたびにエラー情報を更新
+	// (エラータブが選択されたタイミングでのみ更新することができないのでタブが切り替えられるたびに更新する)
 	private:
 		System::Void tabMain_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
 		{
-			// エラータブを最新情報に更新
 			if( tabMain->SelectedIndex == 5 )
 			{
 				this->updateGrid();

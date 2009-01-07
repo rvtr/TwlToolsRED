@@ -135,6 +135,7 @@ void Form1::loadTmp( System::String ^filename )
 	{
 		this->loadRom(text);			// tad/srl—¼‘Î‰ž
 		this->tboxFile->Text = text;
+		this->clearOtherForms();
 	}
 
 	// Œ¾Œê

@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MasterEditorTWL", "MasterEditorTWL\MasterEditorTWL.vcproj", "{29305F6E-41E5-48F5-B7B7-EA095D781693}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MasterEditorTWLSetup", "MasterEditorTWLSetup\MasterEditorTWLSetup.vdproj", "{84332605-CFB8-4CEB-993E-DD327911211B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{29305F6E-41E5-48F5-B7B7-EA095D781693}.Debug|Win32.ActiveCfg = Debug|Win32
+		{29305F6E-41E5-48F5-B7B7-EA095D781693}.Debug|Win32.Build.0 = Debug|Win32
+		{29305F6E-41E5-48F5-B7B7-EA095D781693}.Release|Win32.ActiveCfg = Release|Win32
+		{29305F6E-41E5-48F5-B7B7-EA095D781693}.Release|Win32.Build.0 = Release|Win32
+		{84332605-CFB8-4CEB-993E-DD327911211B}.Debug|Win32.ActiveCfg = Debug
+		{84332605-CFB8-4CEB-993E-DD327911211B}.Release|Win32.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

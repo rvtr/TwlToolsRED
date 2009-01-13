@@ -718,7 +718,7 @@ ECSrlResult RCSrl::decryptRomHeader( ROM_Header *prh )
 	// (1) 公開鍵で復号した結果(ブロック)をローカル変数(original)に格納
 	// (2) ブロックから余分な部分を取り除いて引数(pDst)にコピー
 
-	ECAppType  type = this->selectAppType();
+	ECAppType  type = this->selectAppType( prh );
 
 	// 鍵を選ぶ
 #ifdef METWL_VER_APPTYPE_LAUNCHER
@@ -776,12 +776,12 @@ ECSrlResult RCSrl::decryptRomHeader( ROM_Header *prh )
 // -------------------------------------------------------------------
 // アプリ種別の判定
 // -------------------------------------------------------------------
-ECAppType RCSrl::selectAppType(void)
+ECAppType RCSrl::selectAppType( ROM_Header *prh )
 {
 	ECAppType  type = ECAppType::ILLEGAL;
 
-	u8  *idL = this->pRomHeader->s.titleID_Lo;
-	u32  idH = this->pRomHeader->s.titleID_Hi;
+	u8  *idL = prh->s.titleID_Lo;
+	u32  idH = prh->s.titleID_Hi;
 
 	if( (idL[3]=='H') && (idL[2]=='N') && (idL[1]=='A') )	// ランチャアプリかどうかはTitleID_Loの値で決定
     {

@@ -419,7 +419,7 @@ namespace MasterEditorTWL
 				// @arg [in]  入力ファイルのFP (->SRL読み込み時に実行されるべき)]
 		ECSrlResult searchSDKVersion( FILE *fp );		// SDKバージョンを取得する
 		ECSrlResult searchLicenses( FILE *fp );			// 使用ライセンスを取得する
-		ECAppType selectAppType(void);
+		ECAppType selectAppType( ROM_Header *prh );		// TitleIDからアプリ種別を決定する
 
 		// MRC(Master ROM Checker)機能
 		ECSrlResult mrc( FILE *fp );

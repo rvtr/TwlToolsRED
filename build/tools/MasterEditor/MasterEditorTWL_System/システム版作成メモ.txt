@@ -1,0 +1,42 @@
+システム版 作成メモ
+
+(本体編)
+
+1. プロジェクト名を"MasterEditorTWL"にして、
+   Windowsフォームアプリプロジェクトを作成。
+   (こうしないと、リソースdllがコンパイルできない。)
+
+2. ユーザ版のソースファイルとヘッダファイルをプロジェクトに追加する。
+   ただし、以下のファイルを除く。
+   (Form1.hとresxはプロジェクトから削除する。)
+
+   ・AssemblyInfo.cpp
+   ・MasterEditorTWL.cpp
+   ・stdafx.[cpp,h]
+   ・resource.h
+   ・app.[ico,rc]
+   ・ReadMe.txt
+
+3. プロパティのインクルードディレクトリとライブラリディレクトリをユーザ版にあわせる。
+   (apptype.hの場所だけ変えておく)
+
+4. プロパティの[構成プロパティ]→[全般]を/clr:pureから/clrに変更。
+
+5. MasterEditorTWL.cppの"Form1.h"のパスを変更。
+   ("../../../MasterEditorTWL/MasterEditorTWL/Form1.h")
+
+6. ユーザ版からresourceフォルダをコピー
+
+7. AssemblyInfo.cpp のバージョン情報をユーザ版と合わせる。
+
+
+(インストーラ編)
+
+1. 必要なファイルを全部追加する。
+
+2. AuthorとManufacturerを"nintendo"にして、
+   ProductNameを"MasterEditorTWL_System"に変更。
+
+3. .NET 2.0を使用するように、インストーラのプロパティの「必須コンポーネント」と
+   「見つかった依存関係」の.NETのバージョンを変更。
+

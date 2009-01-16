@@ -193,4 +193,9 @@ namespace MasterEditorTWL
 	//
 	System::Boolean IsSDKVersionRC( u32 target );
 
+	//
+	// src ‚ğ base ’PˆÊ‚ÉØ‚èã‚°‚é
+	//
+	System::UInt32 roundUp( const System::UInt32 src, const System::UInt32 base );
+
 } // end of namespace MasterEditorTWL

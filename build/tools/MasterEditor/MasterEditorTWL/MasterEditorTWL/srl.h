@@ -7,6 +7,7 @@
 #include <twl/types.h>
 #include <twl/os/common/format_rom.h>
 #include <twl/os/common/ownerInfoEx.h>
+#include "utility.h"
 
 namespace MasterEditorTWL
 {
@@ -51,7 +52,7 @@ namespace MasterEditorTWL
 		SECURE,
 		LAUNCHER,
 		ILLEGAL,	// 不定
-	};
+	}; //ECAppType
 
 	// -------------------------------------------------------------------
 	// Type : ref class
@@ -94,7 +95,7 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get(){ return (this->code); }
 		}
-	};
+	}; //RCSDKVersion
 
 	// -------------------------------------------------------------------
 	// Type : ref class
@@ -134,7 +135,7 @@ namespace MasterEditorTWL
 		{
 			System::String^ get(){ return System::String::Copy(this->hPublisher); }
 		}
-	};
+	}; //RCLicense
 
 	// -------------------------------------------------------------------
 	// Type : ref class
@@ -214,7 +215,7 @@ namespace MasterEditorTWL
 			else
 				return (gcnew array<System::Object^>{this->hNameE, this->begin.ToString("X04")+"h", this->end.ToString("X04")+"h", this->hMsgE});
 		}
-	};
+	}; //RCMrcError
 
 	// -------------------------------------------------------------------
 	// Type : value class
@@ -244,7 +245,7 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get(){ return this->end; }
 		}
-	};
+	}; //VCReservedArea
 
 	// -------------------------------------------------------------------
 	// Type : ref class
@@ -280,7 +281,101 @@ namespace MasterEditorTWL
 			this->hReservedAreaList = gcnew System::Collections::Generic::List<VCReservedArea>;
 			this->hReservedAreaList->Clear();
 		}
-	};
+	}; //RCMrcExternalCheckItems
+
+	// -------------------------------------------------------------------
+	// Type : ref class
+	// Name : RCNandUsedSize
+	//
+	// Description : アプリのインポート時NAND消費サイズクラス
+	// 
+	// Role : 構造体としてデータをまとめておく
+	// -------------------------------------------------------------------
+	ref class RCNandUsedSize
+	{
+	public:
+		property System::UInt32  SrlSize;
+		property System::UInt32  PublicSaveSize;
+		property System::UInt32  PrivateSaveSize;
+		property System::Boolean IsMediaNand;		// NANDアプリかどうか
+		property System::Boolean IsUseSubBanner;	// サブバナーを使用するかどうか
+	public:
+		static const System::UInt32  TmdSize = 16 * 1024;
+		static const System::UInt32  SubBannerSize = 16 * 1024;
+	private:
+		static const System::UInt32 NandClusterSize =  16 * 1024;
+		static const System::UInt32 ShopBlockSize   = 128 * 1024;
+	public:
+		property System::UInt32  SrlSizeRoundUp
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsMediaNand )
+				{
+					return 0;
+				}
+				return (MasterEditorTWL::roundUp( this->SrlSize, NandClusterSize ));
+			}
+		}
+		property System::UInt32  PublicSaveSizeRoundUp
+		{
+			System::UInt32 get(){ return (MasterEditorTWL::roundUp( this->PublicSaveSize, NandClusterSize )); }
+		}
+		property System::UInt32  PrivateSaveSizeRoundUp
+		{
+			System::UInt32 get(){ return (MasterEditorTWL::roundUp( this->PrivateSaveSize, NandClusterSize )); }
+		}
+		property System::UInt32  TmdSizeRoundUp
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsMediaNand )
+				{
+					return 0;
+				}
+				return (MasterEditorTWL::roundUp( this->TmdSize, NandClusterSize ));
+			}
+		}
+		property System::UInt32  SubBannerSizeRoundUp
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsUseSubBanner )
+				{
+					return 0;
+				}
+				return (MasterEditorTWL::roundUp( this->SubBannerSize, NandClusterSize ));
+			}
+		}
+		property System::UInt32  NandUsedSize		// 全体のNAND消費サイズは変数で持たず property で提供
+		{
+			System::UInt32 get()
+			{
+				// NAND消費量の計算式
+				// 以下のファイルをNANDクラスタ単位(=16KB)に切り上げて合計する
+				//
+				//     SRLの実ファイルサイズ
+				//     Publicセーブデータサイズ
+				//     Privateセーブデータサイズ
+				//     TMDサイズ(=16KB固定)
+				//     サブバナーサイズ(使用時には16KB固定 不使用時には0KB)
+				if( !this->IsMediaNand )
+				{
+					return 0;	// カードアプリのとき0
+				}
+				System::UInt32 size = this->SrlSizeRoundUp + this->PublicSaveSizeRoundUp + this->PrivateSaveSizeRoundUp
+									  + this->TmdSizeRoundUp + this->SubBannerSizeRoundUp;
+				return size;
+			}
+		}
+		property System::UInt32  NandUsedSizeBlock	// ショップでのブロック数
+		{
+			System::UInt32 get()
+			{
+				return (MasterEditorTWL::roundUp( this->NandUsedSize, ShopBlockSize ));
+			}
+		}
+	}; //RCNandUsedSize
 
 	// -------------------------------------------------------------------
 	// Type : ref class
@@ -314,26 +409,29 @@ namespace MasterEditorTWL
 		property cli::array<System::Int32> ^hArrayParentalIndex;	// 表示用のコンボボックスのインデックス
 		property System::Boolean  IsUnnecessaryRating;				// レーティング表示不要フラグ
 
-		// TWL専用情報 一部編集可能
+		// TWL専用情報 Read Only
 		property System::UInt32   NormalRomOffset;
 		property System::UInt32   KeyTableRomOffset;
 		property System::String  ^hTitleIDLo;
 		property System::UInt32   TitleIDHi;
 		property System::Boolean  IsAppLauncher;	// TitleIDLoからわかるアプリ種別
 		property System::Boolean  IsAppUser;		// TitleIDHiからわかるアプリ種別
-		property System::Boolean  IsAppSystem;	//
-		property System::Boolean  IsAppSecure;	//
-		property System::Boolean  IsLaunch;		//
-		property System::Boolean  IsMediaNand;	//
-		property System::Boolean  IsDataOnly;	//
+		property System::Boolean  IsAppSystem;		//
+		property System::Boolean  IsAppSecure;		//
+		property System::Boolean  IsLaunch;			//
+		property System::Boolean  IsMediaNand;		//
+		property System::Boolean  IsDataOnly;		//
 		property System::UInt16   PublisherCode;	//
-		property System::UInt32   PublicSize;
-		property System::UInt32   PrivateSize;
 		property System::Boolean  IsNormalJump;
 		property System::Boolean  IsTmpJump;
 		property System::Boolean  HasDSDLPlaySign;	// ROMヘッダ外のSRLからわかる署名の有無
 		property System::Boolean  IsOldDevEncrypt;	// 旧開発用暗号フラグが立っている
 		property System::Boolean  IsSCFGAccess;		// SCFGレジスタをロックしている
+		property System::UInt32   PublicSize;		// セーブデータサイズ
+		property System::UInt32   PrivateSize;
+
+		// NAND消費サイズ
+		RCNandUsedSize ^hNandUsedSize;
 
 		// TWL拡張フラグ Read Only
 		property System::Boolean IsCodecTWL;
@@ -420,6 +518,7 @@ namespace MasterEditorTWL
 		ECSrlResult searchSDKVersion( FILE *fp );		// SDKバージョンを取得する
 		ECSrlResult searchLicenses( FILE *fp );			// 使用ライセンスを取得する
 		ECAppType selectAppType( ROM_Header *prh );		// TitleIDからアプリ種別を決定する
+		void calcNandUsedSize( FILE *fp );				// NAND消費サイズを計算する
 
 		// MRC(Master ROM Checker)機能
 		ECSrlResult mrc( FILE *fp );

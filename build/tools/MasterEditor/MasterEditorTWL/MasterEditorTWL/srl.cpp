@@ -110,6 +110,7 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 
 	// ROMヘッダの値をROM固有情報フィールドに反映させる
 	(void)this->setRomInfo();
+	(void)this->calcNandUsedSize( fp );	// NAND消費サイズ
 
 	// すべて設定したあとにMRC
 	{
@@ -967,3 +968,26 @@ ECSrlResult RCSrl::searchLicenses(FILE *fp)
 	return ECSrlResult::NOERROR;
 } //RCSrl::searchLicenses
 
+// -------------------------------------------------------------------
+// NAND消費サイズを計算する
+// -------------------------------------------------------------------
+void RCSrl::calcNandUsedSize(FILE *fp)
+{
+	this->hNandUsedSize = gcnew MasterEditorTWL::RCNandUsedSize;
+
+	this->hNandUsedSize->IsMediaNand = this->IsMediaNand;
+	this->hNandUsedSize->IsUseSubBanner = this->IsSubBanner;
+
+	// SRLの情報を登録
+	this->hNandUsedSize->PublicSaveSize  = this->PublicSize;
+	this->hNandUsedSize->PrivateSaveSize = this->PrivateSize;
+	fseek( fp, 0, SEEK_END );
+	this->hNandUsedSize->SrlSize = ftell(fp);
+
+	//System::Diagnostics::Debug::WriteLine( "SRL " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->SrlSizeRoundUp) );
+	//System::Diagnostics::Debug::WriteLine( "PUB " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->PublicSaveSizeRoundUp) );
+	//System::Diagnostics::Debug::WriteLine( "PRI " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->PrivateSaveSizeRoundUp) );
+	//System::Diagnostics::Debug::WriteLine( "TMD " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->TmdSizeRoundUp) );
+	//System::Diagnostics::Debug::WriteLine( "SUB " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->SubBannerSizeRoundUp) );
+	//System::Diagnostics::Debug::WriteLine( "ALL " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->NandUsedSize) );
+}//RCSrl::calcNandUsedSize()

@@ -576,3 +576,16 @@ System::Boolean MasterEditorTWL::IsSDKVersionRC( u32 target )
 	}
 	return false;
 }
+
+// ----------------------------------------------------------------------
+// src Ç base íPà Ç…êÿÇËè„Ç∞ÇÈ
+// ----------------------------------------------------------------------
+System::UInt32 MasterEditorTWL::roundUp( const System::UInt32 src, const System::UInt32 base )
+{
+	System::UInt32 div = src / base;
+	if( src % base )
+	{
+		div++;
+	}
+	return (div*base);
+}

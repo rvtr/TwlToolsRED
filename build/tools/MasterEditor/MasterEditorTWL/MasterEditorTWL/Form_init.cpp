@@ -122,7 +122,7 @@ void Form1::loadInit(void)
 		}
 
 		// ノーマルジャンプ
-		this->cboxIsNormalJump->Visible = this->hSrl->hMrcExternalCheckItems->IsPermitNormalJump;
+		this->changeVisibleGboxExFlags( this->hSrl->hMrcExternalCheckItems->IsPermitNormalJump );
 	}
 
 	// <shared2>タグ : Shared2ファイルサイズの真値(アクセス許可されているファイルのみ記載)
@@ -196,6 +196,7 @@ void Form1::loadAppendInit(void)
 	// <visible>タグ
 	System::Boolean bVisible = MasterEditorTWL::isXmlEqual( root, "visible", "ON" );
 	this->changeVisibleForms( bVisible );
+	this->changeVisibleGboxExFlags( bVisible );
 
 	// <spcheck>タグ
 	System::Boolean bCheck = MasterEditorTWL::isXmlEqual( root, "spcheck", "ON" );

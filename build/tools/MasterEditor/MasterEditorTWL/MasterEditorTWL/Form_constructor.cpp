@@ -39,6 +39,7 @@ void Form1::construct(void)
 	this->IsCheckedPhotoEx = false;
 	this->IsSpreadSheet = true;
 	this->IsReadOnly    = false;
+	this->SizeGboxExFlags   = this->gboxExFlags->Size;
 
 	// バージョン情報を表示
 	//this->labAssemblyVersion->Text = System::Windows::Forms::Application::ProductVersion;

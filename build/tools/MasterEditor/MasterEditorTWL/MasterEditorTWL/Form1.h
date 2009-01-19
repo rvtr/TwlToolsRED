@@ -48,6 +48,10 @@ namespace MasterEditorTWL {
 		// リードオンリーモード
 		System::Boolean IsReadOnly;
 
+		// 非表示項目の有無で大きさを変えるグループボックスのもともとの大きさ
+		System::Drawing::Size SizeGboxExFlags;
+		System::Boolean IsVisibleGboxExFlags;
+
 		// 入力エラー情報
 		System::Collections::Generic::List<RCMrcError ^> ^hErrorList;
 		System::Collections::Generic::List<RCMrcError ^> ^hWarnList;
@@ -805,10 +809,10 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle13 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle14 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle15 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle16 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -1973,13 +1977,10 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			this->gboxTWLExInfo->Controls->Add(this->labByte1);
 			this->gboxTWLExInfo->Controls->Add(this->labHex4);
-			this->gboxTWLExInfo->Controls->Add(this->labHex3);
 			this->gboxTWLExInfo->Controls->Add(this->tboxIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labKeyTableRomOffset);
 			this->gboxTWLExInfo->Controls->Add(this->tboxKeyTableRomOffset);
-			this->gboxTWLExInfo->Controls->Add(this->labNormalRomOffset);
-			this->gboxTWLExInfo->Controls->Add(this->tboxNormalRomOffset);
 			resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
 			this->gboxTWLExInfo->Name = L"gboxTWLExInfo";
 			this->gboxTWLExInfo->TabStop = false;
@@ -2349,15 +2350,15 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle13->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle13->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle13->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle13->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle13->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle13->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle13->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle13;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle1;
 			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
@@ -2388,11 +2389,14 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			this->tabTWLInfo->Controls->Add(this->gboxLaunch);
 			this->tabTWLInfo->Controls->Add(this->tboxGuideTWLInfo);
+			this->tabTWLInfo->Controls->Add(this->labHex3);
 			this->tabTWLInfo->Controls->Add(this->gboxExFlags);
 			this->tabTWLInfo->Controls->Add(this->gboxShared2Size);
 			this->tabTWLInfo->Controls->Add(this->gboxTWLExInfo);
 			this->tabTWLInfo->Controls->Add(this->gboxAccess);
 			this->tabTWLInfo->Controls->Add(this->gboxTitleID);
+			this->tabTWLInfo->Controls->Add(this->tboxNormalRomOffset);
+			this->tabTWLInfo->Controls->Add(this->labNormalRomOffset);
 			resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
 			this->tabTWLInfo->Name = L"tabTWLInfo";
 			this->tabTWLInfo->UseVisualStyleBackColor = true;
@@ -2844,15 +2848,15 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle14->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle14->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle14->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle14->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle14->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle14->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle14->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle14;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle2;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->Name = L"gridWarn";
@@ -2887,22 +2891,22 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			// gridError
 			// 
-			dataGridViewCellStyle15->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle16->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle16->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle16->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle16->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle16->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle16->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle16->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle16;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle4;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->Name = L"gridError";
@@ -3139,7 +3143,6 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->labShared2Size4->Visible  = visible;
 			this->tboxShared2Size5->Visible = visible;
 			this->labShared2Size5->Visible  = visible;
-			this->cboxIsNormalJump->Visible = visible;
 
 			this->tboxIsGameCardOn->Visible = visible;
 			this->labIsGameCardOn->Visible  = visible;
@@ -3147,6 +3150,26 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->labNormalRomOffset->Visible  = visible;
 			this->tboxNormalRomOffset->Visible = visible;
 			this->labHex3->Visible = visible;
+		}
+		// 非表示項目の有無でサイズが変わるグループボックス
+		void changeVisibleGboxExFlags( System::Boolean visible )
+		{
+			// 設定ファイルで visible を指定されたら追加設定ファイルがどうであろうと visible
+			if( !this->IsVisibleGboxExFlags )
+			{
+				this->IsVisibleGboxExFlags = visible;
+				this->cboxIsNormalJump->Visible = visible;
+				if( visible )
+				{
+					this->gboxExFlags->Size = this->SizeGboxExFlags;
+				}
+				else
+				{
+					System::Drawing::Size size = this->SizeGboxExFlags;
+					size.Height -= 15;
+					this->gboxExFlags->Size = size;
+				}
+			}
 		}
 
 		// 設定/選択可能なフォームをすべて disable にする

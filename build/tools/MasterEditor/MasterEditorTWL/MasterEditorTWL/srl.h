@@ -386,12 +386,9 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get()
 			{
-				System::UInt32 div = this->NandUsedSize / this->ShopBlockSize;
-				if( this->NandUsedSize % this->ShopBlockSize )
-				{
-					div++;
-				}
-				return div;
+				System::UInt32 blocks = MasterEditorTWL::roundUp( this->NandUsedSize, this->ShopBlockSize)
+										/ this->ShopBlockSize;
+				return blocks;
 			}
 		}
 	}; //RCNandUsedSize

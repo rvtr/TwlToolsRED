@@ -346,6 +346,19 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labConnectIcon, L"labConnectIcon");
 	resources->ApplyResources(this->tboxGuideTWLInfo, L"tboxGuideTWLInfo");
 	resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
+	resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
+	resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
+	resources->ApplyResources(this->labShopBlockUnit, L"labShopBlockUnit");
+	resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
+	resources->ApplyResources(this->labNandSize, L"labNandSize");
+	resources->ApplyResources(this->labShopBlock2, L"labShopBlock2");
+	resources->ApplyResources(this->labNandSizeFS, L"labNandSizeFS");
+	resources->ApplyResources(this->labShopBlock, L"labShopBlock");
+	resources->ApplyResources(this->labSrlSize, L"labSrlSize");
+	resources->ApplyResources(this->labSumSize2, L"labSumSize2");
+	resources->ApplyResources(this->labSumSize, L"labSumSize");
+	resources->ApplyResources(this->labSubBannerSize, L"labSubBannerSize");
+	resources->ApplyResources(this->labTmdSize, L"labTmdSize");
 	resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
 	resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
 	resources->ApplyResources(this->cboxIsUGC, L"cboxIsUGC");
@@ -403,6 +416,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	}
 
 	// •¡”s•\Ž¦‚Ì‰üs‚ð‘}“ü
+	this->tboxGuideNandSizeInfo->Text = this->tboxGuideNandSizeInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideErrorInfo->Text   = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 

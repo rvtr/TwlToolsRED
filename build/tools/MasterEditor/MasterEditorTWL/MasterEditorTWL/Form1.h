@@ -616,6 +616,61 @@ private: System::Windows::Forms::Label^  labConnectIcon;
 private: System::Windows::Forms::TextBox^  tboxConnectIcon;
 private: System::Windows::Forms::Label^  labIsGameCardOn2;
 private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
+private: System::Windows::Forms::TabPage^  tabNandSizeInfo;
+
+private: System::Windows::Forms::Label^  labSumSize2;
+
+
+
+private: System::Windows::Forms::Label^  labSrlSize;
+private: System::Windows::Forms::Label^  labSubBannerSize;
+private: System::Windows::Forms::Label^  labTmdSize;
+private: System::Windows::Forms::Label^  labNandSize;
+
+
+private: System::Windows::Forms::Label^  labNandSizeFS;
+private: System::Windows::Forms::Label^  labSumSize;
+private: System::Windows::Forms::Label^  labShopBlock;
+private: System::Windows::Forms::Label^  labShopBlock2;
+private: System::Windows::Forms::GroupBox^  gboxNandSize;
+private: System::Windows::Forms::TextBox^  tboxShopBlock;
+
+private: System::Windows::Forms::TextBox^  tboxSumSize;
+
+private: System::Windows::Forms::TextBox^  tboxTmdSizeFS;
+
+private: System::Windows::Forms::TextBox^  tboxSubBannerSizeFS;
+
+private: System::Windows::Forms::TextBox^  tboxPrivateSizeFS;
+
+private: System::Windows::Forms::TextBox^  tboxPublicSizeFS;
+
+private: System::Windows::Forms::TextBox^  tboxSrlSizeFS;
+
+private: System::Windows::Forms::TextBox^  tboxTmdSize;
+
+private: System::Windows::Forms::TextBox^  tboxSubBannerSize;
+
+
+
+private: System::Windows::Forms::Label^  labShopBlockUnit;
+private: System::Windows::Forms::Label^  labArrow5;
+
+private: System::Windows::Forms::Label^  labArrow4;
+
+private: System::Windows::Forms::Label^  labArrow3;
+
+
+
+private: System::Windows::Forms::Label^  labArrow2;
+
+private: System::Windows::Forms::Label^  labArrow1;
+private: System::Windows::Forms::TextBox^  tboxGuideNandSizeInfo;
+
+
+private: System::Windows::Forms::TextBox^  tboxSrlSize;
+
+
 
 
 
@@ -750,10 +805,10 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle13 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle14 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle15 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle16 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -894,17 +949,17 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->gboxTWLExInfo = (gcnew System::Windows::Forms::GroupBox());
 			this->labByte1 = (gcnew System::Windows::Forms::Label());
 			this->labHex4 = (gcnew System::Windows::Forms::Label());
+			this->labHex3 = (gcnew System::Windows::Forms::Label());
 			this->tboxIsCodec = (gcnew System::Windows::Forms::TextBox());
 			this->labIsCodec = (gcnew System::Windows::Forms::Label());
-			this->tboxPrivateSize = (gcnew System::Windows::Forms::TextBox());
-			this->labPrivateSize = (gcnew System::Windows::Forms::Label());
 			this->labKeyTableRomOffset = (gcnew System::Windows::Forms::Label());
-			this->labPublicSize = (gcnew System::Windows::Forms::Label());
-			this->tboxPublicSize = (gcnew System::Windows::Forms::TextBox());
 			this->tboxKeyTableRomOffset = (gcnew System::Windows::Forms::TextBox());
-			this->labHex3 = (gcnew System::Windows::Forms::Label());
 			this->labNormalRomOffset = (gcnew System::Windows::Forms::Label());
 			this->tboxNormalRomOffset = (gcnew System::Windows::Forms::TextBox());
+			this->tboxPrivateSize = (gcnew System::Windows::Forms::TextBox());
+			this->labPrivateSize = (gcnew System::Windows::Forms::Label());
+			this->labPublicSize = (gcnew System::Windows::Forms::Label());
+			this->tboxPublicSize = (gcnew System::Windows::Forms::TextBox());
 			this->cboxIsSubBanner = (gcnew System::Windows::Forms::CheckBox());
 			this->cboxIsNormalJump = (gcnew System::Windows::Forms::CheckBox());
 			this->cboxIsTmpJump = (gcnew System::Windows::Forms::CheckBox());
@@ -918,9 +973,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->cboxIsSD = (gcnew System::Windows::Forms::CheckBox());
 			this->gboxTitleID = (gcnew System::Windows::Forms::GroupBox());
 			this->labAppType = (gcnew System::Windows::Forms::Label());
-			this->labMedia = (gcnew System::Windows::Forms::Label());
 			this->tboxAppType = (gcnew System::Windows::Forms::TextBox());
-			this->tboxMedia = (gcnew System::Windows::Forms::TextBox());
 			this->labHex2 = (gcnew System::Windows::Forms::Label());
 			this->tboxTitleIDLo = (gcnew System::Windows::Forms::TextBox());
 			this->labTitleIDLo = (gcnew System::Windows::Forms::Label());
@@ -928,6 +981,8 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->tboxTitleIDHi = (gcnew System::Windows::Forms::TextBox());
 			this->tboxAppTypeOther = (gcnew System::Windows::Forms::TextBox());
 			this->labAppTypeOther = (gcnew System::Windows::Forms::Label());
+			this->labMedia = (gcnew System::Windows::Forms::Label());
+			this->tboxMedia = (gcnew System::Windows::Forms::TextBox());
 			this->labCaptionEx = (gcnew System::Windows::Forms::Label());
 			this->tboxCaptionEx = (gcnew System::Windows::Forms::TextBox());
 			this->gboxProd = (gcnew System::Windows::Forms::GroupBox());
@@ -958,6 +1013,34 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->tboxConnectIcon = (gcnew System::Windows::Forms::TextBox());
 			this->tboxGuideTWLInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxExFlags = (gcnew System::Windows::Forms::GroupBox());
+			this->tabNandSizeInfo = (gcnew System::Windows::Forms::TabPage());
+			this->tboxGuideNandSizeInfo = (gcnew System::Windows::Forms::TextBox());
+			this->gboxNandSize = (gcnew System::Windows::Forms::GroupBox());
+			this->tboxSrlSize = (gcnew System::Windows::Forms::TextBox());
+			this->labShopBlockUnit = (gcnew System::Windows::Forms::Label());
+			this->labArrow5 = (gcnew System::Windows::Forms::Label());
+			this->labArrow4 = (gcnew System::Windows::Forms::Label());
+			this->labArrow3 = (gcnew System::Windows::Forms::Label());
+			this->labArrow2 = (gcnew System::Windows::Forms::Label());
+			this->labArrow1 = (gcnew System::Windows::Forms::Label());
+			this->tboxShopBlock = (gcnew System::Windows::Forms::TextBox());
+			this->tboxSumSize = (gcnew System::Windows::Forms::TextBox());
+			this->tboxTmdSizeFS = (gcnew System::Windows::Forms::TextBox());
+			this->tboxSubBannerSizeFS = (gcnew System::Windows::Forms::TextBox());
+			this->tboxPrivateSizeFS = (gcnew System::Windows::Forms::TextBox());
+			this->tboxPublicSizeFS = (gcnew System::Windows::Forms::TextBox());
+			this->tboxSrlSizeFS = (gcnew System::Windows::Forms::TextBox());
+			this->tboxTmdSize = (gcnew System::Windows::Forms::TextBox());
+			this->tboxSubBannerSize = (gcnew System::Windows::Forms::TextBox());
+			this->labNandSize = (gcnew System::Windows::Forms::Label());
+			this->labShopBlock2 = (gcnew System::Windows::Forms::Label());
+			this->labNandSizeFS = (gcnew System::Windows::Forms::Label());
+			this->labShopBlock = (gcnew System::Windows::Forms::Label());
+			this->labSrlSize = (gcnew System::Windows::Forms::Label());
+			this->labSumSize2 = (gcnew System::Windows::Forms::Label());
+			this->labSumSize = (gcnew System::Windows::Forms::Label());
+			this->labSubBannerSize = (gcnew System::Windows::Forms::Label());
+			this->labTmdSize = (gcnew System::Windows::Forms::Label());
 			this->tabRomEditInfo = (gcnew System::Windows::Forms::TabPage());
 			this->gboxOtherSpec = (gcnew System::Windows::Forms::GroupBox());
 			this->cboxIsUGC = (gcnew System::Windows::Forms::CheckBox());
@@ -1012,6 +1095,8 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->tabTWLInfo->SuspendLayout();
 			this->gboxLaunch->SuspendLayout();
 			this->gboxExFlags->SuspendLayout();
+			this->tabNandSizeInfo->SuspendLayout();
+			this->gboxNandSize->SuspendLayout();
 			this->tabRomEditInfo->SuspendLayout();
 			this->gboxOtherSpec->SuspendLayout();
 			this->gboxParental->SuspendLayout();
@@ -1888,14 +1973,13 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			this->gboxTWLExInfo->Controls->Add(this->labByte1);
 			this->gboxTWLExInfo->Controls->Add(this->labHex4);
+			this->gboxTWLExInfo->Controls->Add(this->labHex3);
 			this->gboxTWLExInfo->Controls->Add(this->tboxIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labIsCodec);
-			this->gboxTWLExInfo->Controls->Add(this->tboxPrivateSize);
-			this->gboxTWLExInfo->Controls->Add(this->labPrivateSize);
 			this->gboxTWLExInfo->Controls->Add(this->labKeyTableRomOffset);
-			this->gboxTWLExInfo->Controls->Add(this->labPublicSize);
-			this->gboxTWLExInfo->Controls->Add(this->tboxPublicSize);
 			this->gboxTWLExInfo->Controls->Add(this->tboxKeyTableRomOffset);
+			this->gboxTWLExInfo->Controls->Add(this->labNormalRomOffset);
+			this->gboxTWLExInfo->Controls->Add(this->tboxNormalRomOffset);
 			resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
 			this->gboxTWLExInfo->Name = L"gboxTWLExInfo";
 			this->gboxTWLExInfo->TabStop = false;
@@ -1910,6 +1994,11 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			resources->ApplyResources(this->labHex4, L"labHex4");
 			this->labHex4->Name = L"labHex4";
 			// 
+			// labHex3
+			// 
+			resources->ApplyResources(this->labHex3, L"labHex3");
+			this->labHex3->Name = L"labHex3";
+			// 
 			// tboxIsCodec
 			// 
 			resources->ApplyResources(this->tboxIsCodec, L"tboxIsCodec");
@@ -1920,6 +2009,28 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			resources->ApplyResources(this->labIsCodec, L"labIsCodec");
 			this->labIsCodec->Name = L"labIsCodec";
+			// 
+			// labKeyTableRomOffset
+			// 
+			resources->ApplyResources(this->labKeyTableRomOffset, L"labKeyTableRomOffset");
+			this->labKeyTableRomOffset->Name = L"labKeyTableRomOffset";
+			// 
+			// tboxKeyTableRomOffset
+			// 
+			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
+			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
+			this->tboxKeyTableRomOffset->ReadOnly = true;
+			// 
+			// labNormalRomOffset
+			// 
+			resources->ApplyResources(this->labNormalRomOffset, L"labNormalRomOffset");
+			this->labNormalRomOffset->Name = L"labNormalRomOffset";
+			// 
+			// tboxNormalRomOffset
+			// 
+			resources->ApplyResources(this->tboxNormalRomOffset, L"tboxNormalRomOffset");
+			this->tboxNormalRomOffset->Name = L"tboxNormalRomOffset";
+			this->tboxNormalRomOffset->ReadOnly = true;
 			// 
 			// tboxPrivateSize
 			// 
@@ -1932,11 +2043,6 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			resources->ApplyResources(this->labPrivateSize, L"labPrivateSize");
 			this->labPrivateSize->Name = L"labPrivateSize";
 			// 
-			// labKeyTableRomOffset
-			// 
-			resources->ApplyResources(this->labKeyTableRomOffset, L"labKeyTableRomOffset");
-			this->labKeyTableRomOffset->Name = L"labKeyTableRomOffset";
-			// 
 			// labPublicSize
 			// 
 			resources->ApplyResources(this->labPublicSize, L"labPublicSize");
@@ -1947,28 +2053,6 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			resources->ApplyResources(this->tboxPublicSize, L"tboxPublicSize");
 			this->tboxPublicSize->Name = L"tboxPublicSize";
 			this->tboxPublicSize->ReadOnly = true;
-			// 
-			// tboxKeyTableRomOffset
-			// 
-			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
-			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
-			this->tboxKeyTableRomOffset->ReadOnly = true;
-			// 
-			// labHex3
-			// 
-			resources->ApplyResources(this->labHex3, L"labHex3");
-			this->labHex3->Name = L"labHex3";
-			// 
-			// labNormalRomOffset
-			// 
-			resources->ApplyResources(this->labNormalRomOffset, L"labNormalRomOffset");
-			this->labNormalRomOffset->Name = L"labNormalRomOffset";
-			// 
-			// tboxNormalRomOffset
-			// 
-			resources->ApplyResources(this->tboxNormalRomOffset, L"tboxNormalRomOffset");
-			this->tboxNormalRomOffset->Name = L"tboxNormalRomOffset";
-			this->tboxNormalRomOffset->ReadOnly = true;
 			// 
 			// cboxIsSubBanner
 			// 
@@ -2043,9 +2127,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// gboxTitleID
 			// 
 			this->gboxTitleID->Controls->Add(this->labAppType);
-			this->gboxTitleID->Controls->Add(this->labMedia);
 			this->gboxTitleID->Controls->Add(this->tboxAppType);
-			this->gboxTitleID->Controls->Add(this->tboxMedia);
 			this->gboxTitleID->Controls->Add(this->labHex2);
 			this->gboxTitleID->Controls->Add(this->tboxTitleIDLo);
 			this->gboxTitleID->Controls->Add(this->labTitleIDLo);
@@ -2062,22 +2144,11 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			resources->ApplyResources(this->labAppType, L"labAppType");
 			this->labAppType->Name = L"labAppType";
 			// 
-			// labMedia
-			// 
-			resources->ApplyResources(this->labMedia, L"labMedia");
-			this->labMedia->Name = L"labMedia";
-			// 
 			// tboxAppType
 			// 
 			resources->ApplyResources(this->tboxAppType, L"tboxAppType");
 			this->tboxAppType->Name = L"tboxAppType";
 			this->tboxAppType->ReadOnly = true;
-			// 
-			// tboxMedia
-			// 
-			resources->ApplyResources(this->tboxMedia, L"tboxMedia");
-			this->tboxMedia->Name = L"tboxMedia";
-			this->tboxMedia->ReadOnly = true;
 			// 
 			// labHex2
 			// 
@@ -2116,6 +2187,17 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			resources->ApplyResources(this->labAppTypeOther, L"labAppTypeOther");
 			this->labAppTypeOther->Name = L"labAppTypeOther";
+			// 
+			// labMedia
+			// 
+			resources->ApplyResources(this->labMedia, L"labMedia");
+			this->labMedia->Name = L"labMedia";
+			// 
+			// tboxMedia
+			// 
+			resources->ApplyResources(this->tboxMedia, L"tboxMedia");
+			this->tboxMedia->Name = L"tboxMedia";
+			this->tboxMedia->ReadOnly = true;
 			// 
 			// labCaptionEx
 			// 
@@ -2235,6 +2317,7 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			this->tabMain->Controls->Add(this->tabRomInfo);
 			this->tabMain->Controls->Add(this->tabTWLInfo);
+			this->tabMain->Controls->Add(this->tabNandSizeInfo);
 			this->tabMain->Controls->Add(this->tabRomEditInfo);
 			this->tabMain->Controls->Add(this->tabSubmitInfo);
 			this->tabMain->Controls->Add(this->tabCompanyInfo);
@@ -2266,15 +2349,15 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle13->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle13->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle13->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle13->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle13->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle13->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle13->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle13;
 			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
@@ -2303,16 +2386,12 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			// tabTWLInfo
 			// 
-			this->tabTWLInfo->Controls->Add(this->cboxIsNormalJump);
 			this->tabTWLInfo->Controls->Add(this->gboxLaunch);
-			this->tabTWLInfo->Controls->Add(this->labHex3);
 			this->tabTWLInfo->Controls->Add(this->tboxGuideTWLInfo);
 			this->tabTWLInfo->Controls->Add(this->gboxExFlags);
 			this->tabTWLInfo->Controls->Add(this->gboxShared2Size);
 			this->tabTWLInfo->Controls->Add(this->gboxTWLExInfo);
-			this->tabTWLInfo->Controls->Add(this->tboxNormalRomOffset);
 			this->tabTWLInfo->Controls->Add(this->gboxAccess);
-			this->tabTWLInfo->Controls->Add(this->labNormalRomOffset);
 			this->tabTWLInfo->Controls->Add(this->gboxTitleID);
 			resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
 			this->tabTWLInfo->Name = L"tabTWLInfo";
@@ -2347,11 +2426,199 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			// gboxExFlags
 			// 
+			this->gboxExFlags->Controls->Add(this->cboxIsNormalJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsTmpJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsSubBanner);
 			resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
 			this->gboxExFlags->Name = L"gboxExFlags";
 			this->gboxExFlags->TabStop = false;
+			// 
+			// tabNandSizeInfo
+			// 
+			this->tabNandSizeInfo->Controls->Add(this->tboxGuideNandSizeInfo);
+			this->tabNandSizeInfo->Controls->Add(this->labMedia);
+			this->tabNandSizeInfo->Controls->Add(this->tboxMedia);
+			this->tabNandSizeInfo->Controls->Add(this->gboxNandSize);
+			resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
+			this->tabNandSizeInfo->Name = L"tabNandSizeInfo";
+			this->tabNandSizeInfo->UseVisualStyleBackColor = true;
+			// 
+			// tboxGuideNandSizeInfo
+			// 
+			this->tboxGuideNandSizeInfo->BackColor = System::Drawing::SystemColors::Info;
+			resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
+			this->tboxGuideNandSizeInfo->Name = L"tboxGuideNandSizeInfo";
+			this->tboxGuideNandSizeInfo->ReadOnly = true;
+			// 
+			// gboxNandSize
+			// 
+			this->gboxNandSize->Controls->Add(this->tboxSrlSize);
+			this->gboxNandSize->Controls->Add(this->labShopBlockUnit);
+			this->gboxNandSize->Controls->Add(this->labArrow5);
+			this->gboxNandSize->Controls->Add(this->labArrow4);
+			this->gboxNandSize->Controls->Add(this->labArrow3);
+			this->gboxNandSize->Controls->Add(this->labArrow2);
+			this->gboxNandSize->Controls->Add(this->labArrow1);
+			this->gboxNandSize->Controls->Add(this->tboxShopBlock);
+			this->gboxNandSize->Controls->Add(this->tboxSumSize);
+			this->gboxNandSize->Controls->Add(this->tboxTmdSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxSubBannerSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxPrivateSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxPublicSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxSrlSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxTmdSize);
+			this->gboxNandSize->Controls->Add(this->tboxSubBannerSize);
+			this->gboxNandSize->Controls->Add(this->labNandSize);
+			this->gboxNandSize->Controls->Add(this->labShopBlock2);
+			this->gboxNandSize->Controls->Add(this->labNandSizeFS);
+			this->gboxNandSize->Controls->Add(this->tboxPrivateSize);
+			this->gboxNandSize->Controls->Add(this->labShopBlock);
+			this->gboxNandSize->Controls->Add(this->labSrlSize);
+			this->gboxNandSize->Controls->Add(this->labPrivateSize);
+			this->gboxNandSize->Controls->Add(this->labSumSize2);
+			this->gboxNandSize->Controls->Add(this->tboxPublicSize);
+			this->gboxNandSize->Controls->Add(this->labPublicSize);
+			this->gboxNandSize->Controls->Add(this->labSumSize);
+			this->gboxNandSize->Controls->Add(this->labSubBannerSize);
+			this->gboxNandSize->Controls->Add(this->labTmdSize);
+			resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
+			this->gboxNandSize->Name = L"gboxNandSize";
+			this->gboxNandSize->TabStop = false;
+			// 
+			// tboxSrlSize
+			// 
+			resources->ApplyResources(this->tboxSrlSize, L"tboxSrlSize");
+			this->tboxSrlSize->Name = L"tboxSrlSize";
+			this->tboxSrlSize->ReadOnly = true;
+			// 
+			// labShopBlockUnit
+			// 
+			resources->ApplyResources(this->labShopBlockUnit, L"labShopBlockUnit");
+			this->labShopBlockUnit->Name = L"labShopBlockUnit";
+			// 
+			// labArrow5
+			// 
+			resources->ApplyResources(this->labArrow5, L"labArrow5");
+			this->labArrow5->Name = L"labArrow5";
+			// 
+			// labArrow4
+			// 
+			resources->ApplyResources(this->labArrow4, L"labArrow4");
+			this->labArrow4->Name = L"labArrow4";
+			// 
+			// labArrow3
+			// 
+			resources->ApplyResources(this->labArrow3, L"labArrow3");
+			this->labArrow3->Name = L"labArrow3";
+			// 
+			// labArrow2
+			// 
+			resources->ApplyResources(this->labArrow2, L"labArrow2");
+			this->labArrow2->Name = L"labArrow2";
+			// 
+			// labArrow1
+			// 
+			resources->ApplyResources(this->labArrow1, L"labArrow1");
+			this->labArrow1->Name = L"labArrow1";
+			// 
+			// tboxShopBlock
+			// 
+			resources->ApplyResources(this->tboxShopBlock, L"tboxShopBlock");
+			this->tboxShopBlock->Name = L"tboxShopBlock";
+			this->tboxShopBlock->ReadOnly = true;
+			// 
+			// tboxSumSize
+			// 
+			resources->ApplyResources(this->tboxSumSize, L"tboxSumSize");
+			this->tboxSumSize->Name = L"tboxSumSize";
+			this->tboxSumSize->ReadOnly = true;
+			// 
+			// tboxTmdSizeFS
+			// 
+			resources->ApplyResources(this->tboxTmdSizeFS, L"tboxTmdSizeFS");
+			this->tboxTmdSizeFS->Name = L"tboxTmdSizeFS";
+			this->tboxTmdSizeFS->ReadOnly = true;
+			// 
+			// tboxSubBannerSizeFS
+			// 
+			resources->ApplyResources(this->tboxSubBannerSizeFS, L"tboxSubBannerSizeFS");
+			this->tboxSubBannerSizeFS->Name = L"tboxSubBannerSizeFS";
+			this->tboxSubBannerSizeFS->ReadOnly = true;
+			// 
+			// tboxPrivateSizeFS
+			// 
+			resources->ApplyResources(this->tboxPrivateSizeFS, L"tboxPrivateSizeFS");
+			this->tboxPrivateSizeFS->Name = L"tboxPrivateSizeFS";
+			this->tboxPrivateSizeFS->ReadOnly = true;
+			// 
+			// tboxPublicSizeFS
+			// 
+			resources->ApplyResources(this->tboxPublicSizeFS, L"tboxPublicSizeFS");
+			this->tboxPublicSizeFS->Name = L"tboxPublicSizeFS";
+			this->tboxPublicSizeFS->ReadOnly = true;
+			// 
+			// tboxSrlSizeFS
+			// 
+			resources->ApplyResources(this->tboxSrlSizeFS, L"tboxSrlSizeFS");
+			this->tboxSrlSizeFS->Name = L"tboxSrlSizeFS";
+			this->tboxSrlSizeFS->ReadOnly = true;
+			// 
+			// tboxTmdSize
+			// 
+			resources->ApplyResources(this->tboxTmdSize, L"tboxTmdSize");
+			this->tboxTmdSize->Name = L"tboxTmdSize";
+			this->tboxTmdSize->ReadOnly = true;
+			// 
+			// tboxSubBannerSize
+			// 
+			resources->ApplyResources(this->tboxSubBannerSize, L"tboxSubBannerSize");
+			this->tboxSubBannerSize->Name = L"tboxSubBannerSize";
+			this->tboxSubBannerSize->ReadOnly = true;
+			// 
+			// labNandSize
+			// 
+			resources->ApplyResources(this->labNandSize, L"labNandSize");
+			this->labNandSize->Name = L"labNandSize";
+			// 
+			// labShopBlock2
+			// 
+			resources->ApplyResources(this->labShopBlock2, L"labShopBlock2");
+			this->labShopBlock2->Name = L"labShopBlock2";
+			// 
+			// labNandSizeFS
+			// 
+			resources->ApplyResources(this->labNandSizeFS, L"labNandSizeFS");
+			this->labNandSizeFS->Name = L"labNandSizeFS";
+			// 
+			// labShopBlock
+			// 
+			resources->ApplyResources(this->labShopBlock, L"labShopBlock");
+			this->labShopBlock->Name = L"labShopBlock";
+			// 
+			// labSrlSize
+			// 
+			resources->ApplyResources(this->labSrlSize, L"labSrlSize");
+			this->labSrlSize->Name = L"labSrlSize";
+			// 
+			// labSumSize2
+			// 
+			resources->ApplyResources(this->labSumSize2, L"labSumSize2");
+			this->labSumSize2->Name = L"labSumSize2";
+			// 
+			// labSumSize
+			// 
+			resources->ApplyResources(this->labSumSize, L"labSumSize");
+			this->labSumSize->Name = L"labSumSize";
+			// 
+			// labSubBannerSize
+			// 
+			resources->ApplyResources(this->labSubBannerSize, L"labSubBannerSize");
+			this->labSubBannerSize->Name = L"labSubBannerSize";
+			// 
+			// labTmdSize
+			// 
+			resources->ApplyResources(this->labTmdSize, L"labTmdSize");
+			this->labTmdSize->Name = L"labTmdSize";
 			// 
 			// tabRomEditInfo
 			// 
@@ -2577,15 +2844,15 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle14->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle14->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle14->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle14->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle14->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle14->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle14->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle14;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->Name = L"gridWarn";
@@ -2620,22 +2887,22 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			// 
 			// gridError
 			// 
-			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle15->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle15;
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle16->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle16->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle16->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle16->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle16->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle16->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle16->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle16;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
 			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->Name = L"gridError";
@@ -2728,6 +2995,10 @@ private: System::Windows::Forms::CheckBox^  cboxIsUnnecessaryRating;
 			this->gboxLaunch->PerformLayout();
 			this->gboxExFlags->ResumeLayout(false);
 			this->gboxExFlags->PerformLayout();
+			this->tabNandSizeInfo->ResumeLayout(false);
+			this->tabNandSizeInfo->PerformLayout();
+			this->gboxNandSize->ResumeLayout(false);
+			this->gboxNandSize->PerformLayout();
 			this->tabRomEditInfo->ResumeLayout(false);
 			this->tabRomEditInfo->PerformLayout();
 			this->gboxOtherSpec->ResumeLayout(false);

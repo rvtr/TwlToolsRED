@@ -77,8 +77,6 @@ void Form1::setSrlForms(void)
 	this->tboxTitleIDHi->Text = this->hSrl->TitleIDHi.ToString("X8");
 	this->tboxNormalRomOffset->Text   = this->hSrl->NormalRomOffset.ToString("X8");
 	this->tboxKeyTableRomOffset->Text = this->hSrl->KeyTableRomOffset.ToString("X8");
-	this->tboxPublicSize->Text  = MasterEditorTWL::transSizeToString( this->hSrl->PublicSize );
-	this->tboxPrivateSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->PrivateSize );
 	this->cboxIsNormalJump->Checked = this->hSrl->IsNormalJump;
 	this->cboxIsTmpJump->Checked    = this->hSrl->IsTmpJump;
 	this->cboxIsSubBanner->Checked  = this->hSrl->IsSubBanner;
@@ -111,6 +109,24 @@ void Form1::setSrlForms(void)
 	this->tboxShared2Size3->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[3] );
 	this->tboxShared2Size4->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[4] );
 	this->tboxShared2Size5->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[5] );
+
+	// NAND消費サイズ
+	//this->tboxPublicSize->Text  = MasterEditorTWL::transSizeToString( this->hSrl->PublicSize );
+	//this->tboxPrivateSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->PrivateSize );
+	this->tboxSrlSize->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SrlSize );
+	this->tboxPublicSize->Text    = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PublicSaveSize );
+	this->tboxPrivateSize->Text   = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PrivateSaveSize );
+	this->tboxSubBannerSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SubBannerSize );
+	this->tboxTmdSize->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->TmdSize );
+	// NANDのクラスタサイズに切り上げた値
+	this->tboxSrlSizeFS->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SrlSizeRoundUp );
+	this->tboxPublicSizeFS->Text    = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PublicSaveSizeRoundUp );
+	this->tboxPrivateSizeFS->Text   = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PrivateSaveSizeRoundUp );
+	this->tboxSubBannerSizeFS->Text = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SubBannerSizeRoundUp );
+	this->tboxTmdSizeFS->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->TmdSizeRoundUp );
+	// 総和
+	this->tboxSumSize->Text         = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->NandUsedSize );
+	this->tboxShopBlock->Text       = this->hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
 
 	// アプリ種別
 	if( this->hSrl->IsMediaNand )

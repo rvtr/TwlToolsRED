@@ -293,6 +293,9 @@ namespace MasterEditorTWL
 	// -------------------------------------------------------------------
 	ref class RCNandUsedSize
 	{
+		// 値へのアクセス方法
+		// - 生のデータサイズ : publicメンバ変数
+		// - 切り上げたサイズ : property (ReadOnlyなメンバ変数のように見える)
 	public:
 		property System::UInt32  SrlSize;
 		property System::UInt32  PublicSaveSize;
@@ -301,12 +304,12 @@ namespace MasterEditorTWL
 		property System::Boolean IsUseSubBanner;	// サブバナーを使用するかどうか
 	public:
 		static const System::UInt32  TmdSize = 16 * 1024;
-		static const System::UInt32  SubBannerSize = 16 * 1024;
 	private:
-		static const System::UInt32 NandClusterSize =  16 * 1024;
-		static const System::UInt32 ShopBlockSize   = 128 * 1024;
+		static const System::UInt32  cSubBannerSize  = 16  * 1024;
+		static const System::UInt32  NandClusterSize = 16  * 1024;
+		static const System::UInt32  ShopBlockSize   = 128 * 1024;
 	public:
-		property System::UInt32  SrlSizeRoundUp
+		property System::UInt32  SrlSizeRoundUp		// 切り上げた値はメンバ変数としては持たず計算した値を property で提供
 		{
 			System::UInt32 get()
 			{
@@ -334,6 +337,17 @@ namespace MasterEditorTWL
 					return 0;
 				}
 				return (MasterEditorTWL::roundUp( this->TmdSize, NandClusterSize ));
+			}
+		}
+		property System::UInt32  SubBannerSize	// サブバナーのサイズは使用するかしないかで異なるので計算した値を property で提供
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsUseSubBanner )
+				{
+					return 0;
+				}
+				return this->cSubBannerSize;
 			}
 		}
 		property System::UInt32  SubBannerSizeRoundUp
@@ -372,7 +386,12 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get()
 			{
-				return (MasterEditorTWL::roundUp( this->NandUsedSize, ShopBlockSize ));
+				System::UInt32 div = this->NandUsedSize / this->ShopBlockSize;
+				if( this->NandUsedSize % this->ShopBlockSize )
+				{
+					div++;
+				}
+				return div;
 			}
 		}
 	}; //RCNandUsedSize

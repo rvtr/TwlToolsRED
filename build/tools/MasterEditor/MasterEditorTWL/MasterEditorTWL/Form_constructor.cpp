@@ -81,8 +81,8 @@ void Form1::construct(void)
 	}
 
 	// 複数行表示の改行を挿入
-	this->tboxGuideNandSizeInfo->Text = this->tboxGuideNandSizeInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideRomEditInfo->Text  = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
+	this->tboxGuideNandSizeInfo->Text = this->tboxGuideNandSizeInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideErrorInfo->Text    = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 
 	// 言語バージョンにあわせてメニューにチェックを入れる

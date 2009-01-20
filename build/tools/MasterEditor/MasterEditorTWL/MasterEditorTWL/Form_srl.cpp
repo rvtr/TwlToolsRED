@@ -119,13 +119,14 @@ void Form1::setSrlForms(void)
 	this->tboxSubBannerSize->Text = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SubBannerSize );
 	this->tboxTmdSize->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->TmdSize );
 	// NANDのクラスタサイズに切り上げた値
-	this->tboxSrlSizeFS->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SrlSizeRoundUp );
-	this->tboxPublicSizeFS->Text    = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PublicSaveSizeRoundUp );
-	this->tboxPrivateSizeFS->Text   = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->PrivateSaveSizeRoundUp );
-	this->tboxSubBannerSizeFS->Text = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->SubBannerSizeRoundUp );
-	this->tboxTmdSizeFS->Text       = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->TmdSizeRoundUp );
+	this->tboxSrlSizeFS->Text       = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->SrlSizeRoundUp );
+	this->tboxPublicSizeFS->Text    = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->PublicSaveSizeRoundUp );
+	this->tboxPrivateSizeFS->Text   = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->PrivateSaveSizeRoundUp );
+	this->tboxSubBannerSizeFS->Text = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->SubBannerSizeRoundUp );
+	this->tboxTmdSizeFS->Text       = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->TmdSizeRoundUp );
 	// 総和
-	this->tboxSumSize->Text         = MasterEditorTWL::transSizeToString( this->hSrl->hNandUsedSize->NandUsedSize );
+	this->tboxSumSize->Text         = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->NandUsedSize );
+	this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize, 2 );
 	this->tboxShopBlock->Text       = this->hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
 
 	// アプリ種別
@@ -231,6 +232,7 @@ void Form1::setSrlForms(void)
 	// ROMヘッダには関係ないが
 	// NANDアプリのときにバックアップメモリを自動的に「なし」にしておく
 	this->maskBackupMemoryForms();
+	this->maskDLCategoryForms();
 } // setSrlForms()
 
 // ----------------------------------------------

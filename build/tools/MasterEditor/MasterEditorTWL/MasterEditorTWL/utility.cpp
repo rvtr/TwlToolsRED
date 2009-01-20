@@ -109,6 +109,53 @@ System::String^ MasterEditorTWL::transSizeToString( const System::UInt32 size )
 	return (val.ToString() + " GB");
 }
 
+// KBまで
+System::String^ MasterEditorTWL::transSizeToStringKB( const System::UInt32 size )
+{
+	System::UInt32 val = size;
+
+	// Byte単位
+	if( val == 0 )
+	{
+		return val.ToString();
+	}
+	if( val < 1024 )
+	{
+		return (val.ToString() + " Byte");
+	}
+
+	// KB単位に変換
+	if( (val % 1024) != 0 )
+	{
+		return (val.ToString() + " Byte");	// 端数のときは単位変換しない
+	}
+	val = val / 1024;
+	return (val.ToString() + " KB");
+}
+
+// MB
+// 第2引数で小数点の桁数を指定(それ以下の桁は切り上げ)
+System::String^ MasterEditorTWL::transSizeToStringMB( const System::UInt32 size, const System::UInt32 decimals )
+{
+	System::UInt32 MB = 1024*1024;
+	System::UInt32 pow = 1;
+	System::UInt32 i;
+	for( i=0; i < decimals; i++ )
+	{
+		pow = pow * 10;
+	}
+
+	System::UInt32 div = size * pow / MB;		// 小数点の位置をずらす
+	System::UInt32 mod = size * pow % MB;
+	if( mod > 0 )								// ずらした小数点以下を切り上げ
+	{
+		div++;
+	}
+
+	System::String ^str = ((System::Double)div / (System::Double)pow).ToString("F" + decimals.ToString());
+	return (str + " MB");
+}
+
 // ----------------------------------------------------------------------
 // 各レーティング団体の設定可能年齢を取得する
 //

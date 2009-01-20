@@ -4090,7 +4090,7 @@
     <value>gboxNandSize</value>
   </data>
   <data name="&gt;&gt;tboxPrivateSize.ZOrder" xml:space="preserve">
-    <value>19</value>
+    <value>22</value>
   </data>
   <data name="labPrivateSize.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4120,7 +4120,7 @@
     <value>gboxNandSize</value>
   </data>
   <data name="&gt;&gt;labPrivateSize.ZOrder" xml:space="preserve">
-    <value>22</value>
+    <value>25</value>
   </data>
   <data name="labPublicSize.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4150,7 +4150,7 @@
     <value>gboxNandSize</value>
   </data>
   <data name="&gt;&gt;labPublicSize.ZOrder" xml:space="preserve">
-    <value>25</value>
+    <value>28</value>
   </data>
   <data name="tboxPublicSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>153, 66</value>
@@ -4174,7 +4174,7 @@
     <value>gboxNandSize</value>
   </data>
   <data name="&gt;&gt;tboxPublicSize.ZOrder" xml:space="preserve">
-    <value>24</value>
+    <value>27</value>
   </data>
   <data name="cboxIsSubBanner.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4744,7 +4744,7 @@
     <value>True</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>224, 62</value>
+    <value>194, 62</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>110, 12</value>
@@ -4765,10 +4765,10 @@
     <value>tabNandSizeInfo</value>
   </data>
   <data name="&gt;&gt;labMedia.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="tboxMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>340, 59</value>
+    <value>316, 59</value>
   </data>
   <data name="tboxMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 19</value>
@@ -4789,7 +4789,7 @@
     <value>tabNandSizeInfo</value>
   </data>
   <data name="&gt;&gt;tboxMedia.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="labCaptionEx.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5205,741 +5205,6 @@
   <data name="&gt;&gt;tabTWLInfo.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="tboxGuideNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 11</value>
-  </data>
-  <data name="tboxGuideNandSizeInfo.Multiline" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="tboxGuideNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>687, 34</value>
-  </data>
-  <data name="tboxGuideNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
-    <value>These item is necessary for checking NAND size used by NAND Application.&lt;newline&gt;When the Media of application is GameCard, following items is not necessary.</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Name" xml:space="preserve">
-    <value>tboxGuideNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Parent" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tboxSrlSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 41</value>
-  </data>
-  <data name="tboxSrlSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>96, 19</value>
-  </data>
-  <data name="tboxSrlSize.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="tboxSrlSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSize.Name" xml:space="preserve">
-    <value>tboxSrlSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSize.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="labShopBlockUnit.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labShopBlockUnit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>392, 213</value>
-  </data>
-  <data name="labShopBlockUnit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 12</value>
-  </data>
-  <data name="labShopBlockUnit.TabIndex" type="System.Int32, mscorlib">
-    <value>29</value>
-  </data>
-  <data name="labShopBlockUnit.Text" xml:space="preserve">
-    <value>Blocks</value>
-  </data>
-  <data name="&gt;&gt;labShopBlockUnit.Name" xml:space="preserve">
-    <value>labShopBlockUnit</value>
-  </data>
-  <data name="&gt;&gt;labShopBlockUnit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labShopBlockUnit.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labShopBlockUnit.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="labArrow5.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labArrow5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labArrow5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 144</value>
-  </data>
-  <data name="labArrow5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="labArrow5.TabIndex" type="System.Int32, mscorlib">
-    <value>28</value>
-  </data>
-  <data name="labArrow5.Text" xml:space="preserve">
-    <value>→</value>
-  </data>
-  <data name="&gt;&gt;labArrow5.Name" xml:space="preserve">
-    <value>labArrow5</value>
-  </data>
-  <data name="&gt;&gt;labArrow5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labArrow5.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labArrow5.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="labArrow4.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labArrow4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labArrow4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 119</value>
-  </data>
-  <data name="labArrow4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="labArrow4.TabIndex" type="System.Int32, mscorlib">
-    <value>27</value>
-  </data>
-  <data name="labArrow4.Text" xml:space="preserve">
-    <value>→</value>
-  </data>
-  <data name="&gt;&gt;labArrow4.Name" xml:space="preserve">
-    <value>labArrow4</value>
-  </data>
-  <data name="&gt;&gt;labArrow4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labArrow4.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labArrow4.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="labArrow3.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labArrow3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labArrow3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 94</value>
-  </data>
-  <data name="labArrow3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="labArrow3.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
-  </data>
-  <data name="labArrow3.Text" xml:space="preserve">
-    <value>→</value>
-  </data>
-  <data name="&gt;&gt;labArrow3.Name" xml:space="preserve">
-    <value>labArrow3</value>
-  </data>
-  <data name="&gt;&gt;labArrow3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labArrow3.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labArrow3.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="labArrow2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labArrow2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labArrow2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 69</value>
-  </data>
-  <data name="labArrow2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="labArrow2.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="labArrow2.Text" xml:space="preserve">
-    <value>→</value>
-  </data>
-  <data name="&gt;&gt;labArrow2.Name" xml:space="preserve">
-    <value>labArrow2</value>
-  </data>
-  <data name="&gt;&gt;labArrow2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labArrow2.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labArrow2.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="labArrow1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labArrow1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>263, 44</value>
-  </data>
-  <data name="labArrow1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>17, 12</value>
-  </data>
-  <data name="labArrow1.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="labArrow1.Text" xml:space="preserve">
-    <value>→</value>
-  </data>
-  <data name="&gt;&gt;labArrow1.Name" xml:space="preserve">
-    <value>labArrow1</value>
-  </data>
-  <data name="&gt;&gt;labArrow1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labArrow1.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labArrow1.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="tboxShopBlock.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 210</value>
-  </data>
-  <data name="tboxShopBlock.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxShopBlock.TabIndex" type="System.Int32, mscorlib">
-    <value>24</value>
-  </data>
-  <data name="tboxShopBlock.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxShopBlock.Name" xml:space="preserve">
-    <value>tboxShopBlock</value>
-  </data>
-  <data name="&gt;&gt;tboxShopBlock.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxShopBlock.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxShopBlock.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="tboxSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 177</value>
-  </data>
-  <data name="tboxSumSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxSumSize.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="tboxSumSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxSumSize.Name" xml:space="preserve">
-    <value>tboxSumSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSumSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxSumSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSumSize.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="tboxTmdSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 141</value>
-  </data>
-  <data name="tboxTmdSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxTmdSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="tboxTmdSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSizeFS.Name" xml:space="preserve">
-    <value>tboxTmdSizeFS</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSizeFS.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="tboxSubBannerSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 116</value>
-  </data>
-  <data name="tboxSubBannerSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxSubBannerSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="tboxSubBannerSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSizeFS.Name" xml:space="preserve">
-    <value>tboxSubBannerSizeFS</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSizeFS.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="tboxPrivateSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 91</value>
-  </data>
-  <data name="tboxPrivateSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxPrivateSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="tboxPrivateSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxPrivateSizeFS.Name" xml:space="preserve">
-    <value>tboxPrivateSizeFS</value>
-  </data>
-  <data name="&gt;&gt;tboxPrivateSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxPrivateSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxPrivateSizeFS.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="tboxPublicSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 66</value>
-  </data>
-  <data name="tboxPublicSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxPublicSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="tboxPublicSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxPublicSizeFS.Name" xml:space="preserve">
-    <value>tboxPublicSizeFS</value>
-  </data>
-  <data name="&gt;&gt;tboxPublicSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxPublicSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxPublicSizeFS.ZOrder" xml:space="preserve">
-    <value>12</value>
-  </data>
-  <data name="tboxSrlSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>292, 41</value>
-  </data>
-  <data name="tboxSrlSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 19</value>
-  </data>
-  <data name="tboxSrlSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="tboxSrlSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSizeFS.Name" xml:space="preserve">
-    <value>tboxSrlSizeFS</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSrlSizeFS.ZOrder" xml:space="preserve">
-    <value>13</value>
-  </data>
-  <data name="tboxTmdSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 141</value>
-  </data>
-  <data name="tboxTmdSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>96, 19</value>
-  </data>
-  <data name="tboxTmdSize.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="tboxTmdSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSize.Name" xml:space="preserve">
-    <value>tboxTmdSize</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxTmdSize.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
-  <data name="tboxSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 116</value>
-  </data>
-  <data name="tboxSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>96, 19</value>
-  </data>
-  <data name="tboxSubBannerSize.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="tboxSubBannerSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSize.Name" xml:space="preserve">
-    <value>tboxSubBannerSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;tboxSubBannerSize.ZOrder" xml:space="preserve">
-    <value>15</value>
-  </data>
-  <data name="labNandSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>167, 22</value>
-  </data>
-  <data name="labNandSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>66, 12</value>
-  </data>
-  <data name="labNandSize.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="labNandSize.Text" xml:space="preserve">
-    <value>Orignal Size</value>
-  </data>
-  <data name="&gt;&gt;labNandSize.Name" xml:space="preserve">
-    <value>labNandSize</value>
-  </data>
-  <data name="&gt;&gt;labNandSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labNandSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labNandSize.ZOrder" xml:space="preserve">
-    <value>16</value>
-  </data>
-  <data name="labShopBlock2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labShopBlock2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>158, 224</value>
-  </data>
-  <data name="labShopBlock2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>95, 12</value>
-  </data>
-  <data name="labShopBlock2.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="labShopBlock2.Text" xml:space="preserve">
-    <value>(1Block = 128KB)</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock2.Name" xml:space="preserve">
-    <value>labShopBlock2</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock2.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock2.ZOrder" xml:space="preserve">
-    <value>17</value>
-  </data>
-  <data name="labNandSizeFS.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labNandSizeFS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labNandSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>307, 22</value>
-  </data>
-  <data name="labNandSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 12</value>
-  </data>
-  <data name="labNandSizeFS.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="labNandSizeFS.Text" xml:space="preserve">
-    <value>NAND Size</value>
-  </data>
-  <data name="&gt;&gt;labNandSizeFS.Name" xml:space="preserve">
-    <value>labNandSizeFS</value>
-  </data>
-  <data name="&gt;&gt;labNandSizeFS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labNandSizeFS.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labNandSizeFS.ZOrder" xml:space="preserve">
-    <value>18</value>
-  </data>
-  <data name="labShopBlock.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labShopBlock.Location" type="System.Drawing.Point, System.Drawing">
-    <value>151, 210</value>
-  </data>
-  <data name="labShopBlock.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 12</value>
-  </data>
-  <data name="labShopBlock.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="labShopBlock.Text" xml:space="preserve">
-    <value>Blocks for Download</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock.Name" xml:space="preserve">
-    <value>labShopBlock</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labShopBlock.ZOrder" xml:space="preserve">
-    <value>20</value>
-  </data>
-  <data name="labSrlSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labSrlSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>39, 44</value>
-  </data>
-  <data name="labSrlSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 12</value>
-  </data>
-  <data name="labSrlSize.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="labSrlSize.Text" xml:space="preserve">
-    <value>ROM File Size</value>
-  </data>
-  <data name="&gt;&gt;labSrlSize.Name" xml:space="preserve">
-    <value>labSrlSize</value>
-  </data>
-  <data name="&gt;&gt;labSrlSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labSrlSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labSrlSize.ZOrder" xml:space="preserve">
-    <value>21</value>
-  </data>
-  <data name="labSumSize2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 189</value>
-  </data>
-  <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>165, 12</value>
-  </data>
-  <data name="labSumSize2.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="labSumSize2.Text" xml:space="preserve">
-    <value>(NAND Size Used by the ROM)</value>
-  </data>
-  <data name="&gt;&gt;labSumSize2.Name" xml:space="preserve">
-    <value>labSumSize2</value>
-  </data>
-  <data name="&gt;&gt;labSumSize2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labSumSize2.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labSumSize2.ZOrder" xml:space="preserve">
-    <value>23</value>
-  </data>
-  <data name="labSumSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>151, 175</value>
-  </data>
-  <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 12</value>
-  </data>
-  <data name="labSumSize.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="labSumSize.Text" xml:space="preserve">
-    <value>Sum of Above Files</value>
-  </data>
-  <data name="&gt;&gt;labSumSize.Name" xml:space="preserve">
-    <value>labSumSize</value>
-  </data>
-  <data name="&gt;&gt;labSumSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labSumSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labSumSize.ZOrder" xml:space="preserve">
-    <value>26</value>
-  </data>
-  <data name="labSubBannerSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>39, 119</value>
-  </data>
-  <data name="labSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>89, 12</value>
-  </data>
-  <data name="labSubBannerSize.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="labSubBannerSize.Text" xml:space="preserve">
-    <value>Sub Banner Size</value>
-  </data>
-  <data name="&gt;&gt;labSubBannerSize.Name" xml:space="preserve">
-    <value>labSubBannerSize</value>
-  </data>
-  <data name="&gt;&gt;labSubBannerSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labSubBannerSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labSubBannerSize.ZOrder" xml:space="preserve">
-    <value>27</value>
-  </data>
-  <data name="labTmdSize.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labTmdSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>39, 144</value>
-  </data>
-  <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 12</value>
-  </data>
-  <data name="labTmdSize.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="labTmdSize.Text" xml:space="preserve">
-    <value>Other File Size</value>
-  </data>
-  <data name="&gt;&gt;labTmdSize.Name" xml:space="preserve">
-    <value>labTmdSize</value>
-  </data>
-  <data name="&gt;&gt;labTmdSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labTmdSize.Parent" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;labTmdSize.ZOrder" xml:space="preserve">
-    <value>28</value>
-  </data>
-  <data name="gboxNandSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>122, 93</value>
-  </data>
-  <data name="gboxNandSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>484, 245</value>
-  </data>
-  <data name="gboxNandSize.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="gboxNandSize.Text" xml:space="preserve">
-    <value>NAND Size Used by the NAND Application</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Name" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Parent" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tabNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="tabNandSizeInfo.Text" xml:space="preserve">
-    <value>Used Nand Size</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Name" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
   <data name="cboxIsUGC.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -6142,6 +5407,942 @@
     <value>tabMain</value>
   </data>
   <data name="&gt;&gt;tabRomEditInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tboxGuideDLCategory.Location" type="System.Drawing.Point, System.Drawing">
+    <value>571, 190</value>
+  </data>
+  <data name="tboxGuideDLCategory.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tboxGuideDLCategory.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 44</value>
+  </data>
+  <data name="tboxGuideDLCategory.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="tboxGuideDLCategory.Text" xml:space="preserve">
+    <value>When Media is NAND, please select a category in the DSi Shop</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideDLCategory.Name" xml:space="preserve">
+    <value>tboxGuideDLCategory</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideDLCategory.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideDLCategory.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideDLCategory.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tboxDLCategoryOther.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="tboxDLCategoryOther.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 62</value>
+  </data>
+  <data name="tboxDLCategoryOther.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 19</value>
+  </data>
+  <data name="tboxDLCategoryOther.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tboxDLCategoryOther.Name" xml:space="preserve">
+    <value>tboxDLCategoryOther</value>
+  </data>
+  <data name="&gt;&gt;tboxDLCategoryOther.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxDLCategoryOther.Parent" xml:space="preserve">
+    <value>gboxDLCategory</value>
+  </data>
+  <data name="&gt;&gt;tboxDLCategoryOther.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="combDLCategory.Items" xml:space="preserve">
+    <value>Free</value>
+  </data>
+  <data name="combDLCategory.Items1" xml:space="preserve">
+    <value>DSi Ware 200</value>
+  </data>
+  <data name="combDLCategory.Items2" xml:space="preserve">
+    <value>DSi Ware 500</value>
+  </data>
+  <data name="combDLCategory.Items3" xml:space="preserve">
+    <value>DSi Ware Premium</value>
+  </data>
+  <data name="combDLCategory.Items4" xml:space="preserve">
+    <value>No Category</value>
+  </data>
+  <data name="combDLCategory.Items5" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="combDLCategory.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 36</value>
+  </data>
+  <data name="combDLCategory.Size" type="System.Drawing.Size, System.Drawing">
+    <value>121, 20</value>
+  </data>
+  <data name="combDLCategory.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;combDLCategory.Name" xml:space="preserve">
+    <value>combDLCategory</value>
+  </data>
+  <data name="&gt;&gt;combDLCategory.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combDLCategory.Parent" xml:space="preserve">
+    <value>gboxDLCategory</value>
+  </data>
+  <data name="&gt;&gt;combDLCategory.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="gboxDLCategory.Location" type="System.Drawing.Point, System.Drawing">
+    <value>561, 84</value>
+  </data>
+  <data name="gboxDLCategory.Size" type="System.Drawing.Size, System.Drawing">
+    <value>163, 100</value>
+  </data>
+  <data name="gboxDLCategory.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="gboxDLCategory.Text" xml:space="preserve">
+    <value>Sale Category</value>
+  </data>
+  <data name="&gt;&gt;gboxDLCategory.Name" xml:space="preserve">
+    <value>gboxDLCategory</value>
+  </data>
+  <data name="&gt;&gt;gboxDLCategory.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxDLCategory.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxDLCategory.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tboxGuideNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 11</value>
+  </data>
+  <data name="tboxGuideNandSizeInfo.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="tboxGuideNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>687, 34</value>
+  </data>
+  <data name="tboxGuideNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
+    <value>These item is necessary for checking NAND area size used by DSi Ware(NAND Application).&lt;newline&gt;When the Media of application is GameCard, following items is not necessary.</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Name" xml:space="preserve">
+    <value>tboxGuideNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="labBracketR.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labBracketR.Font" type="System.Drawing.Font, System.Drawing">
+    <value>MS UI Gothic, 12pt</value>
+  </data>
+  <data name="labBracketR.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labBracketR.Location" type="System.Drawing.Point, System.Drawing">
+    <value>502, 179</value>
+  </data>
+  <data name="labBracketR.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 16</value>
+  </data>
+  <data name="labBracketR.TabIndex" type="System.Int32, mscorlib">
+    <value>44</value>
+  </data>
+  <data name="labBracketR.Text" xml:space="preserve">
+    <value>)</value>
+  </data>
+  <data name="&gt;&gt;labBracketR.Name" xml:space="preserve">
+    <value>labBracketR</value>
+  </data>
+  <data name="&gt;&gt;labBracketR.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labBracketR.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labBracketR.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="labBracketL.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labBracketL.Font" type="System.Drawing.Font, System.Drawing">
+    <value>MS UI Gothic, 12pt</value>
+  </data>
+  <data name="labBracketL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>391, 179</value>
+  </data>
+  <data name="labBracketL.Size" type="System.Drawing.Size, System.Drawing">
+    <value>13, 16</value>
+  </data>
+  <data name="labBracketL.TabIndex" type="System.Int32, mscorlib">
+    <value>43</value>
+  </data>
+  <data name="labBracketL.Text" xml:space="preserve">
+    <value>(</value>
+  </data>
+  <data name="&gt;&gt;labBracketL.Name" xml:space="preserve">
+    <value>labBracketL</value>
+  </data>
+  <data name="&gt;&gt;labBracketL.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labBracketL.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labBracketL.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="tboxSumSizeMB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>405, 177</value>
+  </data>
+  <data name="tboxSumSizeMB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxSumSizeMB.TabIndex" type="System.Int32, mscorlib">
+    <value>31</value>
+  </data>
+  <data name="tboxSumSizeMB.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSizeMB.Name" xml:space="preserve">
+    <value>tboxSumSizeMB</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSizeMB.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSizeMB.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSizeMB.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="tboxSrlSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 41</value>
+  </data>
+  <data name="tboxSrlSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 19</value>
+  </data>
+  <data name="tboxSrlSize.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="tboxSrlSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSize.Name" xml:space="preserve">
+    <value>tboxSrlSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSize.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="labShopBlockUnit.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labShopBlockUnit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>392, 213</value>
+  </data>
+  <data name="labShopBlockUnit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 12</value>
+  </data>
+  <data name="labShopBlockUnit.TabIndex" type="System.Int32, mscorlib">
+    <value>29</value>
+  </data>
+  <data name="labShopBlockUnit.Text" xml:space="preserve">
+    <value>Blocks</value>
+  </data>
+  <data name="&gt;&gt;labShopBlockUnit.Name" xml:space="preserve">
+    <value>labShopBlockUnit</value>
+  </data>
+  <data name="&gt;&gt;labShopBlockUnit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labShopBlockUnit.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labShopBlockUnit.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="labArrow5.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labArrow5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labArrow5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 144</value>
+  </data>
+  <data name="labArrow5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="labArrow5.TabIndex" type="System.Int32, mscorlib">
+    <value>28</value>
+  </data>
+  <data name="labArrow5.Text" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="&gt;&gt;labArrow5.Name" xml:space="preserve">
+    <value>labArrow5</value>
+  </data>
+  <data name="&gt;&gt;labArrow5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labArrow5.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labArrow5.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="labArrow4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labArrow4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labArrow4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 119</value>
+  </data>
+  <data name="labArrow4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="labArrow4.TabIndex" type="System.Int32, mscorlib">
+    <value>27</value>
+  </data>
+  <data name="labArrow4.Text" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="&gt;&gt;labArrow4.Name" xml:space="preserve">
+    <value>labArrow4</value>
+  </data>
+  <data name="&gt;&gt;labArrow4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labArrow4.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labArrow4.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="labArrow3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labArrow3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labArrow3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 94</value>
+  </data>
+  <data name="labArrow3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="labArrow3.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="labArrow3.Text" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="&gt;&gt;labArrow3.Name" xml:space="preserve">
+    <value>labArrow3</value>
+  </data>
+  <data name="&gt;&gt;labArrow3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labArrow3.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labArrow3.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="labArrow2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labArrow2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labArrow2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 69</value>
+  </data>
+  <data name="labArrow2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="labArrow2.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="labArrow2.Text" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="&gt;&gt;labArrow2.Name" xml:space="preserve">
+    <value>labArrow2</value>
+  </data>
+  <data name="&gt;&gt;labArrow2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labArrow2.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labArrow2.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="labArrow1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labArrow1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>263, 44</value>
+  </data>
+  <data name="labArrow1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>17, 12</value>
+  </data>
+  <data name="labArrow1.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="labArrow1.Text" xml:space="preserve">
+    <value>→</value>
+  </data>
+  <data name="&gt;&gt;labArrow1.Name" xml:space="preserve">
+    <value>labArrow1</value>
+  </data>
+  <data name="&gt;&gt;labArrow1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labArrow1.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labArrow1.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="tboxShopBlock.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 210</value>
+  </data>
+  <data name="tboxShopBlock.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxShopBlock.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="tboxShopBlock.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxShopBlock.Name" xml:space="preserve">
+    <value>tboxShopBlock</value>
+  </data>
+  <data name="&gt;&gt;tboxShopBlock.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxShopBlock.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxShopBlock.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="tboxSumSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 177</value>
+  </data>
+  <data name="tboxSumSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxSumSize.TabIndex" type="System.Int32, mscorlib">
+    <value>23</value>
+  </data>
+  <data name="tboxSumSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSize.Name" xml:space="preserve">
+    <value>tboxSumSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSumSize.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="tboxTmdSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 141</value>
+  </data>
+  <data name="tboxTmdSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxTmdSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="tboxTmdSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSizeFS.Name" xml:space="preserve">
+    <value>tboxTmdSizeFS</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSizeFS.ZOrder" xml:space="preserve">
+    <value>12</value>
+  </data>
+  <data name="tboxSubBannerSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 116</value>
+  </data>
+  <data name="tboxSubBannerSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxSubBannerSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="tboxSubBannerSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSizeFS.Name" xml:space="preserve">
+    <value>tboxSubBannerSizeFS</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSizeFS.ZOrder" xml:space="preserve">
+    <value>13</value>
+  </data>
+  <data name="tboxPrivateSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 91</value>
+  </data>
+  <data name="tboxPrivateSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxPrivateSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="tboxPrivateSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxPrivateSizeFS.Name" xml:space="preserve">
+    <value>tboxPrivateSizeFS</value>
+  </data>
+  <data name="&gt;&gt;tboxPrivateSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxPrivateSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxPrivateSizeFS.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="tboxPublicSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 66</value>
+  </data>
+  <data name="tboxPublicSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxPublicSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="tboxPublicSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxPublicSizeFS.Name" xml:space="preserve">
+    <value>tboxPublicSizeFS</value>
+  </data>
+  <data name="&gt;&gt;tboxPublicSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxPublicSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxPublicSizeFS.ZOrder" xml:space="preserve">
+    <value>15</value>
+  </data>
+  <data name="tboxSrlSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>292, 41</value>
+  </data>
+  <data name="tboxSrlSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 19</value>
+  </data>
+  <data name="tboxSrlSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="tboxSrlSizeFS.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSizeFS.Name" xml:space="preserve">
+    <value>tboxSrlSizeFS</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSrlSizeFS.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
+  <data name="tboxTmdSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 141</value>
+  </data>
+  <data name="tboxTmdSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 19</value>
+  </data>
+  <data name="tboxTmdSize.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="tboxTmdSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSize.Name" xml:space="preserve">
+    <value>tboxTmdSize</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxTmdSize.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="tboxSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>153, 116</value>
+  </data>
+  <data name="tboxSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 19</value>
+  </data>
+  <data name="tboxSubBannerSize.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="tboxSubBannerSize.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSize.Name" xml:space="preserve">
+    <value>tboxSubBannerSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;tboxSubBannerSize.ZOrder" xml:space="preserve">
+    <value>18</value>
+  </data>
+  <data name="labNandSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>167, 22</value>
+  </data>
+  <data name="labNandSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>66, 12</value>
+  </data>
+  <data name="labNandSize.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="labNandSize.Text" xml:space="preserve">
+    <value>Orignal Size</value>
+  </data>
+  <data name="&gt;&gt;labNandSize.Name" xml:space="preserve">
+    <value>labNandSize</value>
+  </data>
+  <data name="&gt;&gt;labNandSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labNandSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labNandSize.ZOrder" xml:space="preserve">
+    <value>19</value>
+  </data>
+  <data name="labShopBlock2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labShopBlock2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>158, 224</value>
+  </data>
+  <data name="labShopBlock2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>95, 12</value>
+  </data>
+  <data name="labShopBlock2.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="labShopBlock2.Text" xml:space="preserve">
+    <value>(1Block = 128KB)</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock2.Name" xml:space="preserve">
+    <value>labShopBlock2</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock2.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock2.ZOrder" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="labNandSizeFS.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labNandSizeFS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labNandSizeFS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>307, 22</value>
+  </data>
+  <data name="labNandSizeFS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 12</value>
+  </data>
+  <data name="labNandSizeFS.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="labNandSizeFS.Text" xml:space="preserve">
+    <value>NAND Size</value>
+  </data>
+  <data name="&gt;&gt;labNandSizeFS.Name" xml:space="preserve">
+    <value>labNandSizeFS</value>
+  </data>
+  <data name="&gt;&gt;labNandSizeFS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labNandSizeFS.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labNandSizeFS.ZOrder" xml:space="preserve">
+    <value>21</value>
+  </data>
+  <data name="labShopBlock.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labShopBlock.Location" type="System.Drawing.Point, System.Drawing">
+    <value>151, 210</value>
+  </data>
+  <data name="labShopBlock.Size" type="System.Drawing.Size, System.Drawing">
+    <value>111, 12</value>
+  </data>
+  <data name="labShopBlock.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="labShopBlock.Text" xml:space="preserve">
+    <value>Blocks for Download</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock.Name" xml:space="preserve">
+    <value>labShopBlock</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labShopBlock.ZOrder" xml:space="preserve">
+    <value>23</value>
+  </data>
+  <data name="labSrlSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labSrlSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>39, 44</value>
+  </data>
+  <data name="labSrlSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 12</value>
+  </data>
+  <data name="labSrlSize.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="labSrlSize.Text" xml:space="preserve">
+    <value>ROM File Size</value>
+  </data>
+  <data name="&gt;&gt;labSrlSize.Name" xml:space="preserve">
+    <value>labSrlSize</value>
+  </data>
+  <data name="&gt;&gt;labSrlSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labSrlSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labSrlSize.ZOrder" xml:space="preserve">
+    <value>24</value>
+  </data>
+  <data name="labSumSize2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>121, 189</value>
+  </data>
+  <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>165, 12</value>
+  </data>
+  <data name="labSumSize2.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="labSumSize2.Text" xml:space="preserve">
+    <value>(NAND Size Used by the ROM)</value>
+  </data>
+  <data name="&gt;&gt;labSumSize2.Name" xml:space="preserve">
+    <value>labSumSize2</value>
+  </data>
+  <data name="&gt;&gt;labSumSize2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labSumSize2.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labSumSize2.ZOrder" xml:space="preserve">
+    <value>26</value>
+  </data>
+  <data name="labSumSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>151, 175</value>
+  </data>
+  <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 12</value>
+  </data>
+  <data name="labSumSize.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="labSumSize.Text" xml:space="preserve">
+    <value>Sum of Above Files</value>
+  </data>
+  <data name="&gt;&gt;labSumSize.Name" xml:space="preserve">
+    <value>labSumSize</value>
+  </data>
+  <data name="&gt;&gt;labSumSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labSumSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labSumSize.ZOrder" xml:space="preserve">
+    <value>29</value>
+  </data>
+  <data name="labSubBannerSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>39, 119</value>
+  </data>
+  <data name="labSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="labSubBannerSize.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="labSubBannerSize.Text" xml:space="preserve">
+    <value>Sub Banner Size</value>
+  </data>
+  <data name="&gt;&gt;labSubBannerSize.Name" xml:space="preserve">
+    <value>labSubBannerSize</value>
+  </data>
+  <data name="&gt;&gt;labSubBannerSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labSubBannerSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labSubBannerSize.ZOrder" xml:space="preserve">
+    <value>30</value>
+  </data>
+  <data name="labTmdSize.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labTmdSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>39, 144</value>
+  </data>
+  <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 12</value>
+  </data>
+  <data name="labTmdSize.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="labTmdSize.Text" xml:space="preserve">
+    <value>Other File Size</value>
+  </data>
+  <data name="&gt;&gt;labTmdSize.Name" xml:space="preserve">
+    <value>labTmdSize</value>
+  </data>
+  <data name="&gt;&gt;labTmdSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labTmdSize.Parent" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;labTmdSize.ZOrder" xml:space="preserve">
+    <value>31</value>
+  </data>
+  <data name="gboxNandSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 84</value>
+  </data>
+  <data name="gboxNandSize.Size" type="System.Drawing.Size, System.Drawing">
+    <value>522, 245</value>
+  </data>
+  <data name="gboxNandSize.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="gboxNandSize.Text" xml:space="preserve">
+    <value>NAND Area Size Used by the DSi Ware</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Name" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tabNandSizeInfo.Text" xml:space="preserve">
+    <value>DSi Ware (Editable)</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Name" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="labProductNameLimit.Location" type="System.Drawing.Point, System.Drawing">

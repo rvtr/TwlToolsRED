@@ -673,6 +673,16 @@ private: System::Windows::Forms::TextBox^  tboxGuideNandSizeInfo;
 
 
 private: System::Windows::Forms::TextBox^  tboxSrlSize;
+private: System::Windows::Forms::Label^  labBracketR;
+private: System::Windows::Forms::Label^  labBracketL;
+private: System::Windows::Forms::TextBox^  tboxSumSizeMB;
+private: System::Windows::Forms::GroupBox^  gboxDLCategory;
+private: System::Windows::Forms::TextBox^  tboxDLCategoryOther;
+private: System::Windows::Forms::ComboBox^  combDLCategory;
+private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
+
+
+
 
 
 
@@ -953,11 +963,11 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->gboxTWLExInfo = (gcnew System::Windows::Forms::GroupBox());
 			this->labByte1 = (gcnew System::Windows::Forms::Label());
 			this->labHex4 = (gcnew System::Windows::Forms::Label());
-			this->labHex3 = (gcnew System::Windows::Forms::Label());
 			this->tboxIsCodec = (gcnew System::Windows::Forms::TextBox());
 			this->labIsCodec = (gcnew System::Windows::Forms::Label());
 			this->labKeyTableRomOffset = (gcnew System::Windows::Forms::Label());
 			this->tboxKeyTableRomOffset = (gcnew System::Windows::Forms::TextBox());
+			this->labHex3 = (gcnew System::Windows::Forms::Label());
 			this->labNormalRomOffset = (gcnew System::Windows::Forms::Label());
 			this->tboxNormalRomOffset = (gcnew System::Windows::Forms::TextBox());
 			this->tboxPrivateSize = (gcnew System::Windows::Forms::TextBox());
@@ -1017,9 +1027,24 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->tboxConnectIcon = (gcnew System::Windows::Forms::TextBox());
 			this->tboxGuideTWLInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxExFlags = (gcnew System::Windows::Forms::GroupBox());
+			this->tabRomEditInfo = (gcnew System::Windows::Forms::TabPage());
+			this->gboxOtherSpec = (gcnew System::Windows::Forms::GroupBox());
+			this->cboxIsUGC = (gcnew System::Windows::Forms::CheckBox());
+			this->cboxIsPhotoEx = (gcnew System::Windows::Forms::CheckBox());
+			this->butSetBack = (gcnew System::Windows::Forms::Button());
+			this->tboxGuideRomEditInfo = (gcnew System::Windows::Forms::TextBox());
+			this->gboxParental = (gcnew System::Windows::Forms::GroupBox());
+			this->cboxIsUnnecessaryRating = (gcnew System::Windows::Forms::CheckBox());
 			this->tabNandSizeInfo = (gcnew System::Windows::Forms::TabPage());
+			this->tboxGuideDLCategory = (gcnew System::Windows::Forms::TextBox());
+			this->gboxDLCategory = (gcnew System::Windows::Forms::GroupBox());
+			this->tboxDLCategoryOther = (gcnew System::Windows::Forms::TextBox());
+			this->combDLCategory = (gcnew System::Windows::Forms::ComboBox());
 			this->tboxGuideNandSizeInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxNandSize = (gcnew System::Windows::Forms::GroupBox());
+			this->labBracketR = (gcnew System::Windows::Forms::Label());
+			this->labBracketL = (gcnew System::Windows::Forms::Label());
+			this->tboxSumSizeMB = (gcnew System::Windows::Forms::TextBox());
 			this->tboxSrlSize = (gcnew System::Windows::Forms::TextBox());
 			this->labShopBlockUnit = (gcnew System::Windows::Forms::Label());
 			this->labArrow5 = (gcnew System::Windows::Forms::Label());
@@ -1045,14 +1070,6 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->labSumSize = (gcnew System::Windows::Forms::Label());
 			this->labSubBannerSize = (gcnew System::Windows::Forms::Label());
 			this->labTmdSize = (gcnew System::Windows::Forms::Label());
-			this->tabRomEditInfo = (gcnew System::Windows::Forms::TabPage());
-			this->gboxOtherSpec = (gcnew System::Windows::Forms::GroupBox());
-			this->cboxIsUGC = (gcnew System::Windows::Forms::CheckBox());
-			this->cboxIsPhotoEx = (gcnew System::Windows::Forms::CheckBox());
-			this->butSetBack = (gcnew System::Windows::Forms::Button());
-			this->tboxGuideRomEditInfo = (gcnew System::Windows::Forms::TextBox());
-			this->gboxParental = (gcnew System::Windows::Forms::GroupBox());
-			this->cboxIsUnnecessaryRating = (gcnew System::Windows::Forms::CheckBox());
 			this->tabSubmitInfo = (gcnew System::Windows::Forms::TabPage());
 			this->labProductNameLimit = (gcnew System::Windows::Forms::Label());
 			this->tboxGuideSubmitInfo = (gcnew System::Windows::Forms::TextBox());
@@ -1099,11 +1116,12 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->tabTWLInfo->SuspendLayout();
 			this->gboxLaunch->SuspendLayout();
 			this->gboxExFlags->SuspendLayout();
-			this->tabNandSizeInfo->SuspendLayout();
-			this->gboxNandSize->SuspendLayout();
 			this->tabRomEditInfo->SuspendLayout();
 			this->gboxOtherSpec->SuspendLayout();
 			this->gboxParental->SuspendLayout();
+			this->tabNandSizeInfo->SuspendLayout();
+			this->gboxDLCategory->SuspendLayout();
+			this->gboxNandSize->SuspendLayout();
 			this->tabSubmitInfo->SuspendLayout();
 			this->gboxForeign->SuspendLayout();
 			this->tabCompanyInfo->SuspendLayout();
@@ -1995,11 +2013,6 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			resources->ApplyResources(this->labHex4, L"labHex4");
 			this->labHex4->Name = L"labHex4";
 			// 
-			// labHex3
-			// 
-			resources->ApplyResources(this->labHex3, L"labHex3");
-			this->labHex3->Name = L"labHex3";
-			// 
 			// tboxIsCodec
 			// 
 			resources->ApplyResources(this->tboxIsCodec, L"tboxIsCodec");
@@ -2021,6 +2034,11 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
 			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
 			this->tboxKeyTableRomOffset->ReadOnly = true;
+			// 
+			// labHex3
+			// 
+			resources->ApplyResources(this->labHex3, L"labHex3");
+			this->labHex3->Name = L"labHex3";
 			// 
 			// labNormalRomOffset
 			// 
@@ -2318,8 +2336,8 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			this->tabMain->Controls->Add(this->tabRomInfo);
 			this->tabMain->Controls->Add(this->tabTWLInfo);
-			this->tabMain->Controls->Add(this->tabNandSizeInfo);
 			this->tabMain->Controls->Add(this->tabRomEditInfo);
+			this->tabMain->Controls->Add(this->tabNandSizeInfo);
 			this->tabMain->Controls->Add(this->tabSubmitInfo);
 			this->tabMain->Controls->Add(this->tabCompanyInfo);
 			this->tabMain->Controls->Add(this->tabErrorInfo);
@@ -2437,8 +2455,85 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->gboxExFlags->Name = L"gboxExFlags";
 			this->gboxExFlags->TabStop = false;
 			// 
+			// tabRomEditInfo
+			// 
+			this->tabRomEditInfo->Controls->Add(this->gboxOtherSpec);
+			this->tabRomEditInfo->Controls->Add(this->butSetBack);
+			this->tabRomEditInfo->Controls->Add(this->tboxGuideRomEditInfo);
+			this->tabRomEditInfo->Controls->Add(this->gboxParental);
+			resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
+			this->tabRomEditInfo->Name = L"tabRomEditInfo";
+			this->tabRomEditInfo->UseVisualStyleBackColor = true;
+			// 
+			// gboxOtherSpec
+			// 
+			this->gboxOtherSpec->Controls->Add(this->cboxIsUGC);
+			this->gboxOtherSpec->Controls->Add(this->cboxIsPhotoEx);
+			resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
+			this->gboxOtherSpec->Name = L"gboxOtherSpec";
+			this->gboxOtherSpec->TabStop = false;
+			// 
+			// cboxIsUGC
+			// 
+			resources->ApplyResources(this->cboxIsUGC, L"cboxIsUGC");
+			this->cboxIsUGC->Name = L"cboxIsUGC";
+			this->cboxIsUGC->UseVisualStyleBackColor = true;
+			// 
+			// cboxIsPhotoEx
+			// 
+			resources->ApplyResources(this->cboxIsPhotoEx, L"cboxIsPhotoEx");
+			this->cboxIsPhotoEx->Name = L"cboxIsPhotoEx";
+			this->cboxIsPhotoEx->UseVisualStyleBackColor = true;
+			// 
+			// butSetBack
+			// 
+			resources->ApplyResources(this->butSetBack, L"butSetBack");
+			this->butSetBack->Name = L"butSetBack";
+			this->butSetBack->UseVisualStyleBackColor = true;
+			this->butSetBack->Click += gcnew System::EventHandler(this, &Form1::butSetBack_Click);
+			// 
+			// tboxGuideRomEditInfo
+			// 
+			this->tboxGuideRomEditInfo->BackColor = System::Drawing::SystemColors::Info;
+			resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
+			this->tboxGuideRomEditInfo->Name = L"tboxGuideRomEditInfo";
+			this->tboxGuideRomEditInfo->ReadOnly = true;
+			// 
+			// gboxParental
+			// 
+			this->gboxParental->Controls->Add(this->cboxIsUnnecessaryRating);
+			this->gboxParental->Controls->Add(this->labRegion);
+			this->gboxParental->Controls->Add(this->combRegion);
+			this->gboxParental->Controls->Add(this->labParentalRating);
+			this->gboxParental->Controls->Add(this->labOFLC);
+			this->gboxParental->Controls->Add(this->labPEGI_BBFC);
+			this->gboxParental->Controls->Add(this->combPEGI_BBFC);
+			this->gboxParental->Controls->Add(this->combCERO);
+			this->gboxParental->Controls->Add(this->labCERO);
+			this->gboxParental->Controls->Add(this->combOFLC);
+			this->gboxParental->Controls->Add(this->labPEGI_PRT);
+			this->gboxParental->Controls->Add(this->combPEGI_PRT);
+			this->gboxParental->Controls->Add(this->combESRB);
+			this->gboxParental->Controls->Add(this->labESRB);
+			this->gboxParental->Controls->Add(this->labPEGI);
+			this->gboxParental->Controls->Add(this->combPEGI);
+			this->gboxParental->Controls->Add(this->combUSK);
+			this->gboxParental->Controls->Add(this->labUSK);
+			resources->ApplyResources(this->gboxParental, L"gboxParental");
+			this->gboxParental->Name = L"gboxParental";
+			this->gboxParental->TabStop = false;
+			// 
+			// cboxIsUnnecessaryRating
+			// 
+			resources->ApplyResources(this->cboxIsUnnecessaryRating, L"cboxIsUnnecessaryRating");
+			this->cboxIsUnnecessaryRating->Name = L"cboxIsUnnecessaryRating";
+			this->cboxIsUnnecessaryRating->UseVisualStyleBackColor = true;
+			this->cboxIsUnnecessaryRating->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxIsUnnecessaryRating_CheckedChanged);
+			// 
 			// tabNandSizeInfo
 			// 
+			this->tabNandSizeInfo->Controls->Add(this->tboxGuideDLCategory);
+			this->tabNandSizeInfo->Controls->Add(this->gboxDLCategory);
 			this->tabNandSizeInfo->Controls->Add(this->tboxGuideNandSizeInfo);
 			this->tabNandSizeInfo->Controls->Add(this->labMedia);
 			this->tabNandSizeInfo->Controls->Add(this->tboxMedia);
@@ -2446,6 +2541,37 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
 			this->tabNandSizeInfo->Name = L"tabNandSizeInfo";
 			this->tabNandSizeInfo->UseVisualStyleBackColor = true;
+			// 
+			// tboxGuideDLCategory
+			// 
+			this->tboxGuideDLCategory->BackColor = System::Drawing::SystemColors::Info;
+			resources->ApplyResources(this->tboxGuideDLCategory, L"tboxGuideDLCategory");
+			this->tboxGuideDLCategory->Name = L"tboxGuideDLCategory";
+			this->tboxGuideDLCategory->ReadOnly = true;
+			// 
+			// gboxDLCategory
+			// 
+			this->gboxDLCategory->Controls->Add(this->tboxDLCategoryOther);
+			this->gboxDLCategory->Controls->Add(this->combDLCategory);
+			resources->ApplyResources(this->gboxDLCategory, L"gboxDLCategory");
+			this->gboxDLCategory->Name = L"gboxDLCategory";
+			this->gboxDLCategory->TabStop = false;
+			// 
+			// tboxDLCategoryOther
+			// 
+			resources->ApplyResources(this->tboxDLCategoryOther, L"tboxDLCategoryOther");
+			this->tboxDLCategoryOther->Name = L"tboxDLCategoryOther";
+			// 
+			// combDLCategory
+			// 
+			this->combDLCategory->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->combDLCategory->FormattingEnabled = true;
+			this->combDLCategory->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combDLCategory.Items"), 
+				resources->GetString(L"combDLCategory.Items1"), resources->GetString(L"combDLCategory.Items2"), resources->GetString(L"combDLCategory.Items3"), 
+				resources->GetString(L"combDLCategory.Items4"), resources->GetString(L"combDLCategory.Items5")});
+			resources->ApplyResources(this->combDLCategory, L"combDLCategory");
+			this->combDLCategory->Name = L"combDLCategory";
+			this->combDLCategory->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::cboxDLCategory_SelectedIndexChanged);
 			// 
 			// tboxGuideNandSizeInfo
 			// 
@@ -2456,6 +2582,9 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			// gboxNandSize
 			// 
+			this->gboxNandSize->Controls->Add(this->labBracketR);
+			this->gboxNandSize->Controls->Add(this->labBracketL);
+			this->gboxNandSize->Controls->Add(this->tboxSumSizeMB);
 			this->gboxNandSize->Controls->Add(this->tboxSrlSize);
 			this->gboxNandSize->Controls->Add(this->labShopBlockUnit);
 			this->gboxNandSize->Controls->Add(this->labArrow5);
@@ -2488,6 +2617,22 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
 			this->gboxNandSize->Name = L"gboxNandSize";
 			this->gboxNandSize->TabStop = false;
+			// 
+			// labBracketR
+			// 
+			resources->ApplyResources(this->labBracketR, L"labBracketR");
+			this->labBracketR->Name = L"labBracketR";
+			// 
+			// labBracketL
+			// 
+			resources->ApplyResources(this->labBracketL, L"labBracketL");
+			this->labBracketL->Name = L"labBracketL";
+			// 
+			// tboxSumSizeMB
+			// 
+			resources->ApplyResources(this->tboxSumSizeMB, L"tboxSumSizeMB");
+			this->tboxSumSizeMB->Name = L"tboxSumSizeMB";
+			this->tboxSumSizeMB->ReadOnly = true;
 			// 
 			// tboxSrlSize
 			// 
@@ -2623,81 +2768,6 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			// 
 			resources->ApplyResources(this->labTmdSize, L"labTmdSize");
 			this->labTmdSize->Name = L"labTmdSize";
-			// 
-			// tabRomEditInfo
-			// 
-			this->tabRomEditInfo->Controls->Add(this->gboxOtherSpec);
-			this->tabRomEditInfo->Controls->Add(this->butSetBack);
-			this->tabRomEditInfo->Controls->Add(this->tboxGuideRomEditInfo);
-			this->tabRomEditInfo->Controls->Add(this->gboxParental);
-			resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
-			this->tabRomEditInfo->Name = L"tabRomEditInfo";
-			this->tabRomEditInfo->UseVisualStyleBackColor = true;
-			// 
-			// gboxOtherSpec
-			// 
-			this->gboxOtherSpec->Controls->Add(this->cboxIsUGC);
-			this->gboxOtherSpec->Controls->Add(this->cboxIsPhotoEx);
-			resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
-			this->gboxOtherSpec->Name = L"gboxOtherSpec";
-			this->gboxOtherSpec->TabStop = false;
-			// 
-			// cboxIsUGC
-			// 
-			resources->ApplyResources(this->cboxIsUGC, L"cboxIsUGC");
-			this->cboxIsUGC->Name = L"cboxIsUGC";
-			this->cboxIsUGC->UseVisualStyleBackColor = true;
-			// 
-			// cboxIsPhotoEx
-			// 
-			resources->ApplyResources(this->cboxIsPhotoEx, L"cboxIsPhotoEx");
-			this->cboxIsPhotoEx->Name = L"cboxIsPhotoEx";
-			this->cboxIsPhotoEx->UseVisualStyleBackColor = true;
-			// 
-			// butSetBack
-			// 
-			resources->ApplyResources(this->butSetBack, L"butSetBack");
-			this->butSetBack->Name = L"butSetBack";
-			this->butSetBack->UseVisualStyleBackColor = true;
-			this->butSetBack->Click += gcnew System::EventHandler(this, &Form1::butSetBack_Click);
-			// 
-			// tboxGuideRomEditInfo
-			// 
-			this->tboxGuideRomEditInfo->BackColor = System::Drawing::SystemColors::Info;
-			resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
-			this->tboxGuideRomEditInfo->Name = L"tboxGuideRomEditInfo";
-			this->tboxGuideRomEditInfo->ReadOnly = true;
-			// 
-			// gboxParental
-			// 
-			this->gboxParental->Controls->Add(this->cboxIsUnnecessaryRating);
-			this->gboxParental->Controls->Add(this->labRegion);
-			this->gboxParental->Controls->Add(this->combRegion);
-			this->gboxParental->Controls->Add(this->labParentalRating);
-			this->gboxParental->Controls->Add(this->labOFLC);
-			this->gboxParental->Controls->Add(this->labPEGI_BBFC);
-			this->gboxParental->Controls->Add(this->combPEGI_BBFC);
-			this->gboxParental->Controls->Add(this->combCERO);
-			this->gboxParental->Controls->Add(this->labCERO);
-			this->gboxParental->Controls->Add(this->combOFLC);
-			this->gboxParental->Controls->Add(this->labPEGI_PRT);
-			this->gboxParental->Controls->Add(this->combPEGI_PRT);
-			this->gboxParental->Controls->Add(this->combESRB);
-			this->gboxParental->Controls->Add(this->labESRB);
-			this->gboxParental->Controls->Add(this->labPEGI);
-			this->gboxParental->Controls->Add(this->combPEGI);
-			this->gboxParental->Controls->Add(this->combUSK);
-			this->gboxParental->Controls->Add(this->labUSK);
-			resources->ApplyResources(this->gboxParental, L"gboxParental");
-			this->gboxParental->Name = L"gboxParental";
-			this->gboxParental->TabStop = false;
-			// 
-			// cboxIsUnnecessaryRating
-			// 
-			resources->ApplyResources(this->cboxIsUnnecessaryRating, L"cboxIsUnnecessaryRating");
-			this->cboxIsUnnecessaryRating->Name = L"cboxIsUnnecessaryRating";
-			this->cboxIsUnnecessaryRating->UseVisualStyleBackColor = true;
-			this->cboxIsUnnecessaryRating->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxIsUnnecessaryRating_CheckedChanged);
 			// 
 			// tabSubmitInfo
 			// 
@@ -2999,16 +3069,18 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			this->gboxLaunch->PerformLayout();
 			this->gboxExFlags->ResumeLayout(false);
 			this->gboxExFlags->PerformLayout();
-			this->tabNandSizeInfo->ResumeLayout(false);
-			this->tabNandSizeInfo->PerformLayout();
-			this->gboxNandSize->ResumeLayout(false);
-			this->gboxNandSize->PerformLayout();
 			this->tabRomEditInfo->ResumeLayout(false);
 			this->tabRomEditInfo->PerformLayout();
 			this->gboxOtherSpec->ResumeLayout(false);
 			this->gboxOtherSpec->PerformLayout();
 			this->gboxParental->ResumeLayout(false);
 			this->gboxParental->PerformLayout();
+			this->tabNandSizeInfo->ResumeLayout(false);
+			this->tabNandSizeInfo->PerformLayout();
+			this->gboxDLCategory->ResumeLayout(false);
+			this->gboxDLCategory->PerformLayout();
+			this->gboxNandSize->ResumeLayout(false);
+			this->gboxNandSize->PerformLayout();
 			this->tabSubmitInfo->ResumeLayout(false);
 			this->tabSubmitInfo->PerformLayout();
 			this->gboxForeign->ResumeLayout(false);
@@ -3229,6 +3301,20 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 			else
 			{
 				this->combBackup->Enabled = true;
+			}
+		}
+
+		// DL販売カテゴリの表示をカードアプリのとき「なし」にする。
+		void maskDLCategoryForms(void)
+		{
+			if( !this->hSrl->IsMediaNand )
+			{
+				this->combDLCategory->SelectedIndex = this->combDLCategory->Items->Count - 2;
+				this->combDLCategory->Enabled = false;
+			}
+			else
+			{
+				this->combDLCategory->Enabled = true;
 			}
 		}
 
@@ -3942,6 +4028,20 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 				this->tboxBackupOther->Clear();			// 前にテキストボックスに書かれていた内容を消去
 			}
 		}
+	private:
+		System::Void cboxDLCategory_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
+			{
+				this->tboxDLCategoryOther->Enabled = true;
+			}
+			else
+			{
+				this->tboxDLCategoryOther->Enabled = false;
+				this->tboxDLCategoryOther->Clear();
+			}
+		}
+
 	private:
 		// リージョン変更に連動して表示するレーティング団体を変更する
 		System::Void combRegion_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)

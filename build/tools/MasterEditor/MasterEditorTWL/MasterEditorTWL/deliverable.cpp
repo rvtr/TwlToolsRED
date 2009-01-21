@@ -511,6 +511,24 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				}
 			}
 
+			// NAND使用サイズ
+			if( node->FirstChild->Value->Equals( "TagDLCategory" ) )
+			{
+				node->FirstChild->Value = this->hDLCategory;
+			}
+			if( node->FirstChild->Value->Equals( "TagUsedNandSizeKB" ) )
+			{
+				node->FirstChild->Value = MasterEditorTWL::transSizeToStringKB( hSrl->hNandUsedSize->NandUsedSize );
+			}
+			if( node->FirstChild->Value->Equals( "TagUsedNandSizeMB" ) )
+			{
+				node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize, 2 );
+			}
+			if( node->FirstChild->Value->Equals( "TagDLBlocks" ) )
+			{
+				node->FirstChild->Value = hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
+			}
+
 			// SRLに登録されないROM仕様
 			if( node->FirstChild->Value->Equals( "TagIsUGC" ) )
 			{

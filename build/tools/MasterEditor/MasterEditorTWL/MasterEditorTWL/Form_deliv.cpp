@@ -187,7 +187,7 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hAppTypeOther->Replace("\r\n","");
 	}
 
-	// 一部のROM情報を登録
+	// バックアップメモリはROMヘッダには記述されないので提出確認書にのみ記載
 	if( this->combBackup->SelectedIndex != (this->combBackup->Items->Count - 1) )
 	{
 		if( this->combBackup->SelectedIndex > 0 )
@@ -202,6 +202,23 @@ void Form1::setDeliverableProperties(void)
 	else
 	{
 		this->hDeliv->hBackupMemory = this->tboxBackupOther->Text;
+	}
+
+	// DSi Wareの販売カテゴリ
+	if( this->combDLCategory->SelectedIndex != (this->combDLCategory->Items->Count - 1) )
+	{
+		if( this->combDLCategory->SelectedIndex > 0 )
+		{
+			this->hDeliv->hDLCategory = this->combDLCategory->SelectedItem->ToString();
+		}
+		else
+		{
+			this->hDeliv->hDLCategory = gcnew System::String("");
+		}
+	}
+	else
+	{
+		this->hDeliv->hDLCategory = this->tboxDLCategoryOther->Text;
 	}
 
 	// SRL情報を文字列で登録

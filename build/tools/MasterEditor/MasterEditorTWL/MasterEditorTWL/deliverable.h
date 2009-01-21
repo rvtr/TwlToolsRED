@@ -86,6 +86,9 @@ namespace MasterEditorTWL
 		// ROMヘッダ不記載のROMバイナリ(SRL)固有情報
 		property System::String  ^hBackupMemory;		// バックアップメモリの種別
 
+		// DSi Wareの販売カテゴリ
+		property System::String  ^hDLCategory;
+
 		// SRL情報の一部を文字列で持っておく
 		property System::String  ^hRegion;
 		property System::String  ^hCERO;

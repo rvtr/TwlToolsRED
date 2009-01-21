@@ -86,7 +86,7 @@ System::Boolean Form1::checkBoxIndex( System::Windows::Forms::ComboBox ^box, Sys
 void Form1::setGridError( void )
 {
 	this->gridError->Rows->Clear();
-	if( this->hSrl->hErrorList != nullptr )
+	if( this->hSrl->hErrorList != nullptr )		// ROM読み込み時に発見されたエラー
 	{
 		for each( RCMrcError ^err in this->hSrl->hErrorList )
 		{
@@ -113,7 +113,7 @@ void Form1::setGridWarn( void )
 void Form1::overloadGridError( void )
 {
 	this->gridError->Rows->Clear();
-	if( this->hSrl->hErrorList != nullptr )
+	if( this->hSrl->hErrorList != nullptr )		// ROM読み込み時に発見されたエラー
 	{
 		for each( RCMrcError ^err in this->hSrl->hErrorList )
 		{
@@ -124,7 +124,7 @@ void Form1::overloadGridError( void )
 			}
 		}
 	}
-	if( this->hErrorList != nullptr )
+	if( this->hErrorList != nullptr )	// 現在のフォーム入力から発見されたエラー
 	{
 		for each( RCMrcError ^err in this->hErrorList )
 		{

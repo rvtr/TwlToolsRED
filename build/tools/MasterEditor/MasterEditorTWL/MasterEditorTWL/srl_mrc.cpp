@@ -38,7 +38,8 @@ ECSrlResult RCSrl::mrc( FILE *fp )
 	{
 		return result;
 	}
-	this->hErrorList->AddRange( this->hParentalErrorList );		// ペアレンタルコントロールのリストは別につくっているので追加
+	this->hErrorList->AddRange( this->hParentalErrorList );	// ペアレンタルコントロールのリストは別につくっているので追加
+	this->hWarnList->AddRange( this->hParentalWarnList );
 #endif
 	return ECSrlResult::NOERROR;
 }

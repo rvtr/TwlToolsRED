@@ -28,6 +28,9 @@ using namespace MasterEditorTWL;
 // ----------------------------------------------
 void Form1::setDeliverableProperties(void)
 {
+	// プログラムのバージョン
+	this->hDeliv->hMasterEditorVersion = this->getVersion();
+
 	// 提出情報
 	this->hDeliv->hProductName     = this->tboxProductName->Text;
 	this->hDeliv->hProductCode1    = this->tboxProductCode1->Text;

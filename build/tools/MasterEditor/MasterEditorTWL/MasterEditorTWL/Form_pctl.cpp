@@ -245,7 +245,7 @@ void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::
 			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
 			msg + ": レーティングを選択してください。",
 			"Parental Control", 
-			msg + ": Rating Pending is setting. When rating age is examined, Please submit again.", true, true ) );
+			msg + ": Please set rating.", true, true ) );
 	}
 
 	// 審査中のとき警告
@@ -254,7 +254,9 @@ void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::
 		this->hWarnList->Add( gcnew RCMrcError( 
 			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
 			msg + ": 審査中指定がされています。審査が決まりしだい、再提出してください。",
-			"Parental Control", msg + ": Save ROM data as Game soft which needs rating examinination.", true, true ) );
+			"Parental Control",
+			msg + ": In your selection, no rating yet. Please submit again when rating is dicided.",
+			true, true ) );
 	}
 } //checkRatingForms()
 

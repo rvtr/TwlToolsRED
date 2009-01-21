@@ -69,6 +69,9 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "ReleaseDate", this->dateRelease->Value.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "SubmitDate", this->dateSubmit->Value.ToString() );
 
+	MasterEditorTWL::appendXmlTag( doc, form, "DLCategory", this->combDLCategory->SelectedIndex.ToString() );
+	MasterEditorTWL::appendXmlTag( doc, form, "DLCategoryOther", this->tboxDLCategoryOther->Text );
+
 	MasterEditorTWL::appendXmlTag( doc, form, "Company1", this->tboxCompany1->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "Depart1", this->tboxDepart1->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "Name1", this->tboxPerson1->Text );
@@ -161,7 +164,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/ReleaseDate", this->dateRelease );
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitDate",  this->dateSubmit );
 	this->parseTmp( root, "/MasterEditorTWL/Form/Backup", this->combBackup );
-	this->combBackup->Enabled = true;
+	this->combBackup->Enabled = true;	// あとでマスクする
 
 	this->tboxBackupOther->Enabled = false;
 	this->tboxBackupOther->Clear();
@@ -169,6 +172,18 @@ void Form1::loadTmp( System::String ^filename )
 	{
 		this->parseTmp( root, "/MasterEditorTWL/Form/BackupOther", this->tboxBackupOther );
 		this->tboxBackupOther->Enabled = true;
+	}
+
+	// DSi Ware
+	this->parseTmp( root, "/MasterEditorTWL/Form/DLCategory", this->combDLCategory );
+	this->combDLCategory->Enabled = true;	// あとでマスクする
+
+	this->tboxDLCategoryOther->Enabled = false;
+	this->tboxDLCategoryOther->Clear();
+	if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
+	{
+		this->parseTmp( root, "/MasterEditorTWL/Form/DLCategoryOther", this->tboxDLCategoryOther );
+		this->tboxDLCategoryOther->Enabled = true;
 	}
 
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts;

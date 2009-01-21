@@ -104,6 +104,9 @@ namespace MasterEditorTWL
 		property System::Boolean  IsUGC;
 		property System::Boolean  IsPhotoEx;
 
+		// プログラムのバージョン
+		property System::String  ^hMasterEditorVersion;
+
 		// constructor and destructor
 	public:
 

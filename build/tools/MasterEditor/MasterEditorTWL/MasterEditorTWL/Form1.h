@@ -4259,7 +4259,14 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 		// DL販売カテゴリの表示をカードアプリのとき「なし」にする。
 		void maskDLCategoryForms(void)
 		{
-			if( !this->hSrl->IsMediaNand )
+			// デフォルトだと IsMediaNand は false なのでメディアがNANDなのかROMが読み込まれていないのでfalseなのか判断できないので
+			// ROMが読み込まれていないときに(TMP情報の読み出しで)呼ばれるとコンボボックスが編集不可になってしまう
+			// => 読み込まれたときにのみ判定する
+
+			System::Boolean bRead = this->hSrl->IsAppUser   || this->hSrl->IsAppSystem ||	// 一度でも読み込まれているとどれかがtrueになっている
+									this->hSrl->IsAppSecure || this->hSrl->IsAppLauncher;
+
+			if( !this->hSrl->IsMediaNand && bRead )	// 読み込まれているときのみ
 			{
 				this->combDLCategory->SelectedIndex = this->combDLCategory->Items->Count - 2;
 				this->combDLCategory->Enabled = false;

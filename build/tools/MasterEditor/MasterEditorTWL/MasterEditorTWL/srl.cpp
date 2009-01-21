@@ -104,9 +104,11 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 	this->hErrorList = gcnew System::Collections::Generic::List<RCMrcError^>;
 	this->hWarnList  = gcnew System::Collections::Generic::List<RCMrcError^>;
 	this->hParentalErrorList = gcnew System::Collections::Generic::List<RCMrcError^>;
+	this->hParentalWarnList  = gcnew System::Collections::Generic::List<RCMrcError^>;
 	this->hErrorList->Clear();
 	this->hWarnList->Clear();
 	this->hParentalErrorList->Clear();
+	this->hParentalWarnList->Clear();
 
 	// ROMヘッダの値をROM固有情報フィールドに反映させる
 	(void)this->setRomInfo();
@@ -368,6 +370,12 @@ bool RCSrl::setRegionInfo( u32 region )
 			"Region", "Illigal Region. Parental Control Information is ignored in reading.", true, true ) );
 		return false;
 	}
+	if( !this->IsAppUser && (region == METWL_MASK_REGION_ALL) )
+	{
+		this->hParentalWarnList->Add( gcnew RCMrcError( 
+			"リージョン", 0x1b0, 0x1b3, "読み込み時のROMでは全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。",
+			"Region", "All Region is set in reading ROM. Please check necessity for setting each region individually.", true, true ) );
+	}
 	return true;
 }
 
@@ -406,6 +414,15 @@ void RCSrl::setUnnecessaryRatingInfo( u32 region )
 		this->hParentalErrorList->Add( gcnew RCMrcError( 
 			"ペアレンタルコントロール情報", 0x1b0, 0x1b3, "レーティング表示が不要かどうかを判断できません。再設定してください。",
 			"Parental Control Info.", "Can't judge wheather rating display is unnecessary.", true, true ) );
+	}
+	else
+	{
+		this->hParentalWarnList->Add( gcnew RCMrcError( 
+			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+			"読み込み時のROMにはレーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。",
+			"Parental Control",
+			"In the loaded ROM, rating is unnecessary. This selection is available for only tool application which is not game. Please contact Nintendo for checking validation of this selection",
+			true, true ) );
 	}
 }
 
@@ -458,6 +475,11 @@ void RCSrl::setOneRatingOrgInfo( int ogn )
 			if( age == 0 ) // 年齢が0のときは審査中とみなす
 			{
 				index = ages->Length;	// 配列の最後の要素の次が「審査中」
+				this->hParentalWarnList->Add( gcnew RCMrcError( 
+					"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+					name + ": 読み込み時のROMには審査中であると指定されています。審査が決まりしだい、再提出してください。",
+					"Parental Control",
+					name + ": In the loaded ROM, no rating yet. Please submit again when rating is dicided.", true, true ) );
 			}
 			else
 			{
@@ -902,9 +924,20 @@ ECSrlResult RCSrl::searchSDKVersion( FILE *fp )
 			{
 				case 1: str += ("PR " + patch.ToString() + revstr); break;
 				case 2: str += ("RC " + patch.ToString() + revstr); break;
-				case 3: str += ("RELEASE " + patch.ToString() + revstr); break;
+				//case 3: str += ("RELEASE " + patch.ToString() + revstr); break;
+				case 3:
+					if( patch > 0 )
+					{
+						str += ("RELEASE " + patch.ToString() + revstr);
+					}
+					else
+					{
+						str += ("RELEASE" + revstr);
+					}
+				break;
 				default: break;
 			}
+			// ARM9 static 内にあるか判定
 			u32 statbegin = this->pRomHeader->s.main_rom_offset;
 			u32 statend   = this->pRomHeader->s.main_rom_offset + this->pRomHeader->s.main_size - 1;
 			System::Boolean isstat = ((statbegin <= offset) && (offset <= statend))?true:false;

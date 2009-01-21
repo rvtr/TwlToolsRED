@@ -137,6 +137,11 @@ System::String^ MasterEditorTWL::transSizeToStringKB( const System::UInt32 size 
 // ‘æ2ˆø”‚Å¬”“_‚ÌŒ…”‚ğw’è(‚»‚êˆÈ‰º‚ÌŒ…‚ÍØ‚èã‚°)
 System::String^ MasterEditorTWL::transSizeToStringMB( const System::UInt32 size, const System::UInt32 decimals )
 {
+	if( size == 0 )
+	{
+		return size.ToString();
+	}
+
 	System::UInt32 MB = 1024*1024;
 	System::UInt32 pow = 1;
 	System::UInt32 i;

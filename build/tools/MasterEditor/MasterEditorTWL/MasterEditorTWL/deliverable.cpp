@@ -139,6 +139,11 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 		System::Xml::XmlNode ^node = list->Item(i);
 		if( (node->FirstChild != nullptr) && (node->FirstChild->Value != nullptr) )
 		{
+			// プログラムのバージョン
+			if( node->FirstChild->Value->Equals( "TagMasterEditorVersion" ) )
+			{
+				node->FirstChild->Value = this->hMasterEditorVersion;
+			}
 			// 提出情報
 			if( node->FirstChild->Value->Equals( "TagProductName" ) )
 			{

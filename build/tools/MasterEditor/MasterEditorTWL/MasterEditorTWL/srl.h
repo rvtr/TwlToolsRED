@@ -487,7 +487,8 @@ namespace MasterEditorTWL
 		// MRC機能でチェックされたエラー情報のリスト
 		property System::Collections::Generic::List<RCMrcError^> ^hErrorList;
 		property System::Collections::Generic::List<RCMrcError^> ^hWarnList;
-		property System::Collections::Generic::List<RCMrcError^> ^hParentalErrorList;	// ペアレンタルコントロールのチェックはsetと同時に行なう
+		property System::Collections::Generic::List<RCMrcError^> ^hParentalErrorList;	// 読み込み時に発見されるペアレンタルコントロール情報のエラー
+		property System::Collections::Generic::List<RCMrcError^> ^hParentalWarnList;
 
 		// MRC追加項目
 		property RCMrcExternalCheckItems ^hMrcExternalCheckItems;

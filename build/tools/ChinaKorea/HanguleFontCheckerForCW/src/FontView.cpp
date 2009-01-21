@@ -46,24 +46,24 @@
 // 外部変数
 //****************************************************************************
 	//グループごとの文字コードテーブル
-/*	extern const unsigned short DS[];		
+	extern const unsigned short DS[];		
 	extern const unsigned short ASCII[];		
 	extern const unsigned short JIS_X_0201_Half_width_KATAKANA[];		
 	extern const unsigned short Code_Page_1252[];		
 	extern const unsigned short ISO_8859_1_Latin_1[];		
-	extern const unsigned short JIS_X_0208_Not_Hanja[];		*/
+	extern const unsigned short JIS_X_0208_Not_Hanja[];
 	extern const unsigned short KS_X_1001_Hangul[];	
 	extern const unsigned short KS_X_1001_Jamo[];	
 	extern const unsigned short additional_Hangul[];
     extern const unsigned short wii_additional_Hangul[];		// トゥルータイプフォント(2360 + 8844)
 
 	//文字コードテーブルの要素数定数
-/*	extern const unsigned short Count_of_DS ;
+	extern const unsigned short Count_of_DS ;
 	extern const unsigned short Count_of_ASCII ;
 	extern const unsigned short Count_of_JIS_X_0201_Half_width_KATAKANA ;
 	extern const unsigned short Count_of_Code_Page_1252 ;
 	extern const unsigned short Count_of_ISO_8859_1_Latin_1 ;
-	extern const unsigned short Count_of_JIS_X_0208_Not_Hanja ;*/
+	extern const unsigned short Count_of_JIS_X_0208_Not_Hanja ;
 	extern const unsigned short Count_of_KS_X_1001_Hangul;
 	extern const unsigned short Count_of_KS_X_1001_Jamo;
 	extern const unsigned short Count_of_additional_Hangul;
@@ -71,12 +71,12 @@
 
 	//文字コードテーブルの名前
 	typedef const char * LPCSTR;
-/*	extern const LPCSTR Title_of_DS ;
+	extern const LPCSTR Title_of_DS ;
 	extern const LPCSTR Title_of_ASCII ;
 	extern const LPCSTR Title_of_JIS_X_0201_Half_width_KATAKANA ;
 	extern const LPCSTR Title_of_Code_Page_1252 ;
 	extern const LPCSTR Title_of_ISO_8859_1_Latin_1 ;
-	extern const LPCSTR Title_of_JIS_X_0208_Not_Hanja ;*/
+	extern const LPCSTR Title_of_JIS_X_0208_Not_Hanja ;
 	extern const LPCSTR Title_of_KS_X_1001_Hangul ;
 	extern const LPCSTR Title_of_KS_X_1001_Jamo ;
 	extern const LPCSTR Title_of_additional_Hangul ;
@@ -88,12 +88,12 @@
 //****************************************************************************
 	//定義
 	enum FONTCATEGORY{
-/*		CATEGORY_DS,
+		CATEGORY_DS,
 		CATEGORY_ASCII,
 		CATEGORY_JIS_X_0201_Half_width_KATAKANA,
 		CATEGORY_Code_Page_1252,
 		CATEGORY_ISO_8859_1_Latin_1,
-		CATEGORY_JIS_X_0208_Not_Hanja,*/
+		CATEGORY_JIS_X_0208_Not_Hanja,
 		CATEGORY_KS_X_1001_Hangul,
 		CATEGORY_KS_X_1001_Jamo,
 		CATEGORY_additional_Hangul,
@@ -119,12 +119,12 @@
 
 	//フォントカテゴリテーブル
 	static const FontCategory m_FontCategoryTbl[] = {
-/*		{ DS,								&Count_of_DS 							,	&Title_of_DS 								},
+		{ DS,								&Count_of_DS 							,	&Title_of_DS 								},
 		{ ASCII,                    		&Count_of_ASCII 						,	&Title_of_ASCII 							},	
 		{ JIS_X_0201_Half_width_KATAKANA,   &Count_of_JIS_X_0201_Half_width_KATAKANA,	&Title_of_JIS_X_0201_Half_width_KATAKANA 	},
 		{ Code_Page_1252,           		&Count_of_Code_Page_1252                ,   &Title_of_Code_Page_1252                    },
 		{ ISO_8859_1_Latin_1,				&Count_of_ISO_8859_1_Latin_1 			,	&Title_of_ISO_8859_1_Latin_1 				},
-		{ JIS_X_0208_Not_Hanja,     		&Count_of_JIS_X_0208_Not_Hanja       	,   &Title_of_JIS_X_0208_Not_Hanja              },*/
+		{ JIS_X_0208_Not_Hanja,     		&Count_of_JIS_X_0208_Not_Hanja       	,   &Title_of_JIS_X_0208_Not_Hanja              },
 		{ KS_X_1001_Hangul,         		&Count_of_KS_X_1001_Hangul 				,	&Title_of_KS_X_1001_Hangul 					},
 		{ KS_X_1001_Jamo,       	  		&Count_of_KS_X_1001_Jamo 				,	&Title_of_KS_X_1001_Jamo 					},
 		{ additional_Hangul,         		&Count_of_additional_Hangul				,	&Title_of_additional_Hangul					},
@@ -236,10 +236,7 @@
 		};
 		enum FontSize{
 			SIZE_9x9,
-			SIZE_10x10,
 			SIZE_11x11,
-			SIZE_11x12,
-			SIZE_14x14,
 			SIZE_15x15,
 			
 			SIZE_MAX
@@ -292,18 +289,23 @@
 
 	// フォント
 	static  NNSG2dFont				m_Font;
+
+#ifdef USE_OLD_FONTS
 	static  NNSG2dFont				m_Font_9x9;
-//	static  NNSG2dFont				m_Font_10x10; // いらない
 	static  NNSG2dFont				m_Font_11x11;
-//	static  NNSG2dFont				m_Font_11x12; // いらない
-//	static  NNSG2dFont				m_Font_14x14; // いらない
-	#define m_Font_15x15			m_Font
+#endif
 
     static  NNSG2dFont				m_Font_11x13;
     static  NNSG2dFont				m_Font_13x16;
+
+#ifdef USE_OLD_FONTS
+    #define m_Font_15x15			m_Font
     static  NNSG2dFont				m_Font_17x21;
-                                                                      
-	//共有物
+#else
+    #define m_Font_17x21			m_Font
+#endif
+
+     //共有物
 	static  MainWnd 				m_MainWnd;
 	static  SubWnd  				m_SubWnd;
 	static  NNSGfdVramTransferTask  m_TrasTask[TRANS_TASK_NUM];
@@ -374,6 +376,7 @@
 		TXT_SetupBackground();
 		
 		// フォントを読み込みます
+#ifdef USE_OLD_FONTS
 		{
 			void* pFontFile;
 			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_9x9.NFTR" );
@@ -381,13 +384,6 @@
 			NNS_G2dFontInitUTF16(&m_Font_9x9, pFontFile);
 			NNS_G2dPrintFont(&m_Font_9x9);
 		}
-/*		{
-			void* pFontFile;
-			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_10x10.NFTR" );
-			NNS_G2D_ASSERT( size > 0 );
-			NNS_G2dFontInitUTF16(&m_Font_10x10, pFontFile);
-			NNS_G2dPrintFont(&m_Font_10x10);
-		}*/
 		{
 			void* pFontFile;
 			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_11x11.NFTR" );
@@ -395,20 +391,6 @@
 			NNS_G2dFontInitUTF16(&m_Font_11x11, pFontFile);
 			NNS_G2dPrintFont(&m_Font_11x11);
 		}
-/*		{
-			void* pFontFile;
-			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_11x12.NFTR" );
-			NNS_G2D_ASSERT( size > 0 );
-			NNS_G2dFontInitUTF16(&m_Font_11x12, pFontFile);
-			NNS_G2dPrintFont(&m_Font_11x12);
-		}*/
-/*		{
-			void* pFontFile;
-			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_14x14.NFTR" );
-			NNS_G2D_ASSERT( size > 0 );
-			NNS_G2dFontInitUTF16(&m_Font_14x14, pFontFile);
-			NNS_G2dPrintFont(&m_Font_14x14);
-		}*/
 		{
 			void* pFontFile;
 			u32 size = TXT_LoadFile( &pFontFile, "data/HANGUL_15x15.NFTR" );
@@ -416,7 +398,7 @@
 			NNS_G2dFontInitUTF16(&m_Font_15x15, pFontFile);
 			NNS_G2dPrintFont(&m_Font_15x15);
 		}
-
+#endif
       // 新規追加 -----------------------------------------
 		{
 			void* pFontFile;
@@ -597,8 +579,8 @@
 	{
 		//初期化 
 	 	TXT_EnableBackground();
-		ChangeCategory( CATEGORY_KS_X_1001_Hangul, DISPTYPE_8x2 );
-		m_FontType = 0;
+		ChangeCategory( CATEGORY_DS, DISPTYPE_10x2 );
+		m_FontType = FONTTYPE_MAX-1;
 		m_fDispUnderLine = true;
 		
 		//ループ処理
@@ -696,21 +678,25 @@
 				//テキスト領域のクリア
 				m_MainWnd.Clear();
 				m_SubWnd.Clear();
-				
-				//GroupIDの表示
+
+                //【上画面表示】
+                // GroupIDの表示・フォントカテゴリの表示
+#ifdef USE_OLD_FONTS
 				m_MainWnd.PrintDec( &m_Font_15x15, GROUP_ID_X, GROUP_ID_Y, GetGroupID()+1 );
-				
-				//GroupIDの示すグループ２０文字を表示 (上画面表示)
+                m_MainWnd.PrintString( &m_Font_9x9, FONTTITLE_X, FONTTITLE_Y, m_FontCategoryTbl[m_CurCategory].GetTitle() );
+#else
+                m_MainWnd.PrintDec( &m_Font_17x21, GROUP_ID_X, GROUP_ID_Y, GetGroupID()+1 );
+                m_MainWnd.PrintString( &m_Font_11x13, FONTTITLE_X, FONTTITLE_Y, m_FontCategoryTbl[m_CurCategory].GetTitle() );
+#endif
+              
+				//GroupIDの示すグループ２０文字を表示
 				for( int y = 0; y<GROUP_HEIGHT; y++ ){
 					for( int x = 0; x<m_GroupWidth; x++ ){
 						//フォント切り替え
 						static const NNSG2dFont* const fonts[FONTTYPE_MAX]={
-							&m_Font_9x9,
-						//	&m_Font_10x10,
-							&m_Font_11x11,
-						//	&m_Font_11x12,
-						//	&m_Font_14x14,
-							&m_Font_15x15,
+                            &m_Font_17x21,
+                            &m_Font_13x16,
+                            &m_Font_11x13,
 						};
 						
 						//先頭文字からのオフセットを求め、描画する
@@ -733,33 +719,22 @@
 						if( m_GroupCursor == y ){
 				            NNSG2dGlyph g;
 				            NNS_G2dFontGetGlyph(&g, fonts[m_FontType], c );
-							m_MainWnd.Fill( xPos, yPos + NNS_G2dFontGetHeight(fonts[m_FontType]), GetCharWidth(g.pWidths), 1 );
+							m_MainWnd.Fill( xPos, yPos + NNS_G2dFontGetHeight(fonts[m_FontType]), GetCharWidth(g.pWidths), 1 ); // color = 1
 						}
 					}
 				}
-				
-				//フォントカテゴリの表示
-				m_MainWnd.PrintString( &m_Font_9x9, FONTTITLE_X, FONTTITLE_Y, m_FontCategoryTbl[m_CurCategory].GetTitle() );
-				
-				//FontIDの表示
-				m_SubWnd.PrintHex( &m_Font_15x15, FONT_ID_X, FONT_ID_Y, GetFontID() );
 
-				//ターゲットウインドウの表示 (下画面の表示)
+                //【下画面の表示】
+				//FontIDの表示
+				m_SubWnd.PrintHex( &m_Font, FONT_ID_X, FONT_ID_Y, GetFontID() );
+
+				//ターゲットウインドウの表示
 				for( int y = 0; y<TARGET_HEIGHT; y++ ){
 					for( int x = 0; x<TARGET_WIDTH; x++ ){
                       static NNSG2dFont* fonts[TARGET_WIDTH];
-                      
-						//フォント切り替え
-                      if(m_CurCategory == 3 || m_CurCategory == 4){
                         fonts[0] = &m_Font_17x21;
 						fonts[1] = &m_Font_13x16;
 						fonts[2] = &m_Font_11x13;
-                      }
-                      else{
-                        fonts[0] = &m_Font_15x15;
-						fonts[1] = &m_Font_11x11;
-						fonts[2] = &m_Font_9x9;
-                      }
 
                         //文字色切り替え
 						static int colors[TARGET_HEIGHT]={
@@ -797,11 +772,13 @@
 						break;
 					}
 					u16 c    = m_FontCategoryTbl[m_CurCategory].GetValue(Index);
-					m_SubWnd.PrintChar( &m_Font, SELECT_LEFT + i*SELECT_WIDTH, SELECT_TOP, c );
+                    // m_Font -> m_Font_17x21
+					m_SubWnd.PrintChar( &m_Font_17x21, SELECT_LEFT + i*SELECT_WIDTH, SELECT_TOP, c );
 				}
 				
 				//セレクトウインドウ カーソルの表示
-				m_SubWnd.PrintChar( &m_Font, SELECT_LEFT + SELECT_WIDTH * (m_CurIndex % m_GroupWidth), CURSOR_TOP, CURSOR_CODE );
+                // m_Font -> m_Font_17x21
+				m_SubWnd.PrintChar( &m_Font_17x21, SELECT_LEFT + SELECT_WIDTH * (m_CurIndex % m_GroupWidth), CURSOR_TOP, CURSOR_CODE );
 			}
 				
 			//VBLANK割り込みを待つ
@@ -870,11 +847,15 @@
 						"Font Check Mode",
 						"Text Check Mode",
 					};
+#ifdef USE_OLD_FONTS
 					m_MainWnd.PrintString( &m_Font, MENU_LEFT, MENU_TOP + MENU_HEIGHT*i, MenuStr[i] );
+#else
+                    m_MainWnd.PrintString( &m_Font_13x16, MENU_LEFT, MENU_TOP + MENU_HEIGHT*i, MenuStr[i] );
+#endif
 				}
 				
 				//カーソルの表示
-				m_MainWnd.PrintChar( &m_Font, CURSOR_LEFT, CURSOR_TOP+MENU_HEIGHT*m_CursorIndex, CURSOR_CODE );
+				m_MainWnd.PrintChar( &m_Font_13x16, CURSOR_LEFT, CURSOR_TOP+MENU_HEIGHT*m_CursorIndex, CURSOR_CODE );
 			}
 				
 			//VBLANK割り込みを待つ
@@ -985,12 +966,15 @@
 				
 				//フォントサイズ情報表示
 				static const char * const SizeMes[] = {
+#ifdef USE_OLD_FONTS
 					" 9x 9",
-					"10x10",
 					"11x11",
-					"11x12",
-					"14x14",
 					"15x15",
+#else
+                    "11x13",
+                    "13x16",
+                    "17x21",
+#endif
 				};
 				m_SubWnd.PrintString( &m_Font, SIZE_LEFT, SIZE_TOP, SizeMes[m_CurFontSize] );
 				
@@ -999,12 +983,15 @@
 
 				//対象テキスト表示
 				static const NNSG2dFont* const fonts[SIZE_MAX]={
+#ifdef USE_OLD_FONT
 					&m_Font_9x9,
-				//	&m_Font_10x10,
 					&m_Font_11x11,
-				//	&m_Font_11x12,
-				//	&m_Font_14x14,
 					&m_Font_15x15,
+#else
+					&m_Font_11x13,
+					&m_Font_13x16,
+					&m_Font_17x21,
+#endif
 				};
 				m_SubWnd.PrintUnicodeString( fonts[m_CurFontSize], TEXT_LEFT, TEXT_TOP, g_TextTable[m_CurIndex][m_CurTextType] );
 			}

@@ -46,11 +46,12 @@ static NNSFndAllocator sAllocator;
 // デモ共通のカラーパレット
 GXRgb TXTColorPalette[32] =
 {
-    GX_RGB( 0,  0,  0), GX_RGB(31, 31, 31), GX_RGB( 0,  0,  0), GX_RGB(31,  0,  0),
-    GX_RGB( 0, 31,  0), GX_RGB( 0,  0, 31), GX_RGB( 0, 31, 31), GX_RGB(31,  0, 31),
-    GX_RGB(31, 31,  0), GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0),
+    GX_RGB( 0,  0,  0), // NULL
+    GX_RGB(31, 31, 31), GX_RGB(25, 25, 25), GX_RGB(22, 22, 22), GX_RGB(20, 20, 20),
+    GX_RGB( 0,  0,  0), GX_RGB( 6,  6,  6), GX_RGB( 8,  8,  8), GX_RGB(10, 10, 10),
     GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0),
-
+    GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0), GX_RGB( 0,  0,  0),
+    
     GX_RGB( 0,  0,  0), GX_RGB(12, 16, 19), GX_RGB(23,  9,  0), GX_RGB(31,  0,  3),
     GX_RGB(31, 17, 31), GX_RGB(31, 18,  0), GX_RGB(30, 28,  0), GX_RGB(21, 31,  0),
     GX_RGB( 0, 20,  7), GX_RGB( 9, 27, 17), GX_RGB( 6, 23, 30), GX_RGB( 0, 11, 30),

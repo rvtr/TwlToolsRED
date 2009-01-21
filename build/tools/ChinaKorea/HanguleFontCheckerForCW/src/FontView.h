@@ -10,6 +10,8 @@
 #ifndef FONTVIEW_H_ 
 #define FONTVIEW_H_ 
 
-	void FontView();
+#define USE_OLD_FONTS
+
+void FontView();
 
 #endif	// FONTVIEW_H_ 

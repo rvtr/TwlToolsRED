@@ -64,8 +64,9 @@ void Form1::loadInit(void)
 	{
 		// Shared2ファイルのアクセス許可(ファイルごとに指定)
 		System::String ^shared2 = MasterEditorTWL::getXPathText( root, "/init/access/shared2" );
-		if( shared2 )
+		if( shared2 != nullptr )
 		{
+			// コンマ区切りでアクセス許可ファイルNo.が指定されている
 			cli::array<System::String^> ^list = shared2->Split( ',' );
 			if( list )
 			{
@@ -88,12 +89,12 @@ void Form1::loadInit(void)
 	// <access>タグに付随して非表示項目を表示するかどうかを決める
 	{
 		// Shared2ファイル
-		System::Boolean bVisible;
+		System::Boolean bVisible = false;
 		for each( System::Boolean permit in this->hSrl->hMrcExternalCheckItems->hIsPermitShared2Array )
 		{
 			if( permit && !this->gboxShared2Size->Visible )
 			{
-				bVisible = true;		// どれかひとつでもtrueならグループボックス全体を表示する
+				bVisible = true;		// どれかひとつでもtrueならグループボックスを表示する
 			}
 		}
 		this->gboxShared2Size->Visible = bVisible;
@@ -103,8 +104,7 @@ void Form1::loadInit(void)
 			int i;
 			for( i=0; i < METWL_NUMOF_SHARED2FILES; i++ )
 			{
-				// グループボックス全体が表示されていたら全ファイルの項目が表示されるので
-				// アクセス許可されていないファイルのみ非表示にする
+				// アクセス許可されているファイルのみ表示にする
 				if( this->hSrl->hMrcExternalCheckItems->hIsPermitShared2Array[i] )
 				{
 					switch(i)

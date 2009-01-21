@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <init>
 	<rw>w</rw>
-	<access>
-		<!-- <shared2>0,1</shared2> -->
-		<!-- <normalJump>Permit</normalJump> -->
-	</access>
 	<shared2>
 		<size0>2097152</size0>
 	</shared2>

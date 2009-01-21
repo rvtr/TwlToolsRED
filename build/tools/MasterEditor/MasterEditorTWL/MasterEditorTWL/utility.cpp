@@ -145,9 +145,9 @@ System::String^ MasterEditorTWL::transSizeToStringMB( const System::UInt32 size,
 		pow = pow * 10;
 	}
 
-	System::UInt32 div = size * pow / MB;		// 小数点の位置をずらす
+	System::UInt32 div = size * pow / MB;	// 小数点の位置をずらす
 	System::UInt32 mod = size * pow % MB;
-	if( mod > 0 )								// ずらした小数点以下を切り上げ
+	if( mod > 0 )							// ずらした小数点以下を切り上げ(直後の桁が0であってもそれ以降が0でなければ切り上げ)
 	{
 		div++;
 	}

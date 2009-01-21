@@ -271,6 +271,29 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	}
 #endif
 
+	// NANDアプリがHYBRIDとなるのはクローンブートのときのみ
+	if( this->IsMediaNand )
+	{
+		if( !this->HasDSDLPlaySign && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID) )
+		{
+			this->hErrorList->Add( gcnew RCMrcError( 
+				"NANDアプリのHYBRID条件", 0x12, 0x12,
+				"クローンブート対応でないNANDアプリをHYBRID版として作成することは許可されていません。",
+				"HYBRID NAND application",
+				"Building HYBRID NAND Application supported Clone Boot is not permitted.",
+				false, true ) );
+		}
+		if( this->HasDSDLPlaySign && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED) )
+		{
+			this->hErrorList->Add( gcnew RCMrcError( 
+				"NANDアプリのLIMITED条件", 0x12, 0x12,
+				"クローンブート対応のNANDアプリをLIMITED版として作成することは許可されていません。",
+				"LIMITED NAND application",
+				"Building LIMITED NAND Application supported Clone Boot is not permitted.",
+				false, true ) );
+		}
+	}
+
 	// 旧開発用暗号フラグとクローンブートの組み合わせはマスタリングで矛盾が生じる
 	if( this->IsOldDevEncrypt && this->HasDSDLPlaySign )
 	{
@@ -322,14 +345,23 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				"デバイス容量", 0x14, 0x14, "NANDアプリに対して指定可能な容量ではありません。",
 				"Device Capacity", "Invalid capacity.", false, true ) );
 		}
-		u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
+		//u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
+		u32  allsize = this->hNandUsedSize->NandUsedSize;	// TMDやサブバナーのサイズを含める
 		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
 			this->hErrorList->Add( gcnew RCMrcError( 
-				"実ファイルサイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"ROMデータの実ファイルサイズとPublicセーブデータおよびPrivateセーブデータのサイズの総和が32MByteを超えています。",
+				"NAND領域の使用サイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+				"NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が32MBを超えています。",
 				"Actual File Size", 
-				"The sum of this size, the public save data size and private save data size exceed 32MByte.", false, true ) );
+				"NAND size used by NAND application, including Save Data, exceeds 32MB.", false, true ) );
+		}
+		if( (allsize > METWL_ALLSIZE_MAX_NAND_LIC) && this->IsAppUser )		// ユーザアプリのときのみ
+		{
+			this->hWarnList->Add( gcnew RCMrcError(			// 運用上問題あるがシステム上では問題ないので警告にしておく
+				"NAND領域の使用サイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+				"NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が16MBを超えています。",
+				"Used NAND Size", 
+				"NAND size used by NAND application, including Save Data, exceeds 16MB.", false, true ) );
 		}
 	}
 
@@ -369,7 +401,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 
 	// デバッガ動作禁止フラグはユーザアプリでは立っていてはいけない
 	// システムアプリではデバッガで解析されないように通常では立っていなければならない
-	if( this->IsAppLauncher || this->IsAppSecure || this->IsAppSystem )
+	if( !this->IsAppUser )
 	{
 		if( this->pRomHeader->s.disable_debug == 0 )
 		{
@@ -395,7 +427,6 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	}
 
 	// ノーマルジャンプ
-	if( !(this->IsAppLauncher || this->IsAppSecure || this->IsAppSystem) )
 	{
 		u8 okbits = 0x01 | 0x02 | 0x40 | 0x80;
 		u8 *p = (u8*)&(this->pRomHeader->s);
@@ -408,16 +439,18 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				"Illegal bit is setting. This setting is unavailable.", 
 				false, true ) );
 		}
-
-		if( (this->pRomHeader->s.permit_landing_normal_jump != 0) && 
-			!this->hMrcExternalCheckItems->IsPermitNormalJump )			// 設定ファイルでアクセス許可されていないときにチェック
+		if( this->IsAppUser )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"ノーマルアプリジャンプ", 0x1d, 0x1d, 
-				"ノーマルアプリジャンプは許可されていません。",
-				"Normal App Jump", 
-				"This setting is not permitted.", 
-				false, true ) );
+			if( (this->pRomHeader->s.permit_landing_normal_jump != 0) && 
+				!this->hMrcExternalCheckItems->IsPermitNormalJump )			// 設定ファイルでアクセス許可されていないときにチェック
+			{
+				this->hErrorList->Add( gcnew RCMrcError( 
+					"ノーマルアプリジャンプ", 0x1d, 0x1d, 
+					"ノーマルアプリジャンプは許可されていません。",
+					"Normal App Jump", 
+					"This setting is not permitted.", 
+					false, true ) );
+			}
 		}
 	}
 
@@ -518,6 +551,19 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		this->hWarnList->Add( gcnew RCMrcError( 
 			"タイトルID", 0x230, 0x233, "下位4バイトがイニシャルコードと一致しません。",
 			"Title ID", "Lower 4 bytes don't match ones of Game Code.", false, true ) );
+	}
+
+	// カードアプリでPublic/Privateセーブデータを設定してはいけない
+	if( !this->IsMediaNand )
+	{
+		if( (this->PublicSize > 0) || (this->PrivateSize) )
+		{
+			this->hErrorList->Add( gcnew RCMrcError( 
+				"Pubilc/Privateセーブデータ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
+				"ゲームカード向けソフトではPublicセーブデータおよびPrivateセーブデータのサイズを指定することはできません。",
+				"Public/Private Save Data",
+				"Application for GameCard can not have Public Save Data or Private Save Data.", false, true ) );
+		}
 	}
 
 	// バナーの文字コード
@@ -644,7 +690,7 @@ void RCSrl::mrcAppType(FILE *fp)
 // -------------------------------------------------------------------
 void RCSrl::mrcAccessControl(FILE *fp)
 {
-	if( this->IsAppLauncher || this->IsAppSecure || this->IsAppSystem )
+	if( !this->IsAppUser )
 	{
 		if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
 			(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
@@ -654,7 +700,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 				"Access Control Info.", "Game card access setting is either normal mode or NTR mode.", false, true ) );
 		}
 	}
-	else
+	else	// ユーザアプリ
 	{
 		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 		{
@@ -680,7 +726,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		u32 okbits;
 		if( !this->IsMediaNand )
 		{
-			okbits = 0x00000008 | 0x00000010 | 0x00000040;
+			okbits = 0x00000008 | 0x00000010 | 0x00000040;	// NAND | SD | Shared2ファイル (それぞれ個別でチェックするためここではチェックしない)
 		}
 		else
 		{
@@ -862,12 +908,12 @@ void RCSrl::mrcShared2(FILE *fp)
 			System::String ^filenoE = "Shared File(No." + i.ToString() + ")";
 			if( !this->hMrcExternalCheckItems->hIsPermitShared2Array[i] )
 			{
-				// 一般公開されていないのにファイルを使用する場合を考慮してシステムアプリ場合のメッセージを変更する
-				if( this->IsAppSystem || this->IsAppSecure || this->IsAppLauncher )
+				// 一般公開されていないのにファイルを使用する場合を考慮してシステムアプリのときのメッセージを変更する
+				if( !this->IsAppUser )
 				{
 					this->hWarnList->Add( gcnew RCMrcError( 
 						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						"一般公開されていない" + filenoJ + "へのアクセスが設定されています。"
+						filenoJ + "へのアクセス(非公開)が設定されています。"
 						+ "アクセス許可されているかご確認ください。",
 						filenoE,
 						filenoE + " is not revealed to licencies. Please check permission of access to this file.",
@@ -885,9 +931,9 @@ void RCSrl::mrcShared2(FILE *fp)
 			}
 			if( this->hShared2SizeArray[i] != this->hMrcExternalCheckItems->hShared2SizeArray[i] )
 			{
-				if( this->IsAppSystem || this->IsAppSecure || this->IsAppLauncher )
+				if( !this->IsAppUser )
 				{
-					this->hWarnList->Add( gcnew RCMrcError( 
+					this->hWarnList->Add( gcnew RCMrcError(						// システムのとき警告
 						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
 						filenoJ + "のファイルサイズが "
 						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + " に設定されています。"
@@ -899,11 +945,15 @@ void RCSrl::mrcShared2(FILE *fp)
 						false, true ) );
 				}
 				{
-					this->hErrorList->Add( gcnew RCMrcError( 
+					this->hErrorList->Add( gcnew RCMrcError(					// ユーザのときエラー
 						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						filenoJ + "のファイルサイズに不正な値が設定されています。",
+						filenoJ + "のファイルサイズが "
+						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + " に設定されています。"
+						+ "正しい値かどうかをご確認ください。",
 						filenoE,
-						"Illegal file size of " + filenoE + ".",
+						"File size of " + filenoE + " is "
+						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + "."
+						+ " Please check validation of this size.",
 						false, true ) );
 				}
 			}

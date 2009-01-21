@@ -11,7 +11,8 @@
 #define   METWL_ROMSIZE_MAX				4096		// 最大の..           4Gbit
 #define   METWL_ROMSIZE_MIN_NAND		1
 #define   METWL_ROMSIZE_MAX_NAND		256
-#define   METWL_ALLSIZE_MAX_NAND		(32*1024*1024)	// Public/Privateセーブデータのサイズを含めたNANDアプリの容量制限(単位Byte)
+#define   METWL_ALLSIZE_MAX_NAND		(32*1024*1024)	// システム上のNANDアプリの容量制限(単位Byte)
+#define   METWL_ALLSIZE_MAX_NAND_LIC	(16*1024*1024)	// 運用上の(契約上の)NANDアプリの容量制限(単位Byte)
 #define   METWL_MASK_REGION_JAPAN       0x00000001
 #define   METWL_MASK_REGION_AMERICA     0x00000002
 #define   METWL_MASK_REGION_EUROPE      0x00000004

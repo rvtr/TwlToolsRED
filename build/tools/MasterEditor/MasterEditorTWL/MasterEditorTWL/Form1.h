@@ -676,10 +676,10 @@ private: System::Windows::Forms::TextBox^  tboxSrlSize;
 private: System::Windows::Forms::Label^  labBracketR;
 private: System::Windows::Forms::Label^  labBracketL;
 private: System::Windows::Forms::TextBox^  tboxSumSizeMB;
-private: System::Windows::Forms::GroupBox^  gboxDLCategory;
-private: System::Windows::Forms::TextBox^  tboxDLCategoryOther;
-private: System::Windows::Forms::ComboBox^  combDLCategory;
-private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
+
+
+
+
 
 
 
@@ -819,10 +819,10 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle7 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle8 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -1036,10 +1036,6 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxParental = (gcnew System::Windows::Forms::GroupBox());
 			this->cboxIsUnnecessaryRating = (gcnew System::Windows::Forms::CheckBox());
 			this->tabNandSizeInfo = (gcnew System::Windows::Forms::TabPage());
-			this->tboxGuideDLCategory = (gcnew System::Windows::Forms::TextBox());
-			this->gboxDLCategory = (gcnew System::Windows::Forms::GroupBox());
-			this->tboxDLCategoryOther = (gcnew System::Windows::Forms::TextBox());
-			this->combDLCategory = (gcnew System::Windows::Forms::ComboBox());
 			this->tboxGuideNandSizeInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxNandSize = (gcnew System::Windows::Forms::GroupBox());
 			this->labBracketR = (gcnew System::Windows::Forms::Label());
@@ -1120,7 +1116,6 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxOtherSpec->SuspendLayout();
 			this->gboxParental->SuspendLayout();
 			this->tabNandSizeInfo->SuspendLayout();
-			this->gboxDLCategory->SuspendLayout();
 			this->gboxNandSize->SuspendLayout();
 			this->tabSubmitInfo->SuspendLayout();
 			this->gboxForeign->SuspendLayout();
@@ -1133,20 +1128,12 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// tboxFile
 			// 
-			this->tboxFile->AccessibleDescription = nullptr;
-			this->tboxFile->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxFile, L"tboxFile");
-			this->tboxFile->BackgroundImage = nullptr;
-			this->tboxFile->Font = nullptr;
 			this->tboxFile->Name = L"tboxFile";
 			this->tboxFile->ReadOnly = true;
 			// 
 			// gboxSrl
 			// 
-			this->gboxSrl->AccessibleDescription = nullptr;
-			this->gboxSrl->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxSrl, L"gboxSrl");
-			this->gboxSrl->BackgroundImage = nullptr;
 			this->gboxSrl->Controls->Add(this->tboxRemasterVer);
 			this->gboxSrl->Controls->Add(this->tboxRomSize);
 			this->gboxSrl->Controls->Add(this->tboxPlatform);
@@ -1162,457 +1149,297 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxSrl->Controls->Add(this->labTitleName);
 			this->gboxSrl->Controls->Add(this->labRemasterVer);
 			this->gboxSrl->Controls->Add(this->tboxTitleName);
-			this->gboxSrl->Font = nullptr;
+			resources->ApplyResources(this->gboxSrl, L"gboxSrl");
 			this->gboxSrl->Name = L"gboxSrl";
 			this->gboxSrl->TabStop = false;
 			// 
 			// tboxRemasterVer
 			// 
-			this->tboxRemasterVer->AccessibleDescription = nullptr;
-			this->tboxRemasterVer->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxRemasterVer, L"tboxRemasterVer");
-			this->tboxRemasterVer->BackgroundImage = nullptr;
-			this->tboxRemasterVer->Font = nullptr;
 			this->tboxRemasterVer->Name = L"tboxRemasterVer";
 			this->tboxRemasterVer->ReadOnly = true;
 			// 
 			// tboxRomSize
 			// 
-			this->tboxRomSize->AccessibleDescription = nullptr;
-			this->tboxRomSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxRomSize, L"tboxRomSize");
-			this->tboxRomSize->BackgroundImage = nullptr;
-			this->tboxRomSize->Font = nullptr;
 			this->tboxRomSize->Name = L"tboxRomSize";
 			this->tboxRomSize->ReadOnly = true;
 			// 
 			// tboxPlatform
 			// 
-			this->tboxPlatform->AccessibleDescription = nullptr;
-			this->tboxPlatform->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPlatform, L"tboxPlatform");
-			this->tboxPlatform->BackgroundImage = nullptr;
-			this->tboxPlatform->Font = nullptr;
 			this->tboxPlatform->Name = L"tboxPlatform";
 			this->tboxPlatform->ReadOnly = true;
 			// 
 			// labPlatform
 			// 
-			this->labPlatform->AccessibleDescription = nullptr;
-			this->labPlatform->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPlatform, L"labPlatform");
-			this->labPlatform->Font = nullptr;
 			this->labPlatform->Name = L"labPlatform";
 			// 
 			// tboxRomLatency
 			// 
-			this->tboxRomLatency->AccessibleDescription = nullptr;
-			this->tboxRomLatency->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxRomLatency, L"tboxRomLatency");
-			this->tboxRomLatency->BackgroundImage = nullptr;
-			this->tboxRomLatency->Font = nullptr;
 			this->tboxRomLatency->Name = L"tboxRomLatency";
 			this->tboxRomLatency->ReadOnly = true;
 			// 
 			// labRomSize
 			// 
-			this->labRomSize->AccessibleDescription = nullptr;
-			this->labRomSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labRomSize, L"labRomSize");
-			this->labRomSize->Font = nullptr;
 			this->labRomSize->Name = L"labRomSize";
 			// 
 			// labRomType
 			// 
-			this->labRomType->AccessibleDescription = nullptr;
-			this->labRomType->AccessibleName = nullptr;
 			resources->ApplyResources(this->labRomType, L"labRomType");
-			this->labRomType->Font = nullptr;
 			this->labRomType->Name = L"labRomType";
 			// 
 			// tboxMakerCode
 			// 
-			this->tboxMakerCode->AccessibleDescription = nullptr;
-			this->tboxMakerCode->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxMakerCode, L"tboxMakerCode");
-			this->tboxMakerCode->BackgroundImage = nullptr;
-			this->tboxMakerCode->Font = nullptr;
 			this->tboxMakerCode->Name = L"tboxMakerCode";
 			this->tboxMakerCode->ReadOnly = true;
 			// 
 			// cboxRemasterVerE
 			// 
-			this->cboxRemasterVerE->AccessibleDescription = nullptr;
-			this->cboxRemasterVerE->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxRemasterVerE, L"cboxRemasterVerE");
-			this->cboxRemasterVerE->BackgroundImage = nullptr;
-			this->cboxRemasterVerE->Font = nullptr;
 			this->cboxRemasterVerE->Name = L"cboxRemasterVerE";
 			this->cboxRemasterVerE->UseVisualStyleBackColor = true;
 			this->cboxRemasterVerE->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxRemasterVerE_CheckedChanged);
 			// 
 			// labMakerCode
 			// 
-			this->labMakerCode->AccessibleDescription = nullptr;
-			this->labMakerCode->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMakerCode, L"labMakerCode");
-			this->labMakerCode->Font = nullptr;
 			this->labMakerCode->Name = L"labMakerCode";
 			// 
 			// labGameCode
 			// 
-			this->labGameCode->AccessibleDescription = nullptr;
-			this->labGameCode->AccessibleName = nullptr;
 			resources->ApplyResources(this->labGameCode, L"labGameCode");
-			this->labGameCode->Font = nullptr;
 			this->labGameCode->Name = L"labGameCode";
 			// 
 			// tboxGameCode
 			// 
-			this->tboxGameCode->AccessibleDescription = nullptr;
-			this->tboxGameCode->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxGameCode, L"tboxGameCode");
-			this->tboxGameCode->BackgroundImage = nullptr;
-			this->tboxGameCode->Font = nullptr;
 			this->tboxGameCode->Name = L"tboxGameCode";
 			this->tboxGameCode->ReadOnly = true;
 			// 
 			// labTitleName
 			// 
-			this->labTitleName->AccessibleDescription = nullptr;
-			this->labTitleName->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTitleName, L"labTitleName");
-			this->labTitleName->Font = nullptr;
 			this->labTitleName->Name = L"labTitleName";
 			// 
 			// labRemasterVer
 			// 
-			this->labRemasterVer->AccessibleDescription = nullptr;
-			this->labRemasterVer->AccessibleName = nullptr;
 			resources->ApplyResources(this->labRemasterVer, L"labRemasterVer");
-			this->labRemasterVer->Font = nullptr;
 			this->labRemasterVer->Name = L"labRemasterVer";
 			// 
 			// tboxTitleName
 			// 
-			this->tboxTitleName->AccessibleDescription = nullptr;
-			this->tboxTitleName->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTitleName, L"tboxTitleName");
-			this->tboxTitleName->BackgroundImage = nullptr;
-			this->tboxTitleName->Font = nullptr;
 			this->tboxTitleName->Name = L"tboxTitleName";
 			this->tboxTitleName->ReadOnly = true;
 			// 
 			// labBackup
 			// 
-			this->labBackup->AccessibleDescription = nullptr;
-			this->labBackup->AccessibleName = nullptr;
 			resources->ApplyResources(this->labBackup, L"labBackup");
-			this->labBackup->Font = nullptr;
 			this->labBackup->Name = L"labBackup";
 			// 
 			// combBackup
 			// 
-			this->combBackup->AccessibleDescription = nullptr;
-			this->combBackup->AccessibleName = nullptr;
-			resources->ApplyResources(this->combBackup, L"combBackup");
-			this->combBackup->BackgroundImage = nullptr;
 			this->combBackup->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combBackup->Font = nullptr;
 			this->combBackup->FormattingEnabled = true;
 			this->combBackup->Items->AddRange(gcnew cli::array< System::Object^  >(9) {resources->GetString(L"combBackup.Items"), resources->GetString(L"combBackup.Items1"), 
 				resources->GetString(L"combBackup.Items2"), resources->GetString(L"combBackup.Items3"), resources->GetString(L"combBackup.Items4"), 
 				resources->GetString(L"combBackup.Items5"), resources->GetString(L"combBackup.Items6"), resources->GetString(L"combBackup.Items7"), 
 				resources->GetString(L"combBackup.Items8")});
+			resources->ApplyResources(this->combBackup, L"combBackup");
 			this->combBackup->Name = L"combBackup";
 			this->combBackup->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::combBackup_SelectedIndexChanged);
 			// 
 			// tboxBackupOther
 			// 
-			this->tboxBackupOther->AccessibleDescription = nullptr;
-			this->tboxBackupOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxBackupOther, L"tboxBackupOther");
-			this->tboxBackupOther->BackgroundImage = nullptr;
-			this->tboxBackupOther->Font = nullptr;
 			this->tboxBackupOther->Name = L"tboxBackupOther";
 			// 
 			// gboxCRC
 			// 
-			this->gboxCRC->AccessibleDescription = nullptr;
-			this->gboxCRC->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxCRC, L"gboxCRC");
-			this->gboxCRC->BackgroundImage = nullptr;
 			this->gboxCRC->Controls->Add(this->labRomCRC);
 			this->gboxCRC->Controls->Add(this->labHeaderCRC);
 			this->gboxCRC->Controls->Add(this->tboxHeaderCRC);
 			this->gboxCRC->Controls->Add(this->tboxWholeCRC);
-			this->gboxCRC->Font = nullptr;
+			resources->ApplyResources(this->gboxCRC, L"gboxCRC");
 			this->gboxCRC->Name = L"gboxCRC";
 			this->gboxCRC->TabStop = false;
 			// 
 			// labRomCRC
 			// 
-			this->labRomCRC->AccessibleDescription = nullptr;
-			this->labRomCRC->AccessibleName = nullptr;
 			resources->ApplyResources(this->labRomCRC, L"labRomCRC");
-			this->labRomCRC->Font = nullptr;
 			this->labRomCRC->Name = L"labRomCRC";
 			// 
 			// labHeaderCRC
 			// 
-			this->labHeaderCRC->AccessibleDescription = nullptr;
-			this->labHeaderCRC->AccessibleName = nullptr;
 			resources->ApplyResources(this->labHeaderCRC, L"labHeaderCRC");
-			this->labHeaderCRC->Font = nullptr;
 			this->labHeaderCRC->Name = L"labHeaderCRC";
 			// 
 			// tboxHeaderCRC
 			// 
-			this->tboxHeaderCRC->AccessibleDescription = nullptr;
-			this->tboxHeaderCRC->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxHeaderCRC, L"tboxHeaderCRC");
-			this->tboxHeaderCRC->BackgroundImage = nullptr;
-			this->tboxHeaderCRC->Font = nullptr;
 			this->tboxHeaderCRC->Name = L"tboxHeaderCRC";
 			this->tboxHeaderCRC->ReadOnly = true;
 			// 
 			// tboxWholeCRC
 			// 
-			this->tboxWholeCRC->AccessibleDescription = nullptr;
-			this->tboxWholeCRC->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxWholeCRC, L"tboxWholeCRC");
-			this->tboxWholeCRC->BackgroundImage = nullptr;
-			this->tboxWholeCRC->Font = nullptr;
 			this->tboxWholeCRC->Name = L"tboxWholeCRC";
 			this->tboxWholeCRC->ReadOnly = true;
 			// 
 			// labCaption
 			// 
-			this->labCaption->AccessibleDescription = nullptr;
-			this->labCaption->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCaption, L"labCaption");
-			this->labCaption->Font = nullptr;
 			this->labCaption->Name = L"labCaption";
 			// 
 			// tboxCaption
 			// 
-			this->tboxCaption->AccessibleDescription = nullptr;
-			this->tboxCaption->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxCaption, L"tboxCaption");
-			this->tboxCaption->BackgroundImage = nullptr;
-			this->tboxCaption->Font = nullptr;
 			this->tboxCaption->Name = L"tboxCaption";
 			// 
 			// labOFLC
 			// 
-			this->labOFLC->AccessibleDescription = nullptr;
-			this->labOFLC->AccessibleName = nullptr;
 			resources->ApplyResources(this->labOFLC, L"labOFLC");
-			this->labOFLC->Font = nullptr;
 			this->labOFLC->Name = L"labOFLC";
 			// 
 			// labPEGI_BBFC
 			// 
-			this->labPEGI_BBFC->AccessibleDescription = nullptr;
-			this->labPEGI_BBFC->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPEGI_BBFC, L"labPEGI_BBFC");
-			this->labPEGI_BBFC->Font = nullptr;
 			this->labPEGI_BBFC->Name = L"labPEGI_BBFC";
 			// 
 			// labPEGI_PRT
 			// 
-			this->labPEGI_PRT->AccessibleDescription = nullptr;
-			this->labPEGI_PRT->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPEGI_PRT, L"labPEGI_PRT");
-			this->labPEGI_PRT->Font = nullptr;
 			this->labPEGI_PRT->Name = L"labPEGI_PRT";
 			// 
 			// labPEGI
 			// 
-			this->labPEGI->AccessibleDescription = nullptr;
-			this->labPEGI->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPEGI, L"labPEGI");
-			this->labPEGI->Font = nullptr;
 			this->labPEGI->Name = L"labPEGI";
 			// 
 			// labUSK
 			// 
-			this->labUSK->AccessibleDescription = nullptr;
-			this->labUSK->AccessibleName = nullptr;
 			resources->ApplyResources(this->labUSK, L"labUSK");
-			this->labUSK->Font = nullptr;
 			this->labUSK->Name = L"labUSK";
 			// 
 			// labESRB
 			// 
-			this->labESRB->AccessibleDescription = nullptr;
-			this->labESRB->AccessibleName = nullptr;
 			resources->ApplyResources(this->labESRB, L"labESRB");
-			this->labESRB->Font = nullptr;
 			this->labESRB->Name = L"labESRB";
 			// 
 			// labCERO
 			// 
-			this->labCERO->AccessibleDescription = nullptr;
-			this->labCERO->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCERO, L"labCERO");
-			this->labCERO->Font = nullptr;
 			this->labCERO->Name = L"labCERO";
 			// 
 			// combOFLC
 			// 
-			this->combOFLC->AccessibleDescription = nullptr;
-			this->combOFLC->AccessibleName = nullptr;
-			resources->ApplyResources(this->combOFLC, L"combOFLC");
-			this->combOFLC->BackgroundImage = nullptr;
 			this->combOFLC->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combOFLC->Font = nullptr;
 			this->combOFLC->FormattingEnabled = true;
 			this->combOFLC->Items->AddRange(gcnew cli::array< System::Object^  >(5) {resources->GetString(L"combOFLC.Items"), resources->GetString(L"combOFLC.Items1"), 
 				resources->GetString(L"combOFLC.Items2"), resources->GetString(L"combOFLC.Items3"), resources->GetString(L"combOFLC.Items4")});
+			resources->ApplyResources(this->combOFLC, L"combOFLC");
 			this->combOFLC->Name = L"combOFLC";
 			// 
 			// combPEGI_BBFC
 			// 
-			this->combPEGI_BBFC->AccessibleDescription = nullptr;
-			this->combPEGI_BBFC->AccessibleName = nullptr;
-			resources->ApplyResources(this->combPEGI_BBFC, L"combPEGI_BBFC");
-			this->combPEGI_BBFC->BackgroundImage = nullptr;
 			this->combPEGI_BBFC->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combPEGI_BBFC->Font = nullptr;
 			this->combPEGI_BBFC->FormattingEnabled = true;
 			this->combPEGI_BBFC->Items->AddRange(gcnew cli::array< System::Object^  >(10) {resources->GetString(L"combPEGI_BBFC.Items"), 
 				resources->GetString(L"combPEGI_BBFC.Items1"), resources->GetString(L"combPEGI_BBFC.Items2"), resources->GetString(L"combPEGI_BBFC.Items3"), 
 				resources->GetString(L"combPEGI_BBFC.Items4"), resources->GetString(L"combPEGI_BBFC.Items5"), resources->GetString(L"combPEGI_BBFC.Items6"), 
 				resources->GetString(L"combPEGI_BBFC.Items7"), resources->GetString(L"combPEGI_BBFC.Items8"), resources->GetString(L"combPEGI_BBFC.Items9")});
+			resources->ApplyResources(this->combPEGI_BBFC, L"combPEGI_BBFC");
 			this->combPEGI_BBFC->Name = L"combPEGI_BBFC";
 			// 
 			// combPEGI_PRT
 			// 
-			this->combPEGI_PRT->AccessibleDescription = nullptr;
-			this->combPEGI_PRT->AccessibleName = nullptr;
-			resources->ApplyResources(this->combPEGI_PRT, L"combPEGI_PRT");
-			this->combPEGI_PRT->BackgroundImage = nullptr;
 			this->combPEGI_PRT->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combPEGI_PRT->Font = nullptr;
 			this->combPEGI_PRT->FormattingEnabled = true;
 			this->combPEGI_PRT->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combPEGI_PRT.Items"), 
 				resources->GetString(L"combPEGI_PRT.Items1"), resources->GetString(L"combPEGI_PRT.Items2"), resources->GetString(L"combPEGI_PRT.Items3"), 
 				resources->GetString(L"combPEGI_PRT.Items4"), resources->GetString(L"combPEGI_PRT.Items5"), resources->GetString(L"combPEGI_PRT.Items6")});
+			resources->ApplyResources(this->combPEGI_PRT, L"combPEGI_PRT");
 			this->combPEGI_PRT->Name = L"combPEGI_PRT";
 			// 
 			// combPEGI
 			// 
-			this->combPEGI->AccessibleDescription = nullptr;
-			this->combPEGI->AccessibleName = nullptr;
-			resources->ApplyResources(this->combPEGI, L"combPEGI");
-			this->combPEGI->BackgroundImage = nullptr;
 			this->combPEGI->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combPEGI->Font = nullptr;
 			this->combPEGI->FormattingEnabled = true;
 			this->combPEGI->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combPEGI.Items"), resources->GetString(L"combPEGI.Items1"), 
 				resources->GetString(L"combPEGI.Items2"), resources->GetString(L"combPEGI.Items3"), resources->GetString(L"combPEGI.Items4"), 
 				resources->GetString(L"combPEGI.Items5"), resources->GetString(L"combPEGI.Items6")});
+			resources->ApplyResources(this->combPEGI, L"combPEGI");
 			this->combPEGI->Name = L"combPEGI";
 			// 
 			// combUSK
 			// 
-			this->combUSK->AccessibleDescription = nullptr;
-			this->combUSK->AccessibleName = nullptr;
-			resources->ApplyResources(this->combUSK, L"combUSK");
-			this->combUSK->BackgroundImage = nullptr;
 			this->combUSK->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combUSK->Font = nullptr;
 			this->combUSK->FormattingEnabled = true;
 			this->combUSK->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combUSK.Items"), resources->GetString(L"combUSK.Items1"), 
 				resources->GetString(L"combUSK.Items2"), resources->GetString(L"combUSK.Items3"), resources->GetString(L"combUSK.Items4"), resources->GetString(L"combUSK.Items5")});
+			resources->ApplyResources(this->combUSK, L"combUSK");
 			this->combUSK->Name = L"combUSK";
 			// 
 			// combESRB
 			// 
-			this->combESRB->AccessibleDescription = nullptr;
-			this->combESRB->AccessibleName = nullptr;
-			resources->ApplyResources(this->combESRB, L"combESRB");
-			this->combESRB->BackgroundImage = nullptr;
 			this->combESRB->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combESRB->Font = nullptr;
 			this->combESRB->FormattingEnabled = true;
 			this->combESRB->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combESRB.Items"), resources->GetString(L"combESRB.Items1"), 
 				resources->GetString(L"combESRB.Items2"), resources->GetString(L"combESRB.Items3"), resources->GetString(L"combESRB.Items4"), 
 				resources->GetString(L"combESRB.Items5"), resources->GetString(L"combESRB.Items6")});
+			resources->ApplyResources(this->combESRB, L"combESRB");
 			this->combESRB->Name = L"combESRB";
 			// 
 			// combCERO
 			// 
-			this->combCERO->AccessibleDescription = nullptr;
-			this->combCERO->AccessibleName = nullptr;
-			resources->ApplyResources(this->combCERO, L"combCERO");
-			this->combCERO->BackgroundImage = nullptr;
 			this->combCERO->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combCERO->Font = nullptr;
 			this->combCERO->FormattingEnabled = true;
 			this->combCERO->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combCERO.Items"), resources->GetString(L"combCERO.Items1"), 
 				resources->GetString(L"combCERO.Items2"), resources->GetString(L"combCERO.Items3"), resources->GetString(L"combCERO.Items4"), 
 				resources->GetString(L"combCERO.Items5")});
+			resources->ApplyResources(this->combCERO, L"combCERO");
 			this->combCERO->Name = L"combCERO";
 			// 
 			// labParentalRating
 			// 
-			this->labParentalRating->AccessibleDescription = nullptr;
-			this->labParentalRating->AccessibleName = nullptr;
 			resources->ApplyResources(this->labParentalRating, L"labParentalRating");
-			this->labParentalRating->Font = nullptr;
 			this->labParentalRating->Name = L"labParentalRating";
 			// 
 			// labRegion
 			// 
-			this->labRegion->AccessibleDescription = nullptr;
-			this->labRegion->AccessibleName = nullptr;
 			resources->ApplyResources(this->labRegion, L"labRegion");
-			this->labRegion->Font = nullptr;
 			this->labRegion->Name = L"labRegion";
 			// 
 			// cboxIsEULA
 			// 
-			this->cboxIsEULA->AccessibleDescription = nullptr;
-			this->cboxIsEULA->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsEULA, L"cboxIsEULA");
-			this->cboxIsEULA->BackgroundImage = nullptr;
-			this->cboxIsEULA->Font = nullptr;
 			this->cboxIsEULA->Name = L"cboxIsEULA";
 			this->cboxIsEULA->UseVisualStyleBackColor = true;
 			// 
 			// combRegion
 			// 
-			this->combRegion->AccessibleDescription = nullptr;
-			this->combRegion->AccessibleName = nullptr;
-			resources->ApplyResources(this->combRegion, L"combRegion");
-			this->combRegion->BackgroundImage = nullptr;
 			this->combRegion->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combRegion->Font = nullptr;
 			this->combRegion->FormattingEnabled = true;
 			this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(5) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
 				resources->GetString(L"combRegion.Items2"), resources->GetString(L"combRegion.Items3"), resources->GetString(L"combRegion.Items4")});
+			resources->ApplyResources(this->combRegion, L"combRegion");
 			this->combRegion->Name = L"combRegion";
 			this->combRegion->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::combRegion_SelectedIndexChanged);
 			// 
 			// cboxIsInputPerson2
 			// 
-			this->cboxIsInputPerson2->AccessibleDescription = nullptr;
-			this->cboxIsInputPerson2->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsInputPerson2, L"cboxIsInputPerson2");
-			this->cboxIsInputPerson2->BackgroundImage = nullptr;
-			this->cboxIsInputPerson2->Font = nullptr;
 			this->cboxIsInputPerson2->Name = L"cboxIsInputPerson2";
 			this->cboxIsInputPerson2->UseVisualStyleBackColor = true;
 			this->cboxIsInputPerson2->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxIsInputPerson2_CheckedChanged);
 			// 
 			// gboxPerson2
 			// 
-			this->gboxPerson2->AccessibleDescription = nullptr;
-			this->gboxPerson2->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxPerson2, L"gboxPerson2");
-			this->gboxPerson2->BackgroundImage = nullptr;
 			this->gboxPerson2->Controls->Add(this->labArbit4);
 			this->gboxPerson2->Controls->Add(this->labArbit3);
 			this->gboxPerson2->Controls->Add(this->labNTSC2Sur);
@@ -1632,176 +1459,107 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxPerson2->Controls->Add(this->labFurigana2);
 			this->gboxPerson2->Controls->Add(this->labPerson2);
 			this->gboxPerson2->Controls->Add(this->labCompany2);
-			this->gboxPerson2->Font = nullptr;
+			resources->ApplyResources(this->gboxPerson2, L"gboxPerson2");
 			this->gboxPerson2->Name = L"gboxPerson2";
 			this->gboxPerson2->TabStop = false;
 			// 
 			// labArbit4
 			// 
-			this->labArbit4->AccessibleDescription = nullptr;
-			this->labArbit4->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArbit4, L"labArbit4");
-			this->labArbit4->Font = nullptr;
 			this->labArbit4->Name = L"labArbit4";
 			// 
 			// labArbit3
 			// 
-			this->labArbit3->AccessibleDescription = nullptr;
-			this->labArbit3->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArbit3, L"labArbit3");
-			this->labArbit3->Font = nullptr;
 			this->labArbit3->Name = L"labArbit3";
 			// 
 			// labNTSC2Sur
 			// 
-			this->labNTSC2Sur->AccessibleDescription = nullptr;
-			this->labNTSC2Sur->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNTSC2Sur, L"labNTSC2Sur");
-			this->labNTSC2Sur->Font = nullptr;
 			this->labNTSC2Sur->Name = L"labNTSC2Sur";
 			// 
 			// tboxNTSC2
 			// 
-			this->tboxNTSC2->AccessibleDescription = nullptr;
-			this->tboxNTSC2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxNTSC2, L"tboxNTSC2");
-			this->tboxNTSC2->BackgroundImage = nullptr;
-			this->tboxNTSC2->Font = nullptr;
 			this->tboxNTSC2->Name = L"tboxNTSC2";
 			// 
 			// labFax2
 			// 
-			this->labFax2->AccessibleDescription = nullptr;
-			this->labFax2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labFax2, L"labFax2");
-			this->labFax2->Font = nullptr;
 			this->labFax2->Name = L"labFax2";
 			// 
 			// labNTSC2Pre
 			// 
-			this->labNTSC2Pre->AccessibleDescription = nullptr;
-			this->labNTSC2Pre->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNTSC2Pre, L"labNTSC2Pre");
-			this->labNTSC2Pre->Font = nullptr;
 			this->labNTSC2Pre->Name = L"labNTSC2Pre";
 			// 
 			// tboxFax2
 			// 
-			this->tboxFax2->AccessibleDescription = nullptr;
-			this->tboxFax2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxFax2, L"tboxFax2");
-			this->tboxFax2->BackgroundImage = nullptr;
-			this->tboxFax2->Font = nullptr;
 			this->tboxFax2->Name = L"tboxFax2";
 			// 
 			// tboxMail2
 			// 
-			this->tboxMail2->AccessibleDescription = nullptr;
-			this->tboxMail2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxMail2, L"tboxMail2");
-			this->tboxMail2->BackgroundImage = nullptr;
-			this->tboxMail2->Font = nullptr;
 			this->tboxMail2->Name = L"tboxMail2";
 			// 
 			// tboxTel2
 			// 
-			this->tboxTel2->AccessibleDescription = nullptr;
-			this->tboxTel2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTel2, L"tboxTel2");
-			this->tboxTel2->BackgroundImage = nullptr;
-			this->tboxTel2->Font = nullptr;
 			this->tboxTel2->Name = L"tboxTel2";
 			// 
 			// tboxFurigana2
 			// 
-			this->tboxFurigana2->AccessibleDescription = nullptr;
-			this->tboxFurigana2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxFurigana2, L"tboxFurigana2");
-			this->tboxFurigana2->BackgroundImage = nullptr;
-			this->tboxFurigana2->Font = nullptr;
 			this->tboxFurigana2->Name = L"tboxFurigana2";
 			// 
 			// tboxPerson2
 			// 
-			this->tboxPerson2->AccessibleDescription = nullptr;
-			this->tboxPerson2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPerson2, L"tboxPerson2");
-			this->tboxPerson2->BackgroundImage = nullptr;
-			this->tboxPerson2->Font = nullptr;
 			this->tboxPerson2->Name = L"tboxPerson2";
 			// 
 			// tboxDepart2
 			// 
-			this->tboxDepart2->AccessibleDescription = nullptr;
-			this->tboxDepart2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxDepart2, L"tboxDepart2");
-			this->tboxDepart2->BackgroundImage = nullptr;
-			this->tboxDepart2->Font = nullptr;
 			this->tboxDepart2->Name = L"tboxDepart2";
 			// 
 			// labDepart2
 			// 
-			this->labDepart2->AccessibleDescription = nullptr;
-			this->labDepart2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labDepart2, L"labDepart2");
-			this->labDepart2->Font = nullptr;
 			this->labDepart2->Name = L"labDepart2";
 			// 
 			// tboxCompany2
 			// 
-			this->tboxCompany2->AccessibleDescription = nullptr;
-			this->tboxCompany2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxCompany2, L"tboxCompany2");
-			this->tboxCompany2->BackgroundImage = nullptr;
-			this->tboxCompany2->Font = nullptr;
 			this->tboxCompany2->Name = L"tboxCompany2";
 			// 
 			// labMail2
 			// 
-			this->labMail2->AccessibleDescription = nullptr;
-			this->labMail2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMail2, L"labMail2");
-			this->labMail2->Font = nullptr;
 			this->labMail2->Name = L"labMail2";
 			// 
 			// labTel2
 			// 
-			this->labTel2->AccessibleDescription = nullptr;
-			this->labTel2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTel2, L"labTel2");
-			this->labTel2->Font = nullptr;
 			this->labTel2->Name = L"labTel2";
 			// 
 			// labFurigana2
 			// 
-			this->labFurigana2->AccessibleDescription = nullptr;
-			this->labFurigana2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labFurigana2, L"labFurigana2");
-			this->labFurigana2->Font = nullptr;
 			this->labFurigana2->Name = L"labFurigana2";
 			// 
 			// labPerson2
 			// 
-			this->labPerson2->AccessibleDescription = nullptr;
-			this->labPerson2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPerson2, L"labPerson2");
-			this->labPerson2->Font = nullptr;
 			this->labPerson2->Name = L"labPerson2";
 			// 
 			// labCompany2
 			// 
-			this->labCompany2->AccessibleDescription = nullptr;
-			this->labCompany2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCompany2, L"labCompany2");
-			this->labCompany2->Font = nullptr;
 			this->labCompany2->Name = L"labCompany2";
 			// 
 			// gboxPerson1
 			// 
-			this->gboxPerson1->AccessibleDescription = nullptr;
-			this->gboxPerson1->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxPerson1, L"gboxPerson1");
-			this->gboxPerson1->BackgroundImage = nullptr;
 			this->gboxPerson1->Controls->Add(this->labArbit2);
 			this->gboxPerson1->Controls->Add(this->labArbit1);
 			this->gboxPerson1->Controls->Add(this->labNTSC1Sur);
@@ -1821,223 +1579,134 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxPerson1->Controls->Add(this->labFurigana1);
 			this->gboxPerson1->Controls->Add(this->labPerson1);
 			this->gboxPerson1->Controls->Add(this->labCompany1);
-			this->gboxPerson1->Font = nullptr;
+			resources->ApplyResources(this->gboxPerson1, L"gboxPerson1");
 			this->gboxPerson1->Name = L"gboxPerson1";
 			this->gboxPerson1->TabStop = false;
 			// 
 			// labArbit2
 			// 
-			this->labArbit2->AccessibleDescription = nullptr;
-			this->labArbit2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArbit2, L"labArbit2");
-			this->labArbit2->Font = nullptr;
 			this->labArbit2->Name = L"labArbit2";
 			// 
 			// labArbit1
 			// 
-			this->labArbit1->AccessibleDescription = nullptr;
-			this->labArbit1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArbit1, L"labArbit1");
-			this->labArbit1->Font = nullptr;
 			this->labArbit1->Name = L"labArbit1";
 			// 
 			// labNTSC1Sur
 			// 
-			this->labNTSC1Sur->AccessibleDescription = nullptr;
-			this->labNTSC1Sur->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNTSC1Sur, L"labNTSC1Sur");
-			this->labNTSC1Sur->Font = nullptr;
 			this->labNTSC1Sur->Name = L"labNTSC1Sur";
 			// 
 			// labFax1
 			// 
-			this->labFax1->AccessibleDescription = nullptr;
-			this->labFax1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labFax1, L"labFax1");
-			this->labFax1->Font = nullptr;
 			this->labFax1->Name = L"labFax1";
 			// 
 			// labNTSC1Pre
 			// 
-			this->labNTSC1Pre->AccessibleDescription = nullptr;
-			this->labNTSC1Pre->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNTSC1Pre, L"labNTSC1Pre");
-			this->labNTSC1Pre->Font = nullptr;
 			this->labNTSC1Pre->Name = L"labNTSC1Pre";
 			// 
 			// tboxNTSC1
 			// 
-			this->tboxNTSC1->AccessibleDescription = nullptr;
-			this->tboxNTSC1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxNTSC1, L"tboxNTSC1");
-			this->tboxNTSC1->BackgroundImage = nullptr;
-			this->tboxNTSC1->Font = nullptr;
 			this->tboxNTSC1->Name = L"tboxNTSC1";
 			// 
 			// tboxFax1
 			// 
-			this->tboxFax1->AccessibleDescription = nullptr;
-			this->tboxFax1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxFax1, L"tboxFax1");
-			this->tboxFax1->BackgroundImage = nullptr;
-			this->tboxFax1->Font = nullptr;
 			this->tboxFax1->Name = L"tboxFax1";
 			// 
 			// tboxMail1
 			// 
-			this->tboxMail1->AccessibleDescription = nullptr;
-			this->tboxMail1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxMail1, L"tboxMail1");
-			this->tboxMail1->BackgroundImage = nullptr;
-			this->tboxMail1->Font = nullptr;
 			this->tboxMail1->Name = L"tboxMail1";
 			// 
 			// tboxTel1
 			// 
-			this->tboxTel1->AccessibleDescription = nullptr;
-			this->tboxTel1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTel1, L"tboxTel1");
-			this->tboxTel1->BackgroundImage = nullptr;
-			this->tboxTel1->Font = nullptr;
 			this->tboxTel1->Name = L"tboxTel1";
 			// 
 			// tboxFurigana1
 			// 
-			this->tboxFurigana1->AccessibleDescription = nullptr;
-			this->tboxFurigana1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxFurigana1, L"tboxFurigana1");
-			this->tboxFurigana1->BackgroundImage = nullptr;
-			this->tboxFurigana1->Font = nullptr;
 			this->tboxFurigana1->Name = L"tboxFurigana1";
 			// 
 			// tboxPerson1
 			// 
-			this->tboxPerson1->AccessibleDescription = nullptr;
-			this->tboxPerson1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPerson1, L"tboxPerson1");
-			this->tboxPerson1->BackgroundImage = nullptr;
-			this->tboxPerson1->Font = nullptr;
 			this->tboxPerson1->Name = L"tboxPerson1";
 			// 
 			// tboxDepart1
 			// 
-			this->tboxDepart1->AccessibleDescription = nullptr;
-			this->tboxDepart1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxDepart1, L"tboxDepart1");
-			this->tboxDepart1->BackgroundImage = nullptr;
-			this->tboxDepart1->Font = nullptr;
 			this->tboxDepart1->Name = L"tboxDepart1";
 			// 
 			// labDepart1
 			// 
-			this->labDepart1->AccessibleDescription = nullptr;
-			this->labDepart1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labDepart1, L"labDepart1");
-			this->labDepart1->Font = nullptr;
 			this->labDepart1->Name = L"labDepart1";
 			// 
 			// tboxCompany1
 			// 
-			this->tboxCompany1->AccessibleDescription = nullptr;
-			this->tboxCompany1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxCompany1, L"tboxCompany1");
-			this->tboxCompany1->BackgroundImage = nullptr;
-			this->tboxCompany1->Font = nullptr;
 			this->tboxCompany1->Name = L"tboxCompany1";
 			// 
 			// labMail1
 			// 
-			this->labMail1->AccessibleDescription = nullptr;
-			this->labMail1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMail1, L"labMail1");
-			this->labMail1->Font = nullptr;
 			this->labMail1->Name = L"labMail1";
 			// 
 			// labTel1
 			// 
-			this->labTel1->AccessibleDescription = nullptr;
-			this->labTel1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTel1, L"labTel1");
-			this->labTel1->Font = nullptr;
 			this->labTel1->Name = L"labTel1";
 			// 
 			// labFurigana1
 			// 
-			this->labFurigana1->AccessibleDescription = nullptr;
-			this->labFurigana1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labFurigana1, L"labFurigana1");
-			this->labFurigana1->Font = nullptr;
 			this->labFurigana1->Name = L"labFurigana1";
 			// 
 			// labPerson1
 			// 
-			this->labPerson1->AccessibleDescription = nullptr;
-			this->labPerson1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPerson1, L"labPerson1");
-			this->labPerson1->Font = nullptr;
 			this->labPerson1->Name = L"labPerson1";
 			// 
 			// labCompany1
 			// 
-			this->labCompany1->AccessibleDescription = nullptr;
-			this->labCompany1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCompany1, L"labCompany1");
-			this->labCompany1->Font = nullptr;
 			this->labCompany1->Name = L"labCompany1";
 			// 
 			// tboxProductCode2
 			// 
-			this->tboxProductCode2->AccessibleDescription = nullptr;
-			this->tboxProductCode2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode2, L"tboxProductCode2");
-			this->tboxProductCode2->BackgroundImage = nullptr;
-			this->tboxProductCode2->Font = nullptr;
 			this->tboxProductCode2->Name = L"tboxProductCode2";
 			// 
 			// tboxProductCode1
 			// 
-			this->tboxProductCode1->AccessibleDescription = nullptr;
-			this->tboxProductCode1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode1, L"tboxProductCode1");
-			this->tboxProductCode1->BackgroundImage = nullptr;
-			this->tboxProductCode1->Font = nullptr;
 			this->tboxProductCode1->Name = L"tboxProductCode1";
 			// 
 			// tboxProductName
 			// 
-			this->tboxProductName->AccessibleDescription = nullptr;
-			this->tboxProductName->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductName, L"tboxProductName");
-			this->tboxProductName->BackgroundImage = nullptr;
-			this->tboxProductName->Font = nullptr;
 			this->tboxProductName->Name = L"tboxProductName";
 			// 
 			// labProductCode2
 			// 
-			this->labProductCode2->AccessibleDescription = nullptr;
-			this->labProductCode2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCode2, L"labProductCode2");
-			this->labProductCode2->Font = nullptr;
 			this->labProductCode2->Name = L"labProductCode2";
 			// 
 			// labProductCode1
 			// 
-			this->labProductCode1->AccessibleDescription = nullptr;
-			this->labProductCode1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCode1, L"labProductCode1");
-			this->labProductCode1->Font = nullptr;
 			this->labProductCode1->Name = L"labProductCode1";
 			// 
 			// dateSubmit
 			// 
-			this->dateSubmit->AccessibleDescription = nullptr;
-			this->dateSubmit->AccessibleName = nullptr;
-			resources->ApplyResources(this->dateSubmit, L"dateSubmit");
-			this->dateSubmit->BackgroundImage = nullptr;
-			this->dateSubmit->CalendarFont = nullptr;
-			this->dateSubmit->CustomFormat = nullptr;
-			this->dateSubmit->Font = nullptr;
 			this->dateSubmit->Format = System::Windows::Forms::DateTimePickerFormat::Short;
+			resources->ApplyResources(this->dateSubmit, L"dateSubmit");
 			this->dateSubmit->MaxDate = System::DateTime(2099, 12, 31, 0, 0, 0, 0);
 			this->dateSubmit->MinDate = System::DateTime(2008, 1, 1, 0, 0, 0, 0);
 			this->dateSubmit->Name = L"dateSubmit";
@@ -2045,14 +1714,8 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// dateRelease
 			// 
-			this->dateRelease->AccessibleDescription = nullptr;
-			this->dateRelease->AccessibleName = nullptr;
-			resources->ApplyResources(this->dateRelease, L"dateRelease");
-			this->dateRelease->BackgroundImage = nullptr;
-			this->dateRelease->CalendarFont = nullptr;
-			this->dateRelease->CustomFormat = nullptr;
-			this->dateRelease->Font = nullptr;
 			this->dateRelease->Format = System::Windows::Forms::DateTimePickerFormat::Short;
+			resources->ApplyResources(this->dateRelease, L"dateRelease");
 			this->dateRelease->MaxDate = System::DateTime(2099, 12, 31, 0, 0, 0, 0);
 			this->dateRelease->MinDate = System::DateTime(2008, 1, 1, 0, 0, 0, 0);
 			this->dateRelease->Name = L"dateRelease";
@@ -2060,264 +1723,164 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// gboxUsage
 			// 
-			this->gboxUsage->AccessibleDescription = nullptr;
-			this->gboxUsage->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxUsage, L"gboxUsage");
-			this->gboxUsage->BackgroundImage = nullptr;
 			this->gboxUsage->Controls->Add(this->tboxUsageOther);
 			this->gboxUsage->Controls->Add(this->rUsageOther);
 			this->gboxUsage->Controls->Add(this->rUsageDst);
 			this->gboxUsage->Controls->Add(this->rUsageSample);
 			this->gboxUsage->Controls->Add(this->rUsageSale);
-			this->gboxUsage->Font = nullptr;
+			resources->ApplyResources(this->gboxUsage, L"gboxUsage");
 			this->gboxUsage->Name = L"gboxUsage";
 			this->gboxUsage->TabStop = false;
 			// 
 			// tboxUsageOther
 			// 
-			this->tboxUsageOther->AccessibleDescription = nullptr;
-			this->tboxUsageOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxUsageOther, L"tboxUsageOther");
-			this->tboxUsageOther->BackgroundImage = nullptr;
-			this->tboxUsageOther->Font = nullptr;
 			this->tboxUsageOther->Name = L"tboxUsageOther";
 			// 
 			// rUsageOther
 			// 
-			this->rUsageOther->AccessibleDescription = nullptr;
-			this->rUsageOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->rUsageOther, L"rUsageOther");
-			this->rUsageOther->BackgroundImage = nullptr;
-			this->rUsageOther->Font = nullptr;
 			this->rUsageOther->Name = L"rUsageOther";
 			this->rUsageOther->UseVisualStyleBackColor = true;
 			this->rUsageOther->CheckedChanged += gcnew System::EventHandler(this, &Form1::rUsageOther_CheckedChanged);
 			// 
 			// rUsageDst
 			// 
-			this->rUsageDst->AccessibleDescription = nullptr;
-			this->rUsageDst->AccessibleName = nullptr;
 			resources->ApplyResources(this->rUsageDst, L"rUsageDst");
-			this->rUsageDst->BackgroundImage = nullptr;
-			this->rUsageDst->Font = nullptr;
 			this->rUsageDst->Name = L"rUsageDst";
 			this->rUsageDst->UseVisualStyleBackColor = true;
 			// 
 			// rUsageSample
 			// 
-			this->rUsageSample->AccessibleDescription = nullptr;
-			this->rUsageSample->AccessibleName = nullptr;
 			resources->ApplyResources(this->rUsageSample, L"rUsageSample");
-			this->rUsageSample->BackgroundImage = nullptr;
-			this->rUsageSample->Font = nullptr;
 			this->rUsageSample->Name = L"rUsageSample";
 			this->rUsageSample->UseVisualStyleBackColor = true;
 			// 
 			// rUsageSale
 			// 
-			this->rUsageSale->AccessibleDescription = nullptr;
-			this->rUsageSale->AccessibleName = nullptr;
 			resources->ApplyResources(this->rUsageSale, L"rUsageSale");
-			this->rUsageSale->BackgroundImage = nullptr;
 			this->rUsageSale->Checked = true;
-			this->rUsageSale->Font = nullptr;
 			this->rUsageSale->Name = L"rUsageSale";
 			this->rUsageSale->TabStop = true;
 			this->rUsageSale->UseVisualStyleBackColor = true;
 			// 
 			// gboxSubmitWay
 			// 
-			this->gboxSubmitWay->AccessibleDescription = nullptr;
-			this->gboxSubmitWay->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxSubmitWay, L"gboxSubmitWay");
-			this->gboxSubmitWay->BackgroundImage = nullptr;
 			this->gboxSubmitWay->Controls->Add(this->rSubmitHand);
 			this->gboxSubmitWay->Controls->Add(this->rSubmitPost);
-			this->gboxSubmitWay->Font = nullptr;
+			resources->ApplyResources(this->gboxSubmitWay, L"gboxSubmitWay");
 			this->gboxSubmitWay->Name = L"gboxSubmitWay";
 			this->gboxSubmitWay->TabStop = false;
 			// 
 			// rSubmitHand
 			// 
-			this->rSubmitHand->AccessibleDescription = nullptr;
-			this->rSubmitHand->AccessibleName = nullptr;
 			resources->ApplyResources(this->rSubmitHand, L"rSubmitHand");
-			this->rSubmitHand->BackgroundImage = nullptr;
-			this->rSubmitHand->Font = nullptr;
 			this->rSubmitHand->Name = L"rSubmitHand";
 			this->rSubmitHand->UseVisualStyleBackColor = true;
 			// 
 			// rSubmitPost
 			// 
-			this->rSubmitPost->AccessibleDescription = nullptr;
-			this->rSubmitPost->AccessibleName = nullptr;
 			resources->ApplyResources(this->rSubmitPost, L"rSubmitPost");
-			this->rSubmitPost->BackgroundImage = nullptr;
 			this->rSubmitPost->Checked = true;
-			this->rSubmitPost->Font = nullptr;
 			this->rSubmitPost->Name = L"rSubmitPost";
 			this->rSubmitPost->TabStop = true;
 			this->rSubmitPost->UseVisualStyleBackColor = true;
 			// 
 			// labSubmiteDate
 			// 
-			this->labSubmiteDate->AccessibleDescription = nullptr;
-			this->labSubmiteDate->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSubmiteDate, L"labSubmiteDate");
-			this->labSubmiteDate->Font = nullptr;
 			this->labSubmiteDate->Name = L"labSubmiteDate";
 			// 
 			// labReleaseDate
 			// 
-			this->labReleaseDate->AccessibleDescription = nullptr;
-			this->labReleaseDate->AccessibleName = nullptr;
 			resources->ApplyResources(this->labReleaseDate, L"labReleaseDate");
-			this->labReleaseDate->Font = nullptr;
 			this->labReleaseDate->Name = L"labReleaseDate";
 			// 
 			// labProductCode
 			// 
-			this->labProductCode->AccessibleDescription = nullptr;
-			this->labProductCode->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCode, L"labProductCode");
-			this->labProductCode->Font = nullptr;
 			this->labProductCode->Name = L"labProductCode";
 			// 
 			// labProductName
 			// 
-			this->labProductName->AccessibleDescription = nullptr;
-			this->labProductName->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductName, L"labProductName");
-			this->labProductName->Font = nullptr;
 			this->labProductName->Name = L"labProductName";
 			// 
 			// labCapSubmitVer
 			// 
-			this->labCapSubmitVer->AccessibleDescription = nullptr;
-			this->labCapSubmitVer->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCapSubmitVer, L"labCapSubmitVer");
-			this->labCapSubmitVer->Font = nullptr;
 			this->labCapSubmitVer->Name = L"labCapSubmitVer";
 			// 
 			// numSubmitVersion
 			// 
-			this->numSubmitVersion->AccessibleDescription = nullptr;
-			this->numSubmitVersion->AccessibleName = nullptr;
 			resources->ApplyResources(this->numSubmitVersion, L"numSubmitVersion");
-			this->numSubmitVersion->Font = nullptr;
 			this->numSubmitVersion->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {15, 0, 0, 0});
 			this->numSubmitVersion->Name = L"numSubmitVersion";
 			// 
 			// labSubmitVer
 			// 
-			this->labSubmitVer->AccessibleDescription = nullptr;
-			this->labSubmitVer->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSubmitVer, L"labSubmitVer");
-			this->labSubmitVer->Font = nullptr;
 			this->labSubmitVer->Name = L"labSubmitVer";
 			// 
 			// labMultiForeign1
 			// 
-			this->labMultiForeign1->AccessibleDescription = nullptr;
-			this->labMultiForeign1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMultiForeign1, L"labMultiForeign1");
-			this->labMultiForeign1->Font = nullptr;
 			this->labMultiForeign1->Name = L"labMultiForeign1";
 			// 
 			// tboxProductCode2Foreign3
 			// 
-			this->tboxProductCode2Foreign3->AccessibleDescription = nullptr;
-			this->tboxProductCode2Foreign3->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode2Foreign3, L"tboxProductCode2Foreign3");
-			this->tboxProductCode2Foreign3->BackgroundImage = nullptr;
-			this->tboxProductCode2Foreign3->Font = nullptr;
 			this->tboxProductCode2Foreign3->Name = L"tboxProductCode2Foreign3";
 			// 
 			// tboxProductCode2Foreign2
 			// 
-			this->tboxProductCode2Foreign2->AccessibleDescription = nullptr;
-			this->tboxProductCode2Foreign2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode2Foreign2, L"tboxProductCode2Foreign2");
-			this->tboxProductCode2Foreign2->BackgroundImage = nullptr;
-			this->tboxProductCode2Foreign2->Font = nullptr;
 			this->tboxProductCode2Foreign2->Name = L"tboxProductCode2Foreign2";
 			// 
 			// labProductCode2Foreign
 			// 
-			this->labProductCode2Foreign->AccessibleDescription = nullptr;
-			this->labProductCode2Foreign->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCode2Foreign, L"labProductCode2Foreign");
-			this->labProductCode2Foreign->Font = nullptr;
 			this->labProductCode2Foreign->Name = L"labProductCode2Foreign";
 			// 
 			// cboxReleaseForeign
 			// 
-			this->cboxReleaseForeign->AccessibleDescription = nullptr;
-			this->cboxReleaseForeign->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxReleaseForeign, L"cboxReleaseForeign");
-			this->cboxReleaseForeign->BackgroundImage = nullptr;
-			this->cboxReleaseForeign->Font = nullptr;
 			this->cboxReleaseForeign->Name = L"cboxReleaseForeign";
 			this->cboxReleaseForeign->UseVisualStyleBackColor = true;
 			this->cboxReleaseForeign->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxReleaseForeign_CheckedChanged);
 			// 
 			// labProductNameForeign
 			// 
-			this->labProductNameForeign->AccessibleDescription = nullptr;
-			this->labProductNameForeign->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductNameForeign, L"labProductNameForeign");
-			this->labProductNameForeign->Font = nullptr;
 			this->labProductNameForeign->Name = L"labProductNameForeign";
 			// 
 			// tboxProductNameForeign
 			// 
-			this->tboxProductNameForeign->AccessibleDescription = nullptr;
-			this->tboxProductNameForeign->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductNameForeign, L"tboxProductNameForeign");
-			this->tboxProductNameForeign->BackgroundImage = nullptr;
-			this->tboxProductNameForeign->Font = nullptr;
 			this->tboxProductNameForeign->Name = L"tboxProductNameForeign";
 			// 
 			// labProductCode1Foreign
 			// 
-			this->labProductCode1Foreign->AccessibleDescription = nullptr;
-			this->labProductCode1Foreign->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCode1Foreign, L"labProductCode1Foreign");
-			this->labProductCode1Foreign->Font = nullptr;
 			this->labProductCode1Foreign->Name = L"labProductCode1Foreign";
 			// 
 			// tboxProductCode1Foreign
 			// 
-			this->tboxProductCode1Foreign->AccessibleDescription = nullptr;
-			this->tboxProductCode1Foreign->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode1Foreign, L"tboxProductCode1Foreign");
-			this->tboxProductCode1Foreign->BackgroundImage = nullptr;
-			this->tboxProductCode1Foreign->Font = nullptr;
 			this->tboxProductCode1Foreign->Name = L"tboxProductCode1Foreign";
 			// 
 			// labProductCodeForeign
 			// 
-			this->labProductCodeForeign->AccessibleDescription = nullptr;
-			this->labProductCodeForeign->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductCodeForeign, L"labProductCodeForeign");
-			this->labProductCodeForeign->Font = nullptr;
 			this->labProductCodeForeign->Name = L"labProductCodeForeign";
 			// 
 			// tboxProductCode2Foreign1
 			// 
-			this->tboxProductCode2Foreign1->AccessibleDescription = nullptr;
-			this->tboxProductCode2Foreign1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxProductCode2Foreign1, L"tboxProductCode2Foreign1");
-			this->tboxProductCode2Foreign1->BackgroundImage = nullptr;
-			this->tboxProductCode2Foreign1->Font = nullptr;
 			this->tboxProductCode2Foreign1->Name = L"tboxProductCode2Foreign1";
 			// 
 			// gboxShared2Size
 			// 
-			this->gboxShared2Size->AccessibleDescription = nullptr;
-			this->gboxShared2Size->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxShared2Size, L"gboxShared2Size");
-			this->gboxShared2Size->BackgroundImage = nullptr;
 			this->gboxShared2Size->Controls->Add(this->labShared2Size5);
 			this->gboxShared2Size->Controls->Add(this->labShared2Size4);
 			this->gboxShared2Size->Controls->Add(this->labShared2Size3);
@@ -2331,320 +1894,200 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxShared2Size->Controls->Add(this->tboxShared2Size1);
 			this->gboxShared2Size->Controls->Add(this->tboxShared2Size0);
 			this->gboxShared2Size->Controls->Add(this->cboxIsShared2);
-			this->gboxShared2Size->Font = nullptr;
+			resources->ApplyResources(this->gboxShared2Size, L"gboxShared2Size");
 			this->gboxShared2Size->Name = L"gboxShared2Size";
 			this->gboxShared2Size->TabStop = false;
 			// 
 			// labShared2Size5
 			// 
-			this->labShared2Size5->AccessibleDescription = nullptr;
-			this->labShared2Size5->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size5, L"labShared2Size5");
-			this->labShared2Size5->Font = nullptr;
 			this->labShared2Size5->Name = L"labShared2Size5";
 			// 
 			// labShared2Size4
 			// 
-			this->labShared2Size4->AccessibleDescription = nullptr;
-			this->labShared2Size4->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size4, L"labShared2Size4");
-			this->labShared2Size4->Font = nullptr;
 			this->labShared2Size4->Name = L"labShared2Size4";
 			// 
 			// labShared2Size3
 			// 
-			this->labShared2Size3->AccessibleDescription = nullptr;
-			this->labShared2Size3->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size3, L"labShared2Size3");
-			this->labShared2Size3->Font = nullptr;
 			this->labShared2Size3->Name = L"labShared2Size3";
 			// 
 			// labShared2Size2
 			// 
-			this->labShared2Size2->AccessibleDescription = nullptr;
-			this->labShared2Size2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size2, L"labShared2Size2");
-			this->labShared2Size2->Font = nullptr;
 			this->labShared2Size2->Name = L"labShared2Size2";
 			// 
 			// labShared2Size1
 			// 
-			this->labShared2Size1->AccessibleDescription = nullptr;
-			this->labShared2Size1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size1, L"labShared2Size1");
-			this->labShared2Size1->Font = nullptr;
 			this->labShared2Size1->Name = L"labShared2Size1";
 			// 
 			// labShared2Size0
 			// 
-			this->labShared2Size0->AccessibleDescription = nullptr;
-			this->labShared2Size0->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShared2Size0, L"labShared2Size0");
-			this->labShared2Size0->Font = nullptr;
 			this->labShared2Size0->Name = L"labShared2Size0";
 			// 
 			// tboxShared2Size5
 			// 
-			this->tboxShared2Size5->AccessibleDescription = nullptr;
-			this->tboxShared2Size5->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size5, L"tboxShared2Size5");
-			this->tboxShared2Size5->BackgroundImage = nullptr;
-			this->tboxShared2Size5->Font = nullptr;
 			this->tboxShared2Size5->Name = L"tboxShared2Size5";
 			this->tboxShared2Size5->ReadOnly = true;
 			// 
 			// tboxShared2Size4
 			// 
-			this->tboxShared2Size4->AccessibleDescription = nullptr;
-			this->tboxShared2Size4->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size4, L"tboxShared2Size4");
-			this->tboxShared2Size4->BackgroundImage = nullptr;
-			this->tboxShared2Size4->Font = nullptr;
 			this->tboxShared2Size4->Name = L"tboxShared2Size4";
 			this->tboxShared2Size4->ReadOnly = true;
 			// 
 			// tboxShared2Size3
 			// 
-			this->tboxShared2Size3->AccessibleDescription = nullptr;
-			this->tboxShared2Size3->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size3, L"tboxShared2Size3");
-			this->tboxShared2Size3->BackgroundImage = nullptr;
-			this->tboxShared2Size3->Font = nullptr;
 			this->tboxShared2Size3->Name = L"tboxShared2Size3";
 			this->tboxShared2Size3->ReadOnly = true;
 			// 
 			// tboxShared2Size2
 			// 
-			this->tboxShared2Size2->AccessibleDescription = nullptr;
-			this->tboxShared2Size2->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size2, L"tboxShared2Size2");
-			this->tboxShared2Size2->BackgroundImage = nullptr;
-			this->tboxShared2Size2->Font = nullptr;
 			this->tboxShared2Size2->Name = L"tboxShared2Size2";
 			this->tboxShared2Size2->ReadOnly = true;
 			// 
 			// tboxShared2Size1
 			// 
-			this->tboxShared2Size1->AccessibleDescription = nullptr;
-			this->tboxShared2Size1->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size1, L"tboxShared2Size1");
-			this->tboxShared2Size1->BackgroundImage = nullptr;
-			this->tboxShared2Size1->Font = nullptr;
 			this->tboxShared2Size1->Name = L"tboxShared2Size1";
 			this->tboxShared2Size1->ReadOnly = true;
 			// 
 			// tboxShared2Size0
 			// 
-			this->tboxShared2Size0->AccessibleDescription = nullptr;
-			this->tboxShared2Size0->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShared2Size0, L"tboxShared2Size0");
-			this->tboxShared2Size0->BackgroundImage = nullptr;
-			this->tboxShared2Size0->Font = nullptr;
 			this->tboxShared2Size0->Name = L"tboxShared2Size0";
 			this->tboxShared2Size0->ReadOnly = true;
 			// 
 			// cboxIsShared2
 			// 
-			this->cboxIsShared2->AccessibleDescription = nullptr;
-			this->cboxIsShared2->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsShared2, L"cboxIsShared2");
-			this->cboxIsShared2->BackgroundImage = nullptr;
-			this->cboxIsShared2->Font = nullptr;
 			this->cboxIsShared2->Name = L"cboxIsShared2";
 			this->cboxIsShared2->UseVisualStyleBackColor = true;
 			// 
 			// labLib
 			// 
-			this->labLib->AccessibleDescription = nullptr;
-			this->labLib->AccessibleName = nullptr;
 			resources->ApplyResources(this->labLib, L"labLib");
-			this->labLib->Font = nullptr;
 			this->labLib->Name = L"labLib";
 			// 
 			// tboxSDK
 			// 
-			this->tboxSDK->AccessibleDescription = nullptr;
-			this->tboxSDK->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSDK, L"tboxSDK");
-			this->tboxSDK->BackgroundImage = nullptr;
-			this->tboxSDK->Font = nullptr;
 			this->tboxSDK->Name = L"tboxSDK";
 			this->tboxSDK->ReadOnly = true;
 			// 
 			// labSDK
 			// 
-			this->labSDK->AccessibleDescription = nullptr;
-			this->labSDK->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSDK, L"labSDK");
-			this->labSDK->Font = nullptr;
 			this->labSDK->Name = L"labSDK";
 			// 
 			// gboxTWLExInfo
 			// 
-			this->gboxTWLExInfo->AccessibleDescription = nullptr;
-			this->gboxTWLExInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
-			this->gboxTWLExInfo->BackgroundImage = nullptr;
 			this->gboxTWLExInfo->Controls->Add(this->labByte1);
 			this->gboxTWLExInfo->Controls->Add(this->labHex4);
 			this->gboxTWLExInfo->Controls->Add(this->tboxIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labIsCodec);
 			this->gboxTWLExInfo->Controls->Add(this->labKeyTableRomOffset);
 			this->gboxTWLExInfo->Controls->Add(this->tboxKeyTableRomOffset);
-			this->gboxTWLExInfo->Font = nullptr;
+			resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
 			this->gboxTWLExInfo->Name = L"gboxTWLExInfo";
 			this->gboxTWLExInfo->TabStop = false;
 			// 
 			// labByte1
 			// 
-			this->labByte1->AccessibleDescription = nullptr;
-			this->labByte1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labByte1, L"labByte1");
-			this->labByte1->Font = nullptr;
 			this->labByte1->Name = L"labByte1";
 			// 
 			// labHex4
 			// 
-			this->labHex4->AccessibleDescription = nullptr;
-			this->labHex4->AccessibleName = nullptr;
 			resources->ApplyResources(this->labHex4, L"labHex4");
-			this->labHex4->Font = nullptr;
 			this->labHex4->Name = L"labHex4";
 			// 
 			// tboxIsCodec
 			// 
-			this->tboxIsCodec->AccessibleDescription = nullptr;
-			this->tboxIsCodec->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxIsCodec, L"tboxIsCodec");
-			this->tboxIsCodec->BackgroundImage = nullptr;
-			this->tboxIsCodec->Font = nullptr;
 			this->tboxIsCodec->Name = L"tboxIsCodec";
 			this->tboxIsCodec->ReadOnly = true;
 			// 
 			// labIsCodec
 			// 
-			this->labIsCodec->AccessibleDescription = nullptr;
-			this->labIsCodec->AccessibleName = nullptr;
 			resources->ApplyResources(this->labIsCodec, L"labIsCodec");
-			this->labIsCodec->Font = nullptr;
 			this->labIsCodec->Name = L"labIsCodec";
 			// 
 			// labKeyTableRomOffset
 			// 
-			this->labKeyTableRomOffset->AccessibleDescription = nullptr;
-			this->labKeyTableRomOffset->AccessibleName = nullptr;
 			resources->ApplyResources(this->labKeyTableRomOffset, L"labKeyTableRomOffset");
-			this->labKeyTableRomOffset->Font = nullptr;
 			this->labKeyTableRomOffset->Name = L"labKeyTableRomOffset";
 			// 
 			// tboxKeyTableRomOffset
 			// 
-			this->tboxKeyTableRomOffset->AccessibleDescription = nullptr;
-			this->tboxKeyTableRomOffset->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxKeyTableRomOffset, L"tboxKeyTableRomOffset");
-			this->tboxKeyTableRomOffset->BackgroundImage = nullptr;
-			this->tboxKeyTableRomOffset->Font = nullptr;
 			this->tboxKeyTableRomOffset->Name = L"tboxKeyTableRomOffset";
 			this->tboxKeyTableRomOffset->ReadOnly = true;
 			// 
 			// labHex3
 			// 
-			this->labHex3->AccessibleDescription = nullptr;
-			this->labHex3->AccessibleName = nullptr;
 			resources->ApplyResources(this->labHex3, L"labHex3");
-			this->labHex3->Font = nullptr;
 			this->labHex3->Name = L"labHex3";
 			// 
 			// labNormalRomOffset
 			// 
-			this->labNormalRomOffset->AccessibleDescription = nullptr;
-			this->labNormalRomOffset->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNormalRomOffset, L"labNormalRomOffset");
-			this->labNormalRomOffset->Font = nullptr;
 			this->labNormalRomOffset->Name = L"labNormalRomOffset";
 			// 
 			// tboxNormalRomOffset
 			// 
-			this->tboxNormalRomOffset->AccessibleDescription = nullptr;
-			this->tboxNormalRomOffset->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxNormalRomOffset, L"tboxNormalRomOffset");
-			this->tboxNormalRomOffset->BackgroundImage = nullptr;
-			this->tboxNormalRomOffset->Font = nullptr;
 			this->tboxNormalRomOffset->Name = L"tboxNormalRomOffset";
 			this->tboxNormalRomOffset->ReadOnly = true;
 			// 
 			// tboxPrivateSize
 			// 
-			this->tboxPrivateSize->AccessibleDescription = nullptr;
-			this->tboxPrivateSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPrivateSize, L"tboxPrivateSize");
-			this->tboxPrivateSize->BackgroundImage = nullptr;
-			this->tboxPrivateSize->Font = nullptr;
 			this->tboxPrivateSize->Name = L"tboxPrivateSize";
 			this->tboxPrivateSize->ReadOnly = true;
 			// 
 			// labPrivateSize
 			// 
-			this->labPrivateSize->AccessibleDescription = nullptr;
-			this->labPrivateSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPrivateSize, L"labPrivateSize");
-			this->labPrivateSize->Font = nullptr;
 			this->labPrivateSize->Name = L"labPrivateSize";
 			// 
 			// labPublicSize
 			// 
-			this->labPublicSize->AccessibleDescription = nullptr;
-			this->labPublicSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labPublicSize, L"labPublicSize");
-			this->labPublicSize->Font = nullptr;
 			this->labPublicSize->Name = L"labPublicSize";
 			// 
 			// tboxPublicSize
 			// 
-			this->tboxPublicSize->AccessibleDescription = nullptr;
-			this->tboxPublicSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPublicSize, L"tboxPublicSize");
-			this->tboxPublicSize->BackgroundImage = nullptr;
-			this->tboxPublicSize->Font = nullptr;
 			this->tboxPublicSize->Name = L"tboxPublicSize";
 			this->tboxPublicSize->ReadOnly = true;
 			// 
 			// cboxIsSubBanner
 			// 
-			this->cboxIsSubBanner->AccessibleDescription = nullptr;
-			this->cboxIsSubBanner->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsSubBanner, L"cboxIsSubBanner");
-			this->cboxIsSubBanner->BackgroundImage = nullptr;
-			this->cboxIsSubBanner->Font = nullptr;
 			this->cboxIsSubBanner->Name = L"cboxIsSubBanner";
 			this->cboxIsSubBanner->UseVisualStyleBackColor = true;
 			// 
 			// cboxIsNormalJump
 			// 
-			this->cboxIsNormalJump->AccessibleDescription = nullptr;
-			this->cboxIsNormalJump->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsNormalJump, L"cboxIsNormalJump");
-			this->cboxIsNormalJump->BackgroundImage = nullptr;
-			this->cboxIsNormalJump->Font = nullptr;
 			this->cboxIsNormalJump->Name = L"cboxIsNormalJump";
 			this->cboxIsNormalJump->UseVisualStyleBackColor = true;
 			// 
 			// cboxIsTmpJump
 			// 
-			this->cboxIsTmpJump->AccessibleDescription = nullptr;
-			this->cboxIsTmpJump->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsTmpJump, L"cboxIsTmpJump");
-			this->cboxIsTmpJump->BackgroundImage = nullptr;
-			this->cboxIsTmpJump->Font = nullptr;
 			this->cboxIsTmpJump->Name = L"cboxIsTmpJump";
 			this->cboxIsTmpJump->UseVisualStyleBackColor = true;
 			// 
 			// gboxAccess
 			// 
-			this->gboxAccess->AccessibleDescription = nullptr;
-			this->gboxAccess->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxAccess, L"gboxAccess");
-			this->gboxAccess->BackgroundImage = nullptr;
 			this->gboxAccess->Controls->Add(this->labIsGameCardOn2);
 			this->gboxAccess->Controls->Add(this->labAccessOther);
 			this->gboxAccess->Controls->Add(this->tboxAccessOther);
@@ -2652,80 +2095,51 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxAccess->Controls->Add(this->labIsGameCardOn);
 			this->gboxAccess->Controls->Add(this->cboxIsNAND);
 			this->gboxAccess->Controls->Add(this->cboxIsSD);
-			this->gboxAccess->Font = nullptr;
+			resources->ApplyResources(this->gboxAccess, L"gboxAccess");
 			this->gboxAccess->Name = L"gboxAccess";
 			this->gboxAccess->TabStop = false;
 			// 
 			// labIsGameCardOn2
 			// 
-			this->labIsGameCardOn2->AccessibleDescription = nullptr;
-			this->labIsGameCardOn2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labIsGameCardOn2, L"labIsGameCardOn2");
-			this->labIsGameCardOn2->Font = nullptr;
 			this->labIsGameCardOn2->Name = L"labIsGameCardOn2";
 			// 
 			// labAccessOther
 			// 
-			this->labAccessOther->AccessibleDescription = nullptr;
-			this->labAccessOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->labAccessOther, L"labAccessOther");
-			this->labAccessOther->Font = nullptr;
 			this->labAccessOther->Name = L"labAccessOther";
 			// 
 			// tboxAccessOther
 			// 
-			this->tboxAccessOther->AccessibleDescription = nullptr;
-			this->tboxAccessOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxAccessOther, L"tboxAccessOther");
-			this->tboxAccessOther->BackgroundImage = nullptr;
-			this->tboxAccessOther->Font = nullptr;
 			this->tboxAccessOther->Name = L"tboxAccessOther";
 			this->tboxAccessOther->ReadOnly = true;
 			// 
 			// tboxIsGameCardOn
 			// 
-			this->tboxIsGameCardOn->AccessibleDescription = nullptr;
-			this->tboxIsGameCardOn->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxIsGameCardOn, L"tboxIsGameCardOn");
-			this->tboxIsGameCardOn->BackgroundImage = nullptr;
-			this->tboxIsGameCardOn->Font = nullptr;
 			this->tboxIsGameCardOn->Name = L"tboxIsGameCardOn";
 			this->tboxIsGameCardOn->ReadOnly = true;
 			// 
 			// labIsGameCardOn
 			// 
-			this->labIsGameCardOn->AccessibleDescription = nullptr;
-			this->labIsGameCardOn->AccessibleName = nullptr;
 			resources->ApplyResources(this->labIsGameCardOn, L"labIsGameCardOn");
-			this->labIsGameCardOn->Font = nullptr;
 			this->labIsGameCardOn->Name = L"labIsGameCardOn";
 			// 
 			// cboxIsNAND
 			// 
-			this->cboxIsNAND->AccessibleDescription = nullptr;
-			this->cboxIsNAND->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsNAND, L"cboxIsNAND");
-			this->cboxIsNAND->BackgroundImage = nullptr;
-			this->cboxIsNAND->Font = nullptr;
 			this->cboxIsNAND->Name = L"cboxIsNAND";
 			this->cboxIsNAND->UseVisualStyleBackColor = true;
 			// 
 			// cboxIsSD
 			// 
-			this->cboxIsSD->AccessibleDescription = nullptr;
-			this->cboxIsSD->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsSD, L"cboxIsSD");
-			this->cboxIsSD->BackgroundImage = nullptr;
-			this->cboxIsSD->Font = nullptr;
 			this->cboxIsSD->Name = L"cboxIsSD";
 			this->cboxIsSD->UseVisualStyleBackColor = true;
 			// 
 			// gboxTitleID
 			// 
-			this->gboxTitleID->AccessibleDescription = nullptr;
-			this->gboxTitleID->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxTitleID, L"gboxTitleID");
-			this->gboxTitleID->BackgroundImage = nullptr;
 			this->gboxTitleID->Controls->Add(this->labAppType);
 			this->gboxTitleID->Controls->Add(this->tboxAppType);
 			this->gboxTitleID->Controls->Add(this->labHex2);
@@ -2735,295 +2149,186 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxTitleID->Controls->Add(this->tboxTitleIDHi);
 			this->gboxTitleID->Controls->Add(this->tboxAppTypeOther);
 			this->gboxTitleID->Controls->Add(this->labAppTypeOther);
-			this->gboxTitleID->Font = nullptr;
+			resources->ApplyResources(this->gboxTitleID, L"gboxTitleID");
 			this->gboxTitleID->Name = L"gboxTitleID";
 			this->gboxTitleID->TabStop = false;
 			// 
 			// labAppType
 			// 
-			this->labAppType->AccessibleDescription = nullptr;
-			this->labAppType->AccessibleName = nullptr;
 			resources->ApplyResources(this->labAppType, L"labAppType");
-			this->labAppType->Font = nullptr;
 			this->labAppType->Name = L"labAppType";
 			// 
 			// tboxAppType
 			// 
-			this->tboxAppType->AccessibleDescription = nullptr;
-			this->tboxAppType->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxAppType, L"tboxAppType");
-			this->tboxAppType->BackgroundImage = nullptr;
-			this->tboxAppType->Font = nullptr;
 			this->tboxAppType->Name = L"tboxAppType";
 			this->tboxAppType->ReadOnly = true;
 			// 
 			// labHex2
 			// 
-			this->labHex2->AccessibleDescription = nullptr;
-			this->labHex2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labHex2, L"labHex2");
-			this->labHex2->Font = nullptr;
 			this->labHex2->Name = L"labHex2";
 			// 
 			// tboxTitleIDLo
 			// 
-			this->tboxTitleIDLo->AccessibleDescription = nullptr;
-			this->tboxTitleIDLo->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTitleIDLo, L"tboxTitleIDLo");
-			this->tboxTitleIDLo->BackgroundImage = nullptr;
-			this->tboxTitleIDLo->Font = nullptr;
 			this->tboxTitleIDLo->Name = L"tboxTitleIDLo";
 			this->tboxTitleIDLo->ReadOnly = true;
 			// 
 			// labTitleIDLo
 			// 
-			this->labTitleIDLo->AccessibleDescription = nullptr;
-			this->labTitleIDLo->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTitleIDLo, L"labTitleIDLo");
-			this->labTitleIDLo->Font = nullptr;
 			this->labTitleIDLo->Name = L"labTitleIDLo";
 			// 
 			// labTitleIDHi
 			// 
-			this->labTitleIDHi->AccessibleDescription = nullptr;
-			this->labTitleIDHi->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTitleIDHi, L"labTitleIDHi");
-			this->labTitleIDHi->Font = nullptr;
 			this->labTitleIDHi->Name = L"labTitleIDHi";
 			// 
 			// tboxTitleIDHi
 			// 
-			this->tboxTitleIDHi->AccessibleDescription = nullptr;
-			this->tboxTitleIDHi->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTitleIDHi, L"tboxTitleIDHi");
-			this->tboxTitleIDHi->BackgroundImage = nullptr;
-			this->tboxTitleIDHi->Font = nullptr;
 			this->tboxTitleIDHi->Name = L"tboxTitleIDHi";
 			this->tboxTitleIDHi->ReadOnly = true;
 			// 
 			// tboxAppTypeOther
 			// 
-			this->tboxAppTypeOther->AccessibleDescription = nullptr;
-			this->tboxAppTypeOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxAppTypeOther, L"tboxAppTypeOther");
-			this->tboxAppTypeOther->BackgroundImage = nullptr;
-			this->tboxAppTypeOther->Font = nullptr;
 			this->tboxAppTypeOther->Name = L"tboxAppTypeOther";
 			this->tboxAppTypeOther->ReadOnly = true;
 			// 
 			// labAppTypeOther
 			// 
-			this->labAppTypeOther->AccessibleDescription = nullptr;
-			this->labAppTypeOther->AccessibleName = nullptr;
 			resources->ApplyResources(this->labAppTypeOther, L"labAppTypeOther");
-			this->labAppTypeOther->Font = nullptr;
 			this->labAppTypeOther->Name = L"labAppTypeOther";
 			// 
 			// labMedia
 			// 
-			this->labMedia->AccessibleDescription = nullptr;
-			this->labMedia->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMedia, L"labMedia");
-			this->labMedia->Font = nullptr;
 			this->labMedia->Name = L"labMedia";
 			// 
 			// tboxMedia
 			// 
-			this->tboxMedia->AccessibleDescription = nullptr;
-			this->tboxMedia->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxMedia, L"tboxMedia");
-			this->tboxMedia->BackgroundImage = nullptr;
-			this->tboxMedia->Font = nullptr;
 			this->tboxMedia->Name = L"tboxMedia";
 			this->tboxMedia->ReadOnly = true;
 			// 
 			// labCaptionEx
 			// 
-			this->labCaptionEx->AccessibleDescription = nullptr;
-			this->labCaptionEx->AccessibleName = nullptr;
 			resources->ApplyResources(this->labCaptionEx, L"labCaptionEx");
-			this->labCaptionEx->Font = nullptr;
 			this->labCaptionEx->Name = L"labCaptionEx";
 			// 
 			// tboxCaptionEx
 			// 
-			this->tboxCaptionEx->AccessibleDescription = nullptr;
-			this->tboxCaptionEx->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxCaptionEx, L"tboxCaptionEx");
-			this->tboxCaptionEx->BackgroundImage = nullptr;
-			this->tboxCaptionEx->Font = nullptr;
 			this->tboxCaptionEx->Name = L"tboxCaptionEx";
 			this->tboxCaptionEx->ReadOnly = true;
 			// 
 			// gboxProd
 			// 
-			this->gboxProd->AccessibleDescription = nullptr;
-			this->gboxProd->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxProd, L"gboxProd");
-			this->gboxProd->BackgroundImage = nullptr;
 			this->gboxProd->Controls->Add(this->combBackup);
 			this->gboxProd->Controls->Add(this->labBackup);
 			this->gboxProd->Controls->Add(this->tboxBackupOther);
-			this->gboxProd->Font = nullptr;
+			resources->ApplyResources(this->gboxProd, L"gboxProd");
 			this->gboxProd->Name = L"gboxProd";
 			this->gboxProd->TabStop = false;
 			// 
 			// menuStripAbove
 			// 
-			this->menuStripAbove->AccessibleDescription = nullptr;
-			this->menuStripAbove->AccessibleName = nullptr;
-			resources->ApplyResources(this->menuStripAbove, L"menuStripAbove");
-			this->menuStripAbove->BackgroundImage = nullptr;
-			this->menuStripAbove->Font = nullptr;
 			this->menuStripAbove->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->stripFile, this->stripMaster, 
 				this->stripLang});
+			resources->ApplyResources(this->menuStripAbove, L"menuStripAbove");
 			this->menuStripAbove->Name = L"menuStripAbove";
 			// 
 			// stripFile
 			// 
-			this->stripFile->AccessibleDescription = nullptr;
-			this->stripFile->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripFile, L"stripFile");
-			this->stripFile->BackgroundImage = nullptr;
 			this->stripFile->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->stripItemOpenRom, 
 				this->stripItemSepFile1, this->stripItemSaveTemp, this->stripItemLoadTemp});
 			this->stripFile->Name = L"stripFile";
-			this->stripFile->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripFile, L"stripFile");
 			// 
 			// stripItemOpenRom
 			// 
-			this->stripItemOpenRom->AccessibleDescription = nullptr;
-			this->stripItemOpenRom->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemOpenRom, L"stripItemOpenRom");
-			this->stripItemOpenRom->BackgroundImage = nullptr;
 			this->stripItemOpenRom->Name = L"stripItemOpenRom";
-			this->stripItemOpenRom->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemOpenRom, L"stripItemOpenRom");
 			this->stripItemOpenRom->Click += gcnew System::EventHandler(this, &Form1::stripItemOpenRom_Click);
 			// 
 			// stripItemSepFile1
 			// 
-			this->stripItemSepFile1->AccessibleDescription = nullptr;
-			this->stripItemSepFile1->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemSepFile1, L"stripItemSepFile1");
 			this->stripItemSepFile1->Name = L"stripItemSepFile1";
+			resources->ApplyResources(this->stripItemSepFile1, L"stripItemSepFile1");
 			// 
 			// stripItemSaveTemp
 			// 
-			this->stripItemSaveTemp->AccessibleDescription = nullptr;
-			this->stripItemSaveTemp->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemSaveTemp, L"stripItemSaveTemp");
-			this->stripItemSaveTemp->BackgroundImage = nullptr;
 			this->stripItemSaveTemp->Name = L"stripItemSaveTemp";
-			this->stripItemSaveTemp->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemSaveTemp, L"stripItemSaveTemp");
 			this->stripItemSaveTemp->Click += gcnew System::EventHandler(this, &Form1::stripItemSaveTemp_Click);
 			// 
 			// stripItemLoadTemp
 			// 
-			this->stripItemLoadTemp->AccessibleDescription = nullptr;
-			this->stripItemLoadTemp->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemLoadTemp, L"stripItemLoadTemp");
-			this->stripItemLoadTemp->BackgroundImage = nullptr;
 			this->stripItemLoadTemp->Name = L"stripItemLoadTemp";
-			this->stripItemLoadTemp->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemLoadTemp, L"stripItemLoadTemp");
 			this->stripItemLoadTemp->Click += gcnew System::EventHandler(this, &Form1::stripItemLoadTemp_Click);
 			// 
 			// stripMaster
 			// 
-			this->stripMaster->AccessibleDescription = nullptr;
-			this->stripMaster->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripMaster, L"stripMaster");
-			this->stripMaster->BackgroundImage = nullptr;
 			this->stripMaster->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->stripItemSheet, 
 				this->stripItemSepMaster1, this->stripItemMasterRom, this->stripItemMiddlewareXml, this->stripItemMiddlewareHtml});
 			this->stripMaster->Name = L"stripMaster";
-			this->stripMaster->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripMaster, L"stripMaster");
 			// 
 			// stripItemSheet
 			// 
-			this->stripItemSheet->AccessibleDescription = nullptr;
-			this->stripItemSheet->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemSheet, L"stripItemSheet");
-			this->stripItemSheet->BackgroundImage = nullptr;
 			this->stripItemSheet->Name = L"stripItemSheet";
-			this->stripItemSheet->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemSheet, L"stripItemSheet");
 			this->stripItemSheet->Click += gcnew System::EventHandler(this, &Form1::stripItemSheet_Click);
 			// 
 			// stripItemSepMaster1
 			// 
-			this->stripItemSepMaster1->AccessibleDescription = nullptr;
-			this->stripItemSepMaster1->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemSepMaster1, L"stripItemSepMaster1");
 			this->stripItemSepMaster1->Name = L"stripItemSepMaster1";
+			resources->ApplyResources(this->stripItemSepMaster1, L"stripItemSepMaster1");
 			// 
 			// stripItemMasterRom
 			// 
-			this->stripItemMasterRom->AccessibleDescription = nullptr;
-			this->stripItemMasterRom->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemMasterRom, L"stripItemMasterRom");
-			this->stripItemMasterRom->BackgroundImage = nullptr;
 			this->stripItemMasterRom->Name = L"stripItemMasterRom";
-			this->stripItemMasterRom->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemMasterRom, L"stripItemMasterRom");
 			this->stripItemMasterRom->Click += gcnew System::EventHandler(this, &Form1::stripItemMasterRom_Click);
 			// 
 			// stripItemMiddlewareXml
 			// 
-			this->stripItemMiddlewareXml->AccessibleDescription = nullptr;
-			this->stripItemMiddlewareXml->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemMiddlewareXml, L"stripItemMiddlewareXml");
-			this->stripItemMiddlewareXml->BackgroundImage = nullptr;
 			this->stripItemMiddlewareXml->Name = L"stripItemMiddlewareXml";
-			this->stripItemMiddlewareXml->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemMiddlewareXml, L"stripItemMiddlewareXml");
 			this->stripItemMiddlewareXml->Click += gcnew System::EventHandler(this, &Form1::stripItemMiddlewareXml_Click);
 			// 
 			// stripItemMiddlewareHtml
 			// 
-			this->stripItemMiddlewareHtml->AccessibleDescription = nullptr;
-			this->stripItemMiddlewareHtml->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemMiddlewareHtml, L"stripItemMiddlewareHtml");
-			this->stripItemMiddlewareHtml->BackgroundImage = nullptr;
 			this->stripItemMiddlewareHtml->Name = L"stripItemMiddlewareHtml";
-			this->stripItemMiddlewareHtml->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemMiddlewareHtml, L"stripItemMiddlewareHtml");
 			this->stripItemMiddlewareHtml->Click += gcnew System::EventHandler(this, &Form1::stripItemMiddlewareHtml_Click);
 			// 
 			// stripLang
 			// 
-			this->stripLang->AccessibleDescription = nullptr;
-			this->stripLang->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripLang, L"stripLang");
-			this->stripLang->BackgroundImage = nullptr;
 			this->stripLang->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->stripItemEnglish, 
 				this->stripItemJapanese});
 			this->stripLang->Name = L"stripLang";
-			this->stripLang->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripLang, L"stripLang");
 			// 
 			// stripItemEnglish
 			// 
-			this->stripItemEnglish->AccessibleDescription = nullptr;
-			this->stripItemEnglish->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemEnglish, L"stripItemEnglish");
-			this->stripItemEnglish->BackgroundImage = nullptr;
 			this->stripItemEnglish->Name = L"stripItemEnglish";
-			this->stripItemEnglish->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemEnglish, L"stripItemEnglish");
 			this->stripItemEnglish->Click += gcnew System::EventHandler(this, &Form1::stripItemEnglish_Click);
 			// 
 			// stripItemJapanese
 			// 
-			this->stripItemJapanese->AccessibleDescription = nullptr;
-			this->stripItemJapanese->AccessibleName = nullptr;
-			resources->ApplyResources(this->stripItemJapanese, L"stripItemJapanese");
-			this->stripItemJapanese->BackgroundImage = nullptr;
 			this->stripItemJapanese->Checked = true;
 			this->stripItemJapanese->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->stripItemJapanese->Name = L"stripItemJapanese";
-			this->stripItemJapanese->ShortcutKeyDisplayString = nullptr;
+			resources->ApplyResources(this->stripItemJapanese, L"stripItemJapanese");
 			this->stripItemJapanese->Click += gcnew System::EventHandler(this, &Form1::stripItemJapanese_Click);
 			// 
 			// tabMain
 			// 
-			this->tabMain->AccessibleDescription = nullptr;
-			this->tabMain->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabMain, L"tabMain");
-			this->tabMain->BackgroundImage = nullptr;
 			this->tabMain->Controls->Add(this->tabRomInfo);
 			this->tabMain->Controls->Add(this->tabTWLInfo);
 			this->tabMain->Controls->Add(this->tabRomEditInfo);
@@ -3031,17 +2336,13 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->tabMain->Controls->Add(this->tabSubmitInfo);
 			this->tabMain->Controls->Add(this->tabCompanyInfo);
 			this->tabMain->Controls->Add(this->tabErrorInfo);
-			this->tabMain->Font = nullptr;
+			resources->ApplyResources(this->tabMain, L"tabMain");
 			this->tabMain->Name = L"tabMain";
 			this->tabMain->SelectedIndex = 0;
 			this->tabMain->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::tabMain_SelectedIndexChanged);
 			// 
 			// tabRomInfo
 			// 
-			this->tabRomInfo->AccessibleDescription = nullptr;
-			this->tabRomInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabRomInfo, L"tabRomInfo");
-			this->tabRomInfo->BackgroundImage = nullptr;
 			this->tabRomInfo->Controls->Add(this->gridLibrary);
 			this->tabRomInfo->Controls->Add(this->tboxGuideRomInfo);
 			this->tabRomInfo->Controls->Add(this->gboxSrl);
@@ -3051,31 +2352,27 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->tabRomInfo->Controls->Add(this->gboxCRC);
 			this->tabRomInfo->Controls->Add(this->tboxSDK);
 			this->tabRomInfo->Controls->Add(this->labSDK);
-			this->tabRomInfo->Font = nullptr;
+			resources->ApplyResources(this->tabRomInfo, L"tabRomInfo");
 			this->tabRomInfo->Name = L"tabRomInfo";
 			this->tabRomInfo->UseVisualStyleBackColor = true;
 			// 
 			// gridLibrary
 			// 
-			this->gridLibrary->AccessibleDescription = nullptr;
-			this->gridLibrary->AccessibleName = nullptr;
-			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridLibrary->BackgroundColor = System::Drawing::SystemColors::Control;
-			this->gridLibrary->BackgroundImage = nullptr;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle5;
-			this->gridLibrary->Font = nullptr;
+			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle1;
+			resources->ApplyResources(this->gridLibrary, L"gridLibrary");
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
 			this->gridLibrary->RowHeadersVisible = false;
@@ -3096,21 +2393,13 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// tboxGuideRomInfo
 			// 
-			this->tboxGuideRomInfo->AccessibleDescription = nullptr;
-			this->tboxGuideRomInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideRomInfo, L"tboxGuideRomInfo");
 			this->tboxGuideRomInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideRomInfo->BackgroundImage = nullptr;
-			this->tboxGuideRomInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideRomInfo, L"tboxGuideRomInfo");
 			this->tboxGuideRomInfo->Name = L"tboxGuideRomInfo";
 			this->tboxGuideRomInfo->ReadOnly = true;
 			// 
 			// tabTWLInfo
 			// 
-			this->tabTWLInfo->AccessibleDescription = nullptr;
-			this->tabTWLInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
-			this->tabTWLInfo->BackgroundImage = nullptr;
 			this->tabTWLInfo->Controls->Add(this->gboxLaunch);
 			this->tabTWLInfo->Controls->Add(this->tboxGuideTWLInfo);
 			this->tabTWLInfo->Controls->Add(this->labHex3);
@@ -3121,139 +2410,92 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->tabTWLInfo->Controls->Add(this->gboxTitleID);
 			this->tabTWLInfo->Controls->Add(this->tboxNormalRomOffset);
 			this->tabTWLInfo->Controls->Add(this->labNormalRomOffset);
-			this->tabTWLInfo->Font = nullptr;
+			resources->ApplyResources(this->tabTWLInfo, L"tabTWLInfo");
 			this->tabTWLInfo->Name = L"tabTWLInfo";
 			this->tabTWLInfo->UseVisualStyleBackColor = true;
 			// 
 			// gboxLaunch
 			// 
-			this->gboxLaunch->AccessibleDescription = nullptr;
-			this->gboxLaunch->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxLaunch, L"gboxLaunch");
-			this->gboxLaunch->BackgroundImage = nullptr;
 			this->gboxLaunch->Controls->Add(this->labConnectIcon);
 			this->gboxLaunch->Controls->Add(this->tboxConnectIcon);
 			this->gboxLaunch->Controls->Add(this->cboxIsEULA);
-			this->gboxLaunch->Font = nullptr;
+			resources->ApplyResources(this->gboxLaunch, L"gboxLaunch");
 			this->gboxLaunch->Name = L"gboxLaunch";
 			this->gboxLaunch->TabStop = false;
 			// 
 			// labConnectIcon
 			// 
-			this->labConnectIcon->AccessibleDescription = nullptr;
-			this->labConnectIcon->AccessibleName = nullptr;
 			resources->ApplyResources(this->labConnectIcon, L"labConnectIcon");
-			this->labConnectIcon->Font = nullptr;
 			this->labConnectIcon->Name = L"labConnectIcon";
 			// 
 			// tboxConnectIcon
 			// 
-			this->tboxConnectIcon->AccessibleDescription = nullptr;
-			this->tboxConnectIcon->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxConnectIcon, L"tboxConnectIcon");
-			this->tboxConnectIcon->BackgroundImage = nullptr;
-			this->tboxConnectIcon->Font = nullptr;
 			this->tboxConnectIcon->Name = L"tboxConnectIcon";
 			this->tboxConnectIcon->ReadOnly = true;
 			// 
 			// tboxGuideTWLInfo
 			// 
-			this->tboxGuideTWLInfo->AccessibleDescription = nullptr;
-			this->tboxGuideTWLInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideTWLInfo, L"tboxGuideTWLInfo");
 			this->tboxGuideTWLInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideTWLInfo->BackgroundImage = nullptr;
-			this->tboxGuideTWLInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideTWLInfo, L"tboxGuideTWLInfo");
 			this->tboxGuideTWLInfo->Name = L"tboxGuideTWLInfo";
 			this->tboxGuideTWLInfo->ReadOnly = true;
 			// 
 			// gboxExFlags
 			// 
-			this->gboxExFlags->AccessibleDescription = nullptr;
-			this->gboxExFlags->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
-			this->gboxExFlags->BackgroundImage = nullptr;
 			this->gboxExFlags->Controls->Add(this->cboxIsNormalJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsTmpJump);
 			this->gboxExFlags->Controls->Add(this->cboxIsSubBanner);
-			this->gboxExFlags->Font = nullptr;
+			resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
 			this->gboxExFlags->Name = L"gboxExFlags";
 			this->gboxExFlags->TabStop = false;
 			// 
 			// tabRomEditInfo
 			// 
-			this->tabRomEditInfo->AccessibleDescription = nullptr;
-			this->tabRomEditInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
-			this->tabRomEditInfo->BackgroundImage = nullptr;
 			this->tabRomEditInfo->Controls->Add(this->gboxOtherSpec);
 			this->tabRomEditInfo->Controls->Add(this->butSetBack);
 			this->tabRomEditInfo->Controls->Add(this->tboxGuideRomEditInfo);
 			this->tabRomEditInfo->Controls->Add(this->gboxParental);
-			this->tabRomEditInfo->Font = nullptr;
+			resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
 			this->tabRomEditInfo->Name = L"tabRomEditInfo";
 			this->tabRomEditInfo->UseVisualStyleBackColor = true;
 			// 
 			// gboxOtherSpec
 			// 
-			this->gboxOtherSpec->AccessibleDescription = nullptr;
-			this->gboxOtherSpec->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
-			this->gboxOtherSpec->BackgroundImage = nullptr;
 			this->gboxOtherSpec->Controls->Add(this->cboxIsUGC);
 			this->gboxOtherSpec->Controls->Add(this->cboxIsPhotoEx);
-			this->gboxOtherSpec->Font = nullptr;
+			resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
 			this->gboxOtherSpec->Name = L"gboxOtherSpec";
 			this->gboxOtherSpec->TabStop = false;
 			// 
 			// cboxIsUGC
 			// 
-			this->cboxIsUGC->AccessibleDescription = nullptr;
-			this->cboxIsUGC->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsUGC, L"cboxIsUGC");
-			this->cboxIsUGC->BackgroundImage = nullptr;
-			this->cboxIsUGC->Font = nullptr;
 			this->cboxIsUGC->Name = L"cboxIsUGC";
 			this->cboxIsUGC->UseVisualStyleBackColor = true;
 			// 
 			// cboxIsPhotoEx
 			// 
-			this->cboxIsPhotoEx->AccessibleDescription = nullptr;
-			this->cboxIsPhotoEx->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsPhotoEx, L"cboxIsPhotoEx");
-			this->cboxIsPhotoEx->BackgroundImage = nullptr;
-			this->cboxIsPhotoEx->Font = nullptr;
 			this->cboxIsPhotoEx->Name = L"cboxIsPhotoEx";
 			this->cboxIsPhotoEx->UseVisualStyleBackColor = true;
 			// 
 			// butSetBack
 			// 
-			this->butSetBack->AccessibleDescription = nullptr;
-			this->butSetBack->AccessibleName = nullptr;
 			resources->ApplyResources(this->butSetBack, L"butSetBack");
-			this->butSetBack->BackgroundImage = nullptr;
-			this->butSetBack->Font = nullptr;
 			this->butSetBack->Name = L"butSetBack";
 			this->butSetBack->UseVisualStyleBackColor = true;
 			this->butSetBack->Click += gcnew System::EventHandler(this, &Form1::butSetBack_Click);
 			// 
 			// tboxGuideRomEditInfo
 			// 
-			this->tboxGuideRomEditInfo->AccessibleDescription = nullptr;
-			this->tboxGuideRomEditInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
 			this->tboxGuideRomEditInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideRomEditInfo->BackgroundImage = nullptr;
-			this->tboxGuideRomEditInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideRomEditInfo, L"tboxGuideRomEditInfo");
 			this->tboxGuideRomEditInfo->Name = L"tboxGuideRomEditInfo";
 			this->tboxGuideRomEditInfo->ReadOnly = true;
 			// 
 			// gboxParental
 			// 
-			this->gboxParental->AccessibleDescription = nullptr;
-			this->gboxParental->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxParental, L"gboxParental");
-			this->gboxParental->BackgroundImage = nullptr;
 			this->gboxParental->Controls->Add(this->cboxIsUnnecessaryRating);
 			this->gboxParental->Controls->Add(this->labRegion);
 			this->gboxParental->Controls->Add(this->combRegion);
@@ -3272,101 +2514,36 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxParental->Controls->Add(this->combPEGI);
 			this->gboxParental->Controls->Add(this->combUSK);
 			this->gboxParental->Controls->Add(this->labUSK);
-			this->gboxParental->Font = nullptr;
+			resources->ApplyResources(this->gboxParental, L"gboxParental");
 			this->gboxParental->Name = L"gboxParental";
 			this->gboxParental->TabStop = false;
 			// 
 			// cboxIsUnnecessaryRating
 			// 
-			this->cboxIsUnnecessaryRating->AccessibleDescription = nullptr;
-			this->cboxIsUnnecessaryRating->AccessibleName = nullptr;
 			resources->ApplyResources(this->cboxIsUnnecessaryRating, L"cboxIsUnnecessaryRating");
-			this->cboxIsUnnecessaryRating->BackgroundImage = nullptr;
-			this->cboxIsUnnecessaryRating->Font = nullptr;
 			this->cboxIsUnnecessaryRating->Name = L"cboxIsUnnecessaryRating";
 			this->cboxIsUnnecessaryRating->UseVisualStyleBackColor = true;
 			this->cboxIsUnnecessaryRating->CheckedChanged += gcnew System::EventHandler(this, &Form1::cboxIsUnnecessaryRating_CheckedChanged);
 			// 
 			// tabNandSizeInfo
 			// 
-			this->tabNandSizeInfo->AccessibleDescription = nullptr;
-			this->tabNandSizeInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
-			this->tabNandSizeInfo->BackgroundImage = nullptr;
-			this->tabNandSizeInfo->Controls->Add(this->tboxGuideDLCategory);
-			this->tabNandSizeInfo->Controls->Add(this->gboxDLCategory);
 			this->tabNandSizeInfo->Controls->Add(this->tboxGuideNandSizeInfo);
 			this->tabNandSizeInfo->Controls->Add(this->labMedia);
 			this->tabNandSizeInfo->Controls->Add(this->tboxMedia);
 			this->tabNandSizeInfo->Controls->Add(this->gboxNandSize);
-			this->tabNandSizeInfo->Font = nullptr;
+			resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
 			this->tabNandSizeInfo->Name = L"tabNandSizeInfo";
 			this->tabNandSizeInfo->UseVisualStyleBackColor = true;
 			// 
-			// tboxGuideDLCategory
-			// 
-			this->tboxGuideDLCategory->AccessibleDescription = nullptr;
-			this->tboxGuideDLCategory->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideDLCategory, L"tboxGuideDLCategory");
-			this->tboxGuideDLCategory->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideDLCategory->BackgroundImage = nullptr;
-			this->tboxGuideDLCategory->Font = nullptr;
-			this->tboxGuideDLCategory->Name = L"tboxGuideDLCategory";
-			this->tboxGuideDLCategory->ReadOnly = true;
-			// 
-			// gboxDLCategory
-			// 
-			this->gboxDLCategory->AccessibleDescription = nullptr;
-			this->gboxDLCategory->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxDLCategory, L"gboxDLCategory");
-			this->gboxDLCategory->BackgroundImage = nullptr;
-			this->gboxDLCategory->Controls->Add(this->tboxDLCategoryOther);
-			this->gboxDLCategory->Controls->Add(this->combDLCategory);
-			this->gboxDLCategory->Font = nullptr;
-			this->gboxDLCategory->Name = L"gboxDLCategory";
-			this->gboxDLCategory->TabStop = false;
-			// 
-			// tboxDLCategoryOther
-			// 
-			this->tboxDLCategoryOther->AccessibleDescription = nullptr;
-			this->tboxDLCategoryOther->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxDLCategoryOther, L"tboxDLCategoryOther");
-			this->tboxDLCategoryOther->BackgroundImage = nullptr;
-			this->tboxDLCategoryOther->Font = nullptr;
-			this->tboxDLCategoryOther->Name = L"tboxDLCategoryOther";
-			// 
-			// combDLCategory
-			// 
-			this->combDLCategory->AccessibleDescription = nullptr;
-			this->combDLCategory->AccessibleName = nullptr;
-			resources->ApplyResources(this->combDLCategory, L"combDLCategory");
-			this->combDLCategory->BackgroundImage = nullptr;
-			this->combDLCategory->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
-			this->combDLCategory->Font = nullptr;
-			this->combDLCategory->FormattingEnabled = true;
-			this->combDLCategory->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combDLCategory.Items"), 
-				resources->GetString(L"combDLCategory.Items1"), resources->GetString(L"combDLCategory.Items2"), resources->GetString(L"combDLCategory.Items3"), 
-				resources->GetString(L"combDLCategory.Items4"), resources->GetString(L"combDLCategory.Items5")});
-			this->combDLCategory->Name = L"combDLCategory";
-			this->combDLCategory->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::cboxDLCategory_SelectedIndexChanged);
-			// 
 			// tboxGuideNandSizeInfo
 			// 
-			this->tboxGuideNandSizeInfo->AccessibleDescription = nullptr;
-			this->tboxGuideNandSizeInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
 			this->tboxGuideNandSizeInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideNandSizeInfo->BackgroundImage = nullptr;
-			this->tboxGuideNandSizeInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
 			this->tboxGuideNandSizeInfo->Name = L"tboxGuideNandSizeInfo";
 			this->tboxGuideNandSizeInfo->ReadOnly = true;
 			// 
 			// gboxNandSize
 			// 
-			this->gboxNandSize->AccessibleDescription = nullptr;
-			this->gboxNandSize->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
-			this->gboxNandSize->BackgroundImage = nullptr;
 			this->gboxNandSize->Controls->Add(this->labBracketR);
 			this->gboxNandSize->Controls->Add(this->labBracketL);
 			this->gboxNandSize->Controls->Add(this->tboxSumSizeMB);
@@ -3399,260 +2576,163 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxNandSize->Controls->Add(this->labSumSize);
 			this->gboxNandSize->Controls->Add(this->labSubBannerSize);
 			this->gboxNandSize->Controls->Add(this->labTmdSize);
-			this->gboxNandSize->Font = nullptr;
+			resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
 			this->gboxNandSize->Name = L"gboxNandSize";
 			this->gboxNandSize->TabStop = false;
 			// 
 			// labBracketR
 			// 
-			this->labBracketR->AccessibleDescription = nullptr;
-			this->labBracketR->AccessibleName = nullptr;
 			resources->ApplyResources(this->labBracketR, L"labBracketR");
 			this->labBracketR->Name = L"labBracketR";
 			// 
 			// labBracketL
 			// 
-			this->labBracketL->AccessibleDescription = nullptr;
-			this->labBracketL->AccessibleName = nullptr;
 			resources->ApplyResources(this->labBracketL, L"labBracketL");
 			this->labBracketL->Name = L"labBracketL";
 			// 
 			// tboxSumSizeMB
 			// 
-			this->tboxSumSizeMB->AccessibleDescription = nullptr;
-			this->tboxSumSizeMB->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSumSizeMB, L"tboxSumSizeMB");
-			this->tboxSumSizeMB->BackgroundImage = nullptr;
-			this->tboxSumSizeMB->Font = nullptr;
 			this->tboxSumSizeMB->Name = L"tboxSumSizeMB";
 			this->tboxSumSizeMB->ReadOnly = true;
 			// 
 			// tboxSrlSize
 			// 
-			this->tboxSrlSize->AccessibleDescription = nullptr;
-			this->tboxSrlSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSrlSize, L"tboxSrlSize");
-			this->tboxSrlSize->BackgroundImage = nullptr;
-			this->tboxSrlSize->Font = nullptr;
 			this->tboxSrlSize->Name = L"tboxSrlSize";
 			this->tboxSrlSize->ReadOnly = true;
 			// 
 			// labShopBlockUnit
 			// 
-			this->labShopBlockUnit->AccessibleDescription = nullptr;
-			this->labShopBlockUnit->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShopBlockUnit, L"labShopBlockUnit");
-			this->labShopBlockUnit->Font = nullptr;
 			this->labShopBlockUnit->Name = L"labShopBlockUnit";
 			// 
 			// labArrow5
 			// 
-			this->labArrow5->AccessibleDescription = nullptr;
-			this->labArrow5->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArrow5, L"labArrow5");
-			this->labArrow5->Font = nullptr;
 			this->labArrow5->Name = L"labArrow5";
 			// 
 			// labArrow4
 			// 
-			this->labArrow4->AccessibleDescription = nullptr;
-			this->labArrow4->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArrow4, L"labArrow4");
-			this->labArrow4->Font = nullptr;
 			this->labArrow4->Name = L"labArrow4";
 			// 
 			// labArrow3
 			// 
-			this->labArrow3->AccessibleDescription = nullptr;
-			this->labArrow3->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArrow3, L"labArrow3");
-			this->labArrow3->Font = nullptr;
 			this->labArrow3->Name = L"labArrow3";
 			// 
 			// labArrow2
 			// 
-			this->labArrow2->AccessibleDescription = nullptr;
-			this->labArrow2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArrow2, L"labArrow2");
-			this->labArrow2->Font = nullptr;
 			this->labArrow2->Name = L"labArrow2";
 			// 
 			// labArrow1
 			// 
-			this->labArrow1->AccessibleDescription = nullptr;
-			this->labArrow1->AccessibleName = nullptr;
 			resources->ApplyResources(this->labArrow1, L"labArrow1");
-			this->labArrow1->Font = nullptr;
 			this->labArrow1->Name = L"labArrow1";
 			// 
 			// tboxShopBlock
 			// 
-			this->tboxShopBlock->AccessibleDescription = nullptr;
-			this->tboxShopBlock->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxShopBlock, L"tboxShopBlock");
-			this->tboxShopBlock->BackgroundImage = nullptr;
-			this->tboxShopBlock->Font = nullptr;
 			this->tboxShopBlock->Name = L"tboxShopBlock";
 			this->tboxShopBlock->ReadOnly = true;
 			// 
 			// tboxSumSize
 			// 
-			this->tboxSumSize->AccessibleDescription = nullptr;
-			this->tboxSumSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSumSize, L"tboxSumSize");
-			this->tboxSumSize->BackgroundImage = nullptr;
-			this->tboxSumSize->Font = nullptr;
 			this->tboxSumSize->Name = L"tboxSumSize";
 			this->tboxSumSize->ReadOnly = true;
 			// 
 			// tboxTmdSizeFS
 			// 
-			this->tboxTmdSizeFS->AccessibleDescription = nullptr;
-			this->tboxTmdSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTmdSizeFS, L"tboxTmdSizeFS");
-			this->tboxTmdSizeFS->BackgroundImage = nullptr;
-			this->tboxTmdSizeFS->Font = nullptr;
 			this->tboxTmdSizeFS->Name = L"tboxTmdSizeFS";
 			this->tboxTmdSizeFS->ReadOnly = true;
 			// 
 			// tboxSubBannerSizeFS
 			// 
-			this->tboxSubBannerSizeFS->AccessibleDescription = nullptr;
-			this->tboxSubBannerSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSubBannerSizeFS, L"tboxSubBannerSizeFS");
-			this->tboxSubBannerSizeFS->BackgroundImage = nullptr;
-			this->tboxSubBannerSizeFS->Font = nullptr;
 			this->tboxSubBannerSizeFS->Name = L"tboxSubBannerSizeFS";
 			this->tboxSubBannerSizeFS->ReadOnly = true;
 			// 
 			// tboxPrivateSizeFS
 			// 
-			this->tboxPrivateSizeFS->AccessibleDescription = nullptr;
-			this->tboxPrivateSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPrivateSizeFS, L"tboxPrivateSizeFS");
-			this->tboxPrivateSizeFS->BackgroundImage = nullptr;
-			this->tboxPrivateSizeFS->Font = nullptr;
 			this->tboxPrivateSizeFS->Name = L"tboxPrivateSizeFS";
 			this->tboxPrivateSizeFS->ReadOnly = true;
 			// 
 			// tboxPublicSizeFS
 			// 
-			this->tboxPublicSizeFS->AccessibleDescription = nullptr;
-			this->tboxPublicSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxPublicSizeFS, L"tboxPublicSizeFS");
-			this->tboxPublicSizeFS->BackgroundImage = nullptr;
-			this->tboxPublicSizeFS->Font = nullptr;
 			this->tboxPublicSizeFS->Name = L"tboxPublicSizeFS";
 			this->tboxPublicSizeFS->ReadOnly = true;
 			// 
 			// tboxSrlSizeFS
 			// 
-			this->tboxSrlSizeFS->AccessibleDescription = nullptr;
-			this->tboxSrlSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSrlSizeFS, L"tboxSrlSizeFS");
-			this->tboxSrlSizeFS->BackgroundImage = nullptr;
-			this->tboxSrlSizeFS->Font = nullptr;
 			this->tboxSrlSizeFS->Name = L"tboxSrlSizeFS";
 			this->tboxSrlSizeFS->ReadOnly = true;
 			// 
 			// tboxTmdSize
 			// 
-			this->tboxTmdSize->AccessibleDescription = nullptr;
-			this->tboxTmdSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxTmdSize, L"tboxTmdSize");
-			this->tboxTmdSize->BackgroundImage = nullptr;
-			this->tboxTmdSize->Font = nullptr;
 			this->tboxTmdSize->Name = L"tboxTmdSize";
 			this->tboxTmdSize->ReadOnly = true;
 			// 
 			// tboxSubBannerSize
 			// 
-			this->tboxSubBannerSize->AccessibleDescription = nullptr;
-			this->tboxSubBannerSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->tboxSubBannerSize, L"tboxSubBannerSize");
-			this->tboxSubBannerSize->BackgroundImage = nullptr;
-			this->tboxSubBannerSize->Font = nullptr;
 			this->tboxSubBannerSize->Name = L"tboxSubBannerSize";
 			this->tboxSubBannerSize->ReadOnly = true;
 			// 
 			// labNandSize
 			// 
-			this->labNandSize->AccessibleDescription = nullptr;
-			this->labNandSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNandSize, L"labNandSize");
-			this->labNandSize->Font = nullptr;
 			this->labNandSize->Name = L"labNandSize";
 			// 
 			// labShopBlock2
 			// 
-			this->labShopBlock2->AccessibleDescription = nullptr;
-			this->labShopBlock2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShopBlock2, L"labShopBlock2");
-			this->labShopBlock2->Font = nullptr;
 			this->labShopBlock2->Name = L"labShopBlock2";
 			// 
 			// labNandSizeFS
 			// 
-			this->labNandSizeFS->AccessibleDescription = nullptr;
-			this->labNandSizeFS->AccessibleName = nullptr;
 			resources->ApplyResources(this->labNandSizeFS, L"labNandSizeFS");
-			this->labNandSizeFS->Font = nullptr;
 			this->labNandSizeFS->Name = L"labNandSizeFS";
 			// 
 			// labShopBlock
 			// 
-			this->labShopBlock->AccessibleDescription = nullptr;
-			this->labShopBlock->AccessibleName = nullptr;
 			resources->ApplyResources(this->labShopBlock, L"labShopBlock");
-			this->labShopBlock->Font = nullptr;
 			this->labShopBlock->Name = L"labShopBlock";
 			// 
 			// labSrlSize
 			// 
-			this->labSrlSize->AccessibleDescription = nullptr;
-			this->labSrlSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSrlSize, L"labSrlSize");
-			this->labSrlSize->Font = nullptr;
 			this->labSrlSize->Name = L"labSrlSize";
 			// 
 			// labSumSize2
 			// 
-			this->labSumSize2->AccessibleDescription = nullptr;
-			this->labSumSize2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSumSize2, L"labSumSize2");
-			this->labSumSize2->Font = nullptr;
 			this->labSumSize2->Name = L"labSumSize2";
 			// 
 			// labSumSize
 			// 
-			this->labSumSize->AccessibleDescription = nullptr;
-			this->labSumSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSumSize, L"labSumSize");
-			this->labSumSize->Font = nullptr;
 			this->labSumSize->Name = L"labSumSize";
 			// 
 			// labSubBannerSize
 			// 
-			this->labSubBannerSize->AccessibleDescription = nullptr;
-			this->labSubBannerSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labSubBannerSize, L"labSubBannerSize");
-			this->labSubBannerSize->Font = nullptr;
 			this->labSubBannerSize->Name = L"labSubBannerSize";
 			// 
 			// labTmdSize
 			// 
-			this->labTmdSize->AccessibleDescription = nullptr;
-			this->labTmdSize->AccessibleName = nullptr;
 			resources->ApplyResources(this->labTmdSize, L"labTmdSize");
-			this->labTmdSize->Font = nullptr;
 			this->labTmdSize->Name = L"labTmdSize";
 			// 
 			// tabSubmitInfo
 			// 
-			this->tabSubmitInfo->AccessibleDescription = nullptr;
-			this->tabSubmitInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabSubmitInfo, L"tabSubmitInfo");
-			this->tabSubmitInfo->BackgroundImage = nullptr;
 			this->tabSubmitInfo->Controls->Add(this->labProductNameLimit);
 			this->tabSubmitInfo->Controls->Add(this->tboxGuideSubmitInfo);
 			this->tabSubmitInfo->Controls->Add(this->gboxForeign);
@@ -3675,35 +2755,24 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->tabSubmitInfo->Controls->Add(this->labProductCode);
 			this->tabSubmitInfo->Controls->Add(this->labProductName);
 			this->tabSubmitInfo->Controls->Add(this->labProductCode1);
-			this->tabSubmitInfo->Font = nullptr;
+			resources->ApplyResources(this->tabSubmitInfo, L"tabSubmitInfo");
 			this->tabSubmitInfo->Name = L"tabSubmitInfo";
 			this->tabSubmitInfo->UseVisualStyleBackColor = true;
 			// 
 			// labProductNameLimit
 			// 
-			this->labProductNameLimit->AccessibleDescription = nullptr;
-			this->labProductNameLimit->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductNameLimit, L"labProductNameLimit");
-			this->labProductNameLimit->Font = nullptr;
 			this->labProductNameLimit->Name = L"labProductNameLimit";
 			// 
 			// tboxGuideSubmitInfo
 			// 
-			this->tboxGuideSubmitInfo->AccessibleDescription = nullptr;
-			this->tboxGuideSubmitInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideSubmitInfo, L"tboxGuideSubmitInfo");
 			this->tboxGuideSubmitInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideSubmitInfo->BackgroundImage = nullptr;
-			this->tboxGuideSubmitInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideSubmitInfo, L"tboxGuideSubmitInfo");
 			this->tboxGuideSubmitInfo->Name = L"tboxGuideSubmitInfo";
 			this->tboxGuideSubmitInfo->ReadOnly = true;
 			// 
 			// gboxForeign
 			// 
-			this->gboxForeign->AccessibleDescription = nullptr;
-			this->gboxForeign->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxForeign, L"gboxForeign");
-			this->gboxForeign->BackgroundImage = nullptr;
 			this->gboxForeign->Controls->Add(this->labProductNameLimitForeign);
 			this->gboxForeign->Controls->Add(this->labMultiForeign2);
 			this->gboxForeign->Controls->Add(this->cboxReleaseForeign);
@@ -3717,97 +2786,67 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxForeign->Controls->Add(this->labProductCode1Foreign);
 			this->gboxForeign->Controls->Add(this->tboxProductNameForeign);
 			this->gboxForeign->Controls->Add(this->labProductNameForeign);
-			this->gboxForeign->Font = nullptr;
+			resources->ApplyResources(this->gboxForeign, L"gboxForeign");
 			this->gboxForeign->Name = L"gboxForeign";
 			this->gboxForeign->TabStop = false;
 			// 
 			// labProductNameLimitForeign
 			// 
-			this->labProductNameLimitForeign->AccessibleDescription = nullptr;
-			this->labProductNameLimitForeign->AccessibleName = nullptr;
 			resources->ApplyResources(this->labProductNameLimitForeign, L"labProductNameLimitForeign");
-			this->labProductNameLimitForeign->Font = nullptr;
 			this->labProductNameLimitForeign->Name = L"labProductNameLimitForeign";
 			// 
 			// labMultiForeign2
 			// 
-			this->labMultiForeign2->AccessibleDescription = nullptr;
-			this->labMultiForeign2->AccessibleName = nullptr;
 			resources->ApplyResources(this->labMultiForeign2, L"labMultiForeign2");
-			this->labMultiForeign2->Font = nullptr;
 			this->labMultiForeign2->Name = L"labMultiForeign2";
 			// 
 			// tabCompanyInfo
 			// 
-			this->tabCompanyInfo->AccessibleDescription = nullptr;
-			this->tabCompanyInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabCompanyInfo, L"tabCompanyInfo");
-			this->tabCompanyInfo->BackgroundImage = nullptr;
 			this->tabCompanyInfo->Controls->Add(this->tboxGuideCompanyInfo);
 			this->tabCompanyInfo->Controls->Add(this->cboxIsInputPerson2);
 			this->tabCompanyInfo->Controls->Add(this->gboxPerson1);
 			this->tabCompanyInfo->Controls->Add(this->gboxPerson2);
-			this->tabCompanyInfo->Font = nullptr;
+			resources->ApplyResources(this->tabCompanyInfo, L"tabCompanyInfo");
 			this->tabCompanyInfo->Name = L"tabCompanyInfo";
 			this->tabCompanyInfo->UseVisualStyleBackColor = true;
 			// 
 			// tboxGuideCompanyInfo
 			// 
-			this->tboxGuideCompanyInfo->AccessibleDescription = nullptr;
-			this->tboxGuideCompanyInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideCompanyInfo, L"tboxGuideCompanyInfo");
 			this->tboxGuideCompanyInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideCompanyInfo->BackgroundImage = nullptr;
-			this->tboxGuideCompanyInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideCompanyInfo, L"tboxGuideCompanyInfo");
 			this->tboxGuideCompanyInfo->Name = L"tboxGuideCompanyInfo";
 			this->tboxGuideCompanyInfo->ReadOnly = true;
 			// 
 			// tabErrorInfo
 			// 
-			this->tabErrorInfo->AccessibleDescription = nullptr;
-			this->tabErrorInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tabErrorInfo, L"tabErrorInfo");
-			this->tabErrorInfo->BackgroundImage = nullptr;
 			this->tabErrorInfo->Controls->Add(this->tboxGuideErrorInfo);
 			this->tabErrorInfo->Controls->Add(this->gboxErrorTiming);
 			this->tabErrorInfo->Controls->Add(this->labWarn);
 			this->tabErrorInfo->Controls->Add(this->labError);
 			this->tabErrorInfo->Controls->Add(this->gridWarn);
 			this->tabErrorInfo->Controls->Add(this->gridError);
-			this->tabErrorInfo->Font = nullptr;
+			resources->ApplyResources(this->tabErrorInfo, L"tabErrorInfo");
 			this->tabErrorInfo->Name = L"tabErrorInfo";
 			this->tabErrorInfo->UseVisualStyleBackColor = true;
 			// 
 			// tboxGuideErrorInfo
 			// 
-			this->tboxGuideErrorInfo->AccessibleDescription = nullptr;
-			this->tboxGuideErrorInfo->AccessibleName = nullptr;
-			resources->ApplyResources(this->tboxGuideErrorInfo, L"tboxGuideErrorInfo");
 			this->tboxGuideErrorInfo->BackColor = System::Drawing::SystemColors::Info;
-			this->tboxGuideErrorInfo->BackgroundImage = nullptr;
-			this->tboxGuideErrorInfo->Font = nullptr;
+			resources->ApplyResources(this->tboxGuideErrorInfo, L"tboxGuideErrorInfo");
 			this->tboxGuideErrorInfo->Name = L"tboxGuideErrorInfo";
 			this->tboxGuideErrorInfo->ReadOnly = true;
 			// 
 			// gboxErrorTiming
 			// 
-			this->gboxErrorTiming->AccessibleDescription = nullptr;
-			this->gboxErrorTiming->AccessibleName = nullptr;
-			resources->ApplyResources(this->gboxErrorTiming, L"gboxErrorTiming");
-			this->gboxErrorTiming->BackgroundImage = nullptr;
 			this->gboxErrorTiming->Controls->Add(this->rErrorCurrent);
 			this->gboxErrorTiming->Controls->Add(this->rErrorReading);
-			this->gboxErrorTiming->Font = nullptr;
+			resources->ApplyResources(this->gboxErrorTiming, L"gboxErrorTiming");
 			this->gboxErrorTiming->Name = L"gboxErrorTiming";
 			this->gboxErrorTiming->TabStop = false;
 			// 
 			// rErrorCurrent
 			// 
-			this->rErrorCurrent->AccessibleDescription = nullptr;
-			this->rErrorCurrent->AccessibleName = nullptr;
 			resources->ApplyResources(this->rErrorCurrent, L"rErrorCurrent");
-			this->rErrorCurrent->BackgroundImage = nullptr;
-			this->rErrorCurrent->Font = nullptr;
 			this->rErrorCurrent->Name = L"rErrorCurrent";
 			this->rErrorCurrent->TabStop = true;
 			this->rErrorCurrent->UseVisualStyleBackColor = true;
@@ -3815,12 +2854,8 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// rErrorReading
 			// 
-			this->rErrorReading->AccessibleDescription = nullptr;
-			this->rErrorReading->AccessibleName = nullptr;
 			resources->ApplyResources(this->rErrorReading, L"rErrorReading");
-			this->rErrorReading->BackgroundImage = nullptr;
 			this->rErrorReading->Checked = true;
-			this->rErrorReading->Font = nullptr;
 			this->rErrorReading->Name = L"rErrorReading";
 			this->rErrorReading->TabStop = true;
 			this->rErrorReading->UseVisualStyleBackColor = true;
@@ -3828,44 +2863,34 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// labWarn
 			// 
-			this->labWarn->AccessibleDescription = nullptr;
-			this->labWarn->AccessibleName = nullptr;
 			resources->ApplyResources(this->labWarn, L"labWarn");
-			this->labWarn->Font = nullptr;
 			this->labWarn->ForeColor = System::Drawing::SystemColors::ActiveCaption;
 			this->labWarn->Name = L"labWarn";
 			// 
 			// labError
 			// 
-			this->labError->AccessibleDescription = nullptr;
-			this->labError->AccessibleName = nullptr;
 			resources->ApplyResources(this->labError, L"labError");
-			this->labError->Font = nullptr;
 			this->labError->ForeColor = System::Drawing::SystemColors::ActiveCaption;
 			this->labError->Name = L"labError";
 			// 
 			// gridWarn
 			// 
-			this->gridWarn->AccessibleDescription = nullptr;
-			this->gridWarn->AccessibleName = nullptr;
-			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridWarn->BackgroundColor = System::Drawing::SystemColors::Control;
-			this->gridWarn->BackgroundImage = nullptr;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle6;
-			this->gridWarn->Font = nullptr;
+			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle2;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
+			resources->ApplyResources(this->gridWarn, L"gridWarn");
 			this->gridWarn->Name = L"gridWarn";
 			this->gridWarn->ReadOnly = true;
 			this->gridWarn->RowHeadersVisible = false;
@@ -3898,28 +2923,24 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// gridError
 			// 
-			this->gridError->AccessibleDescription = nullptr;
-			this->gridError->AccessibleName = nullptr;
-			dataGridViewCellStyle7->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
-			resources->ApplyResources(this->gridError, L"gridError");
+			dataGridViewCellStyle3->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
-			this->gridError->BackgroundImage = nullptr;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle8->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle8->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle8->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+			dataGridViewCellStyle4->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle4->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle4->Font = (gcnew System::Drawing::Font(L"MS UI Gothic", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(128)));
-			dataGridViewCellStyle8->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle8->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle8->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle8->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle8;
-			this->gridError->Font = nullptr;
+			dataGridViewCellStyle4->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle4->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle4->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle4->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle4;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
+			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->Name = L"gridError";
 			this->gridError->ReadOnly = true;
 			this->gridError->RowHeadersVisible = false;
@@ -3952,36 +2973,25 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			// 
 			// labFile
 			// 
-			this->labFile->AccessibleDescription = nullptr;
-			this->labFile->AccessibleName = nullptr;
 			resources->ApplyResources(this->labFile, L"labFile");
-			this->labFile->Font = nullptr;
 			this->labFile->Name = L"labFile";
 			// 
 			// labAssemblyVersion
 			// 
-			this->labAssemblyVersion->AccessibleDescription = nullptr;
-			this->labAssemblyVersion->AccessibleName = nullptr;
 			resources->ApplyResources(this->labAssemblyVersion, L"labAssemblyVersion");
-			this->labAssemblyVersion->Font = nullptr;
 			this->labAssemblyVersion->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->labAssemblyVersion->Name = L"labAssemblyVersion";
 			// 
 			// Form1
 			// 
-			this->AccessibleDescription = nullptr;
-			this->AccessibleName = nullptr;
 			this->AllowDrop = true;
 			resources->ApplyResources(this, L"$this");
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->BackgroundImage = nullptr;
 			this->Controls->Add(this->labAssemblyVersion);
 			this->Controls->Add(this->labFile);
 			this->Controls->Add(this->tabMain);
 			this->Controls->Add(this->tboxFile);
 			this->Controls->Add(this->menuStripAbove);
-			this->Font = nullptr;
-			this->Icon = nullptr;
 			this->MainMenuStrip = this->menuStripAbove;
 			this->Name = L"Form1";
 			this->DragDrop += gcnew System::Windows::Forms::DragEventHandler(this, &Form1::Form1_DragDrop);
@@ -4029,8 +3039,6 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			this->gboxParental->PerformLayout();
 			this->tabNandSizeInfo->ResumeLayout(false);
 			this->tabNandSizeInfo->PerformLayout();
-			this->gboxDLCategory->ResumeLayout(false);
-			this->gboxDLCategory->PerformLayout();
 			this->gboxNandSize->ResumeLayout(false);
 			this->gboxNandSize->PerformLayout();
 			this->tabSubmitInfo->ResumeLayout(false);
@@ -4256,26 +3264,26 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			}
 		}
 
-		// DL販売カテゴリの表示をカードアプリのとき「なし」にする。
-		void maskDLCategoryForms(void)
-		{
-			// デフォルトだと IsMediaNand は false なのでメディアがNANDなのかROMが読み込まれていないのでfalseなのか判断できないので
-			// ROMが読み込まれていないときに(TMP情報の読み出しで)呼ばれるとコンボボックスが編集不可になってしまう
-			// => 読み込まれたときにのみ判定する
+		//// DL販売カテゴリの表示をカードアプリのとき「なし」にする。
+		//void maskDLCategoryForms(void)
+		//{
+		//	// デフォルトだと IsMediaNand は false なのでメディアがNANDなのかROMが読み込まれていないのでfalseなのか判断できないので
+		//	// ROMが読み込まれていないときに(TMP情報の読み出しで)呼ばれるとコンボボックスが編集不可になってしまう
+		//	// => 読み込まれたときにのみ判定する
 
-			System::Boolean bRead = this->hSrl->IsAppUser   || this->hSrl->IsAppSystem ||	// 一度でも読み込まれているとどれかがtrueになっている
-									this->hSrl->IsAppSecure || this->hSrl->IsAppLauncher;
+		//	System::Boolean bRead = this->hSrl->IsAppUser   || this->hSrl->IsAppSystem ||	// 一度でも読み込まれているとどれかがtrueになっている
+		//							this->hSrl->IsAppSecure || this->hSrl->IsAppLauncher;
 
-			if( !this->hSrl->IsMediaNand && bRead )	// 読み込まれているときのみ
-			{
-				this->combDLCategory->SelectedIndex = this->combDLCategory->Items->Count - 2;
-				this->combDLCategory->Enabled = false;
-			}
-			else
-			{
-				this->combDLCategory->Enabled = true;
-			}
-		}
+		//	if( !this->hSrl->IsMediaNand && bRead )	// 読み込まれているときのみ
+		//	{
+		//		this->combDLCategory->SelectedIndex = this->combDLCategory->Items->Count - 2;
+		//		this->combDLCategory->Enabled = false;
+		//	}
+		//	else
+		//	{
+		//		this->combDLCategory->Enabled = true;
+		//	}
+		//}
 
 	private:
 		// ----------------------------------------------
@@ -4988,18 +3996,18 @@ private: System::Windows::Forms::TextBox^  tboxGuideDLCategory;
 			}
 		}
 	private:
-		System::Void cboxDLCategory_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
-			{
-				this->tboxDLCategoryOther->Enabled = true;
-			}
-			else
-			{
-				this->tboxDLCategoryOther->Enabled = false;
-				this->tboxDLCategoryOther->Clear();
-			}
-		}
+		//System::Void cboxDLCategory_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
+		//{
+		//	if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
+		//	{
+		//		this->tboxDLCategoryOther->Enabled = true;
+		//	}
+		//	else
+		//	{
+		//		this->tboxDLCategoryOther->Enabled = false;
+		//		this->tboxDLCategoryOther->Clear();
+		//	}
+		//}
 
 	private:
 		// リージョン変更に連動して表示するレーティング団体を変更する

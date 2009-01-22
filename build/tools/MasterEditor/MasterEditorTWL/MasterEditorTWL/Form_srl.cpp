@@ -232,8 +232,8 @@ void Form1::setSrlForms(void)
 	// ROMヘッダには関係ないが
 	// NANDアプリのときにバックアップメモリを自動的に「なし」にしておく
 	this->maskBackupMemoryForms();
-	// カードアプリのときにDSi Wareの販売カテゴリを自動的に「なし」にしておく
-	this->maskDLCategoryForms();
+	//// カードアプリのときにDSi Wareの販売カテゴリを自動的に「なし」にしておく
+	//this->maskDLCategoryForms();
 } // setSrlForms()
 
 // ----------------------------------------------

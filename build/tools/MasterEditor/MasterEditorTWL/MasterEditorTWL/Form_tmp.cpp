@@ -69,8 +69,8 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "ReleaseDate", this->dateRelease->Value.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "SubmitDate", this->dateSubmit->Value.ToString() );
 
-	MasterEditorTWL::appendXmlTag( doc, form, "DLCategory", this->combDLCategory->SelectedIndex.ToString() );
-	MasterEditorTWL::appendXmlTag( doc, form, "DLCategoryOther", this->tboxDLCategoryOther->Text );
+	//MasterEditorTWL::appendXmlTag( doc, form, "DLCategory", this->combDLCategory->SelectedIndex.ToString() );
+	//MasterEditorTWL::appendXmlTag( doc, form, "DLCategoryOther", this->tboxDLCategoryOther->Text );
 
 	MasterEditorTWL::appendXmlTag( doc, form, "Company1", this->tboxCompany1->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "Depart1", this->tboxDepart1->Text );
@@ -174,17 +174,17 @@ void Form1::loadTmp( System::String ^filename )
 		this->tboxBackupOther->Enabled = true;
 	}
 
-	// DSi Ware
-	this->parseTmp( root, "/MasterEditorTWL/Form/DLCategory", this->combDLCategory );
-	this->combDLCategory->Enabled = true;	// あとでマスクする
+	//// DSi Ware
+	//this->parseTmp( root, "/MasterEditorTWL/Form/DLCategory", this->combDLCategory );
+	//this->combDLCategory->Enabled = true;	// あとでマスクする
 
-	this->tboxDLCategoryOther->Enabled = false;
-	this->tboxDLCategoryOther->Clear();
-	if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
-	{
-		this->parseTmp( root, "/MasterEditorTWL/Form/DLCategoryOther", this->tboxDLCategoryOther );
-		this->tboxDLCategoryOther->Enabled = true;
-	}
+	//this->tboxDLCategoryOther->Enabled = false;
+	//this->tboxDLCategoryOther->Clear();
+	//if( this->combDLCategory->SelectedIndex == (this->combDLCategory->Items->Count - 1) )
+	//{
+	//	this->parseTmp( root, "/MasterEditorTWL/Form/DLCategoryOther", this->tboxDLCategoryOther );
+	//	this->tboxDLCategoryOther->Enabled = true;
+	//}
 
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts;
 	cli::array<System::String^> ^strs;
@@ -294,7 +294,7 @@ void Form1::loadTmp( System::String ^filename )
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
 	this->changeUnnecessaryRatingForms(true);	// 一度コンボボックスがenableになるので再設定
 	this->maskBackupMemoryForms();				// NANDアプリのときのバックアップメモリの自動設定
-	this->maskDLCategoryForms();
+	//this->maskDLCategoryForms();
 } //loadTmp()
 
 // ----------------------------------------------

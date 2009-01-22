@@ -207,22 +207,22 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hBackupMemory = this->tboxBackupOther->Text;
 	}
 
-	// DSi Ware‚Ì”Ì”„ƒJƒeƒSƒŠ
-	if( this->combDLCategory->SelectedIndex != (this->combDLCategory->Items->Count - 1) )
-	{
-		if( this->combDLCategory->SelectedIndex > 0 )
-		{
-			this->hDeliv->hDLCategory = this->combDLCategory->SelectedItem->ToString();
-		}
-		else
-		{
-			this->hDeliv->hDLCategory = gcnew System::String("");
-		}
-	}
-	else
-	{
-		this->hDeliv->hDLCategory = this->tboxDLCategoryOther->Text;
-	}
+	//// DSi Ware‚Ì”Ì”„ƒJƒeƒSƒŠ
+	//if( this->combDLCategory->SelectedIndex != (this->combDLCategory->Items->Count - 1) )
+	//{
+	//	if( this->combDLCategory->SelectedIndex > 0 )
+	//	{
+	//		this->hDeliv->hDLCategory = this->combDLCategory->SelectedItem->ToString();
+	//	}
+	//	else
+	//	{
+	//		this->hDeliv->hDLCategory = gcnew System::String("");
+	//	}
+	//}
+	//else
+	//{
+	//	this->hDeliv->hDLCategory = this->tboxDLCategoryOther->Text;
+	//}
 
 	// SRLî•ñ‚ð•¶Žš—ñ‚Å“o˜^
 	if( this->combRegion->SelectedIndex < 0 )

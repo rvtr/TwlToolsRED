@@ -188,13 +188,13 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 #endif
 	this->combRegion->SelectedIndex = index;
 
-	resources->ApplyResources(this->combDLCategory, L"combDLCategory");
-	index = this->combDLCategory->SelectedIndex;
-	this->combDLCategory->Items->Clear();
-	this->combDLCategory->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combDLCategory.Items"), 
-		resources->GetString(L"combDLCategory.Items1"), resources->GetString(L"combDLCategory.Items2"), resources->GetString(L"combDLCategory.Items3"), 
-		resources->GetString(L"combDLCategory.Items4"), resources->GetString(L"combDLCategory.Items5")});
-	this->combDLCategory->SelectedIndex = index;
+	//resources->ApplyResources(this->combDLCategory, L"combDLCategory");
+	//index = this->combDLCategory->SelectedIndex;
+	//this->combDLCategory->Items->Clear();
+	//this->combDLCategory->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combDLCategory.Items"), 
+	//	resources->GetString(L"combDLCategory.Items1"), resources->GetString(L"combDLCategory.Items2"), resources->GetString(L"combDLCategory.Items3"), 
+	//	resources->GetString(L"combDLCategory.Items4"), resources->GetString(L"combDLCategory.Items5")});
+	//this->combDLCategory->SelectedIndex = index;
 
 	resources->ApplyResources(this->cboxIsInputPerson2, L"cboxIsInputPerson2");
 	resources->ApplyResources(this->gboxPerson2, L"gboxPerson2");
@@ -355,8 +355,8 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->tboxGuideTWLInfo, L"tboxGuideTWLInfo");
 	resources->ApplyResources(this->gboxExFlags, L"gboxExFlags");
 	resources->ApplyResources(this->tabNandSizeInfo, L"tabNandSizeInfo");
-	resources->ApplyResources(this->tboxGuideDLCategory, L"tboxGuideDLCategory");
-	resources->ApplyResources(this->gboxDLCategory, L"gboxDLCategory");
+	//resources->ApplyResources(this->tboxGuideDLCategory, L"tboxGuideDLCategory");
+	//resources->ApplyResources(this->gboxDLCategory, L"gboxDLCategory");
 	resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
 	resources->ApplyResources(this->labShopBlockUnit, L"labShopBlockUnit");
 	resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");

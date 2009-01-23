@@ -286,7 +286,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->tboxShared2Size0, L"tboxShared2Size0");
 	resources->ApplyResources(this->cboxIsShared2, L"cboxIsShared2");
 	resources->ApplyResources(this->labLib, L"labLib");
-	resources->ApplyResources(this->tboxSDK, L"tboxSDK");
+	resources->ApplyResources(this->gridSDK, L"gridSDK");
 	resources->ApplyResources(this->labSDK, L"labSDK");
 	resources->ApplyResources(this->gboxTWLExInfo, L"gboxTWLExInfo");
 	resources->ApplyResources(this->labByte1, L"labByte1");

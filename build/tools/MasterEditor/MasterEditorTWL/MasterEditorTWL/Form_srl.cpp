@@ -200,17 +200,21 @@ void Form1::setSrlForms(void)
 	this->setSrlFormsTextBox();
 
 	// SDKバージョンとライブラリ
-	this->tboxSDK->Clear();
+	this->gridSDK->Rows->Clear();
 	if( this->hSrl->hSDKList != nullptr )
 	{
 		for each( RCSDKVersion ^ver in this->hSrl->hSDKList )
 		{
+			this->gridSDK->Rows->Add( gcnew cli::array<System::Object^>{ ver->Version } );
 			if( ver->IsStatic )
-				this->tboxSDK->Text += ver->Version + " (main static)\r\n";
-			else
-				this->tboxSDK->Text += ver->Version + "\r\n";
+			{
+				System::Int32 last = this->gridSDK->Rows->Count - 2;	// 追加直後の行
+				this->gridSDK->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Blue;
+			}
 		}
 	}
+	this->gridSDK->CurrentCell = nullptr;	// セルが選択(ハイライト)されていない状態にする
+
 	this->gridLibrary->Rows->Clear();
 	if( this->hSrl->hLicenseList != nullptr )
 	{
@@ -219,11 +223,12 @@ void Form1::setSrlForms(void)
 			this->gridLibrary->Rows->Add( gcnew cli::array<System::Object^>{lic->Publisher, lic->Name} );
 			if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->Equals( "DEBUG" ) )
 			{
-				System::Int32 last = this->gridLibrary->Rows->Count - 2;	// 追加直後の行
+				System::Int32 last = this->gridLibrary->Rows->Count - 2;
 				this->gridLibrary->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 			}
 		}
 	}
+	this->gridLibrary->CurrentCell = nullptr;
 
 	// 編集可能情報
 	this->setRegionForms();

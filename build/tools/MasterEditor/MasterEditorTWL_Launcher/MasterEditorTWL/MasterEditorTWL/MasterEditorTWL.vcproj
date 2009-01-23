@@ -367,6 +367,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\srl_const.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\srl_element.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

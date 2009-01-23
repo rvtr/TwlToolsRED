@@ -168,6 +168,11 @@ namespace MasterEditorTWL
 	u32 countBits( const u32 val );
 
 	//
+	// SDKバージョンを解読する(例 10203 -> "PR2 plus3")
+	//
+	System::String^ analyzeSDKVersion( System::UInt32 code );
+
+	//
 	// SDKバージョンの大小判定をする
 	//
 	// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)

@@ -555,6 +555,63 @@ u32 MasterEditorTWL::countBits( const u32 val )
 }
 
 // ----------------------------------------------------------------------
+// SDKバージョンを解読する(例 10203 -> "PR2 plus3")
+//
+// @arg [in] SRL中に埋まっているSDKのバージョン情報(4バイトバイナリ)
+//
+// @ret 解読したSDKバージョン
+//
+// ----------------------------------------------------------------------
+System::String^ MasterEditorTWL::analyzeSDKVersion( System::UInt32 code )
+{
+	System::Byte   major = (System::Byte)(0xff & (code >> 24));
+	System::Byte   minor = (System::Byte)(0xff & (code >> 16));
+	System::UInt16 relstep = (System::UInt16)(0xffff & code);
+	System::String ^str = nullptr;
+	str += (major.ToString() + "." + minor.ToString() + " ");
+	//System::Diagnostics::Debug::WriteLine( "relstep = " + relstep.ToString() );
+
+	// RELSTEPの解釈
+	//   PR1=10100 PR2=10200 ...
+	//   RC1=20100 RC2=20200 ...
+	//   RELEASE=30000
+	System::UInt16 middle = relstep;
+	while( middle >= 10000 )
+	{
+		middle -= 10000;
+	}
+	System::UInt16 plus = middle;
+	System::String ^plusstr = gcnew System::String( "" );
+	while( plus >= 100 )
+	{
+		plus -= 100;
+	}
+	if( plus > 0 )
+	{
+		plusstr = " plus" + plus.ToString();
+	}
+	middle = middle / 100;
+	switch( relstep / 10000 )
+	{
+		case 1: str += ("PR " + middle.ToString() + plusstr); break;
+		case 2: str += ("RC " + middle.ToString() + plusstr); break;
+		//case 3: str += ("RELEASE " + middle.ToString() + plusstr); break;
+		case 3:
+			if( middle > 0 )
+			{
+				str += ("RELEASE " + middle.ToString() + plusstr);
+			}
+			else
+			{
+				str += ("RELEASE" + plusstr);
+			}
+		break;
+		default: break;
+	}
+	return System::String::Copy(str);
+}
+
+// ----------------------------------------------------------------------
 // SDKバージョンの大小判定をする
 //
 // @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)

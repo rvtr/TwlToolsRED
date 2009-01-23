@@ -892,56 +892,11 @@ ECSrlResult RCSrl::searchSDKVersion( FILE *fp )
 				return ECSrlResult::ERROR_SDK;
 			}
 
-			// ‰ð“Ç
-			System::Byte   major = (System::Byte)(0xff & (sdkcode >> 24));
-			System::Byte   minor = (System::Byte)(0xff & (sdkcode >> 16));
-			System::UInt16 relstep = (System::UInt16)(0xffff & sdkcode);
-			System::String ^str = nullptr;
-			str += (major.ToString() + "." + minor.ToString() + " ");
-			//System::Diagnostics::Debug::WriteLine( "relstep = " + relstep.ToString() );
-
-			// RELSTEP‚Ì‰ðŽß
-			//   PR1=10100 PR2=10200 ...
-			//   RC1=20100 RC2=20200 ...
-			//   RELEASE=30000
-			System::UInt16 patch = relstep;
-			while( patch >= 10000 )
-			{
-				patch -= 10000;
-			}
-			System::UInt16 rev = patch;
-			System::String ^revstr = gcnew System::String( "" );
-			while( rev >= 100 )
-			{
-				rev -= 100;
-			}
-			if( rev > 0 )
-			{
-				revstr = " plus" + rev.ToString();
-			}
-			patch = patch / 100;
-			switch( relstep / 10000 )
-			{
-				case 1: str += ("PR " + patch.ToString() + revstr); break;
-				case 2: str += ("RC " + patch.ToString() + revstr); break;
-				//case 3: str += ("RELEASE " + patch.ToString() + revstr); break;
-				case 3:
-					if( patch > 0 )
-					{
-						str += ("RELEASE " + patch.ToString() + revstr);
-					}
-					else
-					{
-						str += ("RELEASE" + revstr);
-					}
-				break;
-				default: break;
-			}
 			// ARM9 static “à‚É‚ ‚é‚©”»’è
 			u32 statbegin = this->pRomHeader->s.main_rom_offset;
 			u32 statend   = this->pRomHeader->s.main_rom_offset + this->pRomHeader->s.main_size - 1;
 			System::Boolean isstat = ((statbegin <= offset) && (offset <= statend))?true:false;
-			this->hSDKList->Add( gcnew RCSDKVersion(str, sdkcode, isstat) );
+			this->hSDKList->Add( gcnew RCSDKVersion(sdkcode, isstat) );
 			//System::Diagnostics::Debug::WriteLine( "SDK " + str );
 		}
 	}

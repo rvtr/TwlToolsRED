@@ -371,6 +371,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\srl_const.h"
+				>
+			</File>
+			<File
+				RelativePath=".\srl_element.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>

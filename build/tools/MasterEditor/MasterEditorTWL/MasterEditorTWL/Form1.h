@@ -4645,33 +4645,33 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 					switch( result )
 					{
 						case ECFormResult::ERROR_FILE_OPEN:
-							msgJ += "\n\n原因:出力ファイルのオープンに失敗しました。";
-							msgE += "\n\nReason: Opening an output file is failed.";
+							msgJ += "\n\n原因:\n出力ファイルのオープンに失敗しました。";
+							msgE += "\n\nReason:\nOpening an output file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_READ:
-							msgJ += "\n\n原因:ファイルの読み込みに失敗しました。";
-							msgE += "\n\nReason: Reading the file is failed.";
+							msgJ += "\n\n原因:\nファイルの読み込みに失敗しました。";
+							msgE += "\n\nReason:\nReading the file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_WRITE:
-							msgJ += "\n\n原因:出力ファイルへの書き出しに失敗しました。";
-							msgE += "\n\nReason: Writing the file is failed.";
+							msgJ += "\n\n原因:\n出力ファイルへの書き出しに失敗しました。";
+							msgE += "\n\nReason:\nWriting the file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_COPY:
-							msgJ += "\n\n原因:入力ROMデータファイルのコピーに失敗しました。";
-							msgE += "\n\nReason: Copying the ROM data file failed.";
+							msgJ += "\n\n原因:\n入力ROMデータファイルのコピーに失敗しました。";
+							msgE += "\n\nReason:\nCopying the ROM data file failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_EXIST:
-							msgJ += "\n\n原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
-							msgE += "\n\nReason: When the input ROM data file doesn't exist in the original folder, output file can't be made.";
+							msgJ += "\n\n原因:\n入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
+							msgE += "\n\nReason:\nWhen the input ROM data file doesn't exist in the original folder, output file can't be made.";
 						break;
 
 						case ECFormResult::ERROR_FILE_SIGN:
-							msgJ += "\n\n原因:出力ファイルのディジタル署名の計算に失敗しました。";
-							msgE += "\n\nReason: Calculation the digital signature of the output file failed.";
+							msgJ += "\n\n原因:\n出力ファイルのディジタル署名の計算に失敗しました。";
+							msgE += "\n\nReason:\nCalculation the digital signature of the output file failed.";
 						break;
 
 						default:
@@ -4786,33 +4786,33 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 					switch( result )
 					{
 						case ECFormResult::ERROR_FILE_OPEN:
-							msgJ += "\n\n原因:出力ファイルのオープンに失敗しました。";
-							msgE += "\n\nReason: Opening an output file is failed.";
+							msgJ += "\n\n原因:\n出力ファイルのオープンに失敗しました。";
+							msgE += "\n\nReason:\nOpening an output file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_READ:
-							msgJ += "\n\n原因:ファイルの読み込みに失敗しました。";
-							msgE += "\n\nReason: Reading the file is failed.";
+							msgJ += "\n\n原因:\nファイルの読み込みに失敗しました。";
+							msgE += "\n\nReason:\nReading the file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_WRITE:
-							msgJ += "\n\n原因:出力ファイルへの書き出しに失敗しました。";
-							msgE += "\n\nReason: Writing the file is failed.";
+							msgJ += "\n\n原因:\n出力ファイルへの書き出しに失敗しました。";
+							msgE += "\n\nReason:\nWriting the file is failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_COPY:
-							msgJ += "\n\n原因:入力ROMデータファイルのコピーに失敗しました。";
-							msgE += "\n\nReason: Copying the ROM data file failed.";
+							msgJ += "\n\n原因:\n入力ROMデータファイルのコピーに失敗しました。";
+							msgE += "\n\nReason:\nCopying the ROM data file failed.";
 						break;
 
 						case ECFormResult::ERROR_FILE_EXIST:
-							msgJ += "\n\n原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
-							msgE += "\n\nReason: When the input ROM data file doesn't exist in the original folder, output file can't be made.";
+							msgJ += "\n\n原因:\n入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
+							msgE += "\n\nReason:\nWhen the input ROM data file doesn't exist in the original folder, output file can't be made.";
 						break;
 
 						case ECFormResult::ERROR_FILE_SIGN:
-							msgJ += "\n\n原因:出力ファイルのディジタル署名の計算に失敗しました。";
-							msgE += "\n\nReason: Calculation the digital signature of the output file failed.";
+							msgJ += "\n\n原因:\n出力ファイルのディジタル署名の計算に失敗しました。";
+							msgE += "\n\nReason:\nCalculation the digital signature of the output file failed.";
 						break;
 
 						default:

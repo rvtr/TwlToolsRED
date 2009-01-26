@@ -333,6 +333,10 @@
 				</File>
 			</File>
 			<File
+				RelativePath=".\Form1_const.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FormError.cpp"
 				>
 			</File>

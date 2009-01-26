@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form1_const.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\FormError.h"
 				>
 			</File>

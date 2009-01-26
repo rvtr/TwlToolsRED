@@ -57,15 +57,15 @@ System::Boolean Form1::loadRom( System::String ^infile )
 // ----------------------------------------------
 // ファイルの書き出し (TAD/SRL書き出しをラップ)
 // ----------------------------------------------
-System::Boolean Form1::saveRom( System::String ^outfile )
+ECFormResult Form1::saveRom( System::String ^outfile )
 {
-	System::Boolean result = false;
+	ECFormResult result = ECFormResult::NOERROR;
 	if( this->IsLoadTad )
 	{
 		// 一時ファイルにSRLを書き出しているのでその一時ファイルから出力ファイルを作成
 		System::String ^tmpsrl = this->getSplitTadTmpFile();
 		result = this->saveSrl( tmpsrl, outfile );
-		if( result )
+		if( result != ECFormResult::NOERROR )
 		{
 			System::IO::File::Delete( tmpsrl );
 			this->IsLoadTad = false;			// 出力したSRLが次のソースとなる
@@ -158,25 +158,26 @@ System::Boolean Form1::loadSrl( System::String ^srlfile )
 // ----------------------------------------------
 // SRLの保存
 // ----------------------------------------------
-System::Boolean Form1::saveSrl( System::String ^infile, System::String ^outfile )
+ECFormResult Form1::saveSrl( System::String ^infile, System::String ^outfile )
 {
 	if( !System::IO::File::Exists( infile ) )
 	{
-		return false;
+		return ECFormResult::ERROR_FILE_EXIST;
 	}
 
 	// コピーしたファイルにROMヘッダを上書き
-	if( !this->saveSrlCore( infile, outfile ) )
+	ECFormResult result = this->saveSrlCore( infile, outfile );
+	if( result != ECFormResult::NOERROR )
 	{
-		return false;
+		return result;
 	}
 
 	// 再リード
 	this->loadSrl( outfile );
-	return true;
+	return ECFormResult::NOERROR;
 } // saveSrl()
 
-System::Boolean Form1::saveSrlCore( System::String ^infile, System::String ^outfile )
+ECFormResult Form1::saveSrlCore( System::String ^infile, System::String ^outfile )
 {
 	// ROM情報をフォームから取得してSRLバイナリに反映させる
 	this->setSrlProperties();
@@ -184,13 +185,37 @@ System::Boolean Form1::saveSrlCore( System::String ^infile, System::String ^outf
 	// ファイルをコピー
 	if( !(outfile->Equals( infile )) )
 	{
-		System::IO::File::Copy( infile, outfile, true );
+		try
+		{
+			System::IO::File::Copy( infile, outfile, true );
+		}
+		catch( System::Exception ^ex )
+		{
+			(void)ex;
+			return ECFormResult::ERROR_FILE_COPY;
+		}
 	}
 
 	// コピーしたファイルにROMヘッダを上書き
-	if( this->hSrl->writeToFile( outfile ) != ECSrlResult::NOERROR )
+	ECSrlResult srlRes = this->hSrl->writeToFile( outfile );
+	if( srlRes != ECSrlResult::NOERROR )
 	{
-		return false;
+		ECFormResult formRes = ECFormResult::NOERROR; 
+		switch( srlRes )
+		{
+			case ECSrlResult::ERROR_FILE_OPEN:  formRes = ECFormResult::ERROR_FILE_OPEN;  break;
+			case ECSrlResult::ERROR_FILE_WRITE: formRes = ECFormResult::ERROR_FILE_WRITE; break;
+			case ECSrlResult::ERROR_FILE_READ:  formRes = ECFormResult::ERROR_FILE_READ;  break;
+			case ECSrlResult::ERROR_SIGN_ENCRYPT:
+			case ECSrlResult::ERROR_SIGN_DECRYPT:
+			case ECSrlResult::ERROR_SIGN_VERIFY:
+				formRes = ECFormResult::ERROR_FILE_SIGN;
+			break;
+			default:
+				formRes = ECFormResult::ERROR;
+			break;
+		}
+		return formRes;
 	}
-	return true;
+	return ECFormResult::NOERROR;
 }

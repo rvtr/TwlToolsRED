@@ -8,6 +8,7 @@
 #include "utility.h"
 #include "lang.h"
 #include "FormError.h"
+#include "Form1_const.h"
 
 namespace MasterEditorTWL {
 
@@ -4060,16 +4061,16 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 		System::Boolean loadRom( System::String ^infile );
 
 		// ROMファイルの書き出し (SRL書き出しをラップ)
-		System::Boolean saveRom( System::String ^outname );
+		ECFormResult saveRom( System::String ^outname );
 
 		// SRLの読み込み
 		System::Boolean loadSrl( System::String ^srlfile );
 
 		// SRLの書き出しと再読み込み
-		System::Boolean saveSrl( System::String ^infile, System::String ^outfile );
+		ECFormResult saveSrl( System::String ^infile, System::String ^outfile );
 
 		// SRLの書き出しのみ @ret 成否
-		System::Boolean saveSrlCore( System::String ^infile, System::String ^outfile );
+		ECFormResult saveSrlCore( System::String ^infile, System::String ^outfile );
 
 		// tadの読み込み
 		System::Boolean loadTad( System::String ^tadfile );
@@ -4636,10 +4637,47 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 
 			try
 			{
-				if( !this->saveRom( srlfile ) )
+				ECFormResult result = this->saveRom( srlfile );
+				if( result != ECFormResult::NOERROR )
 				{
-					this->errMsg( "マスターROMの作成に失敗しました。",
-								  "Making a master ROM failed." );
+					System::String^ msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
+					System::String^ msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
+					switch( result )
+					{
+						case ECFormResult::ERROR_FILE_OPEN:
+							msgJ += "\n\n原因:出力ファイルのオープンに失敗しました。";
+							msgE += "\n\nReason: Opening an output file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_READ:
+							msgJ += "\n\n原因:ファイルの読み込みに失敗しました。";
+							msgE += "\n\nReason: Reading the file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_WRITE:
+							msgJ += "\n\n原因:出力ファイルへの書き出しに失敗しました。";
+							msgE += "\n\nReason: Writing the file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_COPY:
+							msgJ += "\n\n原因:入力ROMデータファイルのコピーに失敗しました。";
+							msgE += "\n\nReason: Copying the ROM data file failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_EXIST:
+							msgJ += "\n\n原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
+							msgE += "\n\nReason: When the input ROM data file doesn't exist in the original folder, output file can't be made.";
+						break;
+
+						case ECFormResult::ERROR_FILE_SIGN:
+							msgJ += "\n\n原因:出力ファイルのディジタル署名の計算に失敗しました。";
+							msgE += "\n\nReason: Calculation the digital signature of the output file failed.";
+						break;
+
+						default:
+						break;
+					}
+					this->errMsg( msgJ, msgE );
 					return;
 				}
 				this->sucMsg( "マスターROMの作成が成功しました。", "A master ROM is made successfully." );
@@ -4647,9 +4685,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 			}
 			catch( System::Exception ^ex )
 			{
-				(void)ex;
-				this->errMsg( "マスターROMの作成に失敗しました。",
-							  "Making a master ROM failed." );
+				System::String ^msgJ = "マスターROMの作成に失敗しました。";
+				System::String ^msgE = "Making a master ROM failed. ";
+				msgJ += "\n\n例外:\n" + ex->ToString() + "\n" + ex->Message;
+				msgE += "\n\n例外:\n" + ex->ToString() + "\n" + ex->Message;
+				this->errMsg( msgJ, msgE );
 				return;
 			}
 		} //stripItemMasterRom_Click()
@@ -4738,19 +4778,58 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 			// 更新後のSRLを別ファイルに作成
 			try
 			{
-				if( !this->saveRom( srlfile ) )
+				ECFormResult result = this->saveRom( srlfile );
+				if( result != ECFormResult::NOERROR )
 				{
-					this->errMsg( "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。",
-								  "Making a master ROM failed. Therefore, a part of files can't be made." );
+					System::String^ msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
+					System::String^ msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
+					switch( result )
+					{
+						case ECFormResult::ERROR_FILE_OPEN:
+							msgJ += "\n\n原因:出力ファイルのオープンに失敗しました。";
+							msgE += "\n\nReason: Opening an output file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_READ:
+							msgJ += "\n\n原因:ファイルの読み込みに失敗しました。";
+							msgE += "\n\nReason: Reading the file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_WRITE:
+							msgJ += "\n\n原因:出力ファイルへの書き出しに失敗しました。";
+							msgE += "\n\nReason: Writing the file is failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_COPY:
+							msgJ += "\n\n原因:入力ROMデータファイルのコピーに失敗しました。";
+							msgE += "\n\nReason: Copying the ROM data file failed.";
+						break;
+
+						case ECFormResult::ERROR_FILE_EXIST:
+							msgJ += "\n\n原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
+							msgE += "\n\nReason: When the input ROM data file doesn't exist in the original folder, output file can't be made.";
+						break;
+
+						case ECFormResult::ERROR_FILE_SIGN:
+							msgJ += "\n\n原因:出力ファイルのディジタル署名の計算に失敗しました。";
+							msgE += "\n\nReason: Calculation the digital signature of the output file failed.";
+						break;
+
+						default:
+						break;
+					}
+					this->errMsg( msgJ, msgE );
 					return;
 				}
-				this->tboxFile->Text = srlfile;
+				this->tboxFile->Text = srlfile;		// 成功してからテキストボックスに反映
 			}
 			catch( System::Exception ^ex )
 			{
-				(void)ex;
-				this->errMsg( "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。",
-							  "Making a master ROM failed. Therefore, a part of files can't be made." );
+				System::String ^msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
+				System::String ^msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
+				msgJ += "例外:\n" + ex->ToString() + "\n" + ex->Message;
+				msgE += "例外:\n" + ex->ToString() + "\n" + ex->Message;
+				this->errMsg( msgJ, msgE );
 				return;
 			}
 			u16  crc;			// SRL全体のCRCを計算する(書類に記述するため)

@@ -14,6 +14,8 @@
 # $Revision$
 #----------------------------------------------------------------------------
 
+SUBDIRS		=	banner
+
 NNS_USELIBS     = g2d gfd fnd
 
 G2D_TEXTDEMOLIB	=	$(NITROSYSTEM_ROOT)/build/demos/g2d/Text/textdemolib
@@ -22,17 +24,23 @@ LINCLUDES       =   $(G2D_TEXTDEMOLIB)/include
 LLIBRARY_DIRS   =   $(G2D_TEXTDEMOLIB)/lib/$(NITRO_BUILDTYPE)
 LLIBRARIES      =   libg2d_textdemo.a
 
+LIBSYSCALL		=	./030A/libsyscall.a
+
+TWL_NANDAPP		=	TRUE
+
+TITLEID_LO				=	030A
+
 #----------------------------------------------------------------------------
 
 SRCS		=	main.c
-TARGET_BIN	=	main.srl
+TARGET_BIN	=	SimpleFontViewSD.tad
 
 LDEPENDS_NEF = data/fontd.NFTR
 
 MAKEROM_ROMROOT  = ./
 MAKEROM_ROMFILES = data/fontd.NFTR
 
-ROM_SPEC				=	ROM-TS_custom.rsf
+ROM_SPEC				=	./ROM-TS_custom.rsf
 
 #----------------------------------------------------------------------------
 include	$(NITROSYSTEM_ROOT)/build/buildtools/commondefs
@@ -41,7 +49,7 @@ include	$(NITROSYSTEM_ROOT)/build/buildtools/commondefs
 do-build:		$(TARGETS)
 
 
-include	$(NITROSYSTEM_ROOT)/build/buildtools/modulerules
+include $(TWLSDK_ROOT)/build/buildtools/modulerules
 
 
 #===== End of Makefile =====

@@ -57,13 +57,13 @@ Property
 	#
 	# TITLE NAME: Your product name within 12bytes
 	#
-	#TitleName		"MY APP NAME"
+	TitleName		"SIFONTVIEWER"
 
 	#
 	# MAKER CODE: Your company ID# in 2 ascii words
 	#             issued by NINTENDO
 	#
-	#MakerCode		"00"
+	MakerCode		"01"
 
 	#
 	# REMASTER VERSION: Mastering version
@@ -88,13 +88,13 @@ Property
 	#
 	# ROM HEADER TEMPLATE: Provided to every product by NINTENDO
 	#
-	#RomHeaderTemplate	./etc/rom_header.template.sbin
+	RomHeaderTemplate	./030A/rom_header_030a.template.sbin
 
 	#
 	# BANNER FILE: generated from Banner Spec File
 	#
 	#BannerFile		./etc/myGameBanner.bnr
-	BannerFile		$(TWLSDK_ROOT)/include/twl/specfiles/default.bnr
+	BannerFile		./banner/banner.bnr
 
 	#
 	# Permit LandingNormalJump: for TWL "ApplicationJump" function [TRUE/FALSE]
@@ -207,7 +207,7 @@ AppendProperty
 	#
 	# Publisher : "Nintendo"
 	#  don't have to edit
-	#Publisher				Nintendo
+	Publisher				Nintendo
 
 	#
 	# Application type : [USER/SYSTEM]
@@ -222,7 +222,7 @@ AppendProperty
 	#
 	# Boot allowed Media: [GameCard]
 	#
-	Media					GameCard
+	Media					NAND
 
 	#
 	# Data only title : [TRUE/FALSE]
@@ -237,7 +237,7 @@ AppendProperty
 	#
 	# GameCode for TitleID : Your GameCode in 4 ascii words
 	#
-	#GameCode				ABCJ
+	GameCode				"030A"
 
 	#
 	# Public save data size: [0K/16K/32K/64K/128K/256K/512K/1M/2M/4M]

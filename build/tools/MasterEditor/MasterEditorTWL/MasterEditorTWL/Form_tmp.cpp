@@ -43,6 +43,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	System::Xml::XmlElement ^form = doc->CreateElement( "Form" );
 	root->AppendChild( form );
 
+	MasterEditorTWL::appendXmlTag( doc, form, "MasterEditorVersion", this->getVersion() );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductName", this->tboxProductName->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode1", this->tboxProductCode1->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode2", this->tboxProductCode2->Text );

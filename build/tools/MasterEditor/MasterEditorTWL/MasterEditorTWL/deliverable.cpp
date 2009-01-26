@@ -529,7 +529,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize, 2 );
 			}
-			if( node->FirstChild->Value->Equals( "TagDLBlocks" ) )
+			if( node->FirstChild->Value->Equals( "TagHWBlocks" ) )
 			{
 				node->FirstChild->Value = hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
 			}

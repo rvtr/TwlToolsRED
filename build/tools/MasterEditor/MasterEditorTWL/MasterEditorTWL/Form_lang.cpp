@@ -358,12 +358,9 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	//resources->ApplyResources(this->tboxGuideDLCategory, L"tboxGuideDLCategory");
 	//resources->ApplyResources(this->gboxDLCategory, L"gboxDLCategory");
 	resources->ApplyResources(this->tboxGuideNandSizeInfo, L"tboxGuideNandSizeInfo");
-	resources->ApplyResources(this->labShopBlockUnit, L"labShopBlockUnit");
 	resources->ApplyResources(this->gboxNandSize, L"gboxNandSize");
 	resources->ApplyResources(this->labNandSize, L"labNandSize");
-	resources->ApplyResources(this->labShopBlock2, L"labShopBlock2");
 	resources->ApplyResources(this->labNandSizeFS, L"labNandSizeFS");
-	resources->ApplyResources(this->labShopBlock, L"labShopBlock");
 	resources->ApplyResources(this->labSrlSize, L"labSrlSize");
 	resources->ApplyResources(this->labSumSize2, L"labSumSize2");
 	resources->ApplyResources(this->labSumSize, L"labSumSize");

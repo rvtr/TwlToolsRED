@@ -530,10 +530,6 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				//node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize, 2 );
 				node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize );
 			}
-			if( node->FirstChild->Value->Equals( "TagHWBlocks" ) )
-			{
-				node->FirstChild->Value = hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
-			}
 
 			// SRL‚É“o˜^‚³‚ê‚È‚¢ROMŽd—l
 			if( node->FirstChild->Value->Equals( "TagIsUGC" ) )

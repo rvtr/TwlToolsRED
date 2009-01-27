@@ -527,7 +527,8 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagUsedNandSizeMB" ) )
 			{
-				node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize, 2 );
+				//node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize, 2 );
+				node->FirstChild->Value = MasterEditorTWL::transSizeToStringMB( hSrl->hNandUsedSize->NandUsedSize );
 			}
 			if( node->FirstChild->Value->Equals( "TagHWBlocks" ) )
 			{

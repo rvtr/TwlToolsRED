@@ -134,6 +134,17 @@ System::String^ MasterEditorTWL::transSizeToStringKB( const System::UInt32 size 
 }
 
 // MB
+System::String^ MasterEditorTWL::transSizeToStringMB( const System::UInt32 size )
+{
+	if( size == 0 )
+	{
+		return size.ToString();
+	}
+	System::Double MB = 1024.0 * 1024.0;
+	System::Double result = ((System::Double)size) / MB;	// ¬”
+
+	return (result.ToString() + " MB");
+}
 // ‘æ2ˆø”‚Å¬”“_‚ÌŒ…”‚ğw’è(‚»‚êˆÈ‰º‚ÌŒ…‚ÍØ‚èã‚°)
 System::String^ MasterEditorTWL::transSizeToStringMB( const System::UInt32 size, const System::UInt32 decimals )
 {

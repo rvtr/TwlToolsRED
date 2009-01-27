@@ -41,6 +41,7 @@ namespace MasterEditorTWL
 	//
 	System::String^ transSizeToString( const System::UInt32 size );
 	System::String^ transSizeToStringKB( const System::UInt32 size );
+	System::String^ transSizeToStringMB( const System::UInt32 size );	// 小数点表示
 	System::String^ transSizeToStringMB( const System::UInt32 size, const System::UInt32 decimals ); // 第2引数で小数点桁数を指定(それ以下の桁は切り上げ)
 
 	//

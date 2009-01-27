@@ -126,7 +126,8 @@ void Form1::setSrlForms(void)
 	this->tboxTmdSizeFS->Text       = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->TmdSizeRoundUp );
 	// ‘˜a
 	this->tboxSumSize->Text         = MasterEditorTWL::transSizeToStringKB( this->hSrl->hNandUsedSize->NandUsedSize );
-	this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize, 2 );
+	//this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize, 2 );
+	this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize );
 	this->tboxShopBlock->Text       = this->hSrl->hNandUsedSize->NandUsedSizeBlock.ToString();
 
 	// ƒAƒvƒŠí•Ê

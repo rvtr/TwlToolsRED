@@ -86,7 +86,7 @@ void Form1::setSrlForms(void)
 	}
 	else
 	{
-		this->tboxIsCodec->Text = gcnew System::String( "NTR" );
+		this->tboxIsCodec->Text = gcnew System::String( "DS" );
 	}
 	this->cboxIsSD->Checked   = this->hSrl->IsSD;
 	this->cboxIsNAND->Checked = this->hSrl->IsNAND;

@@ -316,7 +316,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				if( hSrl->IsCodecTWL )
 					node->FirstChild->Value = gcnew System::String("TWL");
 				else
-					node->FirstChild->Value = gcnew System::String("NTR");
+					node->FirstChild->Value = gcnew System::String("DS");
 			}
 			if( node->FirstChild->Value->Equals( "TagIsEULA" ) )
 			{

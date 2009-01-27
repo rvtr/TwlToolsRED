@@ -142,9 +142,8 @@ namespace MasterEditorTWL
 		property System::UInt32  PrivateSaveSize;
 		property System::Boolean IsMediaNand;		// NANDアプリかどうか
 		property System::Boolean IsUseSubBanner;	// サブバナーを使用するかどうか
-	public:
-		static const System::UInt32  TmdSize = 16 * 1024;
 	private:
+		static const System::UInt32  cTmdSize = 16 * 1024;
 		static const System::UInt32  cSubBannerSize  = 16  * 1024;
 		static const System::UInt32  NandClusterSize = 16  * 1024;
 		static const System::UInt32  ShopBlockSize   = 128 * 1024;
@@ -168,17 +167,6 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get(){ return (MasterEditorTWL::roundUp( this->PrivateSaveSize, NandClusterSize )); }
 		}
-		property System::UInt32  TmdSizeRoundUp
-		{
-			System::UInt32 get()
-			{
-				if( !this->IsMediaNand )
-				{
-					return 0;
-				}
-				return (MasterEditorTWL::roundUp( this->TmdSize, NandClusterSize ));
-			}
-		}
 		property System::UInt32  SubBannerSize	// サブバナーのサイズは使用するかしないかで異なるので計算した値を property で提供
 		{
 			System::UInt32 get()
@@ -199,6 +187,28 @@ namespace MasterEditorTWL
 					return 0;
 				}
 				return (MasterEditorTWL::roundUp( this->SubBannerSize, NandClusterSize ));
+			}
+		}
+		property System::UInt32  TmdSize
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsMediaNand )
+				{
+					return 0;
+				}
+				return this->cTmdSize;
+			}
+		}
+		property System::UInt32  TmdSizeRoundUp
+		{
+			System::UInt32 get()
+			{
+				if( !this->IsMediaNand )
+				{
+					return 0;
+				}
+				return (MasterEditorTWL::roundUp( this->TmdSize, NandClusterSize ));
 			}
 		}
 		property System::UInt32  NandUsedSize		// 全体のNAND消費サイズは変数で持たず property で提供

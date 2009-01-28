@@ -228,7 +228,7 @@ ECFormResult Form1::saveSrlCore( System::String ^infile, System::String ^outfile
 // ----------------------------------------------
 // ファイルのコピー
 // ----------------------------------------------
-#define METWL_COPY_FILE_BUFSIZE   (1*1024*1024)
+#define METWL_COPY_FILE_BUFSIZE   (10*1024*1024)
 ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
 {
 	const char *pchInfile = 

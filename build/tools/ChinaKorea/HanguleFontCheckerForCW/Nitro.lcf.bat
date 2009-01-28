@@ -1,1 +1,0 @@
-"%NITROSDK_ROOT%\tools\bin\makelcf.exe" "C:\home\HanglefontCheck_custom_forCW\Nitro.lcf.lsf" "C:\NitroSDK\include\nitro\specfiles\ARM9-TS.lcf.template" "C:\home\HanglefontCheck_custom_forCW\Nitro.lcf"

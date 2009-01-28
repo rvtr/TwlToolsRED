@@ -4033,6 +4033,9 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  dataSDKVer;
 		// tadの読み込み
 		System::Boolean loadTad( System::String ^tadfile );
 
+		// ファイルのコピー
+		ECFormResult copyFile( System::String ^infile, System::String ^outfile );
+
 		// 提出ファイル名をゲームコードなどから決定
 		System::String^ getSubmitFilePrefix(void)
 		{

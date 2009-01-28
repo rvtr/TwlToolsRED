@@ -185,13 +185,18 @@ ECFormResult Form1::saveSrlCore( System::String ^infile, System::String ^outfile
 	// ファイルをコピー
 	if( !(outfile->Equals( infile )) )
 	{
-		try
+		//try
+		//{
+		//	System::IO::File::Copy( infile, outfile, true );
+		//}
+		//catch( System::Exception ^ex )
+		//{
+		//	(void)ex;
+		//	return ECFormResult::ERROR_FILE_COPY;
+		//}
+		ECFormResult formRes = this->copyFile( infile, outfile );
+		if( formRes != ECFormResult::NOERROR )
 		{
-			System::IO::File::Copy( infile, outfile, true );
-		}
-		catch( System::Exception ^ex )
-		{
-			(void)ex;
 			return ECFormResult::ERROR_FILE_COPY;
 		}
 	}
@@ -217,5 +222,71 @@ ECFormResult Form1::saveSrlCore( System::String ^infile, System::String ^outfile
 		}
 		return formRes;
 	}
+	return ECFormResult::NOERROR;
+}
+
+// ----------------------------------------------
+// ファイルのコピー
+// ----------------------------------------------
+#define METWL_COPY_FILE_BUFSIZE   (1*1024*1024)
+ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
+{
+	const char *pchInfile = 
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( infile ).ToPointer();
+	const char *pchOutfile = 
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( outfile ).ToPointer();
+
+	FILE       *ifp = NULL;
+	if( fopen_s( &ifp, pchInfile, "rb" ) != NULL )
+	{
+		this->errMsg(
+			"ファイルコピーにおいて入力ファイルのオープンに失敗しました。",
+			"In Copying file, the input file can't be opened." );
+		return (ECFormResult::ERROR_FILE_OPEN);
+	}
+	FILE       *ofp = NULL;
+	if( fopen_s( &ofp, pchOutfile, "wb" ) != NULL )	// 同名ファイルを削除して新規にライト・バイナリ
+	{
+		this->errMsg(
+			"ファイルコピーにおいて出力ファイルのオープンに失敗しました。",
+			"In Copying file, the output file can't be opened." );
+		fclose(ifp);
+		return (ECFormResult::ERROR_FILE_OPEN);
+	}
+
+	// 入力ファイルのサイズ取得
+	fseek( ifp, 0, SEEK_END );
+	System::Int32 size = ftell(ifp);
+
+	cli::array<System::Byte> ^mbuf = gcnew cli::array<System::Byte>(METWL_COPY_FILE_BUFSIZE);	// 解放の必要なし
+	pin_ptr<unsigned char> buf = &mbuf[0];
+	fseek( ifp, 0, SEEK_SET );
+	fseek( ofp, 0, SEEK_SET );
+	while( size > 0 )
+	{
+		System::Int32 datasize = (METWL_COPY_FILE_BUFSIZE < size)?METWL_COPY_FILE_BUFSIZE:size;
+
+		if( datasize != fread(buf, 1, datasize, ifp) )
+		{
+			this->errMsg(
+				"ファイルコピーにおいて入力ファイルからのデータリードに失敗しました。",
+				"In Copying file, contents can't be read from the input file." );
+			fclose(ofp);
+			fclose(ifp);
+			return ECFormResult::ERROR_FILE_READ;
+		}
+		if( datasize != fwrite(buf, 1, datasize, ofp) )
+		{
+			this->errMsg(
+				"ファイルコピーにおいて出力ファイルからのデータライトに失敗しました。",
+				"In Copying file, contents can't be written to the output file." );
+			fclose(ofp);
+			fclose(ifp);
+			return ECFormResult::ERROR_FILE_READ;
+		}
+		size -= datasize;
+	}
+	fclose(ofp);
+	fclose(ifp);
 	return ECFormResult::NOERROR;
 }

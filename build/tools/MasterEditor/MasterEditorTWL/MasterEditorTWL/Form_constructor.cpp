@@ -142,6 +142,11 @@ void Form1::handleArgs(void)
 		return;
 	}
 	System::String ^rompath;
+	if( System::IO::Path::IsPathRooted( romfile ) )		// 絶対パスのときはそのまま表示
+	{
+		rompath = romfile;
+	}
+	else
 	{
 		// 表示のために絶対パスに変換
 		System::String ^currdir = System::Environment::CurrentDirectory;

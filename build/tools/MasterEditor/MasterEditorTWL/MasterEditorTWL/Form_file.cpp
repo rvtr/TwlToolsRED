@@ -239,17 +239,17 @@ ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
 	FILE       *ifp = NULL;
 	if( fopen_s( &ifp, pchInfile, "rb" ) != NULL )
 	{
-		this->errMsg(
-			"ファイルコピーにおいて入力ファイルのオープンに失敗しました。",
-			"In Copying file, the input file can't be opened." );
+		//this->errMsg(
+		//	"ファイルコピーにおいて入力ファイルのオープンに失敗しました。",
+		//	"In Copying file, the input file can't be opened." );
 		return (ECFormResult::ERROR_FILE_OPEN);
 	}
 	FILE       *ofp = NULL;
 	if( fopen_s( &ofp, pchOutfile, "wb" ) != NULL )	// 同名ファイルを削除して新規にライト・バイナリ
 	{
-		this->errMsg(
-			"ファイルコピーにおいて出力ファイルのオープンに失敗しました。",
-			"In Copying file, the output file can't be opened." );
+		//this->errMsg(
+		//	"ファイルコピーにおいて出力ファイルのオープンに失敗しました。",
+		//	"In Copying file, the output file can't be opened." );
 		fclose(ifp);
 		return (ECFormResult::ERROR_FILE_OPEN);
 	}
@@ -268,18 +268,18 @@ ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
 
 		if( datasize != fread(buf, 1, datasize, ifp) )
 		{
-			this->errMsg(
-				"ファイルコピーにおいて入力ファイルからのデータリードに失敗しました。",
-				"In Copying file, contents can't be read from the input file." );
+			//this->errMsg(
+			//	"ファイルコピーにおいて入力ファイルからのデータリードに失敗しました。",
+			//	"In Copying file, contents can't be read from the input file." );
 			fclose(ofp);
 			fclose(ifp);
 			return ECFormResult::ERROR_FILE_READ;
 		}
 		if( datasize != fwrite(buf, 1, datasize, ofp) )
 		{
-			this->errMsg(
-				"ファイルコピーにおいて出力ファイルからのデータライトに失敗しました。",
-				"In Copying file, contents can't be written to the output file." );
+			//this->errMsg(
+			//	"ファイルコピーにおいて出力ファイルからのデータライトに失敗しました。",
+			//	"In Copying file, contents can't be written to the output file." );
 			fclose(ofp);
 			fclose(ifp);
 			return ECFormResult::ERROR_FILE_READ;

@@ -89,11 +89,11 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 
 	index = this->combBackup->SelectedIndex;
 	this->combBackup->Items->Clear();
-	resources->ApplyResources(this->combBackup, L"combBackup");
-	this->combBackup->Items->AddRange(gcnew cli::array< System::Object^  >(9) {resources->GetString(L"combBackup.Items"), resources->GetString(L"combBackup.Items1"), 
+	this->combBackup->Items->AddRange(gcnew cli::array< System::Object^  >(10) {resources->GetString(L"combBackup.Items"), resources->GetString(L"combBackup.Items1"), 
 		resources->GetString(L"combBackup.Items2"), resources->GetString(L"combBackup.Items3"), resources->GetString(L"combBackup.Items4"), 
 		resources->GetString(L"combBackup.Items5"), resources->GetString(L"combBackup.Items6"), resources->GetString(L"combBackup.Items7"), 
-		resources->GetString(L"combBackup.Items8")});
+		resources->GetString(L"combBackup.Items8"), resources->GetString(L"combBackup.Items9")});
+	resources->ApplyResources(this->combBackup, L"combBackup");
 	this->combBackup->SelectedIndex = index;
 
 	resources->ApplyResources(this->tboxBackupOther, L"tboxBackupOther");
@@ -408,6 +408,12 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	{
 		this->setSrlFormsTextBox();
 	}
+
+	// バックアップメモリのテキストボックス
+	this->combBackup_SelectedIndexChanged( nullptr, nullptr );
+	this->cboxReleaseForeign_CheckedChanged( nullptr, nullptr );
+	this->cboxIsInputPerson2_CheckedChanged( nullptr, nullptr );
+	this->rUsageOther_CheckedChanged( nullptr, nullptr );
 
 	// 「レーティング表示不要」にチェックが入っているときのみレーティングのコンボボックスのテキストを変更
 	// (それ以外のときにはApplyResourcesで自動的に切り替わる)

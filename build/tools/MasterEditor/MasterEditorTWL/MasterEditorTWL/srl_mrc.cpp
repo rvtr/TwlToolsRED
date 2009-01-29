@@ -458,7 +458,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	// NANDアプリのときにはROMの種類(MROM/1TROM)が設定されていなくてもよい
 	if( (this->pRomHeader->s.warning_no_spec_rom_speed != 0) && !this->IsMediaNand )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
+		this->hErrorList->Add( gcnew RCMrcError( 
 			"諸フラグ", 0x1f, 0x1f, "rsfファイルでROMSpeedTypeが設定されていません。",
 			"Setting Flags", "In a RSF file, the item \"ROMSpeedType\" is not set.", false, true ) );
 	}

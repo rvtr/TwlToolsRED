@@ -193,14 +193,7 @@ void Form1::setDeliverableProperties(void)
 	// バックアップメモリはROMヘッダには記述されないので提出確認書にのみ記載
 	if( this->combBackup->SelectedIndex != (this->combBackup->Items->Count - 1) )
 	{
-		if( this->combBackup->SelectedIndex > 0 )
-		{
-			this->hDeliv->hBackupMemory = this->combBackup->SelectedItem->ToString();
-		}
-		else
-		{
-			this->hDeliv->hBackupMemory = gcnew System::String("");
-		}
+		this->hDeliv->hBackupMemory = this->combBackup->SelectedItem->ToString();
 	}
 	else
 	{

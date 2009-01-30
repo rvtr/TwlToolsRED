@@ -587,10 +587,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	}
 
 	// 追加チェック
-	if( this->hMrcExternalCheckItems->IsAppendCheck )
-	{
-		this->mrcSDKVersion(fp);
-	} //if( *(this->hMrcExternalCheckItems->hIsCheck) )
+	this->mrcSDKVersion(fp);
 
 	return ECSrlResult::NOERROR;
 } // mrcTWL()
@@ -977,7 +974,10 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 		{
 			isPR  = MasterEditorTWL::IsSDKVersionPR( sdk->Code );
 			isRC  = MasterEditorTWL::IsSDKVersionRC( sdk->Code );
-			isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVer );
+			if( this->hMrcExternalCheckItems->IsAppendCheck )
+			{
+				isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVer );
+			}
 		}
 	}
 	if( isOld )

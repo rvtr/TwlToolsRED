@@ -137,9 +137,11 @@ void Form1::loadTmp( System::String ^filename )
 	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Srl" );
 	if( !System::String::IsNullOrEmpty(text) )		// SRLファイル名がないときはスルー
 	{
-		this->loadRom(text);			// tad/srl両対応
-		this->tboxFile->Text = text;
-		this->clearOtherForms();
+		if( this->loadRom(text) )
+		{
+			this->tboxFile->Text = text;
+			this->clearOtherForms();
+		}
 	}
 
 	// 言語

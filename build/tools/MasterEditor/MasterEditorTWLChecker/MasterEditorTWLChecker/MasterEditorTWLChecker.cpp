@@ -7,22 +7,21 @@ using namespace System;
 
 int main(array<System::String ^> ^args)
 {
-	FilenameItem ^fItem = gcnew FilenameItem;
-	fItem->parseFilename( args[0] );
-
-	SheetItem ^sItem = gcnew SheetItem;
-	sItem->readSheet( args[0] );
-
-	System::String^ errmsg = checkSheet( fItem, sItem );
-	if( errmsg != nullptr )
+	try
 	{
-		Console::WriteLine( "NG " + errmsg );
-	}
-	else
-	{
-		Console::WriteLine( "OK" );
-	}
+		FilenameItem ^fItem = gcnew FilenameItem;
+		fItem->parseFilename( args[0] );
 
-	Console::WriteLine(L"Hello World");
+		SheetItem ^sItem = gcnew SheetItem;
+		sItem->readSheet( args[0] );
+
+		checkSheet( fItem, sItem );
+	}
+	catch( System::Exception ^ex )
+	{
+		Console::WriteLine( "NG - " + ex->Message);
+		return -1;
+	}
+	Console::WriteLine( "OK" );
     return 0;
 }

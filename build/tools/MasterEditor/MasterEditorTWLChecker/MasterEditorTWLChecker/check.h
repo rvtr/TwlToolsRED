@@ -13,7 +13,7 @@ public:
 public:
 	FilenameItem(){}
 public:
-	System::Boolean parseFilename( System::String ^filepath );
+	System::Void parseFilename( System::String ^filepath );
 };
 
 //
@@ -34,7 +34,8 @@ public:
 public:
 	SheetItem(){}
 public:
-	System::Boolean readSheet( System::String ^sheetfile );
+	System::Void readSheet( System::String ^sheetfile );
 };
 
-System::String^ checkSheet( FilenameItem ^fItem, SheetItem ^sItem );
+// 提出確認書の文字列と真値を比較
+System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem );

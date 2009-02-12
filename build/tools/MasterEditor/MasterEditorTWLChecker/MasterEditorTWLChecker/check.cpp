@@ -7,7 +7,7 @@ using namespace System;
 // ƒtƒ@ƒCƒ‹–¼‚Ì‰ğÍ
 // ------------------------------------------------------------------
 
-System::Boolean FilenameItem::parseFilename( System::String ^filepath )
+System::Void FilenameItem::parseFilename( System::String ^filepath )
 {
 	System::String ^filename = System::IO::Path::GetFileNameWithoutExtension(filepath);
 
@@ -22,6 +22,5 @@ System::Boolean FilenameItem::parseFilename( System::String ^filepath )
 	Console::WriteLine( "Ogn:    " + this->ogn );
 	Console::WriteLine( "Rating: " + this->rating );
 	Console::WriteLine( "Lang:   " + this->lang );
-
-	return true;
+	return;
 }

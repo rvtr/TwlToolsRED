@@ -13,41 +13,24 @@ using namespace System;
 // 提出確認書の読み込み
 // ------------------------------------------------------------------
 
-System::Boolean SheetItem::readSheet( System::String ^sheetfile )
+System::Void SheetItem::readSheet( System::String ^sheetfile )
 {
 	// XSLによってXML変換
 	System::String ^tmpfile = ".\\temp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".xml";
 	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
 	System::String ^xslpath = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
 		                      + "\\extract_sheet.xsl";
-	try
-	{
-		//Console::WriteLine( "xslpath: " + xslpath );
-		xslt->Load( xslpath );
-		xslt->Transform( sheetfile, tmpfile );
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		//Console::WriteLine( "XSLT Error" );
-		return false;
-	}
+
+	//Console::WriteLine( "xslpath: " + xslpath );
+	xslt->Load( xslpath );
+	xslt->Transform( sheetfile, tmpfile );
+
 	// 変換したXMLを読み込み
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;
-	try
-	{
-		doc->Load( tmpfile );
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		//Console::WriteLine( "Load error" );
-		return false;
-	}
+	doc->Load( tmpfile );
 
 	// XMLからデータを抽出
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
-	try
 	{
 		this->region   = MasterEditorTWL::getXPathText( root, "/Sheet/Region" );
 		this->CERO     = MasterEditorTWL::getXPathText( root, "/Sheet/RatingCERO" );
@@ -79,19 +62,12 @@ System::Boolean SheetItem::readSheet( System::String ^sheetfile )
 		Console::WriteLine( "OFLC:     " + this->OFLC );
 		Console::WriteLine( "Unnecessary: " + this->IsUnnecessaryRating.ToString() );
 	}
-	catch( System::Exception ^ex )
-	{
-		//(void)ex;
-		Console::WriteLine( ex->Message );
-		return false;
-	}
 
 	// 中間ファイルを削除
 	if( System::IO::File::Exists( tmpfile ) )
 	{
 		System::IO::File::Delete( tmpfile );
 	}
-	return true;
 }
 
 
@@ -101,23 +77,13 @@ System::Boolean SheetItem::readSheet( System::String ^sheetfile )
 
 // @arg [in] ファイル情報
 // @arg [in] 提出確認書の情報
-//
-// @ret エラーメッセージ (エラーなしのときnullptr)
-System::String^ checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
+System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 {
 	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;
-	try
-	{
-		System::String ^cfgfile = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
-		                          + "\\config.xml";
-		doc->Load( cfgfile );
-	}
-	catch( System::Exception ^ex )
-	{
-		(void)ex;
-		//Console::WriteLine( "Load error" );
-		return (gcnew System::String("Failed to load XML"));
-	}
+	System::String ^cfgfile = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location )
+	                          + "\\config.xml";
+	doc->Load( cfgfile );
+
 	// XMLからデータを抽出
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 
@@ -134,7 +100,7 @@ System::String^ checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 	// リージョンの文字列をチェック
 	if( sItem->region != region )
 	{
-		return (gcnew System::String("In Sheet, region is illegal string."));
+		throw (gcnew System::Exception("In Sheet, region is illegal string."));
 	}
 	// レーティングの文字列をチェック
 	if( fItem->region == "JP" )
@@ -240,8 +206,7 @@ System::String^ checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 	}
 	if( errmsg != nullptr )
 	{
-		return errmsg;
+		throw (gcnew System::Exception(errmsg));
 	}
-
-	return nullptr;
+	return;
 }

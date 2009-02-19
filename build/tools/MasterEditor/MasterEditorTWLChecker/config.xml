@@ -79,11 +79,11 @@
 			<rRP><J></J><E></E></rRP>
 		</BBFC>
 		<UN>
-			<r00><J></J><E></E></r00>
+			<J></J><E></E>
 		</UN>
-		<Undefined>
+		<DISABLE>
 			<J>不可</J>
 			<E></E>
-		</Undefined>
+		</DISABLE>
 	</Rating>
 </Config>

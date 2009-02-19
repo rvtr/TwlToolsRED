@@ -5,9 +5,11 @@
 #include "stdafx.h"
 #include "check.h"
 #include <utility.h>
+#include <twl/types.h>
+#include <twl/os/common/ownerInfoEx.h>
+#include <twl/os/common/format_rom.h>
 
 using namespace System;
-
 
 // ------------------------------------------------------------------
 // 提出確認書の読み込み
@@ -15,6 +17,9 @@ using namespace System;
 
 System::Void SheetItem::readSheet( System::String ^sheetfile )
 {
+	// メンバの初期化
+	this->ratings = gcnew cli::array<System::String^>(PARENTAL_CONTROL_INFO_SIZE);
+
 	// XSLによってXML変換
 	System::String ^tmpfile = ".\\temp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".xml";
 	System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;
@@ -33,13 +38,14 @@ System::Void SheetItem::readSheet( System::String ^sheetfile )
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 	{
 		this->region   = MasterEditorTWL::getXPathText( root, "/Sheet/Region" );
-		this->CERO     = MasterEditorTWL::getXPathText( root, "/Sheet/RatingCERO" );
-		this->ESRB     = MasterEditorTWL::getXPathText( root, "/Sheet/RatingESRB" );
-		this->USK      = MasterEditorTWL::getXPathText( root, "/Sheet/RatingUSK" );
-		this->PEGI     = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGI" );
-		this->PEGIPRT  = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGIPRT" );
-		this->PEGIBBFC = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGIBBFC" );
-		this->OFLC     = MasterEditorTWL::getXPathText( root, "/Sheet/RatingOFLC" );
+		this->ratings[ OS_TWL_PCTL_OGN_CERO ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingCERO" );
+		this->ratings[ OS_TWL_PCTL_OGN_ESRB ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingESRB" );
+		this->ratings[ OS_TWL_PCTL_OGN_USK  ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingUSK" );
+		this->ratings[ OS_TWL_PCTL_OGN_PEGI_GEN ]  = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGI" );
+		this->ratings[ OS_TWL_PCTL_OGN_PEGI_PRT ]  = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGIPRT" );
+		this->ratings[ OS_TWL_PCTL_OGN_PEGI_BBFC ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingPEGIBBFC" );
+		this->ratings[ OS_TWL_PCTL_OGN_OFLC ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingOFLC" );
+		//this->ratings[ OS_TWL_PCTL_OGN_GRB  ] = MasterEditorTWL::getXPathText( root, "/Sheet/RatingGRB" );
 
 		System::String ^text = MasterEditorTWL::getXPathText( root, "/Sheet/IsUnnecessaryRating" );
 		if( !System::String::IsNullOrEmpty( text ) && text->Equals( "○" ) )
@@ -51,16 +57,18 @@ System::Void SheetItem::readSheet( System::String ^sheetfile )
 			this->IsUnnecessaryRating = false;
 		}
 
-		Console::WriteLine( "[In Sheet]" );
-		Console::WriteLine( "Region:   " + this->region );
-		Console::WriteLine( "CERO:     " + this->CERO );
-		Console::WriteLine( "ESRB:     " + this->ESRB );
-		Console::WriteLine( "USK:      " + this->USK );
-		Console::WriteLine( "PEGI:     " + this->PEGI );
-		Console::WriteLine( "PEGIPRT:  " + this->PEGIPRT );
-		Console::WriteLine( "PEGIBBFC: " + this->PEGIBBFC );
-		Console::WriteLine( "OFLC:     " + this->OFLC );
-		Console::WriteLine( "Unnecessary: " + this->IsUnnecessaryRating.ToString() );
+		//Console::WriteLine( "[In Sheet]" );
+		//Console::WriteLine( "Region:   " + this->region );
+		//Console::WriteLine( "Region: {0,-20} {1,-20}", this->region, this->region );
+		//Console::WriteLine( "CERO:     " + this->ratings[ OS_TWL_PCTL_OGN_CERO ] );
+		//Console::WriteLine( "ESRB:     " + this->ratings[ OS_TWL_PCTL_OGN_ESRB ] );
+		//Console::WriteLine( "USK:      " + this->ratings[ OS_TWL_PCTL_OGN_USK  ] );
+		//Console::WriteLine( "PEGI:     " + this->ratings[ OS_TWL_PCTL_OGN_PEGI_GEN ] );
+		//Console::WriteLine( "PEGIPRT:  " + this->ratings[ OS_TWL_PCTL_OGN_PEGI_PRT ] );
+		//Console::WriteLine( "PEGIBBFC: " + this->ratings[ OS_TWL_PCTL_OGN_PEGI_BBFC ] );
+		//Console::WriteLine( "OFLC:     " + this->ratings[ OS_TWL_PCTL_OGN_OFLC ] );
+		////Console::WriteLine( "GRB:      " + this->ratings[ OS_TWL_PCTL_OGN_GRB ] );
+		//Console::WriteLine( "Unnecessary: " + this->IsUnnecessaryRating.ToString() );
 	}
 
 	// 中間ファイルを削除
@@ -87,126 +95,117 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 	// XMLからデータを抽出
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 
+	DebugPrint( "--------------------------------------------------------" );
+	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "Config", "Sheet" );
+	DebugPrint( "--" );
+
 	// 設定ファイル中の真値と提出確認書の記述を比較
 	// (設定ファイルにはファイル名と対応させたタグ名で真値が記述されている)
-	System::String ^region = MasterEditorTWL::getXPathText( root, "/Config/Region/" + fItem->region + "/" + fItem->lang );
-	System::String ^undef  = MasterEditorTWL::getXPathText( root, "/Config/Rating/Undefined/" + fItem->lang );
-	System::String ^rating = MasterEditorTWL::getXPathText( root, "/Config/Rating/" + fItem->ogn + "/r" + fItem->rating + "/" + fItem->lang );
-	Console::WriteLine( "[In Config file]" );
-	Console::WriteLine( "Region:    " + region );
-	Console::WriteLine( "Rating:    " + rating );
-	Console::WriteLine( "Undefined: " + undef );
-	System::String ^errmsg = nullptr;
+
 	// リージョンの文字列をチェック
+	System::String ^region = MasterEditorTWL::getXPathText( root, "/Config/Region/" + fItem->region + "/" + fItem->lang );
+
+	DebugPrint( "{0,-10} {1,-20} {2,-20}", "Region", region, sItem->region );
+	DebugPrint( "--" );
+
 	if( sItem->region != region )
 	{
-		throw (gcnew System::Exception("In Sheet, region is illegal string."));
+		throw (gcnew System::Exception("In Sheet, region is an Illegal String."));
+		return;
 	}
-	// レーティングの文字列をチェック
-	if( fItem->region == "JP" )
+
+	// レーティングの文字列のチェック
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion(  fItem->getRegionBitmap() );
+	if( fItem->ogn != fItem->getOgnString(-1) )
 	{
-		if( sItem->CERO != rating )
+		// 「レーティング表示不要」でないとき
+
+		// 対象のレーティングの文字列を真値と比較
+		System::String ^rating = MasterEditorTWL::getXPathText( root, "/Config/Rating/" + fItem->ogn + "/r" + fItem->rating + "/" + fItem->lang );
+		DebugPrint( "{0,-10} {1,-20} {2,-20}", fItem->ogn, rating, sItem->ratings[fItem->getOgnNumber()] );
+		if( sItem->ratings[fItem->getOgnNumber()] != rating )
 		{
-			errmsg = "In Sheet, CERO is illegal string.";
+			throw (gcnew System::Exception("In Sheet, " + fItem->ogn + " is an Illegal String."));
+			return;
 		}
-		if( (sItem->ESRB != undef) ||
-			(sItem->USK  != undef) ||
-			(sItem->PEGI != undef) ||
-			(sItem->PEGIPRT != undef) ||
-			(sItem->PEGIBBFC != undef) ||
-			(sItem->OFLC != undef) )
+
+		// その他のリージョンに含まれる団体が「全年齢」になっているかチェック
+		for each ( int ogn in ognlist )
 		{
-			errmsg = "In Sheet, Other Ogn is illegal string.";
+			if( ogn != fItem->getOgnNumber() )
+			{
+				// 設定ファイルから 00 (全年齢)のときの文字列を抜き出す
+				System::String ^str   = fItem->getOgnString( ogn );
+				System::String ^other = MasterEditorTWL::getXPathText( root, "/Config/Rating/" + str + "/r00/" + fItem->lang );
+
+				DebugPrint( "{0,-10} {1,-20} {2,-20}", str, other, sItem->ratings[ogn] );
+
+				// 提出確認書の文字列をチェック
+				if( sItem->ratings[ogn] != other )
+				{
+					throw (gcnew System::Exception("In Sheet, " + str + " is not a String for \"All ages\""));
+					return;
+				}
+			}
 		}
 	}
-	else if( fItem->region == "US" )
+	else
 	{
-		if( sItem->ESRB != rating )
+		// 「レーティング表示不要」のとき
+
+		// リージョンに含まれるすべての団体が「レーティング不要」になっているかチェック
+		for each ( int ogn in ognlist )
 		{
-			errmsg = "In Sheet, ESRB is illegal string.";
+			// 設定ファイルから「レーティング表示不要」のときの文字列を抜き出す
+			System::String ^str = fItem->getOgnString(-1);
+			System::String ^unnecessary = MasterEditorTWL::getXPathText( root, "/Config/Rating/" + str + "/" + fItem->lang );
+
+			DebugPrint( "{0,-10} {1,-20} {2,-20}", fItem->getOgnString(ogn), unnecessary, sItem->ratings[ogn] );
+
+			// 提出確認書の文字列をチェック
+			if( sItem->ratings[ogn] != unnecessary )
+			{
+				throw (gcnew System::Exception("In Sheet, " + str + " is not a String for \"Unnecessary\""));
+				return;
+			}
 		}
-		if( (sItem->CERO != undef) ||
-			(sItem->USK  != undef) ||
-			(sItem->PEGI != undef) ||
-			(sItem->PEGIPRT != undef) ||
-			(sItem->PEGIBBFC != undef) ||
-			(sItem->OFLC != undef) )
+
+		// フラグをチェック
+		if( !sItem->IsUnnecessaryRating )
 		{
-			errmsg = "In Sheet, Other Ogn is illegal string.";
+			throw (gcnew System::Exception("In Sheet, \"Unnecessary\" Flag is Negated."));
+			return;
 		}
 	}
-	else if( fItem->region == "EU" )
+
+	// リージョン設定可能な団体(Reservedでない団体)をリストアップ(ここに含まれない団体はチェックしなくてよい)
+	System::Collections::Generic::List<int> ^alllist = gcnew System::Collections::Generic::List<int>();
+	alllist->Clear();
+	alllist->Add( OS_TWL_PCTL_OGN_CERO );
+	alllist->Add( OS_TWL_PCTL_OGN_ESRB );
+	alllist->Add( OS_TWL_PCTL_OGN_USK );
+	alllist->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
+	alllist->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
+	alllist->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
+	alllist->Add( OS_TWL_PCTL_OGN_OFLC );
+	//alllist->Add( OS_TWL_PCTL_OGN_GRB );
+
+	// リージョンに含まれない団体が「不可」になっているかチェック
+	System::String ^disable = MasterEditorTWL::getXPathText( root, "/Config/Rating/DISABLE/" + fItem->lang );
+	int i;
+	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
 	{
-		if( sItem->USK != rating )
+		// Reserved の団体は調べない
+		if( (alllist->IndexOf(i) >=0 ) && (ognlist->IndexOf(i) < 0) )
 		{
-			errmsg = "In Sheet, USK is illegal string.";
-		}
-		if( sItem->PEGI != rating )
-		{
-			errmsg = "In Sheet, PEGI is illegal string.";
-		}
-		if( sItem->PEGIPRT != rating )
-		{
-			errmsg = "In Sheet, PEGIPRT is illegal string.";
-		}
-		if( sItem->PEGIBBFC != rating )
-		{
-			errmsg = "In Sheet, PEGIBBFC is illegal string.";
-		}
-		if( (sItem->CERO != undef) ||
-			(sItem->ESRB != undef) ||
-			(sItem->OFLC != undef) )
-		{
-			errmsg = "In Sheet, Other Ogn is illegal string.";
+			DebugPrint( "{0,-10} {1,-20} {2,-20}", fItem->getOgnString(i), disable, sItem->ratings[i] );
+			if( sItem->ratings[i] != disable )
+			{
+				throw (gcnew System::Exception("In Sheet, " + fItem->getOgnString(i) + " is not a String for \"Disable\""));
+				return;
+			}
 		}
 	}
-	else if( fItem->region == "AU" )
-	{
-		if( sItem->OFLC != rating )
-		{
-			errmsg = "In Sheet, OFLC is illegal string.";
-		}
-		if( (sItem->CERO != undef) ||
-			(sItem->ESRB != undef) ||
-			(sItem->USK  != undef) ||
-			(sItem->PEGI != undef) ||
-			(sItem->PEGIPRT != undef) ||
-			(sItem->PEGIBBFC != undef) )
-		{
-			errmsg = "In Sheet, Other Ogn is illegal string.";
-		}
-	}
-	else if( fItem->region == "EUAU" )
-	{
-		if( sItem->USK != rating )
-		{
-			errmsg = "In Sheet, USK is illegal string.";
-		}
-		if( sItem->PEGI != rating )
-		{
-			errmsg = "In Sheet, PEGI is illegal string.";
-		}
-		if( sItem->PEGIPRT != rating )
-		{
-			errmsg = "In Sheet, PEGIPRT is illegal string.";
-		}
-		if( sItem->PEGIBBFC != rating )
-		{
-			errmsg = "In Sheet, PEGIBBFC is illegal string.";
-		}
-		if( sItem->OFLC != rating )
-		{
-			errmsg = "In Sheet, OFLC is illegal string.";
-		}
-		if( (sItem->CERO != undef) ||
-			(sItem->ESRB != undef) )
-		{
-			errmsg = "In Sheet, Other Ogn is illegal string.";
-		}
-	}
-	if( errmsg != nullptr )
-	{
-		throw (gcnew System::Exception(errmsg));
-	}
+	DebugPrint( "--------------------------------------------------------" );
 	return;
 }

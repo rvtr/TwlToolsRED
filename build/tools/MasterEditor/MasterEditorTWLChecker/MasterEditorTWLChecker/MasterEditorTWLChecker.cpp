@@ -9,13 +9,17 @@ int main(array<System::String ^> ^args)
 {
 	try
 	{
+		setDebugPrint( true );
+
+		//FilenameItem ^fItem = gcnew FilenameItem;
+		//fItem->parseFilename( args[0] );
+		//SheetItem ^sItem = gcnew SheetItem;
+		//sItem->readSheet( args[0] );
+		//checkSheet( fItem, sItem );
+
 		FilenameItem ^fItem = gcnew FilenameItem;
 		fItem->parseFilename( args[0] );
-
-		SheetItem ^sItem = gcnew SheetItem;
-		sItem->readSheet( args[0] );
-
-		checkSheet( fItem, sItem );
+		checkRom( fItem, args[0] );
 	}
 	catch( System::Exception ^ex )
 	{

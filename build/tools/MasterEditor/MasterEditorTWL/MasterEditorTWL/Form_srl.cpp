@@ -343,13 +343,25 @@ System::Boolean Form1::checkSrlForms(void)
 			bEurope    = true;
 			bAustralia = true;
 		break;
+		case 5:
+			bAmerica = true;
+			bAustralia = true;
+		break;
+		case 6:
+			bAmerica = true;
+			bEurope    = true;
+			bAustralia = true;
+		break;
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-		case 5:
+		case 7:
 			bJapan = true;
 			bAmerica = true;
 			bEurope = true;
 			bAustralia = true;
+			this->hWarnList->Add( gcnew RCMrcError( 
+			"リージョン", 0x1b0, 0x1b3, "全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。",
+			"Region", "All Region is set. Please check necessity for setting each region individually.", true, true ) );
 		break;
 #endif
 		default:

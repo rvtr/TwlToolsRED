@@ -55,8 +55,19 @@ void Form1::setRegionSrlPropaties(void)
 			this->hSrl->IsRegionAustralia = true;
 		break;
 
-#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case 5:
+			this->hSrl->IsRegionAmerica   = true;
+			this->hSrl->IsRegionAustralia = true;
+		break;
+
+		case 6:
+			this->hSrl->IsRegionAmerica   = true;
+			this->hSrl->IsRegionEurope    = true;
+			this->hSrl->IsRegionAustralia = true;
+		break;
+
+#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+		case 7:
 			this->hSrl->IsRegionJapan     = true;
 			this->hSrl->IsRegionAmerica   = true;
 			this->hSrl->IsRegionEurope    = true;
@@ -86,6 +97,10 @@ void Form1::setRegionForms(void)
 		index = 3;
 	else if( !isJapan && !isAmerica && isEurope && isAustralia )
 		index = 4;
+	else if( !isJapan && isAmerica && !isEurope && isAustralia )
+		index = 5;
+	else if( !isJapan && isAmerica && isEurope && isAustralia )
+		index = 6;
 	else
 		index = -1;	// •s³
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
@@ -157,7 +172,7 @@ void Form1::maskRatingForms(void)
 		break;
 
 		case 1:
-			// •Ä‘
+			// –k•Ä
 			this->disableRating( this->combCERO, this->labCERO, nullptr );
 			this->enableRating( this->combESRB,  this->labESRB, nullptr );
 			this->disableRating( this->combUSK,  this->labUSK,  nullptr );
@@ -193,6 +208,28 @@ void Form1::maskRatingForms(void)
 			// ‰¢B‚Æ‹B
 			this->disableRating( this->combCERO, this->labCERO, nullptr );
 			this->disableRating( this->combESRB, this->labESRB, nullptr );
+			this->enableRating( this->combUSK,   this->labUSK,  nullptr );
+			this->enableRating( this->combPEGI,  this->labPEGI, nullptr );
+			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+		break;
+
+		case 5:
+			// –k•Ä‚Æ‹B
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->enableRating( this->combESRB,  this->labESRB, nullptr );
+			this->disableRating( this->combUSK,  this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI, this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+		break;
+
+		case 6:
+			// –k•Ä‚Æ‰¢B‚Æ‹B
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->enableRating( this->combESRB,  this->labESRB, nullptr );
 			this->enableRating( this->combUSK,   this->labUSK,  nullptr );
 			this->enableRating( this->combPEGI,  this->labPEGI, nullptr );
 			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );

@@ -291,6 +291,20 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_OFLC );
 		break;
 
+		case (METWL_MASK_REGION_AMERICA|METWL_MASK_REGION_AUSTRALIA):
+			list->Add( OS_TWL_PCTL_OGN_ESRB );
+			list->Add( OS_TWL_PCTL_OGN_OFLC );
+		break;
+
+		case (METWL_MASK_REGION_AMERICA|METWL_MASK_REGION_EUROPE|METWL_MASK_REGION_AUSTRALIA):
+			list->Add( OS_TWL_PCTL_OGN_ESRB );
+			list->Add( OS_TWL_PCTL_OGN_USK );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
+			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
+			list->Add( OS_TWL_PCTL_OGN_OFLC );
+		break;
+
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case METWL_MASK_REGION_ALL:
 

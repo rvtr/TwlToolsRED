@@ -40,7 +40,7 @@ public:
 };
 
 // ROMヘッダの値と真値(ファイル名)を比較
-System::Void checkRom( FilenameItem ^fItem, System::String ^srlpath );
+System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::String ^targetSrl );
 
 // 提出確認書の文字列と真値を比較
 System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem );

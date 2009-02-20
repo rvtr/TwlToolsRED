@@ -58,6 +58,11 @@ System::Void FilenameItem::parseFilename( System::String ^filepath )
 	System::String ^filename = System::IO::Path::GetFileNameWithoutExtension(filepath);
 
 	cli::array<System::String^> ^list = filename->Split( '_' );
+	if( list->Length < 4 )
+	{
+		throw (gcnew System::Exception("Illegal filename format. REGION_OGN_AGE_LANG.[SRL/XML]"));
+		return;
+	}
 	this->region = System::String::Copy(list[0]);
 	this->ogn    = System::String::Copy(list[1]);
 	this->rating = System::String::Copy(list[2]);
@@ -70,6 +75,24 @@ System::Void FilenameItem::parseFilename( System::String ^filepath )
 	DebugPrint( "{0,-10} {1,-20}", "Rating",  this->rating );
 	DebugPrint( "{0,-10} {1,-20}", "Language",this->lang );
 	DebugPrint( "--------------------------------------------------------" );
+
+	// ƒtƒ@ƒCƒ‹–¼‚ÌŒŸ¸
+	if( this->getRegionBitmap() == 0 )
+	{
+		throw (gcnew System::Exception("Illegal filename format. (Region.) REGION_OGN_RATING_LANG.[SRL/XML]"));
+		return;
+	}
+	if( this->getOgnNumber() < -1 )
+	{
+		throw (gcnew System::Exception("Illegal filename format. (Ogn.) REGION_OGN_RATING_LANG.[SRL/XML]"));
+		return;
+	}
+	if( this->getRatingValue() == 0 )
+	{
+		throw (gcnew System::Exception("Illegal filename format. (Rating.) REGION_OGN_RATING_LANG.[SRL/XML]"));
+		return;
+	}
+
 	return;
 }
 
@@ -125,7 +148,7 @@ u32 FilenameItem::getRegionBitmap()
 
 int FilenameItem::getOgnNumber()
 {
-	int num = -1;
+	int num = -2;
 	if( this->ogn == "CERO" )
 	{
 		num = OS_TWL_PCTL_OGN_CERO;
@@ -158,6 +181,10 @@ int FilenameItem::getOgnNumber()
 	//{
 	//	num = OS_TWL_PCTL_OGN_GRB;
 	//}
+	else if( this->ogn == "UN" )
+	{
+		num = -1;
+	}
 	return num;
 }
 

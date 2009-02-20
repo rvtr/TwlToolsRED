@@ -12,20 +12,22 @@
 #include <cstdio>
 
 System::Void checkRomHeaderSign( ROM_Header *prh );
-
+System::Void verifyArea( FILE *fp1, FILE *fp2, const int offset, const int size );
 
 // -------------------------------------------------------------------
 // 出力SRLのチェック
 // -------------------------------------------------------------------
-System::Void checkRom( FilenameItem ^fItem, System::String ^srlpath )
+System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::String ^targetSrl )
 {
-	const char *chpath = 
-		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlpath ).ToPointer();
+	const char *chorg = 
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( orgSrl ).ToPointer();
+	const char *chtarget = 
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( targetSrl ).ToPointer();
 
 	// ROMヘッダの読み込み
 	ROM_Header rh;
 	FILE       *fp = NULL;
-	if( fopen_s( &fp, chpath, "rb" ) != NULL )
+	if( fopen_s( &fp, chtarget, "rb" ) != NULL )
 	{
 		throw (gcnew System::Exception("Fail to Open SRL File."));
 		return;
@@ -73,9 +75,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^srlpath )
 	u8  rating = fItem->getRatingValue();
 	if( rh.s.parental_control_rating_info[ ogn ] != rating )
 	{
-		throw (gcnew System::Exception("Mismatch Rating Ogn " + ogn.ToString() + ". "
-										+ "filename = " + rating.ToString("2X")
-										+ "srl = " + rh.s.parental_control_rating_info[ ogn ].ToString("2X") + "."));
+		throw (gcnew System::Exception("Mismatch Rating Ogn " + ogn.ToString() + "."));
 		return;
 	}
 
@@ -105,6 +105,38 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^srlpath )
 			return;
 		}
 	}
+	DebugPrint( "--------------------------------------------------------" );
+	
+	// 全領域ベリファイ
+	FILE       *fp1 = NULL;
+	if( fopen_s( &fp1, chorg, "rb" ) != NULL )
+	{
+		throw (gcnew System::Exception("Fail to Open SRL File."));
+		return;
+	}
+	FILE       *fp2 = NULL;
+	if( fopen_s( &fp2, chtarget, "rb" ) != NULL )
+	{
+		throw (gcnew System::Exception("Fail to Open SRL File."));
+		return;
+	}
+	// ファイルサイズをまずチェック
+	fseek(fp1, 0, SEEK_END);
+	u32 filesize1 = ftell( fp1 );
+	fseek(fp2, 0, SEEK_END);
+	u32 filesize2 = ftell( fp2 );
+	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "Original File", "Target File" );
+	DebugPrint( "{0,-10} {1,-20:X08} {2,-20:X08}", "Filesize", filesize1, filesize2 );
+	DebugPrint( "--------------------------------------------------------" );
+	if( filesize1 != filesize2 )
+	{
+		throw (gcnew System::Exception("Incorrect filesize"));
+		return;
+	}
+	// マスタエディタで書き換えられていない領域をチェック
+	verifyArea( fp1, fp2, 0, 0x1b0 );
+	verifyArea( fp1, fp2, 0x1b4, 0x2f0 - 0x1b4 );
+	verifyArea( fp1, fp2, 0x300, filesize1 - 0x300 );
 	DebugPrint( "--------------------------------------------------------" );
 }
 
@@ -166,5 +198,52 @@ System::Void checkRomHeaderSign( ROM_Header *prh )
 		throw (gcnew System::Exception("Fail to verify sign."));
 		return;
 	}
+	return;
+}
+
+// -------------------------------------------------------------------
+// 書き換えた箇所以外の全領域をベリファイしたいので
+// 指定領域をベリファイする関数をつくる
+// -------------------------------------------------------------------
+#define VERIFY_AREA_BUFSIZE  (10*1024*1024)
+System::Void verifyArea( FILE *fp1, FILE *fp2, const int offset, const int size )
+{
+    if( !fp1 || !fp2 )
+    {
+		throw (gcnew System::Exception("File pointer is NULL."));
+        return;
+    }
+
+	DebugPrint( "{0,-10} {1:X08} - {2:X08}", "Verify", offset, offset+size-1 );
+
+	cli::array<System::Byte> ^mbuf1 = gcnew cli::array<System::Byte>(VERIFY_AREA_BUFSIZE);	// 解放の必要なし
+	pin_ptr<unsigned char> buf1 = &mbuf1[0];
+	cli::array<System::Byte> ^mbuf2 = gcnew cli::array<System::Byte>(VERIFY_AREA_BUFSIZE);
+	pin_ptr<unsigned char> buf2 = &mbuf2[0];
+
+	fseek( fp1, offset, SEEK_SET );
+    fseek( fp2, offset, SEEK_SET );
+
+    // バッファよりも大きい場合は細切れにリードしてベリファイする
+	int rest = size;
+	while( rest > 0 )
+    {
+        int len = (rest > VERIFY_AREA_BUFSIZE)?(VERIFY_AREA_BUFSIZE):(rest);
+        if( fread(buf1, 1, len, fp1) != len )
+        {
+			throw (gcnew System::Exception("In Verify, fail to fread"));
+            return;
+        }
+        if( fread(buf2, 1, len, fp2) != len )
+        {
+			throw (gcnew System::Exception("In Verify, fail to fread"));
+            return;
+        }
+        if( memcmp(buf1, buf2, len) != 0 )
+        {
+			throw (gcnew System::Exception("In Verify, incorrect area."));
+        }
+        rest = rest - len;
+    }
 	return;
 }

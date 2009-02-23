@@ -125,7 +125,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 		DebugPrint( "{0,-10} {1,-20} {2,-20}", fItem->ogn, rating, sItem->ratings[fItem->getOgnNumber()] );
 		if( sItem->ratings[fItem->getOgnNumber()] != rating )
 		{
-			throw (gcnew System::Exception("In Sheet, " + fItem->ogn + " is an Illegal String."));
+			throw (gcnew System::Exception("In Sheet, " + fItem->ogn + " mismatch."));
 			return;
 		}
 
@@ -143,7 +143,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 				// 提出確認書の文字列をチェック
 				if( sItem->ratings[ogn] != other )
 				{
-					throw (gcnew System::Exception("In Sheet, " + str + " is not a String for \"All ages\""));
+					throw (gcnew System::Exception("In Sheet, " + str + " mismatch a String for \"All ages\""));
 					return;
 				}
 			}
@@ -165,7 +165,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 			// 提出確認書の文字列をチェック
 			if( sItem->ratings[ogn] != unnecessary )
 			{
-				throw (gcnew System::Exception("In Sheet, " + str + " is not a String for \"Unnecessary\""));
+				throw (gcnew System::Exception("In Sheet, " + str + " mismatch a string for \"Unnecessary\""));
 				return;
 			}
 		}
@@ -201,7 +201,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 			DebugPrint( "{0,-10} {1,-20} {2,-20}", fItem->getOgnString(i), disable, sItem->ratings[i] );
 			if( sItem->ratings[i] != disable )
 			{
-				throw (gcnew System::Exception("In Sheet, " + fItem->getOgnString(i) + " is not a String for \"Disable\""));
+				throw (gcnew System::Exception("In Sheet, " + fItem->getOgnString(i) + " mismatch a string for \"Disable\""));
 				return;
 			}
 		}

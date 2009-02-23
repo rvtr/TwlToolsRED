@@ -35,14 +35,18 @@ int main(array<System::String ^> ^args)
 		{
 			setDebugPrint( true );
 		}
-		if( argc <= 0 )
+		if( argc <= 1 )
 		{
-			throw (gcnew System::Exception("Argc is 0."));
+			throw (gcnew System::Exception("Argc is less than 2."));
 		}
-		else if( argc == 1 )
+
+		// 拡張子で判定
+		if( System::IO::Path::GetExtension(args[1])->ToUpper() == ".XML" )
 		{
-			System::String ^sheet = args[0];
+			// args[0] はダミー
+			System::String ^sheet = args[1];
 			DebugPrint( "Sheet file : " + sheet );
+			Console::Write( System::IO::Path::GetFileName( sheet ) + "\t" );
 
 			FilenameItem ^fItem = gcnew FilenameItem;
 			fItem->parseFilename( sheet );
@@ -56,6 +60,7 @@ int main(array<System::String ^> ^args)
 			System::String ^target   = args[1];
 			DebugPrint( "Original file : " + original );
 			DebugPrint( "Target file   : " + target );
+			Console::Write( System::IO::Path::GetFileName( target ) + "\t" );
 
 			FilenameItem ^fItem = gcnew FilenameItem;
 			fItem->parseFilename( target );

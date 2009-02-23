@@ -27,16 +27,16 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	// ROMヘッダの読み込み
 	ROM_Header rh;
 	FILE       *fp = NULL;
-	if( fopen_s( &fp, chtarget, "rb" ) != NULL )
+	if( fopen_s( &fp, chtarget, "rb" ) != 0 )
 	{
-		throw (gcnew System::Exception("Fail to Open SRL File."));
+		throw (gcnew System::Exception("Fail to open the target SRL File."));
 		return;
 	}
 	// 1バイトをsizeof(~)だけリード (逆だと返り値がsizeof(~)にならないので注意)
 	(void)fseek( fp, 0, SEEK_SET );		// ROMヘッダはsrlの先頭から
 	if( fread( (void*)&rh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
 	{
-		throw (gcnew System::Exception("Fail to Read ROM Header."));
+		throw (gcnew System::Exception("Fail to read the ROM Header."));
 		fclose(fp);
 		return;
 	}
@@ -55,7 +55,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	DebugPrint( "--" );
 	if( rh.s.card_region_bitmap != region )
 	{
-		throw (gcnew System::Exception("Illegal Region in ROM Header."));
+		throw (gcnew System::Exception("Illegal Region in the ROM Header."));
 		return;
 	}
 
@@ -65,7 +65,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	{
 		if( (rh.s.parental_control_rating_info[ogn] & OS_TWL_PCTL_OGNINFO_ENABLE_MASK) == 0 )
 		{
-			throw (gcnew System::Exception("Rating Ogn " + ogn.ToString() + " is not Enabled."));
+			throw (gcnew System::Exception("Rating Ogn " + ogn.ToString() + " is not enabled."));
 			return;
 		}
 	}
@@ -75,7 +75,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	u8  rating = fItem->getRatingValue();
 	if( rh.s.parental_control_rating_info[ ogn ] != rating )
 	{
-		throw (gcnew System::Exception("Mismatch Rating Ogn " + ogn.ToString() + "."));
+		throw (gcnew System::Exception("mismatch Rating Ogn " + ogn.ToString() + "."));
 		return;
 	}
 
@@ -101,7 +101,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	{
 		if( (ognlist->IndexOf(i) < 0) && (rh.s.parental_control_rating_info[i] != 0) )
 		{
-			throw (gcnew System::Exception("Rating Ogn " + i.ToString() + " is not Cleared in ROM Header."));
+			throw (gcnew System::Exception("Rating Ogn " + i.ToString() + " is not cleared in ROM Header."));
 			return;
 		}
 	}
@@ -111,13 +111,13 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	FILE       *fp1 = NULL;
 	if( fopen_s( &fp1, chorg, "rb" ) != NULL )
 	{
-		throw (gcnew System::Exception("Fail to Open SRL File."));
+		throw (gcnew System::Exception("Fail to open the original SRL file."));
 		return;
 	}
 	FILE       *fp2 = NULL;
 	if( fopen_s( &fp2, chtarget, "rb" ) != NULL )
 	{
-		throw (gcnew System::Exception("Fail to Open SRL File."));
+		throw (gcnew System::Exception("Fail to open the target SRL file."));
 		return;
 	}
 	// ファイルサイズをまずチェック
@@ -231,12 +231,12 @@ System::Void verifyArea( FILE *fp1, FILE *fp2, const int offset, const int size 
         int len = (rest > VERIFY_AREA_BUFSIZE)?(VERIFY_AREA_BUFSIZE):(rest);
         if( fread(buf1, 1, len, fp1) != len )
         {
-			throw (gcnew System::Exception("In Verify, fail to fread"));
+			throw (gcnew System::Exception("In Verify, fail to fread fp1"));
             return;
         }
         if( fread(buf2, 1, len, fp2) != len )
         {
-			throw (gcnew System::Exception("In Verify, fail to fread"));
+			throw (gcnew System::Exception("In Verify, fail to fread fp2"));
             return;
         }
         if( memcmp(buf1, buf2, len) != 0 )

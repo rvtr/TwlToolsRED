@@ -115,7 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL\MasterEditorTWL&quot;;C:\twlsdk\build\tools\makerom.TWL;C:\twlsdk\include;&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL_Common\user&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL\MasterEditorTWL&quot;;C:\twlsdk\build\tools\makerom.TWL;C:\twlsdk\include;&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL_Common\launcher&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"

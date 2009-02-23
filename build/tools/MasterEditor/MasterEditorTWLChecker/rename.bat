@@ -21,45 +21,19 @@ if ""%1"" == """" (
 	goto end
 )
 
-rem パス設定
-set checker_tool=%~d0%~p0MasterEditorTWLChecker.exe
-set org_file=%~d0%~p0ORG.SRL
+rem ユーザ入力
+set user_input_prefix=
+set /P user_input_prefix="ファイル名の接頭辞を入力してください (例: JP_CERO_00_J) => "
+echo 接頭辞を %user_input_prefix% としてファイル名を変換します。
 
 rem ループ開始 (%0を使うのはここまで、%1を使うのはここから、%2以降は使わない)
 :begin
 
 rem 出力パス設定
 set input_file=%~dpnx1
-set log_file=%~dp1%\log.txt
+set output_file=%user_input_prefix%%~x1
 
-rem プログラム確認
-if not exist "%checker_tool%" (
-	echo checker tool "%checker_tool%" is not found.
-	goto end
-)
-
-if not exist "%org_file%" (
-	echo original file "%org_file%" is not found.
-	goto end
-)
-
-if not exist "%input_file%" (
-	echo %input_file% is not found.
-	goto end
-)
-
-rem 処理本体
-echo.
-echo %~nx1をチェックします。
-echo.
-"%checker_tool%" "%org_file%" "%input_file%" >> "%log_file%"
-
-if not %ERRORLEVEL% == 0 (
-	echo %input_file% のチェックに失敗しました。
-rem 	goto end
-) else (
-	echo %input_file% は正常です。
-)
+ren "%input_file%" "%output_file%"
 
 rem 入力ファイルが残っているならbeginに戻る
 shift

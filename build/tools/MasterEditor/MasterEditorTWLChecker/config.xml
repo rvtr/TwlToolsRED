@@ -3,87 +3,102 @@
 	<Region>
 		<JP>
 			<J>日本のみ</J>
-			<E></E>
+			<E>Japan only</E>
 		</JP>
 		<US>
 			<J>北米のみ</J>
-			<E></E>
+			<E>United States only</E>
 		</US>
 		<EU>
 			<J>欧州のみ</J>
-			<E></E>
+			<E>Europe only</E>
 		</EU>
 		<AU>
 			<J>豪州のみ</J>
-			<E></E>
+			<E>Australia only</E>
 		</AU>
 		<EUAU>
 			<J>欧州および豪州</J>
-			<E></E>
+			<E>Europe and Australia</E>
 		</EUAU>
+		<USAU>
+			<J>北米および豪州</J>
+			<E>United States and Australia</E>
+		</USAU>
+		<USEUAU>
+			<J>北米，欧州および豪州</J>
+			<E>United States, Europe and Australia</E>
+		</USEUAU>
 	</Region>
 	<Rating>
 		<CERO>
-			<r00><J>A (全年齢)</J><E></E></r00>
-			<r12><J>B (12歳以上)</J><E></E></r12>
-			<r15><J>C (15歳以上)</J><E></E></r15>
-			<r17><J>D (17歳以上)</J><E></E></r17>
-			<r18><J>Z (18歳以上)</J><E></E></r18>
-			<rRP><J>審査中</J><E></E></rRP>
+			<r00><J>A (全年齢)</J><E>A (All ages)</E></r00>
+			<r12><J>B (12歳以上)</J><E>B (Ages 12 and up)</E></r12>
+			<r15><J>C (15歳以上)</J><E>C (Ages 15 and up)</E></r15>
+			<r17><J>D (17歳以上)</J><E>D (Ages 17 and up)</E></r17>
+			<r18><J>Z (18歳以上)</J><E>Z (Ages 18 and up)</E></r18>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</CERO>
 		<ESRB>
-			<r00><J>年齢制限なし(全年齢)</J><E></E></r00>
-			<r03><J>EC (3歳以上)</J><E></E></r03>
-			<r06><J>E (6歳以上)</J><E></E></r06>
-			<r10><J>E10+ (10歳以上)</J><E></E></r10>
-			<r13><J>T (13歳以上)</J><E></E></r13>
-			<r17><J>M (17歳以上)</J><E></E></r17>
-			<rRP><J>審査中</J><E></E></rRP>
+			<r00><J>年齢制限なし(全年齢)</J><E>All ages</E></r00>
+			<r03><J>EC (3歳以上)</J><E>EC (Ages 3 and up)</E></r03>
+			<r06><J>E (6歳以上)</J><E>E (Ages 6 and up)</E></r06>
+			<r10><J>E10+ (10歳以上)</J><E>E10+ (Ages 10 and up)</E></r10>
+			<r13><J>T (13歳以上)</J><E>T (Ages 13 and up)</E></r13>
+			<r17><J>M (17歳以上)</J><E>M (Ages 17 and up)</E></r17>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</ESRB>
 		<USK>
-			<r00><J></J><E></E></r00>
-			<r06><J></J><E></E></r06>
-			<r12><J></J><E></E></r12>
-			<r16><J></J><E></E></r16>
-			<r18><J></J><E></E></r18>
-			<rRP><J></J><E></E></rRP>
+			<r00><J>年齢制限なし</J><E>All ages</E></r00>
+			<r06><J>6歳以上</J><E>Ages 6 and up</E></r06>
+			<r12><J>12歳以上</J><E>Ages 12 and up</E></r12>
+			<r16><J>16歳以上</J><E>Ages 16 and up</E></r16>
+			<r18><J>青少年には不適切</J><E>Not appropriate for children</E></r18>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</USK>
 		<PEGI>
-			<r00><J></J><E></E></r00>
-			<r03><J></J><E></E></r03>
-			<r07><J></J><E></E></r07>
-			<r12><J></J><E></E></r12>
-			<r16><J></J><E></E></r16>
-			<r18><J></J><E></E></r18>
-			<rRP><J></J><E></E></rRP>
+			<r00><J>年齢制限なし(全年齢)</J><E>All ages</E></r00>
+			<r03><J>3歳以上</J><E>Ages 3 and up</E></r03>
+			<r07><J>7歳以上</J><E>Ages 7 and up</E></r07>
+			<r12><J>12歳以上</J><E>Ages 12 and up</E></r12>
+			<r16><J>16歳以上</J><E>Ages 16 and up</E></r16>
+			<r18><J>18歳以上</J><E>Ages 18 and up</E></r18>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</PEGI>
 		<PRT>
-			<r00><J></J><E></E></r00>
-			<r04><J></J><E></E></r04>
-			<r06><J></J><E></E></r06>
-			<r12><J></J><E></E></r12>
-			<r16><J></J><E></E></r16>
-			<r18><J></J><E></E></r18>
-			<rRP><J></J><E></E></rRP>
+			<r00><J>年齢制限なし(全年齢)</J><E>All ages</E></r00>
+			<r04><J>4歳以上</J><E>Ages 4 and up</E></r04>
+			<r06><J>6歳以上</J><E>Ages 6 and up</E></r06>
+			<r12><J>12歳以上</J><E>Ages 12 and up</E></r12>
+			<r16><J>16歳以上</J><E>Ages 16 and up</E></r16>
+			<r18><J>18歳以上</J><E>Ages 18 and up</E></r18>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</PRT>
 		<BBFC>
-			<r00><J></J><E></E></r00>
-			<r03><J></J><E></E></r03>
-			<r04><J></J><E></E></r04>
-			<r07><J></J><E></E></r07>
-			<r08><J></J><E></E></r08>
-			<r12><J></J><E></E></r12>
-			<r15><J></J><E></E></r15>
-			<r16><J></J><E></E></r16>
-			<r18><J></J><E></E></r18>
-			<rRP><J></J><E></E></rRP>
+			<r00><J>年齢制限なし(全年齢)</J><E>All ages</E></r00>
+			<r03><J>3歳以上</J><E>Ages 3 and up</E></r03>
+			<r04><J>4歳以上推奨</J><E>Ages 4 and up</E></r04>
+			<r07><J>7歳以上</J><E>Ages 7 and up</E></r07>
+			<r08><J>8歳以上推奨</J><E>Ages 8 and up</E></r08>
+			<r12><J>12歳以上</J><E>Ages 12 and up</E></r12>
+			<r15><J>15歳以上</J><E>Ages 15 and up</E></r15>
+			<r16><J>16歳以上</J><E>Ages 16 and up</E></r16>
+			<r18><J>18歳以上</J><E>Ages 18 and up</E></r18>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
 		</BBFC>
+		<OFLC>
+			<r00><J>G</J><E>G</E></r00>
+			<r07><J>PG</J><E>PG</E></r07>
+			<r14><J>M</J><E>M</E></r14>
+			<r15><J>MA15+</J><E>MA15+</E></r15>
+			<rRP><J>審査中</J><E>Rating Pending</E></rRP>
+		</OFLC>
 		<UN>
-			<J></J><E></E>
+			<J>レーティング表示不要 (ツール類のみ選択可)</J><E>Rating Not Required (Only Tools Can Select This)</E>
 		</UN>
 		<DISABLE>
 			<J>不可</J>
-			<E></E>
+			<E>Undefined</E>
 		</DISABLE>
 	</Rating>
 </Config>

@@ -46,37 +46,78 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	checkRomHeaderSign( &rh );
 
 	DebugPrint( "--------------------------------------------------------" );
-	DebugPrint( "{0,-10} {1,-20}", nullptr, "RomHeader" );
+	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "TrueValue", "RomHeader" );
 	DebugPrint( "--" );
 
 	// リージョンのチェック
 	u32 region = fItem->getRegionBitmap();	// ファイル名に対応する真値を取得
-	DebugPrint( "{0,-10} {1,-20:X04}", "Region", rh.s.card_region_bitmap );
+	DebugPrint( "{0,-10} {1,-20:X04} {2,-20:X04}", "Region", region, rh.s.card_region_bitmap );
 	DebugPrint( "--" );
 	if( rh.s.card_region_bitmap != region )
 	{
-		throw (gcnew System::Exception("Illegal Region in the ROM Header."));
+		throw (gcnew System::Exception("In Rom Header, illegal region in the ROM Header."));
 		return;
-	}
-
-	// リージョンに含まれる団体のレーティングenableフラグが立っているかチェック
-	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
-	for each ( int ogn in ognlist )
-	{
-		if( (rh.s.parental_control_rating_info[ogn] & OS_TWL_PCTL_OGNINFO_ENABLE_MASK) == 0 )
-		{
-			throw (gcnew System::Exception("Rating Ogn " + ogn.ToString() + " is not enabled."));
-			return;
-		}
 	}
 
 	// 設定したレーティングが正しいかどうかをチェック
-	int ogn = fItem->getOgnNumber();			// ファイル名に対応する真値を取得
-	u8  rating = fItem->getRatingValue();
-	if( rh.s.parental_control_rating_info[ ogn ] != rating )
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	if( fItem->getOgnNumber() >= 0 )
 	{
-		throw (gcnew System::Exception("mismatch Rating Ogn " + ogn.ToString() + "."));
-		return;
+		// 「レーティング表示不要」でないとき
+
+		int ogn = fItem->getOgnNumber();			// ファイル名に対応する真値を取得
+		u8  rating = fItem->getRatingValue();
+		DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), rating, rh.s.parental_control_rating_info[ogn] );
+		if( rh.s.parental_control_rating_info[ ogn ] != rating )
+		{
+			throw (gcnew System::Exception("In Rom Header, mismatch Rating Ogn " + ogn.ToString() + "."));
+			return;
+		}
+
+		// リージョンに含まれるその他の団体が「全年齢」になっているかチェック
+		for each ( int ogn in ognlist )
+		{
+			if( ogn != fItem->getOgnNumber() )
+			{
+				u8  zero = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
+				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), zero, rh.s.parental_control_rating_info[ogn] );
+				if( rh.s.parental_control_rating_info[ogn] != zero )
+				{
+					throw (gcnew System::Exception("In Rom Header, Rating Ogn " + ogn.ToString() + " is not enabled."));
+					return;
+				}
+			}
+		}
+
+		// 「レーティング不要」フラグが立っていてはいけない
+		if( rh.s.unnecessary_rating_display != 0 )
+		{
+			throw (gcnew System::Exception("In Rom Header, \"Unnecessary\" flag is asserted."));
+			return;
+		}
+	}
+	else
+	{
+		// 「レーティング表示不要」のとき
+
+		// リージョンに含まれるすべての団体が「全年齢」になっているかチェック
+		for each ( int ogn in ognlist )
+		{
+			u8  zero = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
+			DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), zero, rh.s.parental_control_rating_info[ogn] );
+			if( rh.s.parental_control_rating_info[ogn] != zero )
+			{
+				throw (gcnew System::Exception("In Rom Header, Rating Ogn " + ogn.ToString() + " is not enabled."));
+				return;
+			}
+		}
+
+		// フラグチェック
+		if( rh.s.unnecessary_rating_display == 0 )
+		{
+			throw (gcnew System::Exception("In Rom Header, \"Unnecessary\" flag is negated."));
+			return;
+		}
 	}
 
 	// 表示
@@ -90,19 +131,26 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	alllist->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
 	alllist->Add( OS_TWL_PCTL_OGN_OFLC );
 	//alllist->Add( OS_TWL_PCTL_OGN_GRB );
-	for each ( int ogn in alllist )
-	{
-		DebugPrint( "{0,-10} {1,-20:X02}", fItem->getOgnString(ogn), rh.s.parental_control_rating_info[ogn] );
-	}
 
 	// リージョンに含まれない団体のレーティングがクリアされているかチェック
 	int i;
 	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
 	{
-		if( (ognlist->IndexOf(i) < 0) && (rh.s.parental_control_rating_info[i] != 0) )
+		if( ognlist->IndexOf(i) < 0 )
 		{
-			throw (gcnew System::Exception("Rating Ogn " + i.ToString() + " is not cleared in ROM Header."));
-			return;
+			if( alllist->IndexOf(i) >= 0 )
+			{
+				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(i), (u8)0, rh.s.parental_control_rating_info[i] );
+			}
+			else
+			{
+				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", "Ogn" + i.ToString("D2") + "(rsv)", (u8)0, rh.s.parental_control_rating_info[i] );
+			}
+			if( rh.s.parental_control_rating_info[i] != 0 )
+			{
+				throw (gcnew System::Exception("In Rom Header, Rating Ogn " + i.ToString() + " is not cleared in ROM Header."));
+				return;
+			}
 		}
 	}
 	DebugPrint( "--------------------------------------------------------" );

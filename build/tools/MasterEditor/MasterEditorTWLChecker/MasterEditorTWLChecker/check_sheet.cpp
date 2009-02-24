@@ -96,7 +96,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 
 	DebugPrint( "--------------------------------------------------------" );
-	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "Config", "Sheet" );
+	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "TrueValue", "Sheet" );
 	DebugPrint( "--" );
 
 	// 設定ファイル中の真値と提出確認書の記述を比較
@@ -116,7 +116,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 
 	// レーティングの文字列のチェック
 	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion(  fItem->getRegionBitmap() );
-	if( fItem->ogn != fItem->getOgnString(-1) )
+	if( fItem->getOgnNumber() >= 0 )
 	{
 		// 「レーティング表示不要」でないとき
 
@@ -129,7 +129,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 			return;
 		}
 
-		// その他のリージョンに含まれる団体が「全年齢」になっているかチェック
+		// リージョンに含まれるその他の団体が「全年齢」になっているかチェック
 		for each ( int ogn in ognlist )
 		{
 			if( ogn != fItem->getOgnNumber() )
@@ -147,6 +147,13 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 					return;
 				}
 			}
+		}
+
+		// 「レーティング不要」フラグが立っていてはいけない
+		if( !sItem->IsUnnecessaryRating )
+		{
+			throw (gcnew System::Exception("In Sheet, \"Unnecessary\" flag is asserted."));
+			return;
 		}
 	}
 	else
@@ -173,7 +180,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 		// フラグをチェック
 		if( !sItem->IsUnnecessaryRating )
 		{
-			throw (gcnew System::Exception("In Sheet, \"Unnecessary\" Flag is Negated."));
+			throw (gcnew System::Exception("In Sheet, \"Unnecessary\" flag is negated."));
 			return;
 		}
 	}

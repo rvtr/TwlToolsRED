@@ -47,6 +47,7 @@ int main(array<System::String ^> ^args)
 			System::String ^sheet = args[1];
 			DebugPrint( "Sheet file : " + sheet );
 			Console::Write( System::IO::Path::GetFileName( sheet ) + "\t" );
+			DebugPrint( "\n" );
 
 			FilenameItem ^fItem = gcnew FilenameItem;
 			fItem->parseFilename( sheet );
@@ -61,6 +62,7 @@ int main(array<System::String ^> ^args)
 			DebugPrint( "Original file : " + original );
 			DebugPrint( "Target file   : " + target );
 			Console::Write( System::IO::Path::GetFileName( target ) + "\t" );
+			DebugPrint( "\n" );
 
 			FilenameItem ^fItem = gcnew FilenameItem;
 			fItem->parseFilename( target );

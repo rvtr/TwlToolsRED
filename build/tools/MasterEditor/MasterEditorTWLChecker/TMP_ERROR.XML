@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MasterEditorTWL>
+  <Srl>C:\Documents and Settings\All Users\デスクトップ\ttttt.srl</Srl>
+  <Lang>J</Lang>
+  <Form>
+    <MasterEditorVersion>1.3</MasterEditorVersion>
+    <ProductName>Sample Game Name</ProductName>
+    <ProductCode1>P</ProductCode1>
+    <ProductCode2>0CZA</ProductCode2>
+    <ProductNameForeign>Sample Game Name F</ProductNameForeign>
+    <ProductCode1Foreign>P</ProductCode1Foreign>
+    <ProductCode2Foreign1>0CZE</ProductCode2Foreign1>
+    <ProductCode2Foreign2>0CZP</ProductCode2Foreign2>
+    <ProductCode2Foreign3>0CZU</ProductCode2Foreign3>
+    <SubmitVersion>0</SubmitVersion>
+    <Backup>8</Backup>
+    <ReleaseForeign>Y</ReleaseForeign>
+    <Remarks>サンプルです。</Remarks>
+    <SubmitWay>Mail</SubmitWay>
+    <Purpose>Sale</Purpose>
+    <ReleaseDate>2009/02/15 10:54:03</ReleaseDate>
+    <SubmitDate>2009/01/21 10:54:03</SubmitDate>
+    <Company1>任天堂株式会社</Company1>
+    <Depart1>開発技術部</Depart1>
+    <Name1>任天 太郎</Name1>
+    <Furigana1>にんてん たろう</Furigana1>
+    <Tel1>075-662-9600</Tel1>
+    <Fax1>075-662-9624</Fax1>
+    <Mail1>taro@nintendo.co.jp</Mail1>
+    <NTSC1>ninten_taro</NTSC1>
+    <InputPerson2>Y</InputPerson2>
+    <Company2>任天堂株式会社</Company2>
+    <Depart2>開発技術部</Depart2>
+    <Name2>任天 次郎</Name2>
+    <Furigana2>にんてん じろう</Furigana2>
+    <Tel2>075-662-9600</Tel2>
+    <Fax2>075-662-9624</Fax2>
+    <Mail2>jiro@nintendo.co.jp</Mail2>
+    <NTSC2>ninten_jiro</NTSC2>
+    <Region>0</Region>
+    <IsUnnecessaryRating>N</IsUnnecessaryRating>
+    <RatingCERO>0</RatingCERO>
+    <RatingESRB>-1</RatingESRB>
+    <RatingUSK>-1</RatingUSK>
+    <RatingPEGI>-1</RatingPEGI>
+    <RatingPEGI_PRT>-1</RatingPEGI_PRT>
+    <RatingPEGI_BBFC>-1</RatingPEGI_BBFC>
+    <RatingOFLC>-1</RatingOFLC>
+    <IsUGC>N</IsUGC>
+    <IsPhotoEx>N</IsPhotoEx>
+  </Form>
+</MasterEditorTWL>

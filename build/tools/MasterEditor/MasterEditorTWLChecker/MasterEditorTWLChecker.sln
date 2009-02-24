@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MasterEditorTWLChecker", "MasterEditorTWLChecker\MasterEditorTWLChecker.vcproj", "{100CD619-6964-4A1E-98E0-648848933F30}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MasterEditorTWLChecker_Setup", "MasterEditorTWLChecker_Setup\MasterEditorTWLChecker_Setup.vdproj", "{9F8882FA-76B9-44F1-A099-0C85914137E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,8 @@ Global
 		{100CD619-6964-4A1E-98E0-648848933F30}.Debug|Win32.Build.0 = Debug|Win32
 		{100CD619-6964-4A1E-98E0-648848933F30}.Release|Win32.ActiveCfg = Release|Win32
 		{100CD619-6964-4A1E-98E0-648848933F30}.Release|Win32.Build.0 = Release|Win32
+		{9F8882FA-76B9-44F1-A099-0C85914137E3}.Debug|Win32.ActiveCfg = Debug
+		{9F8882FA-76B9-44F1-A099-0C85914137E3}.Release|Win32.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,7 +15,49 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_1A54605CE6E3403EB752621264098FE3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_21DF01AF8FF24D73ABDCE02203AF2554"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_240DAB9A6D2B4CD88A27F9105DD37CB2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_36904C7B8E0C42CDA193E37551C69C95"
+        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_49C040AE0F5A48FD851350336101118A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5DD3C37FF14340599106EFD1108FC8C5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_63AA6A35956942028F9906C6B2AA6E33"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_64C8363B3C034F3DB857DE4089F26834"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -27,19 +69,31 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_661F23250B3E4E978947C6ED4F78B9F3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6BC29853828B4F8485C1D4C97DA9E880"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_76606A04B45A48ADB973281341FDB6C7"
-        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
+        "MsmKey" = "8:_7DD1AD1B82814C639B5929152E4ACB1B"
+        "OwnerKey" = "8:_36904C7B8E0C42CDA193E37551C69C95"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_AF355D0BAC1B44C887BA1BC20BB062FD"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -51,14 +105,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CA2D37D0D1D9498183292FE6A4A78C18"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CAB3CD2D474C4900B8B92E6D6A9F6F2A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CE6B4A61B5344F0FAA7D65969C1560B5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DB1EEF0F1C564E03B4AD772D73F6718E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_FFDDC500FC4A4BE990E619B4342E65C4"
-        "OwnerKey" = "8:_76606A04B45A48ADB973281341FDB6C7"
+        "MsmKey" = "8:_F8DA46C7E2424049B36FFB2BD2C74C9B"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -172,10 +244,130 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1A54605CE6E3403EB752621264098FE3"
+            {
+            "SourcePath" = "8:..\\ERROR.SRL"
+            "TargetName" = "8:ERROR.SRL"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21DF01AF8FF24D73ABDCE02203AF2554"
+            {
+            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_提出確認書.xls"
+            "TargetName" = "8:デバッグ項目_提出確認書.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_240DAB9A6D2B4CD88A27F9105DD37CB2"
+            {
+            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_リージョンとレーティング.xls"
+            "TargetName" = "8:デバッグ項目_リージョンとレーティング.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49C040AE0F5A48FD851350336101118A"
+            {
+            "SourcePath" = "8:..\\TMP_J.XML"
+            "TargetName" = "8:TMP_J.XML"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5DD3C37FF14340599106EFD1108FC8C5"
+            {
+            "SourcePath" = "8:..\\diff.bat"
+            "TargetName" = "8:diff.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_63AA6A35956942028F9906C6B2AA6E33"
             {
             "SourcePath" = "8:..\\checker.bat"
             "TargetName" = "8:checker.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_64C8363B3C034F3DB857DE4089F26834"
+            {
+            "SourcePath" = "8:..\\NAND.TAD"
+            "TargetName" = "8:NAND.TAD"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
@@ -212,10 +404,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_661F23250B3E4E978947C6ED4F78B9F3"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\デバッグ項目_MRC.xls"
+            "TargetName" = "8:デバッグ項目_MRC.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6BC29853828B4F8485C1D4C97DA9E880"
             {
             "SourcePath" = "8:..\\rename.bat"
             "TargetName" = "8:rename.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF355D0BAC1B44C887BA1BC20BB062FD"
+            {
+            "SourcePath" = "8:..\\TMP_E.XML"
+            "TargetName" = "8:TMP_E.XML"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
@@ -252,10 +484,90 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CA2D37D0D1D9498183292FE6A4A78C18"
+            {
+            "SourcePath" = "8:..\\CARD.SRL"
+            "TargetName" = "8:CARD.SRL"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CAB3CD2D474C4900B8B92E6D6A9F6F2A"
+            {
+            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_基本機能.xls"
+            "TargetName" = "8:デバッグ項目_基本機能.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE6B4A61B5344F0FAA7D65969C1560B5"
+            {
+            "SourcePath" = "8:..\\ERROR.TAD"
+            "TargetName" = "8:ERROR.TAD"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DB1EEF0F1C564E03B4AD772D73F6718E"
             {
             "SourcePath" = "8:..\\ORG.SRL"
             "TargetName" = "8:ORG.SRL"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8DA46C7E2424049B36FFB2BD2C74C9B"
+            {
+            "SourcePath" = "8:..\\ORG.TAD"
+            "TargetName" = "8:ORG.TAD"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
@@ -321,6 +633,17 @@
                         {
                         }
                     }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_ED54FB5333F541509640FA1C786BC369"
+                    {
+                    "Name" = "8:docs"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_C3A34D134EC4441586FC36B0B90EC0E6"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
                     {
                     "Name" = "8:resources"
@@ -351,7 +674,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MasterEditorTWLChecker"
         "ProductCode" = "8:{D26DA918-86DA-4E04-9185-BDFFA94D5E55}"
-        "PackageCode" = "8:{D7D622D3-A2FF-4717-A302-079CCC2B3056}"
+        "PackageCode" = "8:{A2098C65-2553-466A-916D-7E1EBEF88CB9}"
         "UpgradeCode" = "8:{02DB365E-B80C-41A2-A777-6B6683FA9332}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -866,7 +1189,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_76606A04B45A48ADB973281341FDB6C7"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_36904C7B8E0C42CDA193E37551C69C95"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -880,7 +1203,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_FFDDC500FC4A4BE990E619B4342E65C4"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_7DD1AD1B82814C639B5929152E4ACB1B"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"

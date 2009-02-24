@@ -55,10 +55,10 @@ echo.
 "%checker_tool%" "%org_file%" "%input_file%" >> "%log_file%"
 
 if not %ERRORLEVEL% == 0 (
-	echo %input_file% のチェックに失敗しました。
+	echo "%input_file%" のチェックに失敗しました。
 rem 	goto end
 ) else (
-	echo %input_file% は正常です。
+	echo "%input_file%" は正常です。
 )
 
 rem 入力ファイルが残っているならbeginに戻る

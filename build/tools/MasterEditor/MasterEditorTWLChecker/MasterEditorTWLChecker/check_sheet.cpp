@@ -150,7 +150,7 @@ System::Void checkSheet( FilenameItem ^fItem, SheetItem ^sItem )
 		}
 
 		// 「レーティング不要」フラグが立っていてはいけない
-		if( !sItem->IsUnnecessaryRating )
+		if( sItem->IsUnnecessaryRating )
 		{
 			throw (gcnew System::Exception("In Sheet, \"Unnecessary\" flag is asserted."));
 			return;

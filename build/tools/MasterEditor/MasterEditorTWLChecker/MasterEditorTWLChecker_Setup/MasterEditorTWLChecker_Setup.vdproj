@@ -93,12 +93,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_21DF01AF8FF24D73ABDCE02203AF2554"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_22C2EACCA2DC4BEC90DB72E42B29DBDA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -106,12 +100,6 @@
         "Entry"
         {
         "MsmKey" = "8:_2351DADC1BD44AA6B1E6F80ACDA93CCB"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_240DAB9A6D2B4CD88A27F9105DD37CB2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -148,6 +136,12 @@
         "Entry"
         {
         "MsmKey" = "8:_32D827C6493444018BF7BACD90E8C074"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_356BA87C1DFE49DC87E5E354611A72A9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -261,6 +255,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_63A8A3414C0943A0A1E30AC3680FE45A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_63AA6A35956942028F9906C6B2AA6E33"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -291,12 +291,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_661F23250B3E4E978947C6ED4F78B9F3"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6A08111DE7D5450EBE62C90E8C9E6132"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -322,6 +316,12 @@
         "Entry"
         {
         "MsmKey" = "8:_712D66746A044600959EA61D00136AC5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_73492247B0FE49B1A59154FC27E1EF9F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -441,12 +441,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9A9A0E53C7A74DD0AA6944E094069B7A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_9C7BE3B3864842A4A653781E4E4220C7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -537,7 +531,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B6C5DAAC93C84FDD91D5B6A7ACD34F92"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B7C05AB647084A0CA5817B199879AA7E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BA809E7E1FA04C08A958B981071B26E8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1098,26 +1104,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_21DF01AF8FF24D73ABDCE02203AF2554"
-            {
-            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_提出確認書.xls"
-            "TargetName" = "8:デバッグ項目_提出確認書.xls"
-            "Tag" = "8:"
-            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_22C2EACCA2DC4BEC90DB72E42B29DBDA"
             {
             "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\srl\\access_nand_usr1_f.srl"
@@ -1144,26 +1130,6 @@
             "TargetName" = "8:reserved_card01_f.srl"
             "Tag" = "8:"
             "Folder" = "8:_985B8C1370FE4FDCACB13B19F5AF28B8"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_240DAB9A6D2B4CD88A27F9105DD37CB2"
-            {
-            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_リージョンとレーティング.xls"
-            "TargetName" = "8:デバッグ項目_リージョンとレーティング.xls"
-            "Tag" = "8:"
-            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1284,6 +1250,26 @@
             "TargetName" = "8:rom_version_card1_f.srl"
             "Tag" = "8:"
             "Folder" = "8:_985B8C1370FE4FDCACB13B19F5AF28B8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_356BA87C1DFE49DC87E5E354611A72A9"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\docs\\MasterEditorTWL\\チェック項目_基本操作.xls"
+            "TargetName" = "8:チェック項目_基本操作.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1658,6 +1644,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_63A8A3414C0943A0A1E30AC3680FE45A"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\チェック項目_MRC.xls"
+            "TargetName" = "8:チェック項目_MRC.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_63AA6A35956942028F9906C6B2AA6E33"
             {
             "SourcePath" = "8:..\\checker.bat"
@@ -1758,26 +1764,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_661F23250B3E4E978947C6ED4F78B9F3"
-            {
-            "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\デバッグ項目_MRC.xls"
-            "TargetName" = "8:デバッグ項目_MRC.xls"
-            "Tag" = "8:"
-            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6A08111DE7D5450EBE62C90E8C9E6132"
             {
             "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\srl\\private_save_data_card1.srl"
@@ -1864,6 +1850,26 @@
             "TargetName" = "8:mrom_card1_f.srl"
             "Tag" = "8:"
             "Folder" = "8:_985B8C1370FE4FDCACB13B19F5AF28B8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_73492247B0FE49B1A59154FC27E1EF9F"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\docs\\MasterEditorTWL\\チェック項目_提出確認書.xls"
+            "TargetName" = "8:チェック項目_提出確認書.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2238,26 +2244,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9A9A0E53C7A74DD0AA6944E094069B7A"
-            {
-            "SourcePath" = "8:C:\\TwlIPL\\trunk\\docs\\マスタエディタ\\デバッグ項目_基本操作.xls"
-            "TargetName" = "8:デバッグ項目_基本操作.xls"
-            "Tag" = "8:"
-            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9C7BE3B3864842A4A653781E4E4220C7"
             {
             "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\srl\\titleid_lo_nand1_f.srl"
@@ -2558,12 +2544,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6C5DAAC93C84FDD91D5B6A7ACD34F92"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\docs\\MasterEditorTWL\\チェック手順書.doc"
+            "TargetName" = "8:チェック手順書.doc"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B7C05AB647084A0CA5817B199879AA7E"
             {
             "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\srl\\access_card_usr3_f.srl"
             "TargetName" = "8:access_card_usr3_f.srl"
             "Tag" = "8:"
             "Folder" = "8:_985B8C1370FE4FDCACB13B19F5AF28B8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA809E7E1FA04C08A958B981071B26E8"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\docs\\MasterEditorTWL\\チェック項目_リージョンとレーティング.xls"
+            "TargetName" = "8:チェック項目_リージョンとレーティング.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"

@@ -38,12 +38,15 @@ void Form1::changeMaxLength( System::Windows::Forms::TextBox ^tbox, System::Int3
 // ----------------------------------------------
 void Form1::changeJapanese(void)
 {
-	// “ü—Í•¶Žš”§ŒÀ‚ð•ÏX‚·‚é
-	this->changeMaxLength( this->tboxCompany1, 25 );
-	this->changeMaxLength( this->tboxDepart1,  25 );
-	this->changeMaxLength( this->tboxPerson1,  15 );
-
 	this->changeLanguage( "ja" );
+
+	// “ü—Í•¶Žš”§ŒÀ‚ð•ÏX‚·‚é
+	this->changeMaxLength( this->tboxCompany1, 35 );
+	this->changeMaxLength( this->tboxDepart1,  35 );
+	this->changeMaxLength( this->tboxPerson1,  25 );
+	this->changeMaxLength( this->tboxCompany2, 35 );
+	this->changeMaxLength( this->tboxDepart2,  35 );
+	this->changeMaxLength( this->tboxPerson2,  25 );
 }
 
 // ----------------------------------------------
@@ -51,11 +54,14 @@ void Form1::changeJapanese(void)
 // ----------------------------------------------
 void  Form1::changeEnglish(void)
 {
-	this->changeMaxLength( this->tboxCompany1, 40 );
-	this->changeMaxLength( this->tboxDepart1,  40 );
-	this->changeMaxLength( this->tboxPerson1,  30 );
-
 	this->changeLanguage( "en" );
+
+	this->changeMaxLength( this->tboxCompany1, 70 );
+	this->changeMaxLength( this->tboxDepart1,  70 );
+	this->changeMaxLength( this->tboxPerson1,  50 );
+	this->changeMaxLength( this->tboxCompany2, 70 );
+	this->changeMaxLength( this->tboxDepart2,  70 );
+	this->changeMaxLength( this->tboxPerson2,  50 );
 }
 
 // ----------------------------------------------

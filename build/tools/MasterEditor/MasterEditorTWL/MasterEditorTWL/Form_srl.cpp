@@ -109,6 +109,22 @@ void Form1::setSrlForms(void)
 	this->tboxShared2Size3->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[3] );
 	this->tboxShared2Size4->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[4] );
 	this->tboxShared2Size5->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[5] );
+	if( this->hSrl->IsPhotoRead && this->hSrl->IsPhotoWrite )
+	{
+		this->tboxPhotoAccess->Text = gcnew System::String("Read and Write");
+	}
+	else if( this->hSrl->IsPhotoRead )
+	{
+		this->tboxPhotoAccess->Text = gcnew System::String("Read Only");
+	}
+	else if( this->hSrl->IsPhotoWrite )
+	{
+		this->tboxPhotoAccess->Text = gcnew System::String("Write Only");
+	}
+	else
+	{
+		this->tboxPhotoAccess->Text = gcnew System::String("Not Access");
+	}
 
 	// NANDÁ”ïƒTƒCƒY
 	//this->tboxPublicSize->Text  = MasterEditorTWL::transSizeToString( this->hSrl->PublicSize );

@@ -404,6 +404,17 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->hShared2SizeArray[5] );
 			}
+			if( node->FirstChild->Value->Equals( "TagPhotoAccess" ) )
+			{
+				if( hSrl->IsPhotoRead && hSrl->IsPhotoWrite )
+					node->FirstChild->Value = gcnew System::String("Read and Write");
+				else if( hSrl->IsPhotoRead )
+					node->FirstChild->Value = gcnew System::String("Read Only");
+				else if( hSrl->IsPhotoWrite )
+					node->FirstChild->Value = gcnew System::String("Write Only");
+				else
+					node->FirstChild->Value = gcnew System::String("Not Access");
+			}
 
 			// ‰ïŽÐî•ñ
 			if( node->FirstChild->Value->Equals( "TagCompany1" ) )

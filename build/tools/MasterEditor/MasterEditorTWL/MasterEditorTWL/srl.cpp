@@ -283,6 +283,8 @@ ECSrlResult RCSrl::setRomInfo(void)
 	this->IsAesSlotAForSSL  = (this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0)?true:false;
 	this->IsCommonClientKeyForDebugger 
 		= (this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0)?true:false;
+	this->IsPhotoWrite      = (this->pRomHeader->s.access_control.photo_access_write != 0)?true:false;
+	this->IsPhotoRead       = (this->pRomHeader->s.access_control.photo_access_read  != 0)?true:false;
 
 	// SCFG がロックされるか
 	if( (this->pRomHeader->s.arm7_scfg_ext >> 31) != 0 )
@@ -293,7 +295,6 @@ ECSrlResult RCSrl::setRomInfo(void)
 	{
 		this->IsSCFGAccess = false;
 	}
-
 
 	// Shared2ファイルサイズ
 	this->hShared2SizeArray = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);

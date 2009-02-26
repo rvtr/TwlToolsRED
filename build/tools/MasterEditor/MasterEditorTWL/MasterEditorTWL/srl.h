@@ -90,6 +90,8 @@ namespace MasterEditorTWL
 		property System::Boolean IsGameCardNitro;
 		property System::Boolean IsAesSlotAForSSL;
 		property System::Boolean IsCommonClientKeyForDebugger;
+		property System::Boolean IsPhotoWrite;
+		property System::Boolean IsPhotoRead;
 
 		// Shared2ファイルサイズ Read Only
 		property cli::array<System::UInt32> ^hShared2SizeArray;

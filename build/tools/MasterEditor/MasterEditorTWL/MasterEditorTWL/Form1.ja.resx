@@ -713,7 +713,7 @@
     <value>その他アプリ情報</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>230, 68</value>
+    <value>230, 82</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 12</value>

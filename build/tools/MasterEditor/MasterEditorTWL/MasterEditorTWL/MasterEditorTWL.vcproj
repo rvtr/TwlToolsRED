@@ -322,6 +322,11 @@
 				FileType="3"
 				>
 				<File
+					RelativePath=".\Form1.en.resx"
+					SubType="Designer"
+					>
+				</File>
+				<File
 					RelativePath=".\Form1.ja.resx"
 					SubType="Designer"
 					>

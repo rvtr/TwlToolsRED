@@ -3803,6 +3803,17 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 				this->errMsg( msgJ, msgE );
 				return;
 			}
+			u16  crc;			// SRL全体のCRCを計算する
+			if( !getWholeCRCInFile( srlfile, &crc ) )
+			{
+				this->errMsg( "CRCの計算に失敗しました。", 
+							  "Calculating CRC is failed. " );
+				return;
+			}
+			this->tboxWholeCRC->Clear();
+			this->tboxWholeCRC->AppendText( "0x" );
+			this->tboxWholeCRC->AppendText( crc.ToString("X4") );	// 書き出したSRLを再読み込みするのでCRCを再計算する
+
 		} //stripItemMasterRom_Click()
 
 	private:

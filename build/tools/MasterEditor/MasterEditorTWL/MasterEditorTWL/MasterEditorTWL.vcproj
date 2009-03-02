@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\message_bank.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\split_tad.cpp"
 				>
 			</File>
@@ -361,6 +365,10 @@
 			</File>
 			<File
 				RelativePath=".\lang.h"
+				>
+			</File>
+			<File
+				RelativePath=".\message_bank.h"
 				>
 			</File>
 			<File

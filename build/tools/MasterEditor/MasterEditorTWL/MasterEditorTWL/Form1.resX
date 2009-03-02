@@ -6183,6 +6183,111 @@
   <data name="stripItemJapanese.Text" xml:space="preserve">
     <value>Japanese</value>
   </data>
+  <data name="&gt;&gt;tabRomInfo.Name" xml:space="preserve">
+    <value>tabRomInfo</value>
+  </data>
+  <data name="&gt;&gt;tabRomInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRomInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabRomInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Name" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Name" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Name" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Name" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Name" xml:space="preserve">
+    <value>tabCompanyInfo</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Name" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="tabMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 93</value>
+  </data>
+  <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>753, 377</value>
+  </data>
+  <data name="tabMain.TabIndex" type="System.Int32, mscorlib">
+    <value>34</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Name" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabMain.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="&gt;&gt;gridSDK.Name" xml:space="preserve">
     <value>gridSDK</value>
   </data>
@@ -6245,633 +6350,6 @@
   </data>
   <data name="&gt;&gt;tabRomInfo.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;gboxLaunch.Name" xml:space="preserve">
-    <value>gboxLaunch</value>
-  </data>
-  <data name="&gt;&gt;gboxLaunch.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxLaunch.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxLaunch.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideTWLInfo.Name" xml:space="preserve">
-    <value>tboxGuideTWLInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideTWLInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideTWLInfo.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideTWLInfo.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;gboxExFlags.Name" xml:space="preserve">
-    <value>gboxExFlags</value>
-  </data>
-  <data name="&gt;&gt;gboxExFlags.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxExFlags.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabTWLInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabTWLInfo.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabTWLInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tabTWLInfo.Text" xml:space="preserve">
-    <value>TWL Info.</value>
-  </data>
-  <data name="&gt;&gt;tabTWLInfo.Name" xml:space="preserve">
-    <value>tabTWLInfo</value>
-  </data>
-  <data name="&gt;&gt;tabTWLInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabTWLInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabTWLInfo.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Name" xml:space="preserve">
-    <value>tboxGuideNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.Parent" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideNandSizeInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Name" xml:space="preserve">
-    <value>gboxNandSize</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.Parent" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxNandSize.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tabNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="tabNandSizeInfo.Text" xml:space="preserve">
-    <value>DSi Ware Info.</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Name" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabNandSizeInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;gboxOtherSpec.Name" xml:space="preserve">
-    <value>gboxOtherSpec</value>
-  </data>
-  <data name="&gt;&gt;gboxOtherSpec.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxOtherSpec.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxOtherSpec.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;butSetBack.Name" xml:space="preserve">
-    <value>butSetBack</value>
-  </data>
-  <data name="&gt;&gt;butSetBack.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;butSetBack.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;butSetBack.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideRomEditInfo.Name" xml:space="preserve">
-    <value>tboxGuideRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideRomEditInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideRomEditInfo.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideRomEditInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;gboxParental.Name" xml:space="preserve">
-    <value>gboxParental</value>
-  </data>
-  <data name="&gt;&gt;gboxParental.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxParental.Parent" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxParental.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tabRomEditInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabRomEditInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Region and Ratings (Editable)</value>
-  </data>
-  <data name="&gt;&gt;tabRomEditInfo.Name" xml:space="preserve">
-    <value>tabRomEditInfo</value>
-  </data>
-  <data name="&gt;&gt;tabRomEditInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabRomEditInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabRomEditInfo.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="labCountryCodeR.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labCountryCodeR.Font" type="System.Drawing.Font, System.Drawing">
-    <value>MS UI Gothic, 9.75pt</value>
-  </data>
-  <data name="labCountryCodeR.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="labCountryCodeR.Location" type="System.Drawing.Point, System.Drawing">
-    <value>291, 84</value>
-  </data>
-  <data name="labCountryCodeR.Size" type="System.Drawing.Size, System.Drawing">
-    <value>11, 13</value>
-  </data>
-  <data name="labCountryCodeR.TabIndex" type="System.Int32, mscorlib">
-    <value>42</value>
-  </data>
-  <data name="labCountryCodeR.Text" xml:space="preserve">
-    <value>)</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeR.Name" xml:space="preserve">
-    <value>labCountryCodeR</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeR.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeR.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeR.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="combCountryCode.Items" xml:space="preserve">
-    <value>ASI</value>
-  </data>
-  <data name="combCountryCode.Items1" xml:space="preserve">
-    <value>ASM</value>
-  </data>
-  <data name="combCountryCode.Items2" xml:space="preserve">
-    <value>AUS</value>
-  </data>
-  <data name="combCountryCode.Items3" xml:space="preserve">
-    <value>BEL</value>
-  </data>
-  <data name="combCountryCode.Items4" xml:space="preserve">
-    <value>CAN</value>
-  </data>
-  <data name="combCountryCode.Items5" xml:space="preserve">
-    <value>EAH</value>
-  </data>
-  <data name="combCountryCode.Items6" xml:space="preserve">
-    <value>ESP</value>
-  </data>
-  <data name="combCountryCode.Items7" xml:space="preserve">
-    <value>EUB</value>
-  </data>
-  <data name="combCountryCode.Items8" xml:space="preserve">
-    <value>EUR</value>
-  </data>
-  <data name="combCountryCode.Items9" xml:space="preserve">
-    <value>EUT</value>
-  </data>
-  <data name="combCountryCode.Items10" xml:space="preserve">
-    <value>EUU</value>
-  </data>
-  <data name="combCountryCode.Items11" xml:space="preserve">
-    <value>EUX</value>
-  </data>
-  <data name="combCountryCode.Items12" xml:space="preserve">
-    <value>EXP</value>
-  </data>
-  <data name="combCountryCode.Items13" xml:space="preserve">
-    <value>FAH</value>
-  </data>
-  <data name="combCountryCode.Items14" xml:space="preserve">
-    <value>FHE</value>
-  </data>
-  <data name="combCountryCode.Items15" xml:space="preserve">
-    <value>FRA</value>
-  </data>
-  <data name="combCountryCode.Items16" xml:space="preserve">
-    <value>FRG</value>
-  </data>
-  <data name="combCountryCode.Items17" xml:space="preserve">
-    <value>GPO</value>
-  </data>
-  <data name="combCountryCode.Items18" xml:space="preserve">
-    <value>GPS</value>
-  </data>
-  <data name="combCountryCode.Items19" xml:space="preserve">
-    <value>HOL</value>
-  </data>
-  <data name="combCountryCode.Items20" xml:space="preserve">
-    <value>ITA</value>
-  </data>
-  <data name="combCountryCode.Items21" xml:space="preserve">
-    <value>JPN</value>
-  </data>
-  <data name="combCountryCode.Items22" xml:space="preserve">
-    <value>NOE</value>
-  </data>
-  <data name="combCountryCode.Items23" xml:space="preserve">
-    <value>SCN</value>
-  </data>
-  <data name="combCountryCode.Items24" xml:space="preserve">
-    <value>UKV</value>
-  </data>
-  <data name="combCountryCode.Items25" xml:space="preserve">
-    <value>USA</value>
-  </data>
-  <data name="combCountryCode.Items26" xml:space="preserve">
-    <value>USZ</value>
-  </data>
-  <data name="combCountryCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>236, 80</value>
-  </data>
-  <data name="combCountryCode.MaxDropDownItems" type="System.Int32, mscorlib">
-    <value>30</value>
-  </data>
-  <data name="combCountryCode.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 20</value>
-  </data>
-  <data name="combCountryCode.TabIndex" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <data name="&gt;&gt;combCountryCode.Name" xml:space="preserve">
-    <value>combCountryCode</value>
-  </data>
-  <data name="&gt;&gt;combCountryCode.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;combCountryCode.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;combCountryCode.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="labCountryCodeL.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="labCountryCodeL.Font" type="System.Drawing.Font, System.Drawing">
-    <value>MS UI Gothic, 9.75pt</value>
-  </data>
-  <data name="labCountryCodeL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>223, 84</value>
-  </data>
-  <data name="labCountryCodeL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>11, 13</value>
-  </data>
-  <data name="labCountryCodeL.TabIndex" type="System.Int32, mscorlib">
-    <value>40</value>
-  </data>
-  <data name="labCountryCodeL.Text" xml:space="preserve">
-    <value>(</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeL.Name" xml:space="preserve">
-    <value>labCountryCodeL</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeL.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeL.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;labCountryCodeL.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="labProductNameLimit.Location" type="System.Drawing.Point, System.Drawing">
-    <value>238, 39</value>
-  </data>
-  <data name="labProductNameLimit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 11</value>
-  </data>
-  <data name="labProductNameLimit.TabIndex" type="System.Int32, mscorlib">
-    <value>39</value>
-  </data>
-  <data name="labProductNameLimit.Text" xml:space="preserve">
-    <value>(Shorter than 30 chars)</value>
-  </data>
-  <data name="labProductNameLimit.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>TopRight</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimit.Name" xml:space="preserve">
-    <value>labProductNameLimit</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimit.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimit.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="tboxGuideSubmitInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 11</value>
-  </data>
-  <data name="tboxGuideSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>687, 19</value>
-  </data>
-  <data name="tboxGuideSubmitInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>38</value>
-  </data>
-  <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
-    <value>These items is necessary for making a submission sheet. Please input.</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideSubmitInfo.Name" xml:space="preserve">
-    <value>tboxGuideSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideSubmitInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideSubmitInfo.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideSubmitInfo.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimitForeign.Name" xml:space="preserve">
-    <value>labProductNameLimitForeign</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimitForeign.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimitForeign.Parent" xml:space="preserve">
-    <value>gboxForeign</value>
-  </data>
-  <data name="&gt;&gt;labProductNameLimitForeign.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;labMultiForeign2.Name" xml:space="preserve">
-    <value>labMultiForeign2</value>
-  </data>
-  <data name="&gt;&gt;labMultiForeign2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labMultiForeign2.Parent" xml:space="preserve">
-    <value>gboxForeign</value>
-  </data>
-  <data name="&gt;&gt;labMultiForeign2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="gboxForeign.Location" type="System.Drawing.Point, System.Drawing">
-    <value>378, 91</value>
-  </data>
-  <data name="gboxForeign.Size" type="System.Drawing.Size, System.Drawing">
-    <value>355, 144</value>
-  </data>
-  <data name="gboxForeign.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
-  </data>
-  <data name="gboxForeign.Text" xml:space="preserve">
-    <value>Foreign Ver.</value>
-  </data>
-  <data name="&gt;&gt;gboxForeign.Name" xml:space="preserve">
-    <value>gboxForeign</value>
-  </data>
-  <data name="&gt;&gt;gboxForeign.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxForeign.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxForeign.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabSubmitInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabSubmitInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="tabSubmitInfo.Text" xml:space="preserve">
-    <value>Submission Info.(Editable)</value>
-  </data>
-  <data name="&gt;&gt;tabSubmitInfo.Name" xml:space="preserve">
-    <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;tabSubmitInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabSubmitInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabSubmitInfo.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideCompanyInfo.Name" xml:space="preserve">
-    <value>tboxGuideCompanyInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideCompanyInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideCompanyInfo.Parent" xml:space="preserve">
-    <value>tabCompanyInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideCompanyInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="tabCompanyInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabCompanyInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="tabCompanyInfo.Text" xml:space="preserve">
-    <value>Company Info.(Editable)</value>
-  </data>
-  <data name="&gt;&gt;tabCompanyInfo.Name" xml:space="preserve">
-    <value>tabCompanyInfo</value>
-  </data>
-  <data name="&gt;&gt;tabCompanyInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabCompanyInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabCompanyInfo.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideErrorInfo.Name" xml:space="preserve">
-    <value>tboxGuideErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideErrorInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideErrorInfo.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxGuideErrorInfo.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;gboxErrorTiming.Name" xml:space="preserve">
-    <value>gboxErrorTiming</value>
-  </data>
-  <data name="&gt;&gt;gboxErrorTiming.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gboxErrorTiming.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;gboxErrorTiming.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;labWarn.Name" xml:space="preserve">
-    <value>labWarn</value>
-  </data>
-  <data name="&gt;&gt;labWarn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labWarn.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;labWarn.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;labError.Name" xml:space="preserve">
-    <value>labError</value>
-  </data>
-  <data name="&gt;&gt;labError.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;labError.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;labError.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;gridWarn.Name" xml:space="preserve">
-    <value>gridWarn</value>
-  </data>
-  <data name="&gt;&gt;gridWarn.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridWarn.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;gridWarn.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;gridError.Name" xml:space="preserve">
-    <value>gridError</value>
-  </data>
-  <data name="&gt;&gt;gridError.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gridError.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;gridError.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabErrorInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 21</value>
-  </data>
-  <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>745, 352</value>
-  </data>
-  <data name="tabErrorInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="tabErrorInfo.Text" xml:space="preserve">
-    <value>Error Info.</value>
-  </data>
-  <data name="&gt;&gt;tabErrorInfo.Name" xml:space="preserve">
-    <value>tabErrorInfo</value>
-  </data>
-  <data name="&gt;&gt;tabErrorInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabErrorInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabErrorInfo.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="tabMain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 93</value>
-  </data>
-  <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>753, 377</value>
-  </data>
-  <data name="tabMain.TabIndex" type="System.Int32, mscorlib">
-    <value>34</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Name" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tabMain.ZOrder" xml:space="preserve">
-    <value>2</value>
   </data>
   <metadata name="dataSDKVer.UserAddedColumn" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -6956,6 +6434,69 @@
   </data>
   <data name="&gt;&gt;tboxGuideRomInfo.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Name" xml:space="preserve">
+    <value>gboxLaunch</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxLaunch.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideTWLInfo.Name" xml:space="preserve">
+    <value>tboxGuideTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideTWLInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideTWLInfo.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideTWLInfo.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;gboxExFlags.Name" xml:space="preserve">
+    <value>gboxExFlags</value>
+  </data>
+  <data name="&gt;&gt;gboxExFlags.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxExFlags.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabTWLInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabTWLInfo.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabTWLInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabTWLInfo.Text" xml:space="preserve">
+    <value>TWL Info.</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Name" xml:space="preserve">
+    <value>tabTWLInfo</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabTWLInfo.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="&gt;&gt;labConnectIcon.Name" xml:space="preserve">
     <value>labConnectIcon</value>
@@ -7100,6 +6641,54 @@
   </data>
   <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
     <value>5</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Name" xml:space="preserve">
+    <value>tboxGuideNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideNandSizeInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Name" xml:space="preserve">
+    <value>gboxNandSize</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxNandSize.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabNandSizeInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tabNandSizeInfo.Text" xml:space="preserve">
+    <value>DSi Ware Info.</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Name" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabNandSizeInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="tboxGuideNandSizeInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>
@@ -8082,6 +7671,78 @@
   <data name="&gt;&gt;labTmdSize.ZOrder" xml:space="preserve">
     <value>27</value>
   </data>
+  <data name="&gt;&gt;gboxOtherSpec.Name" xml:space="preserve">
+    <value>gboxOtherSpec</value>
+  </data>
+  <data name="&gt;&gt;gboxOtherSpec.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxOtherSpec.Parent" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxOtherSpec.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;butSetBack.Name" xml:space="preserve">
+    <value>butSetBack</value>
+  </data>
+  <data name="&gt;&gt;butSetBack.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;butSetBack.Parent" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;butSetBack.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideRomEditInfo.Name" xml:space="preserve">
+    <value>tboxGuideRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideRomEditInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideRomEditInfo.Parent" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideRomEditInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;gboxParental.Name" xml:space="preserve">
+    <value>gboxParental</value>
+  </data>
+  <data name="&gt;&gt;gboxParental.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxParental.Parent" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxParental.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tabRomEditInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabRomEditInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="tabRomEditInfo.Text" xml:space="preserve">
+    <value>Region and Ratings (Editable)</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Name" xml:space="preserve">
+    <value>tabRomEditInfo</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabRomEditInfo.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="&gt;&gt;cboxIsUGC.Name" xml:space="preserve">
     <value>cboxIsUGC</value>
   </data>
@@ -8298,6 +7959,369 @@
   <data name="&gt;&gt;cboxIsUnnecessaryRating.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="&gt;&gt;labCountryCodeR.Name" xml:space="preserve">
+    <value>labCountryCodeR</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Name" xml:space="preserve">
+    <value>combCountryCode</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Name" xml:space="preserve">
+    <value>labCountryCodeL</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Name" xml:space="preserve">
+    <value>labProductNameLimit</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Name" xml:space="preserve">
+    <value>tboxGuideSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Name" xml:space="preserve">
+    <value>gboxForeign</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabSubmitInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabSubmitInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="tabSubmitInfo.Text" xml:space="preserve">
+    <value>Submission Info.(Editable)</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Name" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabSubmitInfo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="labCountryCodeR.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCountryCodeR.Font" type="System.Drawing.Font, System.Drawing">
+    <value>MS UI Gothic, 9.75pt</value>
+  </data>
+  <data name="labCountryCodeR.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="labCountryCodeR.Location" type="System.Drawing.Point, System.Drawing">
+    <value>291, 84</value>
+  </data>
+  <data name="labCountryCodeR.Size" type="System.Drawing.Size, System.Drawing">
+    <value>11, 13</value>
+  </data>
+  <data name="labCountryCodeR.TabIndex" type="System.Int32, mscorlib">
+    <value>42</value>
+  </data>
+  <data name="labCountryCodeR.Text" xml:space="preserve">
+    <value>)</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.Name" xml:space="preserve">
+    <value>labCountryCodeR</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeR.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="combCountryCode.Items" xml:space="preserve">
+    <value>ASI</value>
+  </data>
+  <data name="combCountryCode.Items1" xml:space="preserve">
+    <value>ASM</value>
+  </data>
+  <data name="combCountryCode.Items2" xml:space="preserve">
+    <value>AUS</value>
+  </data>
+  <data name="combCountryCode.Items3" xml:space="preserve">
+    <value>BEL</value>
+  </data>
+  <data name="combCountryCode.Items4" xml:space="preserve">
+    <value>CAN</value>
+  </data>
+  <data name="combCountryCode.Items5" xml:space="preserve">
+    <value>EAH</value>
+  </data>
+  <data name="combCountryCode.Items6" xml:space="preserve">
+    <value>ESP</value>
+  </data>
+  <data name="combCountryCode.Items7" xml:space="preserve">
+    <value>EUB</value>
+  </data>
+  <data name="combCountryCode.Items8" xml:space="preserve">
+    <value>EUR</value>
+  </data>
+  <data name="combCountryCode.Items9" xml:space="preserve">
+    <value>EUT</value>
+  </data>
+  <data name="combCountryCode.Items10" xml:space="preserve">
+    <value>EUU</value>
+  </data>
+  <data name="combCountryCode.Items11" xml:space="preserve">
+    <value>EUX</value>
+  </data>
+  <data name="combCountryCode.Items12" xml:space="preserve">
+    <value>EXP</value>
+  </data>
+  <data name="combCountryCode.Items13" xml:space="preserve">
+    <value>FAH</value>
+  </data>
+  <data name="combCountryCode.Items14" xml:space="preserve">
+    <value>FHE</value>
+  </data>
+  <data name="combCountryCode.Items15" xml:space="preserve">
+    <value>FRA</value>
+  </data>
+  <data name="combCountryCode.Items16" xml:space="preserve">
+    <value>FRG</value>
+  </data>
+  <data name="combCountryCode.Items17" xml:space="preserve">
+    <value>GPO</value>
+  </data>
+  <data name="combCountryCode.Items18" xml:space="preserve">
+    <value>GPS</value>
+  </data>
+  <data name="combCountryCode.Items19" xml:space="preserve">
+    <value>HOL</value>
+  </data>
+  <data name="combCountryCode.Items20" xml:space="preserve">
+    <value>ITA</value>
+  </data>
+  <data name="combCountryCode.Items21" xml:space="preserve">
+    <value>JPN</value>
+  </data>
+  <data name="combCountryCode.Items22" xml:space="preserve">
+    <value>NOE</value>
+  </data>
+  <data name="combCountryCode.Items23" xml:space="preserve">
+    <value>SCN</value>
+  </data>
+  <data name="combCountryCode.Items24" xml:space="preserve">
+    <value>UKV</value>
+  </data>
+  <data name="combCountryCode.Items25" xml:space="preserve">
+    <value>USA</value>
+  </data>
+  <data name="combCountryCode.Items26" xml:space="preserve">
+    <value>USZ</value>
+  </data>
+  <data name="combCountryCode.Location" type="System.Drawing.Point, System.Drawing">
+    <value>236, 80</value>
+  </data>
+  <data name="combCountryCode.MaxDropDownItems" type="System.Int32, mscorlib">
+    <value>30</value>
+  </data>
+  <data name="combCountryCode.Size" type="System.Drawing.Size, System.Drawing">
+    <value>52, 20</value>
+  </data>
+  <data name="combCountryCode.TabIndex" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Name" xml:space="preserve">
+    <value>combCountryCode</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;combCountryCode.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="labCountryCodeL.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="labCountryCodeL.Font" type="System.Drawing.Font, System.Drawing">
+    <value>MS UI Gothic, 9.75pt</value>
+  </data>
+  <data name="labCountryCodeL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>223, 84</value>
+  </data>
+  <data name="labCountryCodeL.Size" type="System.Drawing.Size, System.Drawing">
+    <value>11, 13</value>
+  </data>
+  <data name="labCountryCodeL.TabIndex" type="System.Int32, mscorlib">
+    <value>40</value>
+  </data>
+  <data name="labCountryCodeL.Text" xml:space="preserve">
+    <value>(</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Name" xml:space="preserve">
+    <value>labCountryCodeL</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labCountryCodeL.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="labProductNameLimit.Location" type="System.Drawing.Point, System.Drawing">
+    <value>238, 39</value>
+  </data>
+  <data name="labProductNameLimit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>124, 11</value>
+  </data>
+  <data name="labProductNameLimit.TabIndex" type="System.Int32, mscorlib">
+    <value>39</value>
+  </data>
+  <data name="labProductNameLimit.Text" xml:space="preserve">
+    <value>(Shorter than 30 chars)</value>
+  </data>
+  <data name="labProductNameLimit.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>TopRight</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Name" xml:space="preserve">
+    <value>labProductNameLimit</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimit.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tboxGuideSubmitInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 11</value>
+  </data>
+  <data name="tboxGuideSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>687, 19</value>
+  </data>
+  <data name="tboxGuideSubmitInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>38</value>
+  </data>
+  <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
+    <value>These items is necessary for making a submission sheet. Please input.</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Name" xml:space="preserve">
+    <value>tboxGuideSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimitForeign.Name" xml:space="preserve">
+    <value>labProductNameLimitForeign</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimitForeign.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimitForeign.Parent" xml:space="preserve">
+    <value>gboxForeign</value>
+  </data>
+  <data name="&gt;&gt;labProductNameLimitForeign.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;labMultiForeign2.Name" xml:space="preserve">
+    <value>labMultiForeign2</value>
+  </data>
+  <data name="&gt;&gt;labMultiForeign2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labMultiForeign2.Parent" xml:space="preserve">
+    <value>gboxForeign</value>
+  </data>
+  <data name="&gt;&gt;labMultiForeign2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="gboxForeign.Location" type="System.Drawing.Point, System.Drawing">
+    <value>378, 91</value>
+  </data>
+  <data name="gboxForeign.Size" type="System.Drawing.Size, System.Drawing">
+    <value>355, 144</value>
+  </data>
+  <data name="gboxForeign.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="gboxForeign.Text" xml:space="preserve">
+    <value>Foreign Ver.</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Name" xml:space="preserve">
+    <value>gboxForeign</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxForeign.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="labProductNameLimitForeign.Location" type="System.Drawing.Point, System.Drawing">
     <value>225, 62</value>
   </data>
@@ -8352,6 +8376,42 @@
   <data name="&gt;&gt;labMultiForeign2.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="&gt;&gt;tboxGuideCompanyInfo.Name" xml:space="preserve">
+    <value>tboxGuideCompanyInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideCompanyInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideCompanyInfo.Parent" xml:space="preserve">
+    <value>tabCompanyInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideCompanyInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="tabCompanyInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabCompanyInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="tabCompanyInfo.Text" xml:space="preserve">
+    <value>Company Info.(Editable)</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Name" xml:space="preserve">
+    <value>tabCompanyInfo</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabCompanyInfo.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="tboxGuideCompanyInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>
   </data>
@@ -8375,6 +8435,102 @@
   </data>
   <data name="&gt;&gt;tboxGuideCompanyInfo.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideErrorInfo.Name" xml:space="preserve">
+    <value>tboxGuideErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideErrorInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideErrorInfo.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;tboxGuideErrorInfo.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;gboxErrorTiming.Name" xml:space="preserve">
+    <value>gboxErrorTiming</value>
+  </data>
+  <data name="&gt;&gt;gboxErrorTiming.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gboxErrorTiming.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;gboxErrorTiming.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;labWarn.Name" xml:space="preserve">
+    <value>labWarn</value>
+  </data>
+  <data name="&gt;&gt;labWarn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labWarn.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;labWarn.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;labError.Name" xml:space="preserve">
+    <value>labError</value>
+  </data>
+  <data name="&gt;&gt;labError.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labError.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;labError.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;gridWarn.Name" xml:space="preserve">
+    <value>gridWarn</value>
+  </data>
+  <data name="&gt;&gt;gridWarn.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridWarn.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;gridWarn.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;gridError.Name" xml:space="preserve">
+    <value>gridError</value>
+  </data>
+  <data name="&gt;&gt;gridError.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gridError.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;gridError.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabErrorInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 21</value>
+  </data>
+  <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>745, 352</value>
+  </data>
+  <data name="tabErrorInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="tabErrorInfo.Text" xml:space="preserve">
+    <value>Error Info.</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Name" xml:space="preserve">
+    <value>tabErrorInfo</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabErrorInfo.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="tboxGuideErrorInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>

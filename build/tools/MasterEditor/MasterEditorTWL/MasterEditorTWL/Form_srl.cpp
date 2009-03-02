@@ -111,7 +111,7 @@ void Form1::setSrlForms(void)
 	this->tboxShared2Size5->Text = MasterEditorTWL::transSizeToString( this->hSrl->hShared2SizeArray[5] );
 	if( this->hSrl->IsPhotoRead && this->hSrl->IsPhotoWrite )
 	{
-		this->tboxPhotoAccess->Text = gcnew System::String("Read and Write");
+		this->tboxPhotoAccess->Text = gcnew System::String("Read/Write");
 	}
 	else if( this->hSrl->IsPhotoRead )
 	{

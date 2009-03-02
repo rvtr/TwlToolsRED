@@ -407,7 +407,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			if( node->FirstChild->Value->Equals( "TagPhotoAccess" ) )
 			{
 				if( hSrl->IsPhotoRead && hSrl->IsPhotoWrite )
-					node->FirstChild->Value = gcnew System::String("Read and Write");
+					node->FirstChild->Value = gcnew System::String("Read/Write");
 				else if( hSrl->IsPhotoRead )
 					node->FirstChild->Value = gcnew System::String("Read Only");
 				else if( hSrl->IsPhotoWrite )

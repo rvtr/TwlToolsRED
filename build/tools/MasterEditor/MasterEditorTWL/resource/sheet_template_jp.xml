@@ -12086,13 +12086,6 @@
    </Print>
    <PageBreakZoom>100</PageBreakZoom>
    <Selected/>
-   <TopRowVisible>6</TopRowVisible>
-   <Panes>
-    <Pane>
-     <Number>3</Number>
-     <ActiveRow>6</ActiveRow>
-    </Pane>
-   </Panes>
    <ProtectObjects>False</ProtectObjects>
    <ProtectScenarios>False</ProtectScenarios>
   </WorksheetOptions>

@@ -319,7 +319,7 @@ System::String^ Form1::saveFileDlg( System::String ^filter, System::String ^exte
 	}
 	this->prevDir = System::IO::Path::GetDirectoryName( dlg->FileName );
 	retfile = dlg->FileName;
-	if( !System::String::IsNullOrEmpty(extension) && !(dlg->FileName->EndsWith( extension )) )
+	if( !System::String::IsNullOrEmpty(extension) && !(dlg->FileName->ToLower()->EndsWith( extension->ToLower() )) )
 	{
 		retfile += extension;
 	}

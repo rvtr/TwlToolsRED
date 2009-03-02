@@ -45,6 +45,7 @@ namespace MasterEditorTWL
 		property System::String ^hProductName;		// 製品名
 		property System::String ^hProductCode1;		// 製品コード
 		property System::String ^hProductCode2;		// 製品コード
+		property System::String ^hCountryCode;		// 国コード
 		property System::Int32   ReleaseYear;		// 発売予定日
 		property System::Int32   ReleaseMonth;
 		property System::Int32   ReleaseDay;

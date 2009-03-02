@@ -35,6 +35,7 @@ void Form1::setDeliverableProperties(void)
 	this->hDeliv->hProductName     = this->tboxProductName->Text;
 	this->hDeliv->hProductCode1    = this->tboxProductCode1->Text;
 	this->hDeliv->hProductCode2    = this->tboxProductCode2->Text;
+	this->hDeliv->hCountryCode     = this->combCountryCode->SelectedItem->ToString();
 	this->hDeliv->IsReleaseForeign = this->cboxReleaseForeign->Checked;
 	if( this->cboxReleaseForeign->Checked == true )
 	{
@@ -300,6 +301,7 @@ System::Boolean Form1::checkDeliverableForms(void)
 	{
 		this->checkTextForm( this->tboxUsageOther->Text, LANG_USAGE_J, LANG_USAGE_E, false );
 	}
+	this->checkBoxIndex( this->combCountryCode, LANG_PRODUCT_CODE_J, LANG_PRODUCT_CODE_E, false );
 
 	// ‰ïŽÐî•ñ
 	this->checkTextForm( this->tboxPerson1->Text, LANG_PERSON_J, LANG_PERSON_E, false );

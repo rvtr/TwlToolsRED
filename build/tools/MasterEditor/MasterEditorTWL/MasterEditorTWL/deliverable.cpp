@@ -157,6 +157,10 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = this->hProductCode2;
 			}
+			if( node->FirstChild->Value->Equals( "TagCountryCode" ) )
+			{
+				node->FirstChild->Value = this->hCountryCode;
+			}
 			if( node->FirstChild->Value->Equals( "TagReleaseForeign" ) )
 			{
 				if( this->IsReleaseForeign )

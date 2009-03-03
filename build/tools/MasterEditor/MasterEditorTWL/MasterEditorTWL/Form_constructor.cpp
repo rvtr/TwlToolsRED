@@ -40,6 +40,7 @@ void Form1::construct(void)
 	this->IsSpreadSheet = true;
 	this->IsReadOnly    = false;
 	this->SizeGboxExFlags   = this->gboxExFlags->Size;
+	this->hMsg = gcnew RCMessageBank( this->getGuiMessageFileJ(), this->getGuiMessageFileE() );
 
 	// バージョン情報を表示
 	//this->labAssemblyVersion->Text = System::Windows::Forms::Application::ProductVersion;
@@ -50,8 +51,7 @@ void Form1::construct(void)
 	//System::Diagnostics::Debug::WriteLine( this->getSplitTadTmpFile() );
 	if( System::IO::File::Exists( this->getSplitTadTmpFile() ) )
 	{
-		this->sucMsg( "本プログラムで作成する一時ファイルと同名のファイルが存在します。このファイルを削除します。",
-					  "There is the file which has same name as temporary file made by this program. That file is deleted." );
+		this->sucMsg( "E_Start_TmpExist" );
 		System::IO::File::Delete( this->getSplitTadTmpFile() );
 	}
 

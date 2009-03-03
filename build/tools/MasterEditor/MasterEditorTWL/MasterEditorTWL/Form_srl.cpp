@@ -66,12 +66,6 @@ void Form1::setSrlForms(void)
 	this->tboxHeaderCRC->AppendText( "0x" );
 	this->tboxHeaderCRC->AppendText( this->hSrl->HeaderCRC.ToString("X4") );
 
-	if( this->hSrl->hPlatform == nullptr )
-	{
-		this->errMsg( "プラットホーム指定が不正です。ROMデータのビルド設定を見直してください。",
-					  "Illegal Platform: Please check build settings of the ROM data.");
-	}
-
 	// TWL拡張情報
 	this->tboxTitleIDLo->Text = this->hSrl->hTitleIDLo;
 	this->tboxTitleIDHi->Text = this->hSrl->TitleIDHi.ToString("X8");

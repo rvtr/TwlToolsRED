@@ -33,22 +33,22 @@
 <SaveSet_Folder>保存先フォルダを選択してください。</SaveSet_Folder>
 <E_SaveSet_FolderCancel>フォルダの選択がキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_FolderCancel>
 <E_SaveSet_OWCancel>ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_OWCancel>
-<E_SaveSet_FileNormal>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_FileNormal>
+<E_SaveSet_FileDefault>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_FileDefault>
 <E_SaveSet_FileOpen>原因:出力ファイルのオープンに失敗しました。</E_SaveSet_FileOpen>
 <E_SaveSet_FileRead>原因:ファイルの読み込みに失敗しました。</E_SaveSet_FileRead>
 <E_SaveSet_FileWrite>原因:出力ファイルへの書き出しに失敗しました。</E_SaveSet_FileWrite>
 <E_SaveSet_FileCopy>原因:入力ROMデータファイルのコピーに失敗しました。</E_SaveSet_FileCopy>
 <E_SaveSet_FileExist>原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。</E_SaveSet_FileExist>
 <E_SaveSet_FileSign>原因:出力ファイルのディジタル署名の計算に失敗しました。</E_SaveSet_FileSign>
+<E_SaveSet_CRC>CRCの計算に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_CRC>
+<E_SaveSet_MWList>ミドルウェアのリストが作成できませんでした。作成を中止するため一部のファイルは作成されません。</E_SaveSet_MWList>
 <E_SaveSet_Exception>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。
 
 例外:{0}
 {1}</E_SaveSet_Exception>
-<E_SaveSet_CRC>CRCの計算に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_CRC>
-<E_SaveSet_MWList>ミドルウェアのリストが作成できませんでした。作成を中止するため一部のファイルは作成されません。</E_SaveSet_MWList>
-<E_SaveSet_Sheet_Default>提出確認書の作成に失敗しました。</E_SaveSet_Sheet_Default>
 <E_SaveSet_SheetTemplate>提出確認書のテンプレートが開けなかったため、提出確認書の作成に失敗しました。</E_SaveSet_SheetTemplate>
 <E_SaveSet_SheetOpen>提出確認書にデータを書き込みできませんでした。同名ファイルがすでに開かれていないかご確認ください。</E_SaveSet_SheetOpen>
+<E_SaveSet_Sheet_Default>提出確認書の作成に失敗しました。</E_SaveSet_Sheet_Default>
 <SaveSet_Success>提出データ一式の作成に成功しました。</SaveSet_Success>
 
 <!-- Create Master Rom -->
@@ -60,7 +60,7 @@
 <SaveRom_Folder>保存先フォルダを選択してください。</SaveRom_Folder>
 <E_SaveRom_FolderCancel>フォルダの選択がキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_FolderCancel>
 <E_SaveRom_OWCancel>ファイルの上書きがキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_OWCancel>
-<E_SaveRom_FileNormal>マスターROMの作成に失敗しました。</E_SaveRom_FileNormal>
+<E_SaveRom_FileDefault>マスターROMの作成に失敗しました。</E_SaveRom_FileDefault>
 <E_SaveRom_Exception>マスターROMの作成に失敗しました。
 
 例外:{0}

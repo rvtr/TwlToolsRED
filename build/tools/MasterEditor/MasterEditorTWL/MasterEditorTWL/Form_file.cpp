@@ -87,7 +87,7 @@ System::Boolean Form1::loadTad( System::String ^tadfile )
 	System::String ^srlfile = this->getSplitTadTmpFile();
 	if( splitTad( tadfile, srlfile ) != 0 )		// 上書きで保存
 	{
-		this->errMsg( "TADファイルの読み込みに失敗しました。", "Reading TAD file failed." );
+		this->errMsg( "E_LoadRom_Tad" );
 		return false;
 	}
 	System::Boolean result = this->loadSrl( srlfile );	// 一時保存したSRLを読み込み
@@ -105,19 +105,16 @@ System::Boolean Form1::loadSrl( System::String ^srlfile )
 		switch( result )
 		{
 			case ECSrlResult::ERROR_PLATFORM:
-				this->errMsg( "本ツールはTWL用です。NTR専用ROMなどのTWL非対応ROMを読み込むことはできません。",
-							  "This tool can only read TWL ROM. This can't read an other data e.g. NTR limited ROM." );
+				this->errMsg( "E_LoadRom_Platform" );
 			break;
 
 			case ECSrlResult::ERROR_SIGN_DECRYPT:
 			case ECSrlResult::ERROR_SIGN_VERIFY:
-				this->errMsg( "不正なROMデータです。TWL対応/専用ROMでないかROMデータが改ざんされている可能性があります。",
-							  "Illegal ROM data. It is not for TWL ROM, or is altered illegally." );
+				this->errMsg( "E_LoadRom_Sign" );
 			break;
 
 			default:
-				this->errMsg( "ROMデータファイルの読み込みに失敗しました。\n再度ROMデータを読み込ませてください。", 
-					          "Reading the ROM data file failed. \nPlease read a ROM data file again, with \"Open a ROM data file\"" );
+				this->errMsg( "E_LoadRom_Default" );
 			break;
 		}
 		return false;
@@ -138,8 +135,7 @@ System::Boolean Form1::loadSrl( System::String ^srlfile )
 	u16  crc;
 	if( !getWholeCRCInFile( srlfile, &crc ) )
 	{
-		this->errMsg( "ROMデータのCRC計算に失敗しました。ROMデータの読み込みはキャンセルされました。",
-			          "Calculating CRC of the ROM data failed. Therefore reading ROM data is canceled." );
+		this->errMsg( "E_LoadRom_CRC" );
 		return false;
 	}
 	System::UInt16 ^hcrc = gcnew System::UInt16( crc );
@@ -239,17 +235,13 @@ ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
 	FILE       *ifp = NULL;
 	if( fopen_s( &ifp, pchInfile, "rb" ) != NULL )
 	{
-		//this->errMsg(
-		//	"ファイルコピーにおいて入力ファイルのオープンに失敗しました。",
-		//	"In Copying file, the input file can't be opened." );
+		//this->errMsgCore(	"ファイルコピーにおいて入力ファイルのオープンに失敗しました。" );
 		return (ECFormResult::ERROR_FILE_OPEN);
 	}
 	FILE       *ofp = NULL;
 	if( fopen_s( &ofp, pchOutfile, "wb" ) != NULL )	// 同名ファイルを削除して新規にライト・バイナリ
 	{
-		//this->errMsg(
-		//	"ファイルコピーにおいて出力ファイルのオープンに失敗しました。",
-		//	"In Copying file, the output file can't be opened." );
+		//this->errMsg( "ファイルコピーにおいて出力ファイルのオープンに失敗しました。" );
 		fclose(ifp);
 		return (ECFormResult::ERROR_FILE_OPEN);
 	}
@@ -268,18 +260,14 @@ ECFormResult Form1::copyFile( System::String ^infile, System::String ^outfile )
 
 		if( datasize != fread(buf, 1, datasize, ifp) )
 		{
-			//this->errMsg(
-			//	"ファイルコピーにおいて入力ファイルからのデータリードに失敗しました。",
-			//	"In Copying file, contents can't be read from the input file." );
+			//this->errMsg(	"ファイルコピーにおいて入力ファイルからのデータリードに失敗しました。" );
 			fclose(ofp);
 			fclose(ifp);
 			return ECFormResult::ERROR_FILE_READ;
 		}
 		if( datasize != fwrite(buf, 1, datasize, ofp) )
 		{
-			//this->errMsg(
-			//	"ファイルコピーにおいて出力ファイルからのデータライトに失敗しました。",
-			//	"In Copying file, contents can't be written to the output file." );
+			//this->errMsg( "ファイルコピーにおいて出力ファイルからのデータライトに失敗しました。" );
 			fclose(ofp);
 			fclose(ifp);
 			return ECFormResult::ERROR_FILE_READ;

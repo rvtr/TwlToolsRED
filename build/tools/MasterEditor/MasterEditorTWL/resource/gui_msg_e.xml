@@ -20,7 +20,7 @@
 <E_LoadRom_Tad>The reading of the TAD file has failed.</E_LoadRom_Tad>
 
 <!-- Create Submission Set -->
-<E_SaveSet_Empty>ROM data file has not been read</E_SaveSet_Empty>
+<E_SaveSet_Empty>ROM data file has not been read.</E_SaveSet_Empty>
 <E_SaveSet_Setting>Submission data cannot be created due to illegal settings.</E_SaveSet_Setting>
 <E_SaveSet_Input>Submission data cannot be created due to insufficient input information.</E_SaveSet_Input>
 <SaveSet_Name>The following submission files are all created at one time. 
@@ -33,7 +33,7 @@
 <SaveSet_Folder>Select a save-to folder.</SaveSet_Folder>
 <E_SaveSet_FolderCancel>Submission data is not created because folder selection has been canceled.</E_SaveSet_FolderCancel>
 <E_SaveSet_OWCancel>Submission data is not created because file overwrite has been canceled.</E_SaveSet_OWCancel>
-<E_SaveSet_FileNormal>Failed to create Master ROM. Halted during creation, so some files were not created.</E_SaveSet_FileNormal>
+<E_SaveSet_FileDefault>Failed to create Master ROM. Halted during creation, so some files were not created.</E_SaveSet_FileDefault>
 <E_SaveSet_FileOpen>Master ROM file not created due to failure to open the output file.</E_SaveSet_FileOpen>
 <E_SaveSet_FileRead>Master ROM file not created due to failure to read the file.</E_SaveSet_FileRead>
 <E_SaveSet_FileWrite>Master ROM file not created due to failure to write to the output file.</E_SaveSet_FileWrite>
@@ -60,7 +60,7 @@ Exception:{0}
 <SaveRom_Folder>Select a save-to folder.</SaveRom_Folder>
 <E_SaveRom_FolderCancel>The Master ROM was not created because folder selection has been canceled.</E_SaveRom_FolderCancel>
 <E_SaveRom_OWCancel>Creation of Master ROM was canceled.</E_SaveRom_OWCancel>
-<E_SaveRom_FileNormal>Failed to create Master ROM.</E_SaveRom_FileNormal>
+<E_SaveRom_FileDefault>Failed to create Master ROM.</E_SaveRom_FileDefault>
 <E_SaveRom_Exception>Failed to create Master ROM.
 
 例外:{0}

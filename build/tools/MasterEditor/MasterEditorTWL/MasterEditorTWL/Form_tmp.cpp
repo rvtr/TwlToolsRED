@@ -112,7 +112,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	catch( System::Exception ^ex )
 	{
 		(void)ex;
-		this->errMsg( "ˆêŽžî•ñ‚Ì•Û‘¶‚ÉŽ¸”s‚µ‚Ü‚µ‚½B", "Saving a temporary file failed." );
+		this->errMsg( "E_SaveTemp" );
 	}
 } //saveTmp()
 
@@ -129,7 +129,7 @@ void Form1::loadTmp( System::String ^filename )
 	catch( System::Exception ^ex )
 	{
 		(void)ex;
-		this->errMsg( "ˆêŽžî•ñ‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½B", "Loading a temporary file failed." );
+		this->errMsg( "E_LoadTemp" );
 	}
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 	System::String ^text;

@@ -328,7 +328,7 @@ System::String^ Form1::saveFileDlg( System::String ^filter, System::String ^exte
 
 // セーブするディレクトリをダイアログで取得
 // @ret 取得したディレクトリ名(\\で終わるように調整される) エラーのときnullptr
-System::String^ Form1::saveDirDlg( System::String ^msgJ, System::String ^msgE )
+System::String^ Form1::saveDirDlg( System::String ^msg )
 {
 	System::String ^dir;
 	System::Windows::Forms::FolderBrowserDialog ^dlg = gcnew (System::Windows::Forms::FolderBrowserDialog);
@@ -344,16 +344,7 @@ System::String^ Form1::saveDirDlg( System::String ^msgJ, System::String ^msgE )
 		dlg->SelectedPath = this->prevDir;
 	}
 	dlg->ShowNewFolderButton = true;
-
-	// ダイアログの上部に出るメッセージ
-	if( this->isEnglish() && msgE )
-	{
-		dlg->Description = msgE;
-	}
-	else if( msgJ )
-	{
-		dlg->Description = msgJ;
-	}
+	dlg->Description = msg;		// ダイアログの上部に出るメッセージ
 
 	if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
 	{
@@ -377,17 +368,7 @@ bool Form1::isOverwriteFile( System::String ^path )
 {
 	if( System::IO::File::Exists( path ) )
 	{
-		System::String ^msg;
-		if( this->isJapanese() )
-		{
-			msg = gcnew System::String( path + "はすでに存在します。上書きしますか?" );
-		}
-		else
-		{
-			msg = gcnew System::String( path + "already exists. Overwrite it?" );
-		}
-
-		if( MessageBox::Show( msg, "Information", MessageBoxButtons::YesNo, MessageBoxIcon::None ) 
+		if( MessageBox::Show( this->makeMsg( "OverWrite", path ), "Information", MessageBoxButtons::YesNo, MessageBoxIcon::None ) 
 			== System::Windows::Forms::DialogResult::No )
 		{
 			return false;

@@ -39,13 +39,13 @@ void Form1::loadInit(void)
 	catch( System::IO::FileNotFoundException ^s )
 	{
 		(void)s;
-		this->errMsg( "設定ファイルが見つかりません。", "Setting file is not found." );
+		this->errMsg( "E_Start_InitExist" );
 		return;
 	}
 	catch( System::Exception ^s )
 	{
 		(void)s;
-		this->errMsg( "設定ファイルを開くことができませんでした。", "Setting file can't be opened." );
+		this->errMsg( "E_Start_InitOpen" );
 		return;
 	}
 
@@ -182,13 +182,13 @@ void Form1::loadAppendInit(void)
 	catch( System::IO::FileNotFoundException ^s )
 	{
 		(void)s;
-		this->errMsg( "追加設定ファイルが見つかりません。", "Setting file is not found." );
+		this->errMsg( "E_Start_AppendExist" );
 		return;
 	}
 	catch( System::Exception ^s )
 	{
 		(void)s;
-		this->errMsg( "追加設定ファイルを開くことができませんでした。", "Setting file can't be opened." );
+		this->errMsg( "E_Start_AppendOpen" );
 		return;
 	}
 	System::Xml::XmlElement ^root = doc->DocumentElement;
@@ -218,8 +218,7 @@ void Form1::loadAppendInit(void)
 		catch ( System::Exception ^ex )
 		{
 			(void)ex;
-			this->errMsg( "設定ファイル中のSDKバージョンが読み込めませんでした。バージョンは0とみなされます。", 
-				          "SDK ver. can't be read from setting file. Therefore it is set by 0." );
+			this->errMsg( "E_Start_SDK" );
 			this->hSrl->hMrcExternalCheckItems->SDKVer = 0;
 		}
 

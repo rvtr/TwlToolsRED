@@ -32,7 +32,7 @@ void RCMessageBank::loadMessage( System::String ^filepath, System::String ^lang 
 	System::Xml::XmlElement ^root = doc->DocumentElement;
 
 	// Œ¾Œê‚É‚æ‚Á‚ÄXMLƒ‹[ƒg‚ÌŠi”[æ‚ð•ÏX
-	if( lang == "J" )
+	if( lang->ToUpper() == "J" )
 	{
 		this->rootJ = root;
 	}
@@ -48,7 +48,7 @@ void RCMessageBank::loadMessage( System::String ^filepath, System::String ^lang 
 System::String^ RCMessageBank::getMessage( System::String ^tag, System::String ^lang )
 {
 	System::Xml::XmlElement ^root;
-	if( lang == "J" )
+	if( lang->ToUpper() == "J" )
 	{
 		root = this->rootJ;
 	}

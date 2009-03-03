@@ -62,6 +62,9 @@ namespace MasterEditorTWL {
 		System::Boolean IsCheckedUGC;			// 読み込み時にチェックされていたか
 		System::Boolean IsCheckedPhotoEx;
 
+		// エラーメッセージ
+		RCMessageBank ^hMsg;
+
 	/////////////////////////////////////////////
 	// VC自動追加フィールド
 	/////////////////////////////////////////////
@@ -3428,6 +3431,24 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		{
 			return (this->getBinDir() + "tmp.srl");
 		}
+		// GUIメッセージファイル
+		System::String^ getGuiMessageFileJ(void)
+		{
+			return (this->getResDir() + "gui_msg_j.xml");
+		}
+		System::String^ getGuiMessageFileE(void)
+		{
+			return (this->getResDir() + "gui_msg_e.xml");
+		}
+		// MRCメッセージファイル
+		System::String^ getMrcMessageFileJ(void)
+		{
+			return (this->getResDir() + "mrc_msg_j.xml");
+		}
+		System::String^ getMrcMessageFileE(void)
+		{
+			return (this->getResDir() + "mrc_msg_e.xml");
+		}
 
 	private:
 		// ----------------------------------------------
@@ -3537,24 +3558,42 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		System::Boolean checkDeliverableForms(void);
 
 		// ----------------------------------------------
-		// ダイアログ
+		// メッセージダイアログ
 		// ----------------------------------------------
 
-		void sucMsg( System::String ^msgJ, System::String ^msgE )
+		// @arg[in] 外部メッセージファイルのタグ(RCMessageBankに引き渡す)
+		// @arg[in] 引数がある場合は指定 (可変長引数)
+		void sucMsg( System::String ^tag, ... cli::array<System::String^> ^args )
 		{
-			if( this->isJapanese() )
-				MessageBox::Show( msgJ, "Information", MessageBoxButtons::OK, MessageBoxIcon::None );
-			else
-				MessageBox::Show( msgE, "Information", MessageBoxButtons::OK, MessageBoxIcon::None );
+			this->sucMsgCore( this->makeMsg(tag, args) );
 		}
-
-		// エラーメッセージを出力
-		void errMsg( System::String ^msgJ, System::String ^msgE )
+		void errMsg( System::String ^tag, ... cli::array<System::String^> ^args )
 		{
+			this->errMsgCore( this->makeMsg(tag, args) );
+		}
+		System::String^ makeMsg( System::String ^tag, ... cli::array<System::String^> ^args )
+		{
+			System::String ^lang;
 			if( this->isJapanese() )
-				MessageBox::Show( msgJ, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error );
+			{
+				lang = "J";
+			}
 			else
-				MessageBox::Show( msgE, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error );
+			{
+				lang = "E";
+			}
+			System::String ^fmt = this->hMsg->getMessage( tag, lang );	// メッセージファイルから書式を取得
+			System::String ^msg = System::String::Format( fmt, args );	// 書式をStringに展開
+			return msg;
+		}
+		// 文字列を直に指定する
+		void errMsgCore( System::String ^msg )
+		{
+			MessageBox::Show( msg, "Error", MessageBoxButtons::OK, MessageBoxIcon::Error );
+		}
+		void sucMsgCore( System::String ^msg )
+		{
+			MessageBox::Show( msg, "Information", MessageBoxButtons::OK, MessageBoxIcon::None );
 		}
 
 	private:
@@ -3637,7 +3676,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 
 		// セーブするディレクトリをダイアログで取得
 		// @ret 取得したディレクトリ名(\\で終わるように調整される) エラーのときnullptr
-		System::String^ saveDirDlg( System::String ^msgJ, System::String ^msgE );
+		System::String^ saveDirDlg( System::String ^msg );
 
 		// ファイルが存在するかを調べて上書き確認をする
 		bool isOverwriteFile( System::String ^path );
@@ -3677,7 +3716,6 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			filename = this->openFileDlg( "rom format (*.srl;*.tad)|*.srl;*.tad|All files (*.*)|*.*" );
 			if( filename == nullptr )
 			{
-				//this->errMsg( "ROMデータファイルのオープンがキャンセルされました。", "Opening the ROM data file is canceled by user." );
 				return;
 			}
 
@@ -3688,7 +3726,6 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			}
 			this->tboxFile->Text = filename;
 			this->clearOtherForms();			// ROMヘッダには反映されない編集情報を更新
-			//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 		} //stripItemOpenRom_Click()
 
 	private:
@@ -3700,8 +3737,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			// SRLが読み込まれていないときにはリードさせない
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
 			{
-				this->errMsg( "ROMデータファイルが読み込まれていませんので、マスターROMの作成ができません。", 
-							  "ROM data file has not opened yet. A master ROM data can't be made." );
+				this->errMsg( "E_SaveRom_Empty" );
 				return;
 			}
 
@@ -3710,8 +3746,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			this->hWarnList->Clear();
 			if( this->checkSrlForms() == false )
 			{
-				this->errMsg( "不正な設定があるためマスターROMの作成ができません。",
-							  "Setting is illegal. A master ROM data can't be made." );
+				this->errMsg( "E_SaveRom_Setting" );
 				return;
 			}
 
@@ -3720,20 +3755,13 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			System::String ^srlfile    = prefix + ".SRL";
 
 			// 注意書き
-			this->sucMsg(
-				"以下のファイルが作成されます。\n\n"
-				+ srlfile + " (マスターROM)\n",
-
-				"Following file for submission will be made. \n\n"
-				+ srlfile + " (Master ROM)\n"
-			);
+			this->sucMsg( "SaveRom_Name", srlfile );
 
 			// ダイアログからSRLを保存するディレクトリを取得する
-			System::String ^dir = this->saveDirDlg( "保存先フォルダを選択してください。", "Please select a folder for saving the file" );
+			System::String ^dir = this->saveDirDlg( this->makeMsg( "SaveRom_Folder" ) );
 			if( !dir )
 			{
-				this->errMsg( "フォルダの選択がキャンセルされましたのでマスターROMは作成されません。", 
-							  "A master ROM isn't made, since selecting folder is canceled." );
+				this->errMsg( "E_SaveRom_FolderCancel" );
 				return;
 			}
 			srlfile = dir + srlfile;
@@ -3741,8 +3769,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			// ファイルが存在するかを調べて上書き確認をする
 			if( !this->isOverwriteFile(srlfile) )
 			{
-				this->errMsg( "ファイルの上書きがキャンセルされましたのでマスターROMは作成されません。", 
-							  "Since overwriting a file is canceled, a master ROM isn't made." );
+				this->errMsg( "E_SaveRom_OWCancel" );
 				return;
 			}
 
@@ -3751,68 +3778,56 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 				ECFormResult result = this->saveRom( srlfile );
 				if( result != ECFormResult::NOERROR )
 				{
-					System::String^ msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
-					System::String^ msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
+					System::String ^msg = this->makeMsg( "E_SaveSet_FileDefault" );
 					switch( result )
 					{
 						case ECFormResult::ERROR_FILE_OPEN:
-							msgJ += "\n\n原因:\n出力ファイルのオープンに失敗しました。";
-							msgE += "\n\nReason:\nOpening an output file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileOpen" );
 						break;
 
 						case ECFormResult::ERROR_FILE_READ:
-							msgJ += "\n\n原因:\nファイルの読み込みに失敗しました。";
-							msgE += "\n\nReason:\nReading the file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileRead" );
 						break;
 
 						case ECFormResult::ERROR_FILE_WRITE:
-							msgJ += "\n\n原因:\n出力ファイルへの書き出しに失敗しました。";
-							msgE += "\n\nReason:\nWriting the file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileWrite" );
 						break;
 
 						case ECFormResult::ERROR_FILE_COPY:
-							msgJ += "\n\n原因:\n入力ROMデータファイルのコピーに失敗しました。";
-							msgE += "\n\nReason:\nCopying the ROM data file failed.";
+							msg += this->makeMsg( "E_SaveSet_FileCopy" );
 						break;
 
 						case ECFormResult::ERROR_FILE_EXIST:
-							msgJ += "\n\n原因:\n入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
-							msgE += "\n\nReason:\nWhen the input ROM data file doesn't exist in the original folder, output file can't be made.";
+							msg += this->makeMsg( "E_SaveSet_FileExist" );
 						break;
 
 						case ECFormResult::ERROR_FILE_SIGN:
-							msgJ += "\n\n原因:\n出力ファイルのディジタル署名の計算に失敗しました。";
-							msgE += "\n\nReason:\nCalculation the digital signature of the output file failed.";
+							msg += this->makeMsg( "E_SaveSet_FileSign" );
 						break;
 
 						default:
 						break;
 					}
-					this->errMsg( msgJ, msgE );
+					this->errMsgCore( msg );
 					return;
 				}
-				this->sucMsg( "マスターROMの作成が成功しました。", "A master ROM is made successfully." );
+				this->sucMsg( "SaveRom_Success" );
 				this->tboxFile->Text = srlfile;
 			}
 			catch( System::Exception ^ex )
 			{
-				System::String ^msgJ = "マスターROMの作成に失敗しました。";
-				System::String ^msgE = "Making a master ROM failed. ";
-				msgJ += "\n\n例外:\n" + ex->ToString() + "\n" + ex->Message;
-				msgE += "\n\n例外:\n" + ex->ToString() + "\n" + ex->Message;
-				this->errMsg( msgJ, msgE );
+				this->errMsg( "E_SaveRom_Exception", ex->ToString(), ex->Message );
 				return;
 			}
-			u16  crc;			// SRL全体のCRCを計算する
+			u16  crc;	// 書き出したSRLを再読み込みするのでCRCを再計算する
 			if( !getWholeCRCInFile( srlfile, &crc ) )
 			{
-				this->errMsg( "CRCの計算に失敗しました。", 
-							  "Calculating CRC is failed. " );
+				this->errMsg( "E_SaveRom_CRC" );
 				return;
 			}
 			this->tboxWholeCRC->Clear();
 			this->tboxWholeCRC->AppendText( "0x" );
-			this->tboxWholeCRC->AppendText( crc.ToString("X4") );	// 書き出したSRLを再読み込みするのでCRCを再計算する
+			this->tboxWholeCRC->AppendText( crc.ToString("X4") );
 
 		} //stripItemMasterRom_Click()
 
@@ -3827,7 +3842,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			// SRLが読み込まれていないときにはリードさせない
 			if( System::String::IsNullOrEmpty( this->tboxFile->Text ) )
 			{
-				this->errMsg( "ROMデータファイルが読み込まれていません。", "ROM file has not opened yet." );
+				this->errMsg( "E_SaveSet_Empty" );
 				return;
 			}
 
@@ -3836,14 +3851,12 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			this->hWarnList->Clear();
 			if( this->checkSrlForms() == false )
 			{
-				this->errMsg( "不正な設定があるため提出データを作成できません。",
-							  "Setting is illegal. Submission data can't be made." );
+				this->errMsg( "E_SaveSet_Setting" );
 				return;
 			}
 			if( this->checkDeliverableForms() == false )
 			{
-				this->errMsg( "入力情報に不足があるため提出データを作成できません。",
-							  "Input is not enough. Submission data can't be made." );
+				this->errMsg( "E_SaveSet_Input" );
 				return;
 			}
 
@@ -3855,28 +3868,13 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			System::String ^middlefilePrint = prefix + "_MIDDLEWARE.HTML";
 
 			// 注意書き
-			this->sucMsg(
-				"以下の提出ファイルが一度に作成されます。\n\n"
-				+ srlfile    + " (マスターROM)\n"
-				+ delivfile  + " (マスターROM提出確認書)\n"
-				+ middlefile + " (ミドルウェア一覧)\n"
-				+ middlefilePrint + " (ミドルウェア一覧 印刷用)\n"
-				+ "\n",
-
-				"Following files for submission will be made. \n\n"
-				+ srlfile    + " (Master ROM)\n"
-				+ delivfile  + " (Submission Sheet)\n"
-				+ middlefile + " (Middleware List)\n"
-				+ middlefilePrint + " (Middleware List For Print)\n"
-				+ "\n"
-			);
+			this->sucMsg( "SaveSet_Name", srlfile, delivfile, middlefile, middlefilePrint );
 
 			// ダイアログからSRLを保存するディレクトリを取得する
-			System::String ^dir = this->saveDirDlg( "保存先フォルダを選択してください。", "Please select a folder for saving files" );
+			System::String ^dir = this->saveDirDlg( this->makeMsg("SaveSet_Folder") );
 			if( !dir )
 			{
-				this->errMsg( "フォルダの選択がキャンセルされましたので提出データ一式は作成されません。", 
-							  "A set of submission data can not be made, since selecting folder is canceled." );
+				this->errMsg( "E_SaveSet_FolderCancel" );
 				return;
 			}
 			srlfile    = dir + srlfile;
@@ -3888,8 +3886,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			if( !this->isOverwriteFile(srlfile)    || !this->isOverwriteFile(delivfile) ||
 				!this->isOverwriteFile(middlefile) || !this->isOverwriteFile(middlefilePrint) )
 			{
-				this->errMsg( "ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。", 
-							  "Since overwriting a file is canceled, a set of submission data can not be made." );
+				this->errMsg( "E_SaveSet_OWCancel" );
 				return;
 			}
 			
@@ -3903,62 +3900,50 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 				ECFormResult result = this->saveRom( srlfile );
 				if( result != ECFormResult::NOERROR )
 				{
-					System::String^ msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
-					System::String^ msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
+					System::String ^msg = this->makeMsg( "E_SaveSet_FileDefault" );
 					switch( result )
 					{
 						case ECFormResult::ERROR_FILE_OPEN:
-							msgJ += "\n\n原因:\n出力ファイルのオープンに失敗しました。";
-							msgE += "\n\nReason:\nOpening an output file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileOpen" );
 						break;
 
 						case ECFormResult::ERROR_FILE_READ:
-							msgJ += "\n\n原因:\nファイルの読み込みに失敗しました。";
-							msgE += "\n\nReason:\nReading the file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileRead" );
 						break;
 
 						case ECFormResult::ERROR_FILE_WRITE:
-							msgJ += "\n\n原因:\n出力ファイルへの書き出しに失敗しました。";
-							msgE += "\n\nReason:\nWriting the file is failed.";
+							msg += this->makeMsg( "E_SaveSet_FileWrite" );
 						break;
 
 						case ECFormResult::ERROR_FILE_COPY:
-							msgJ += "\n\n原因:\n入力ROMデータファイルのコピーに失敗しました。";
-							msgE += "\n\nReason:\nCopying the ROM data file failed.";
+							msg += this->makeMsg( "E_SaveSet_FileCopy" );
 						break;
 
 						case ECFormResult::ERROR_FILE_EXIST:
-							msgJ += "\n\n原因:\n入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。";
-							msgE += "\n\nReason:\nWhen the input ROM data file doesn't exist in the original folder, output file can't be made.";
+							msg += this->makeMsg( "E_SaveSet_FileExist" );
 						break;
 
 						case ECFormResult::ERROR_FILE_SIGN:
-							msgJ += "\n\n原因:\n出力ファイルのディジタル署名の計算に失敗しました。";
-							msgE += "\n\nReason:\nCalculation the digital signature of the output file failed.";
+							msg += this->makeMsg( "E_SaveSet_FileSign" );
 						break;
 
 						default:
 						break;
 					}
-					this->errMsg( msgJ, msgE );
+					this->errMsgCore( msg );
 					return;
 				}
 				this->tboxFile->Text = srlfile;		// 成功してからテキストボックスに反映
 			}
 			catch( System::Exception ^ex )
 			{
-				System::String ^msgJ = "マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。";
-				System::String ^msgE = "Making a master ROM failed. Therefore, a part of files can't be made.";
-				msgJ += "例外:\n" + ex->ToString() + "\n" + ex->Message;
-				msgE += "例外:\n" + ex->ToString() + "\n" + ex->Message;
-				this->errMsg( msgJ, msgE );
+				this->errMsg( "E_SaveSet_Exception", ex->ToString(), ex->Message );
 				return;
 			}
 			u16  crc;			// SRL全体のCRCを計算する(書類に記述するため)
 			if( !getWholeCRCInFile( srlfile, &crc ) )
 			{
-				this->errMsg( "CRCの計算に失敗しました。作成を中止するため一部のファイルは作成されません。", 
-							  "Calculating CRC is failed. Therefore, a part of files can't be made." );
+				this->errMsg( "E_SaveSet_CRC" );
 				return;
 			}
 			this->tboxWholeCRC->Clear();
@@ -3968,8 +3953,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 			// ミドルウェアのリストを作成
 			if( !this->saveMiddlewareListXmlEmbeddedXsl( middlefile ) || !this->saveMiddlewareListHtml( middlefilePrint ) )
 			{
-				this->errMsg( "ミドルウェアのリストが作成できませんでした。作成を中止するため一部のファイルは作成されません。",
-							  "Making a list of middleware failed. Therefore, a part of files can't be made.");
+				this->errMsg( "E_SaveSet_MWList" );
 				return;
 			}
 
@@ -3982,22 +3966,20 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 				switch( result )
 				{
 					case ECDeliverableResult::ERROR_FILE_OPEN:
-						this->errMsg( "提出確認書のテンプレートが開けなかったため、提出確認書の作成に失敗しました。", 
-							          "Since a templete of the submission sheet can't be opened, making the sheet is failed." );
+						this->errMsg( "E_SaveSet_SheetTemplate" );
 					break;
 
 					case ECDeliverableResult::ERROR_FILE_WRITE:
-						this->errMsg( "提出確認書にデータを書き込みできませんでした。同名ファイルがすでに開かれていないかご確認ください。", 
-							          "Writing data into a submission sheet failed. Please check that the file has been opened already." );
+						this->errMsg( "E_SaveSet_SheetOpen" );
 					break;
 
 					default:
-						this->errMsg( "提出確認書の作成に失敗しました。", "Making the submission sheet is failed." );
+						this->errMsg( "E_SaveSet_Sheet_Default" );
 					break;
 				}
 				return;
 			}
-			this->sucMsg( "提出データ一式の作成に成功しました。", "A set of submission data is made successfully." );
+			this->sucMsg( "SaveSet_Success" );
 
 		} //stripItemSheet_Click()
 
@@ -4037,7 +4019,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		{
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
 			{
-				this->errMsg( "ROMデータファイルが読み込まれていません。", "ROM file has not opened yet." );
+				this->errMsg( "E_MWList_Empty" );
 				return;
 			}
 
@@ -4045,7 +4027,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 
 			if( !filename || !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
 			{
-				this->errMsg( "ミドルウェアリストの作成に失敗しました。","Making a middleware list failed." );
+				this->errMsg( "E_MWList_Default" );
 			}
 		} //stripItemMiddlewareXml_Click()
 
@@ -4057,7 +4039,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		{
 			if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
 			{
-				this->errMsg( "ROMデータファイルがオープンされていません。", "ROM file has not opened yet." );
+				this->errMsg( "E_MWList_Empty" );
 				return;
 			}
 
@@ -4065,7 +4047,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 
 			if( !filename || !this->saveMiddlewareListHtml(filename) )
 			{
-				this->errMsg( "ミドルウェアリストの作成に失敗しました。","Making a middleware list failed." );
+				this->errMsg( "E_MWList_Default" );
 			}
 		} //stripItemMiddlewareHtml_Click
 
@@ -4092,8 +4074,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 
 			if( System::IO::File::Exists(filename) == false )
 			{
-				this->errMsg( "ファイルが存在しませんので読み込むことができません。", 
-							  "File is not found. Therefore the file can not be opened." );
+				this->errMsg( "E_LoadRom_Exist" );
 				return;
 			}
 			if( System::IO::Path::GetExtension(filename)->ToLower() == ".xml" )
@@ -4108,7 +4089,6 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 				}
 				this->tboxFile->Text = filename;
 				this->clearOtherForms();
-				//this->sucMsg( "ROMデータファイルのオープンに成功しました。", "The ROM data file is opened successfully." );
 			}
 		}
 

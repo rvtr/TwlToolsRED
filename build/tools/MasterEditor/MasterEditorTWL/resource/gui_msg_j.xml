@@ -86,18 +86,26 @@
 <LabelProductCode>製品コード</LabelProductCode>
 <LabelCountryCode>製品コード(仕向地仕様コード)</LabelCountryCode>
 <LabelProductNameForeign>製品名(海外版)</LabelProductNameForeign>
-<LabelProductNameForeign>製品コード(海外版)</LabelProductNameForeign>
+<LabelProductCodeForeign>製品コード(海外版)</LabelProductCodeForeign>
 <LabelUsage>目的</LabelUsage>
 <LabelBackup>バックアップメモリ</LabelBackup>
 <LabelPerson1>ご氏名(担当者1)</LabelPerson1>
+<LabelFurigana1>ふりがな(担当者1)</LabelFurigana1>
 <LabelCompany1>貴社名(担当者1)</LabelCompany1>
 <LabelDepart1>部署名(担当者1)</LabelDepart1>
 <LabelTel1>TEL(担当者1)</LabelTel1>
 <LabelMail1>e-mail(担当者1)</LabelMail1>
 <LabelPerson2>ご氏名(担当者2)</LabelPerson2>
+<LabelFurigana2>ふりがな(担当者2)</LabelFurigana2>
 <LabelCompany2>貴社名(担当者2)</LabelCompany2>
 <LabelDepart2>部署名(担当者2)</LabelDepart2>
 <LabelTel2>TEL(担当者2)</LabelTel2>
 <LabelMail2>e-mail(担当者2)</LabelMail2>
+
+<LabelRegion>リージョン</LabelRegion>
+<LabelRating>レーティング</LabelRating>
+<RatingInput>{0}: 選択してください。</RatingInput>
+<RatingPendingSelect>{0}: 審査中であると指定されています。審査が決まりしだい、再提出してください。</RatingPendingSelect>
+<RatingUnnecessarySelect>レーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。</RatingUnnecessarySelect>
 
 </message>

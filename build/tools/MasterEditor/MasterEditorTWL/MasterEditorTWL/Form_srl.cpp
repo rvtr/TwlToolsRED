@@ -327,7 +327,7 @@ void Form1::setSrlFormsTextBox()
 System::Boolean Form1::checkSrlForms(void)
 {
 	// リージョン
-	if( this->checkBoxIndex( this->combRegion, LANG_REGION_J, LANG_REGION_E, true ) == false )
+	if( this->checkComboBoxIndex( this->combRegion, "LabelRegion", true ) == false )
 		return false;
 
 	// リージョンを決める
@@ -381,12 +381,7 @@ System::Boolean Form1::checkSrlForms(void)
 	// ペアレンタルコントロール
 	if( this->cboxIsUnnecessaryRating->Checked )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"レーティング表示が不要であると指定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。",
-			"Parental Control",
-			"In your selection, rating is unnecessary. This selection is available for only tool application which is not game. Please contact Nintendo for checking validation of this selection",
-			true, true ) );
+		this->hWarnList->Add( this->makeErrorMsg(true, "LabelRating", "RatingUnnecessarySelect") );
 	}
 	else
 	{

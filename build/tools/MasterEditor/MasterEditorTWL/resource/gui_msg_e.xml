@@ -86,18 +86,26 @@ Exception:{0}
 <LabelProductCode>Product Code</LabelProductCode>
 <LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
 <LabelProductNameForeign>Product Name(Roreign Version)</LabelProductNameForeign>
-<LabelProductNameForeign>Product Code(Roreign Version)</LabelProductNameForeign>
+<LabelProductCodeForeign>Product Code(Roreign Version)</LabelProductCodeForeign>
 <LabelUsage>Usage</LabelUsage>
 <LabelBackup>Backup Memory</LabelBackup>
 <LabelPerson1>Contact1</LabelPerson1>
+<LabelFurigana1>Furigana</LabelFurigana1>
 <LabelCompany1>Company(Contact1)</LabelCompany1>
 <LabelDepart1>Dept.(Contact1)</LabelDepart1>
 <LabelTel1>TEL(Contact1)</LabelTel1>
 <LabelMail1>e-mail(Contact1)</LabelMail1>
 <LabelPerson2>Contact2</LabelPerson2>
+<LabelFurigana2>Furigana</LabelFurigana2>
 <LabelCompany2>Company(Contact2)</LabelCompany2>
 <LabelDepart2>Dept.(Contact2)</LabelDepart2>
 <LabelTel2>TEL(Contact2)</LabelTel2>
 <LabelMail2>e-mail(Contact2)</LabelMail2>
+
+<LabelRegion>Market</LabelRegion>
+<LabelRating>Rating</LabelRating>
+<RatingInput>{0}: Select data.</RatingInput>
+<RatingPendingSelect>{0}: "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
+<RatingUnnecessarySelect>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</RatingUnnecessarySelect>
 
 </message>

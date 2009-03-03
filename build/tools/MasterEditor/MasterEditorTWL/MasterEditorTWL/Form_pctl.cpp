@@ -269,7 +269,7 @@ void Form1::changeUnnecessaryRatingForms( System::Boolean bInitial )
 }
 
 // ペアレンタルコントロール関連のフォーム入力が正しいか書き込み前チェック
-void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^msg )
+void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::ComboBox ^comb, System::String ^ogn )
 {
 	// リージョンに含まれていないとき: 0クリアが保証されるのでチェック必要なし
 	if( !inRegion )
@@ -278,22 +278,13 @@ void Form1::checkRatingForms( System::Boolean inRegion, System::Windows::Forms::
 	// 設定されていないときエラー
 	if( (comb->SelectedIndex < 0) || (comb->SelectedIndex >= comb->Items->Count)  )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			msg + ": レーティングを選択してください。",
-			"Parental Control", 
-			msg + ": Please set rating.", true, true ) );
+		this->hErrorList->Add( this->makeErrorMsg(true, "LabelRating", "RatingInput", ogn) );
 	}
 
 	// 審査中のとき警告
 	if( comb->SelectedIndex == (comb->Items->Count - 1) )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			msg + ": 審査中指定がされています。審査が決まりしだい、再提出してください。",
-			"Parental Control",
-			msg + ": In your selection, no rating yet. Please submit again when rating is dicided.",
-			true, true ) );
+		this->hWarnList->Add( this->makeErrorMsg(true, "LabelRating", "RatingPendingSelect", ogn) );
 	}
 } //checkRatingForms()
 

@@ -4438,7 +4438,7 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 
 		// フォーム入力が正しいか書き込み前チェック
 		void checkRatingForms( System::Boolean inRegion, 
-							   System::Windows::Forms::ComboBox ^comb, System::String ^msg );
+							   System::Windows::Forms::ComboBox ^comb, System::String ^ogn );
 
 		// クリアする
 		void clearRating( System::Windows::Forms::ComboBox ^comb );
@@ -4467,19 +4467,14 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		// ----------------------------------------------
 
 		// テキスト入力がされているかチェック
-		System::Boolean checkTextForm( System::String ^formtext, 
-									   System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+		System::Boolean checkTextForm( System::String ^formtext, System::String ^tag );
 
 		// 数値入力が正常かどうかチェック
-		System::Boolean checkNumRange( 
-			System::Int32 val, System::Int32 min, System::Int32 max, 
-			System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+		System::Boolean checkNumRange( System::Int32 val, System::Int32 min, System::Int32 max, System::String ^tag );
+		System::Boolean checkNumRange( System::String ^strval, System::Int32 min, System::Int32 max, System::String ^tag );
 
-		System::Boolean checkNumRange( System::String ^strval, System::Int32 min, System::Int32 max, 
-									   System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
 		// コンボボックスをチェック
-		System::Boolean checkBoxIndex( System::Windows::Forms::ComboBox ^box, 
-			                           System::String ^labelJ, System::String ^labelE, System::Boolean affectRom );
+		System::Boolean checkComboBoxIndex( System::Windows::Forms::ComboBox ^box, System::String ^tag, System::Boolean isAffectRom );
 
 		// -----------------------------------------------------------------
 		// 提出情報(SRLに影響しない箇所のみ)とフォーム間のデータのやりとり
@@ -4563,6 +4558,10 @@ private: System::Windows::Forms::Label^  labCountryCodeL;
 		// --------------------------------------------------------
 		// エラー情報の登録
 		// --------------------------------------------------------
+
+		// エラー情報の作成
+		RCMrcError^ makeErrorMsg( 
+			System::Boolean isAffectRom, System::String ^labeltag, System::String ^msgtag, ... cli::array<System::String^> ^args );
 
 		// 読み込み時エラーの登録
 		void setGridError( void );

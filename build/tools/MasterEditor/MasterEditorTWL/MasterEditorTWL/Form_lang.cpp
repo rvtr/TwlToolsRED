@@ -435,6 +435,22 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->unnecessaryRating( this->combOFLC );
 	}
 
+	// 日本語のみの入力項目
+	if( langname->StartsWith("ja") )
+	{
+		this->tboxFurigana1->Enabled = true;
+		this->tboxNTSC1->Enabled  = true;
+		this->tboxFurigana2->Enabled = true;
+		this->tboxNTSC2->Enabled  = true;
+	}
+	else
+	{
+		this->tboxFurigana1->Enabled = false;
+		this->tboxNTSC1->Enabled  = false;
+		this->tboxFurigana2->Enabled = false;
+		this->tboxNTSC2->Enabled  = false;
+	}
+
 	// 複数行表示の改行を挿入
 	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideNandSizeInfo->Text = this->tboxGuideNandSizeInfo->Text->Replace( "<newline>", "\r\n" );

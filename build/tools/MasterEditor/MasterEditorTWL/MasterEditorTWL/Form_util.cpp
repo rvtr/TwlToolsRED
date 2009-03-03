@@ -22,57 +22,58 @@ using namespace MasterEditorTWL;
 // ----------------------------------------------
 
 // テキスト入力がされているかチェック
-System::Boolean Form1::checkTextForm( System::String ^formtext, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom )
+System::Boolean Form1::checkTextForm( System::String ^formtext, System::String ^tag )
 {
-	System::String ^msgJ = gcnew System::String( "入力されていません。" );
-	System::String ^msgE = gcnew System::String( "No item is set. Please retry to input." );
-
 	System::String ^tmp = formtext->Replace( " ", "" );		// スペースのみの文字列もエラー
 	if( (formtext == nullptr) || formtext->Equals("") || tmp->Equals("") )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( labelJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, msgJ, labelE, msgE, true, affectRom ) );
+		System::String ^labelJ = this->hMsg->getMessage(tag,"J");
+		System::String ^labelE = this->hMsg->getMessage(tag,"E");
+		System::String ^msgJ = this->hMsg->getMessage("TextBoxInput", "J");
+		System::String ^msgE = this->hMsg->getMessage("TextBoxInput", "E");
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false ) );
 		return false;
 	}
 	return true;
 }
 // 数値入力が正常かどうかチェック
-System::Boolean Form1::checkNumRange( 
-	System::Int32 val, System::Int32 min, System::Int32 max, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom )
+System::Boolean Form1::checkNumRange( System::Int32 val, System::Int32 min, System::Int32 max, System::String ^tag )
 {
-	System::String ^msgJ = gcnew System::String( "値の範囲が不正です。やり直してください。" );
-	System::String ^msgE = gcnew System::String( "Invalidate range of value. Please retry." );
-
 	if( (val < min) || (max < val) )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( labelJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, msgJ, labelE, msgE, true, affectRom ) );
+		System::String ^labelJ = this->hMsg->getMessage(tag,"J");
+		System::String ^labelE = this->hMsg->getMessage(tag,"E");
+		System::String ^msgJ = this->hMsg->getMessage("NumRangeInput", "J");
+		System::String ^msgE = this->hMsg->getMessage("NumRangeInput", "E");
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false ) );
 		return false;
 	}
 	return true;
 }
-System::Boolean Form1::checkNumRange( System::String ^strval, System::Int32 min, System::Int32 max, 
-							          System::String ^labelJ, System::String ^labelE, System::Boolean affectRom )
+System::Boolean Form1::checkNumRange( System::String ^strval, System::Int32 min, System::Int32 max, System::String ^tag )
 {
 	try
 	{
 		System::Int32  i = System::Int32::Parse(strval);
-		return (this->checkNumRange( i, min, max, labelJ, labelE, affectRom ));
+		return (this->checkNumRange( i, min, max, tag ));
 	}
 	catch ( System::FormatException ^ex )
 	{
 		(void)ex;
-		return (this->checkNumRange( max+1, min, max, labelJ, labelE, affectRom ));		// 必ず失敗するように max+1 を検査
+		return (this->checkNumRange( max+1, min, max, tag ));		// 必ず失敗するように max+1 を検査
 	}
 }
 // コンボボックスをチェック
-System::Boolean Form1::checkBoxIndex( System::Windows::Forms::ComboBox ^box, System::String ^labelJ, System::String ^labelE, System::Boolean affectRom )
+System::Boolean Form1::checkComboBoxIndex( System::Windows::Forms::ComboBox ^box, System::String ^tag, System::Boolean isAffectRom )
 {
-	System::String ^msgJ = gcnew System::String( "選択されていません。" );
-	System::String ^msgE = gcnew System::String( "One item is not selected." );
-	
 	if( box->SelectedIndex < 0 )
 	{
+		System::String ^labelJ = this->hMsg->getMessage(tag,"J");
+		System::String ^labelE = this->hMsg->getMessage(tag,"E");
+		System::String ^msgJ = this->hMsg->getMessage("ComboBoxInput", "J");
+		System::String ^msgE = this->hMsg->getMessage("ComboBoxInput", "E");
 		this->hErrorList->Add( gcnew RCMrcError( 
-			labelJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, msgJ, labelE, msgE, true, affectRom ) );
+			labelJ, 0, 0, msgJ, labelE, msgE, true, isAffectRom ) );
 	}
 	return true;
 }
@@ -81,6 +82,21 @@ System::Boolean Form1::checkBoxIndex( System::Windows::Forms::ComboBox ^box, Sys
 // --------------------------------------------------------
 // エラー情報の登録
 // --------------------------------------------------------
+
+// エラー情報の作成
+RCMrcError^ Form1::makeErrorMsg( System::Boolean isAffectRom, System::String ^labeltag, System::String ^msgtag, ... cli::array<System::String^> ^args )
+{
+	// 外部ファイルから項目名を取得
+	System::String ^nameJ = this->hMsg->getMessage( labeltag, "J" );
+	System::String ^nameE = this->hMsg->getMessage( labeltag, "E" );
+	// メッセージを取得
+	System::String ^fmtJ  = this->hMsg->getMessage( msgtag, "J" );	// メッセージファイルから書式を取得
+	System::String ^msgJ = System::String::Format( fmtJ, args );	// 書式をStringに展開
+	System::String ^fmtE  = this->hMsg->getMessage( msgtag, "E" );
+	System::String ^msgE = System::String::Format( fmtE, args );
+
+	return (gcnew RCMrcError( nameJ, 0, 0, msgJ, nameE, msgE, true, isAffectRom ));
+}
 
 // 読み込み時エラーの登録
 void Form1::setGridError( void )

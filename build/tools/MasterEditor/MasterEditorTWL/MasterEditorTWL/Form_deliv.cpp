@@ -288,60 +288,50 @@ System::Boolean Form1::checkDeliverableForms(void)
 	// 不正な場合はダイアログで注意してreturn
 
 	// 提出情報
-	this->checkTextForm( this->tboxProductName->Text, LANG_PRODUCT_NAME_J, LANG_PRODUCT_NAME_E, false );	// SRL作成には問題のないエラー
-	this->checkTextForm( this->tboxProductCode1->Text, LANG_PRODUCT_CODE_J, LANG_PRODUCT_CODE_E, false );
-	this->checkTextForm( this->tboxProductCode2->Text, LANG_PRODUCT_CODE_J, LANG_PRODUCT_CODE_E, false );
+	this->checkTextForm( this->tboxProductName->Text, "LabelProductName" );	// SRL作成には問題のないエラー
+	this->checkTextForm( this->tboxProductCode1->Text, "LabelProductCode" );
+	this->checkTextForm( this->tboxProductCode2->Text, "LabelProductCode" );
+	this->checkComboBoxIndex( this->combCountryCode, "LabelCountryCode", false );
 	if( this->cboxReleaseForeign->Checked == true )
 	{
-		this->checkTextForm( this->tboxProductNameForeign->Text, LANG_PRODUCT_NAME_F_J, LANG_PRODUCT_NAME_F_E, false );
-		this->checkTextForm( this->tboxProductCode1Foreign->Text, LANG_PRODUCT_CODE_F_J, LANG_PRODUCT_CODE_F_E, false );
-		this->checkTextForm( this->tboxProductCode2Foreign1->Text, LANG_PRODUCT_CODE_F_J, LANG_PRODUCT_CODE_F_E, false );
+		this->checkTextForm( this->tboxProductNameForeign->Text, "LabelProductNameForeign" );
+		this->checkTextForm( this->tboxProductCode1Foreign->Text, "LabelProductCodeForeign" );
+		this->checkTextForm( this->tboxProductCode2Foreign1->Text,"LabelProductCodeForeign" );
 	}
 	if( this->rUsageOther->Checked == true )
 	{
-		this->checkTextForm( this->tboxUsageOther->Text, LANG_USAGE_J, LANG_USAGE_E, false );
+		this->checkTextForm( this->tboxUsageOther->Text, "LabelUsage" );
 	}
-	this->checkBoxIndex( this->combCountryCode, LANG_PRODUCT_CODE_J, LANG_PRODUCT_CODE_E, false );
 
 	// 会社情報
-	this->checkTextForm( this->tboxPerson1->Text, LANG_PERSON_J, LANG_PERSON_E, false );
-	this->checkTextForm( this->tboxCompany1->Text, LANG_COMPANY_J, LANG_COMPANY_E, false );
-	this->checkTextForm( this->tboxDepart1->Text, LANG_DEPART_J, LANG_DEPART_E, false );
+	this->checkTextForm( this->tboxPerson1->Text, "LabelPerson1" );
+	this->checkTextForm( this->tboxCompany1->Text, "LabelCompany1" );
+	this->checkTextForm( this->tboxDepart1->Text, "LabelDepart2" );
 	if( this->isJapanese() == true )
 	{
-		this->checkTextForm( this->tboxFurigana1->Text, LANG_FURIGANA_J, LANG_FURIGANA_J, false );
+		this->checkTextForm( this->tboxFurigana1->Text, "LabelFurigana1" );
 	}
-	this->checkTextForm( this->tboxTel1->Text, LANG_TEL_J, LANG_TEL_E, false );
-	//this->checkTextForm( this->tboxFax1->Text, LANG_FAX_J, LANG_FAX_E, false );
-	this->checkTextForm( this->tboxMail1->Text, LANG_MAIL_J, LANG_MAIL_E, false );
-	//if( this->isJapanese() == true )
-	//{
-	//	this->checkTextForm( this->tboxNTSC1->Text, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, false );
-	//}
+	this->checkTextForm( this->tboxTel1->Text, "LabelTel1" );
+	this->checkTextForm( this->tboxMail1->Text, "LabelMail1" );
 
 	if( this->cboxIsInputPerson2->Checked == true )
 	{
-		this->checkTextForm( this->tboxPerson2->Text, LANG_PERSON_J, LANG_PERSON_E, false );
-		this->checkTextForm( this->tboxCompany2->Text, LANG_COMPANY_J, LANG_COMPANY_E, false );
-		this->checkTextForm( this->tboxDepart2->Text, LANG_DEPART_J, LANG_DEPART_E, false );
+		this->checkTextForm( this->tboxPerson2->Text, "LabelPerson2" );
+		this->checkTextForm( this->tboxCompany2->Text, "LabelCompany2" );
+		this->checkTextForm( this->tboxDepart2->Text, "LabelDepart2" );
 		if( this->isJapanese() == true )
 		{
-			this->checkTextForm( this->tboxFurigana2->Text, LANG_FURIGANA_J, LANG_FURIGANA_J, false );
+			this->checkTextForm( this->tboxFurigana2->Text, "LabelFurigana2" );
 		}
-		this->checkTextForm( this->tboxTel2->Text, LANG_TEL_J, LANG_TEL_E, false );
-		//this->checkTextForm( this->tboxFax2->Text, LANG_FAX_J, LANG_FAX_E, false );
-		this->checkTextForm( this->tboxMail2->Text, LANG_MAIL_J, LANG_MAIL_E, false );
-		//if( this->isJapanese() == true )
-		//{
-		//	this->checkTextForm( this->tboxNTSC2->Text, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, LANG_NTSC_1_J + " " + LANG_NTSC_2_J, false );
-		//}
+		this->checkTextForm( this->tboxTel2->Text, "LabelTel2" );
+		this->checkTextForm( this->tboxMail2->Text, "LabelMail2" );
 	}
 
 	// 一部のROM情報(SRLバイナリに反映されない情報)をここでチェックする
-	this->checkBoxIndex( this->combBackup, LANG_BACKUP_J, LANG_BACKUP_E, false );
+	this->checkComboBoxIndex( this->combBackup, "LabelBackup", false );
 	if( this->combBackup->SelectedIndex == (this->combBackup->Items->Count - 1) )
 	{
-		this->checkTextForm( this->tboxBackupOther->Text, LANG_BACKUP_J, LANG_BACKUP_E, false );
+		this->checkTextForm( this->tboxBackupOther->Text, "LabelBackup" );
 	}
 
 	// ひととおりエラー登録をした後で

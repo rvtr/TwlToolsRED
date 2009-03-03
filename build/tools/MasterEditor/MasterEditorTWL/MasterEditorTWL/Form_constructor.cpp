@@ -28,8 +28,8 @@ using namespace MasterEditorTWL;
 void Form1::construct(void)
 {
 	// フィールド初期化
-	this->hSrl   = gcnew (RCSrl);
-	this->hDeliv = gcnew (RCDeliverable);
+	this->hSrl   = gcnew RCSrl( this->getMrcMessageFileJ(), this->getMrcMessageFileE() );
+	this->hDeliv = gcnew RCDeliverable;
 	this->IsLoadTad = false;
 	this->hErrorList = gcnew System::Collections::Generic::List<RCMrcError^>();
 	this->hErrorList->Clear();

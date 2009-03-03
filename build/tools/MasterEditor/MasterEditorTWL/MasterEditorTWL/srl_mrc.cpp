@@ -64,9 +64,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( !result )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ソフトタイトル", 0x0, 0xb, "使用不可のASCIIコードが使用されています。",
-			"Game Title", "Unusable ASCII code is used.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("TitleNameAscii") );
 	}
 
 	result = true;
@@ -84,9 +82,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( !result )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ソフトタイトル", 0x0, 0xb, "末尾の未使用部分には00hを登録してください。",
-			"Game Title", "Please use 00h for an unused part.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("TitleNameSuffix") );
 	}
 
 	result = true;
@@ -102,9 +98,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( !result )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ソフトタイトル", 0x0, 0xb, "スペース部分には20hを登録してください。",
-			"Game Title", "Please use 20h for an space part.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("TitleNameSpace") );
 	}
 
 	// ゲームコードの文字コードチェック
@@ -119,15 +113,11 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( !result )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"イニシャルコード", 0xc, 0xf, "使用不可のASCIIコードが使用されています。",
-			"Game Code", "Unusable ASCII code is used.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("InitialCodeAscii") );
 	}
 	if( memcmp( this->pRomHeader->s.game_code, "NTRJ", GAME_CODE_MAX ) == 0 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"イニシャルコード", 0xc, 0xf, "SDKデフォルトのコード(NTRJ)が使用されています。",
-			"Game Code", "SDK default code(NTRJ) is used.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("InitialCodeSDKDefault") );
 	}
 
 	// メーカコードの文字コードチェック
@@ -142,40 +132,30 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( !result )
 	{
-		this->hErrorList->Add( gcnew RCMrcError(
-			"メーカーコード", 0x10, 0x11, "使用不可のASCIIコードが使用されています。",
-			"Maker Code", "Unusable ASCII code is used.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("MakerCodeAscii") );
 	}
 
 	// デバイスタイプは不使用なので00h固定
 	if( this->pRomHeader->s.rom_type != 0x00 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"デバイスタイプ", 0x13, 0x13, "不正な値です。00hを設定してください。",
-			"Device Type", "Invalid data. Please set 00h.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("DeviceType") );
 	}
 
 	// リマスターバージョンが16進2桁のときエラー
 	u8 romver = this->pRomHeader->s.rom_version;
 	if( ((romver < 0x00) || (0x0f < romver)) && (romver != 0xE0) )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"リマスターバージョン", 0x1e, 0x1e, "不正な値です。正式版では01h-0Fhのいずれかの値、事前版ではE0hを設定してください。",
-			"Release Ver.", "Invalid data. Please set either one of 01h-0Fh(Regular ver.), or E0h(Preliminary ver.)", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("RemasterVersion") );
 	}
 
 	// 必ず設定されていなければならないパラメータ
 	if( this->pRomHeader->s.banner_offset == 0 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"バナーオフセット", 0x68, 0x6b, "バナーデータが設定されていません。",
-			"Banner Offset.", "Banner data is not set.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("BannerOffset") );
 	}
 	if( this->pRomHeader->s.rom_valid_size == 0 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ROM実効サイズ", 0x80, 0x83, "値が設定されていません。",
-			"ROM Valid Size.", "Data is not set.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("RomValidSize") );
 	}
 
 	// CRC
@@ -192,9 +172,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 		}
 		if (secure_size <= 0)
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"セキュア領域CRC", 0x15e, 0x15f, "セキュア領域のアドレス指定が不正です。",
-				"Secure Area CRC.", "Illegal address of secure area.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("SecureCRCAddress") );
 		}
 		secures = new u8[secure_size];      // never return if not allocated
 		fseek( fp, (u32)this->pRomHeader->s.main_rom_offset, SEEK_SET );
@@ -207,9 +185,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 		delete []secures;
 		if( crc != this->pRomHeader->s.secure_area_crc16 )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"セキュア領域CRC", 0x07c, 0x07d, "計算結果と一致しません。セキュア領域が改ざんされた可能性があります。",
-				"Secure Area CRC.", "Calclated CRC is different from Registered one.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("SecureCRCVerify") );
 		}
 	}
 
@@ -217,18 +193,14 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	crc = 0xcf56;
 	if( crc != this->pRomHeader->s.nintendo_logo_crc16 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"キャラクターデータCRC", 0x15c, 0x15d, "計算結果と一致しません。キャラクターデータが改ざんされた可能性があります。",
-			"Charactor Data CRC.", "Calclated CRC is different from Registered one.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("LogoCRC") );
 	}
 
 	// ヘッダCRC
 	crc = calcCRC( CRC16_INIT_VALUE, (u8*)this->pRomHeader, CALC_CRC16_SIZE );
 	if( crc != this->pRomHeader->s.header_crc16 )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ROMヘッダCRC", 0x15e, 0x15f, "計算結果と一致しません。ROMヘッダが改ざんされた可能性があります。",
-			"ROM Header CRC.", "Calclated CRC is different from Registered one.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("HeaderCRC") );
 	}
 
 	// ROMヘッダ以外の領域のチェック (ファイルから適宜リードする)
@@ -248,9 +220,7 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( i == 32 )	// 全部0
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"システムコールライブラリ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "SDKデフォルトです。",
-			"System-Call Library", "This Library is SDK default one.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("Syscall") );
 	}
 	return ECSrlResult::NOERROR;
 } // mrcNTR()
@@ -277,33 +247,18 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( !this->HasDSDLPlaySign && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"NANDアプリのHYBRID条件", 0x12, 0x12,
-				"クローンブート対応でないNANDアプリをHYBRID版として作成することは許可されていません。",
-				"HYBRID NAND application",
-				"Building HYBRID NAND Application supported Clone Boot is not permitted.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("NandHybrid") );
 		}
 		if( this->HasDSDLPlaySign && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"NANDアプリのLIMITED条件", 0x12, 0x12,
-				"クローンブート対応のNANDアプリをLIMITED版として作成することは許可されていません。",
-				"LIMITED NAND application",
-				"Building LIMITED NAND Application supported Clone Boot is not permitted.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("NandLimited") );
 		}
 	}
 
 	// 旧開発用暗号フラグとクローンブートの組み合わせはマスタリングで矛盾が生じる
 	if( this->IsOldDevEncrypt && this->HasDSDLPlaySign )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"旧開発用暗号フラグ", 0x1c, 0x1c,
-			"このROMはクローンブート対応アプリですが、製品用本体ではクローンブートができなくなります。",
-			"Old Development Flag",
-			"This ROM supports Clone-Boot, and the flag is old type. Therefore, Clone-Boot can't be done.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("OldDevFlag") );
 	}
 
 	// デバイス容量と実ファイルサイズ
@@ -315,54 +270,36 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u32 filesizeMb = (filesize / (1024*1024)) * 8;	// 単位をMbitに直す
 		if( romsize < filesizeMb )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"デバイス容量", 0x14, 0x14, "実ファイルサイズよりも小さい値が指定されています。",
-				"Device Capacity", "Setting data is less than the actual file size.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("CapacityCardLess") );
 		}
 		else if( filesizeMb < romsize )
 		{
-			this->hWarnList->Add( gcnew RCMrcError(		// 警告
-				"デバイス容量", 0x14, 0x14, "実ファイルサイズに比べて無駄のある値が設定されています。",
-				"Device Capacity", "Setting data is larger than the actual file size.", false, true ) );
+			this->hWarnList->Add( this->makeMrcError("CapacityCardWaste") );
 		}
 		if( (romsize < METWL_ROMSIZE_MIN) || (METWL_ROMSIZE_MAX < romsize) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"デバイス容量", 0x14, 0x14, "指定可能な容量ではありません。",
-				"Device Capacity", "Invalid capacity.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("CapacityCardRange") );
 		}
 		if( (filesizeMb < 1) || (MasterEditorTWL::countBits(filesizeMb) != 1) )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
-				"実ファイルサイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "中途半端な値です。通常では2のべき乗[Mbit]の値です。",
-				"Actual File Size", "Invalid size. This size is usually power of 2.", false, true ) );
+			this->hWarnList->Add( this->makeMrcError("CapacityCardFraction") );
 		}
 	} //if( *(this->hIsNAND) == false )
 	else	// NANDアプリのときのみのチェック
 	{
 		if( (romsize < METWL_ROMSIZE_MIN_NAND) || (METWL_ROMSIZE_MAX_NAND < romsize) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"デバイス容量", 0x14, 0x14, "NANDアプリに対して指定可能な容量ではありません。",
-				"Device Capacity", "Invalid capacity.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("CapacityNandRangel") );
 		}
 		//u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
 		u32  allsize = this->hNandUsedSize->NandUsedSize;	// TMDやサブバナーのサイズを含める
 		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"NAND領域の使用サイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が32MBを超えています。",
-				"Actual File Size", 
-				"NAND size used by NAND application, including Save Data, exceeds 32MB.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("UsedNandSizeLimit") );
 		}
 		if( (allsize > METWL_ALLSIZE_MAX_NAND_LIC) && this->IsAppUser )		// ユーザアプリのときのみ
 		{
-			this->hWarnList->Add( gcnew RCMrcError(			// 運用上問題あるがシステム上では問題ないので警告にしておく
-				"NAND領域の使用サイズ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が16MBを超えています。",
-				"Used NAND Size", 
-				"NAND size used by NAND application, including Save Data, exceeds 16MB.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("UsedNandSizeExceed") );
 		}
 	}
 
@@ -377,10 +314,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		BOOL crcret = getSeg3CRCInFp( fp, &crcseg3 );
 		if( !crcret || (crcseg3 != METWL_SEG3_CRC) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"セグメント3 CRC", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, 
-				"セグメント3領域に誤りがあります。",
-				"Segment-3 CRC", "Invalid data exist in Segment-3 area.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("Seg3CRC") );
 		}
 	}
 
@@ -391,12 +325,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u16  KA = this->pRomHeader->s.twl_card_keytable_area_rom_offset;
 		if( (NA == 0) || (KA == 0) || (NA > KA) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"TWL ROMオフセット", 0x90, 0x93,
-				"TWLノーマル領域ROMオフセット(NA)およびTWL専用領域ROMオフセット(KA)はともに1以上で、かつNAはKAを超えてはいけません。",
-				"TWL ROM Offset", 
-				"Both TWL Normal Area ROM Offset(NA) and TWL Limited Area ROM Offset(KA) are bigger than 0. And NA must be smaller than KA, or equals to KA.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("TwlRomOffset") );
 		}
 	}
 
@@ -406,24 +335,14 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( this->pRomHeader->s.disable_debug == 0 )
 		{
-			this->hWarnList->Add( gcnew RCMrcError( 
-				"デバッガ動作禁止フラグ", 0x1f, 0x1f, 
-				"デバッガ上で解析可能な設定になっています。デバッガ向けソフトとしてROMをリリースする場合にはセキュリティ上の問題がないかご確認ください。",
-				"Disable Launch on Debugger Flag", 
-				"This ROM can be analyzed on the debugger. If the ROM is released for the debugger, please check the security settings.", 
-				false, true ) );
+			this->hWarnList->Add( this->makeMrcError("DisableDebugSystem") );
 		}
 	}
 	else
 	{
 		if( this->pRomHeader->s.disable_debug != 0 )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"デバッガ動作禁止フラグ", 0x1f, 0x1f, 
-				"デバッガ上で解析不可な設定になっています。この設定は許可されていません。",
-				"Disable Launch on Debugger Flag", 
-				"This ROM can't be analyzed on the debugger. This setting is unavailable.", 
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("DisableDebugUser") );
 		}
 	}
 
@@ -433,24 +352,14 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u8 *p = (u8*)&(this->pRomHeader->s);
 		if( p[0x1d] & ~okbits )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"特定仕向地", 0x1d, 0x1d, 
-				"不正なビットが立っています。この設定は許可されていません。",
-				"Extra Region Code", 
-				"Illegal bit is setting. This setting is unavailable.", 
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("ExtraRegion") );
 		}
 		if( this->IsAppUser )
 		{
 			if( (this->pRomHeader->s.permit_landing_normal_jump != 0) && 
 				!this->hMrcExternalCheckItems->IsPermitNormalJump )			// 設定ファイルでアクセス許可されていないときにチェック
 			{
-				this->hErrorList->Add( gcnew RCMrcError( 
-					"ノーマルアプリジャンプ", 0x1d, 0x1d, 
-					"ノーマルアプリジャンプは許可されていません。",
-					"Normal App Jump", 
-					"This setting is not permitted.", 
-					false, true ) );
+				this->hErrorList->Add( this->makeMrcError("NormalJump") );
 			}
 		}
 	}
@@ -458,16 +367,12 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	// NANDアプリのときにはROMの種類(MROM/1TROM)が設定されていなくてもよい
 	if( (this->pRomHeader->s.warning_no_spec_rom_speed != 0) && !this->IsMediaNand )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"諸フラグ", 0x1f, 0x1f, "rsfファイルでROMSpeedTypeが設定されていません。",
-			"Setting Flags", "In a RSF file, the item \"ROMSpeedType\" is not set.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("RomSpeedType") );
 	}
 	// 1TROMのみ許可(ROMの種類が設定されないときデフォルトで1TROMとなる)
 	if( (this->pRomHeader->s.game_cmd_param & CARD_LATENCY_MASK) != CARD_1TROM_GAME_LATENCY )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"ROMコントロール情報", 0x60, 0x67, "TWLではマスクROMは用意されていません。ワンタイムPROM設定にしてください。",
-			"ROM Control Info.", "Mask ROM can be set. Please set One-time PROM.", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("RomControl") );
 	}
 
 	// AESがかかっていないとエラー
@@ -475,18 +380,14 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( (this->pRomHeader->s.enable_aes == 0) || (this->pRomHeader->s.aes_target_size == 0) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"AES暗号", 0x60, 0x67, "AES暗号が無効になっています。セキュリティ上の問題があります。",
-				"AES Encryption", "AES Encryption is disable. It is a security problem.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("AES") );
 		}
 	}
 	else		// NANDアプリ
 	{
 		if( (this->pRomHeader->s.enable_aes == 0) || (this->pRomHeader->s.aes_target_size == 0) || (this->pRomHeader->s.aes_target2_size == 0) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"AES暗号", 0x60, 0x67, "AES暗号が無効になっています。セキュリティ上の問題があります。",
-				"AES Encryption", "AES Encryption is disable. It is a security problem.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("AES") );
 		}
 	}
 
@@ -500,23 +401,13 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	// NTRホワイトリスト署名
 	if( this->IsWL )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"TWL拡張諸フラグ", 0x1bf, 0x1bf, 
-			"本来、立つはずのないフラグが立てられています。ビルド時の設定をご確認ください。",
-			"TWL Extended Flag",
-			"Unavailable flag is set. Please check building option.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("WhiteList") );
 	}
 
 	// 通信アイコン表示
 	if( this->IsWiFiIcon && this->IsWirelessIcon )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"アイコン表示フラグ", 0x1bf, 0x1bf, 
-			"ワイヤレス通信アイコンとWi-Fi通信アイコンは同時に表示できません。",
-			"Icon Displaying Flag",
-			"Icon displayed on menu is either Wireless Icon or Wi-Fi Connection Icon.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("ConnectIcon") );
 	}
 
 	// TWL Limited static の位置が KeyTable 領域よりも前にあってはいけない
@@ -526,21 +417,14 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u32 actual = this->pRomHeader->s.main_ltd_rom_offset;
 		if( ideal > actual )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"拡張常駐モジュール", 0x1c0, 0x1c3,
-				"TWL拡張常駐モジュールの配置に問題があります。弊社窓口にご連絡ください。",
-				"Extended Static Module",
-				"Alignment of TWL Extended Static Module is illegal. Please contact us, sorry.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("LimitedStatic") );
 		}
 	}
 
 	// ランチャー以外はSCFGにアクセスしてはならない
 	if( !this->IsAppLauncher && this->IsSCFGAccess )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"SCFG設定", 0x1b8, 0x1bb, "SCFGレジスタへアクセス可能になっています。",
-			"SCFG Setting", "In this setting, SCFG register is accessible.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("SCFGAccess") );
 	}
 
 	// TitleID Lo はゲームコードの逆順
@@ -549,9 +433,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		(this->pRomHeader->s.titleID_Lo[2] != this->pRomHeader->s.game_code[1]) ||
 		(this->pRomHeader->s.titleID_Lo[3] != this->pRomHeader->s.game_code[0]) )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"タイトルID", 0x230, 0x233, "下位4バイトがイニシャルコードと一致しません。",
-			"Title ID", "Lower 4 bytes don't match ones of Game Code.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("TitleID") );
 	}
 
 	// カードアプリでPublic/Privateセーブデータを設定してはいけない
@@ -559,11 +441,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( (this->PublicSize > 0) || (this->PrivateSize) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"Pubilc/Privateセーブデータ", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"ゲームカード向けソフトではPublicセーブデータおよびPrivateセーブデータのサイズを指定することはできません。",
-				"Public/Private Save Data",
-				"Application for GameCard can not have Public Save Data or Private Save Data.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("SaveData") );
 		}
 	}
 
@@ -578,11 +456,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->Equals( "DEBUG" ) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"Debug/Releaseビルド", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"FINALROMビルドのROMではありません。必ずFINALROMビルドのROMを作成してご提出ください。",
-				"Debug/Release Build",
-				"This ROM isn't FINALROM-build. Please submit a FINALROM-build ROM.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("DebugBuild") );
 		}
 	}
 
@@ -604,8 +478,7 @@ void RCSrl::mrcAppType(FILE *fp)
 	const int appSystem   = 1;
 	const int appSecure   = 2;
 	const int appLauncher = 3;
-	System::String ^appstrJ = gcnew System::String("");
-	System::String ^appstrE = gcnew System::String("");
+	System::String ^appstr = gcnew System::String("");
 
 	idH = this->pRomHeader->s.titleID_Hi;
 	memcpy( idL, &(this->pRomHeader->s.titleID_Lo[0]), 4 );
@@ -613,26 +486,22 @@ void RCSrl::mrcAppType(FILE *fp)
 	if( (idL[3]=='H') && (idL[2]=='N') && (idL[1]=='A') )   // ランチャアプリかどうかはTitleID_Loの値で決定
 	{
 		apptype = appLauncher;
-		appstrJ = "ランチャーアプリ";
-		appstrE = "Launcher-App.";
+		appstr  = "Launcher";
 	}
 	else if( idH & TITLE_ID_HI_SECURE_FLAG_MASK )           // 立ってたらセキュアアプリ
 	{
 		apptype = appSecure;
-		appstrJ = "セキュアアプリ";
-		appstrE = "Secure-App.";
+		appstr  = "Secure";
 	}
 	else if( (idH & TITLE_ID_HI_APP_TYPE_MASK) == 1 )       // 立ってたらシステムアプリ
 	{
 		apptype = appSystem;
-		appstrJ = "システムアプリ";
-		appstrE = "System-App.";
+		appstr  = "System";
 	}
 	else if( (idH & TITLE_ID_HI_APP_TYPE_MASK) == 0 )       // 残るはユーザアプリ
 	{
 		apptype = appUser;
-		appstrJ = "ユーザアプリ";
-		appstrE = "User-App.";
+		appstr  = "User";
 	}
 	else
 	{
@@ -641,9 +510,7 @@ void RCSrl::mrcAppType(FILE *fp)
 
 	if( apptype < 0 )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"アプリ種別", 0x230, 0x237, "不正な値です。",
-			"Application Type", "Illigal type.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("IllegalAppType") );
 	}
 
 	System::Boolean bApp = false;
@@ -677,9 +544,7 @@ void RCSrl::mrcAppType(FILE *fp)
 
 	if( !bApp )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"アプリ種別", 0x230, 0x237, "このROMデータは" + appstrJ + "です。本プログラムでは非対応です。",
-			"Application Type", "This ROM is " + appstrE + " which is unsurpported by this editor.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("DifferentAppType", appstr) );
 	}
 } //RCSrl::mrcAppType()
 
@@ -693,33 +558,18 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
 			(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7, "ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。",
-				"Access Control Info.", "Game card access setting is either normal mode or NTR mode.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError("CardAccess") );
 		}
 	}
 	else	// ユーザアプリ
 	{
 		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7,
-				"SDカードへのアクセスは許可されていません。",
-				"Access Control Info.",
-				"Application for Game Card doesn't access to NAND frash memory.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("SDAccess") );
 		}
 		if( !this->IsMediaNand )	// カードアプリのときのみ
 		{
-			if( this->pRomHeader->s.access_control.nand_access != 0 )
-			{
-				this->hErrorList->Add( gcnew RCMrcError( 
-					"アクセスコントロール情報", 0x1b4, 0x1b7,
-					"ゲームカード用ソフトは、NANDフラッシュメモリへのアクセスを許可されていません。",
-					"Access Control Info.",
-					"Application for Game Card doesn't access to NAND frash memory.",
-					false, true ) );
-			}
+			this->hErrorList->Add( this->makeMrcError("NandAccess") );
 		}
 		u32 okbits;
 		if( !this->IsMediaNand )
@@ -733,12 +583,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"アクセスコントロール情報", 0x1b4, 0x1b7,
-				"許可されていないアクセスが設定されています。この設定は許可されていません。",
-				"Access Control Info.",
-				"Illegal Access is setting. This setting is unavailable.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("AccessDefault") );
 		}
 	}
 } //RCSrl::mrcAccessControl()
@@ -750,28 +595,24 @@ void RCSrl::mrcPadding(FILE *fp)
 {
 	u32  romsize = 1 << (this->pRomHeader->s.rom_size);	// ROM容量
 	u32  padsize = 0;	// 単位はByte
-	System::String ^padstrJ = gcnew System::String("");
-	System::String ^padstrE = gcnew System::String("");
+	System::String ^padstr = gcnew System::String("");
 	System::String ^romstr  = gcnew System::String("");
 
 	switch( romsize )
 	{
 		case 1024:
 			padsize = 0x00280000;	// 20Mbit = 2.5MB
-			padstrJ = "最終20Mbit";
-			padstrE = "Last 20Mbit";
+			padstr  = "20Mbit";
 			romstr  = "1Gbit";
 		break;
 		case 2048:
 			padsize = 0x00500000;	// 40Mbit = 5MB
-			padstrJ = "最終40Mbit";
-			padstrE = "Last 40Mbit";
+			padstr  = "40Mbit";
 			romstr  = "2Gbit";
 		break;
 		case 4096:
 			padsize = 0x00A60000;	// 83Mbit = 10.375MB
-			padstrJ = "最終83Mbit";
-			padstrE = "Last 83Mbit";
+			padstr  = "83Mbit";
 			romstr  = "4Gbit";
 		break;
 		default:
@@ -788,10 +629,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	u32  offset = ((romsize / 8) * 1024 * 1024) - padsize;
 	if( (offset + padsize) > filesize )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			padstrJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"読み出すことができませんでした。",
-			padstrE, "This area couldn't be read", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("PaddingRead", padstr) );
 		return;
 	}
 
@@ -799,10 +637,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	fseek( fp, offset, SEEK_SET );
 	if( padsize != fread( buf, 1, padsize, fp ) )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			padstrJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"読み出すことができませんでした。",
-			padstrE, "This area couldn't be read", false, true ) );
+		this->hErrorList->Add( this->makeMrcError("PaddingRead", padstr) );
 		delete []buf;
 		return;
 	}
@@ -818,12 +653,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	}
 	if( !bResult )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			padstrJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"FFh以外の値が格納されています。 " + romstr + " ROMの容量制限が守られていません。",
-			padstrE,
-			"This area includes illegai data. " + romstr + " Volume constraint is violated.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("PaddingValue", padstr, romstr) );
 	}
 	delete []buf;
 } //RCSrl::mrcPadding
@@ -852,9 +682,7 @@ void RCSrl::mrcReservedArea(FILE *fp)
 		}
 		if( !bReserved )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"予約領域", begin, end, "不正な値が含まれています。この領域をすべて0で埋めてください。",
-				"Reserved Area", "Invalid data is included. Please set 0 into this area.", false, true ) );
+			this->hErrorList->Add( this->makeMrcError(begin, end, false, true, "ReservedArea") );
 		}
 	} //for each
 }
@@ -871,12 +699,7 @@ void RCSrl::mrcShared2(FILE *fp)
 		if( (this->hShared2SizeArray[0] != 0) || (this->hShared2SizeArray[1] != 0) || (this->hShared2SizeArray[2] != 0) || 
 			(this->hShared2SizeArray[3] != 0) || (this->hShared2SizeArray[4] != 0) || (this->hShared2SizeArray[5] != 0) )
 		{
-			this->hErrorList->Add( gcnew RCMrcError( 
-				"Shared2ファイル", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-				"Shared2ファイルへのアクセスが指定されていないにもかかわらずファイルサイズが設定されています。",
-				"Shared2 File",
-				"Although access to Shared2 files is not setting, file size is setting.",
-				false, true ) );
+			this->hErrorList->Add( this->makeMrcError("Shared2Disable") );
 		}
 		return;
 	}
@@ -886,12 +709,7 @@ void RCSrl::mrcShared2(FILE *fp)
 	if( (this->hShared2SizeArray[0] == 0) && (this->hShared2SizeArray[1] == 0) && (this->hShared2SizeArray[2] == 0) && 
 		(this->hShared2SizeArray[3] == 0) && (this->hShared2SizeArray[4] == 0) && (this->hShared2SizeArray[5] == 0) )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"Shared2ファイル", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"Shared2ファイルへのアクセスが指定されているにもかかわらずファイルサイズが設定されていません。",
-			"Shared2 File",
-			"Although access to Shared2 files is setting, file size is not setting.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("Shared2Enable") );
 		return;
 	}
 
@@ -902,57 +720,28 @@ void RCSrl::mrcShared2(FILE *fp)
 	{
 		if( this->hShared2SizeArray[i] > 0 )	// 0以外の値が設定されている = そのファイルを使用したい を意味する
 		{
-			System::String ^filenoJ = "Shared2ファイル(No." + i.ToString() + ")";
-			System::String ^filenoE = "Shared File(No." + i.ToString() + ")";
 			if( !this->hMrcExternalCheckItems->hIsPermitShared2Array[i] )
 			{
 				// 一般公開されていないのにファイルを使用する場合を考慮してシステムアプリのときのメッセージを変更する
 				if( !this->IsAppUser )
 				{
-					this->hWarnList->Add( gcnew RCMrcError( 
-						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						filenoJ + "へのアクセス(非公開)が設定されています。"
-						+ "アクセス許可されているかご確認ください。",
-						filenoE,
-						filenoE + " is not revealed to licencies. Please check permission of access to this file.",
-						false, true ) );
+					this->hWarnList->Add( this->makeMrcError("Shared2AccessSystem", i.ToString()) );
 				}
 				else
 				{
-					this->hErrorList->Add( gcnew RCMrcError( 
-						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						filenoJ + "へのアクセスは許可されていません。",
-						filenoE,
-						"Access to " + filenoE + " is not permitted.",
-						false, true ) );
+					this->hErrorList->Add( this->makeMrcError("Shared2AccessUser", i.ToString()) );
 				}
 			}
 			if( this->hShared2SizeArray[i] != this->hMrcExternalCheckItems->hShared2SizeArray[i] )
 			{
 				if( !this->IsAppUser )
 				{
-					this->hWarnList->Add( gcnew RCMrcError(						// システムのとき警告
-						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						filenoJ + "のファイルサイズが "
-						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + " に設定されています。"
-						+ "正しい値かどうかをご確認ください。",
-						filenoE,
-						"File size of " + filenoE + " is "
-						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + "."
-						+ " Please check validation of this size.",
-						false, true ) );
+					this->hWarnList->Add( this->makeMrcError("Shared2SizeSystem", 
+										                     i.ToString(), MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i])) );
 				}
 				{
-					this->hErrorList->Add( gcnew RCMrcError(					// ユーザのときエラー
-						filenoJ, METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-						filenoJ + "のファイルサイズが "
-						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + " に設定されています。"
-						+ "正しい値かどうかをご確認ください。",
-						filenoE,
-						"File size of " + filenoE + " is "
-						+ MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i]) + "."
-						+ " Please check validation of this size.",
-						false, true ) );
+					this->hWarnList->Add( this->makeMrcError("Shared2SizeUser", 
+										                     i.ToString(), MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i])) );
 				}
 			}
 		} //if( this->hShared2SizeArray[i] > 0 )
@@ -982,21 +771,15 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 	}
 	if( isOld )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "設定ファイルに登録されているバージョンよりも古いバージョンです。",
-			"SDK Version", "Older version (comparing with a setting file)", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("SDKVersionOld") );
 	}
 	if( isPR )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "ご使用のSDKバージョンはPR版です。",
-			"SDK Version", "Used version is PR.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("SDKVersionPR") );
 	}
 	if( isRC )
 	{
-		this->hWarnList->Add( gcnew RCMrcError( 
-			"SDKバージョン", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE, "ご使用のSDKバージョンはRC版です。",
-			"SDK Version", "Used version is RC.", false, true ) );
+		this->hWarnList->Add( this->makeMrcError("SDKVersionRC") );
 	}
 }
 
@@ -1051,12 +834,7 @@ void RCSrl::mrcBanner(FILE *fp)
 	fseek( fp, this->pRomHeader->s.banner_offset, SEEK_SET );
 	if( size != fread( banner, 1, size, fp ) )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"バナーファイル", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"読み出すことができませんでした。",
-			"Banner File",
-			"The file can't be read.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("BannerRead") );
 	}
 
 	// バナーの各文字がマップに登録されているかチェック
@@ -1081,12 +859,7 @@ void RCSrl::mrcBanner(FILE *fp)
 	}
 	if( !bResult )
 	{
-		this->hErrorList->Add( gcnew RCMrcError( 
-			"バナーファイル", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"使用不可能な文字セットが使用されています。",
-			"Banner File",
-			"A set of illegal charactor code is used.",
-			false, true ) );
+		this->hErrorList->Add( this->makeMrcError("BannerChar") );
 	}
 	delete []banner;
 } //RCSrl::mrcBanner()

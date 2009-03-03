@@ -78,4 +78,26 @@ Exception:{0}
 <!-- Load Temp File -->
 <E_LoadTemp>Failed to read temporary information.</E_LoadTemp>
 
+<!-- Check -->
+<TextBoxInput>Input omission: Input data.</TextBoxInput>
+<NumRangeInput>Input omission: Illegal value.</NumRangeInput>
+<ComboBoxInput>Input omission: Select data.</ComboBoxInput>
+<LabelProductName>Product Name</LabelProductName>
+<LabelProductCode>Product Code</LabelProductCode>
+<LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
+<LabelProductNameForeign>Product Name(Roreign Version)</LabelProductNameForeign>
+<LabelProductNameForeign>Product Code(Roreign Version)</LabelProductNameForeign>
+<LabelUsage>Usage</LabelUsage>
+<LabelBackup>Backup Memory</LabelBackup>
+<LabelPerson1>Contact1</LabelPerson1>
+<LabelCompany1>Company(Contact1)</LabelCompany1>
+<LabelDepart1>Dept.(Contact1)</LabelDepart1>
+<LabelTel1>TEL(Contact1)</LabelTel1>
+<LabelMail1>e-mail(Contact1)</LabelMail1>
+<LabelPerson2>Contact2</LabelPerson2>
+<LabelCompany2>Company(Contact2)</LabelCompany2>
+<LabelDepart2>Dept.(Contact2)</LabelDepart2>
+<LabelTel2>TEL(Contact2)</LabelTel2>
+<LabelMail2>e-mail(Contact2)</LabelMail2>
+
 </message>

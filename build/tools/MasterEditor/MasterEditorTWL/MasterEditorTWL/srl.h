@@ -10,6 +10,7 @@
 #include "srl_const.h"
 #include "srl_element.h"
 #include "utility.h"
+#include "message_bank.h"
 
 namespace MasterEditorTWL
 {
@@ -115,9 +116,14 @@ namespace MasterEditorTWL
 		// MRC追加項目
 		property RCMrcExternalCheckItems ^hMrcExternalCheckItems;
 
+		// MRCメッセージ
+		property RCMessageBank ^hMrcMsg;
+
 		// constructor / destructor / finalizer 
+	private:
+		RCSrl(){};
 	public:
-		RCSrl();
+		RCSrl( System::String ^msgfileJ, System::String ^msgfileE );	// MRCメッセージのファイルを指定する
 		~RCSrl();
 		!RCSrl();
 
@@ -129,8 +135,8 @@ namespace MasterEditorTWL
 		//
 		// @arg [in/out] 入出力ファイル名
 		//
-		ECSrlResult readFromFile ( System::String ^filename );
-		ECSrlResult writeToFile( System::String ^filename );
+		ECSrlResult readFromFile( System::String ^srlfile );
+		ECSrlResult writeToFile( System::String ^srlfile );
 		
 		// internal method
 	private:
@@ -170,6 +176,11 @@ namespace MasterEditorTWL
 		void mrcReservedArea( FILE *fp );
 		void mrcShared2( FILE *fp );
 		void mrcSDKVersion( FILE *fp );
+
+		// MRCメッセージを追加
+		RCMrcError^ makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args );
+		RCMrcError^ makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
+								  System::String ^tag, ... cli::array<System::String^> ^args );
 
 	}; // end of ref class RCSrl
 

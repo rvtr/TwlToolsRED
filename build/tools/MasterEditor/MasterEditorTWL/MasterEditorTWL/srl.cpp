@@ -19,12 +19,12 @@ using namespace MasterEditorTWL;
 // ****************************************************************
 
 // constructor
-RCSrl::RCSrl()
+RCSrl::RCSrl( System::String ^msgfileJ, System::String ^msgfileE )
 {
 	this->pRomHeader = new (ROM_Header);
 	std::memset( pRomHeader, 0, sizeof(ROM_Header) );
-
 	this->hMrcExternalCheckItems = gcnew RCMrcExternalCheckItems();
+	this->hMrcMsg = gcnew RCMessageBank( msgfileJ, msgfileE );
 }
 
 // destructor
@@ -48,11 +48,11 @@ RCSrl::!RCSrl()
 //
 // @arg [in] 入力ファイル名
 // -------------------------------------------------------------------
-ECSrlResult RCSrl::readFromFile( System::String ^filename )
+ECSrlResult RCSrl::readFromFile( System::String ^srlfile )
 {
 	FILE       *fp = NULL;
 	const char *pchFilename = 
-		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( filename ).ToPointer();
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlfile ).ToPointer();
 	ECSrlResult r;
 
 	// ファイルを開いてROMヘッダのみ読み出す
@@ -133,11 +133,11 @@ ECSrlResult RCSrl::readFromFile( System::String ^filename )
 //
 // @arg [in] 出力ファイル名
 // -------------------------------------------------------------------
-ECSrlResult RCSrl::writeToFile( System::String ^filename )
+ECSrlResult RCSrl::writeToFile( System::String ^srlfile )
 {
 	FILE       *fp = NULL;
 	const char *pchFilename = 
-		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( filename ).ToPointer();
+		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlfile ).ToPointer();
 	ECSrlResult result;
 
 	// ROMヘッダにROM固有情報を反映させる
@@ -366,16 +366,12 @@ bool RCSrl::setRegionInfo( u32 region )
 	// リージョンに含まれる団体がなかったらリージョンは不正
 	if( MasterEditorTWL::getOgnListInRegion( region ) == nullptr )
 	{
-		this->hParentalErrorList->Add( gcnew RCMrcError( 
-			"リージョン", 0x1b0, 0x1b3, "仕向地の組み合わせが不正です。ペアレンタルコントロール情報は無視して読み込まれました。",
-			"Region", "Illigal Region. Parental Control Information is ignored in reading.", true, true ) );
+		this->hParentalErrorList->Add( this->makeMrcError("IllegalRegion") );
 		return false;
 	}
 	if( !this->IsAppUser && (region == METWL_MASK_REGION_ALL) )
 	{
-		this->hParentalWarnList->Add( gcnew RCMrcError( 
-			"リージョン", 0x1b0, 0x1b3, "読み込み時のROMでは全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。",
-			"Region", "All Region is set in reading ROM. Please check necessity for setting each region individually.", true, true ) );
+		this->hParentalWarnList->Add( this->makeMrcError("AllRegion") );
 	}
 	return true;
 }
@@ -412,18 +408,11 @@ void RCSrl::setUnnecessaryRatingInfo( u32 region )
 	if( !noerror )
 	{
 		this->IsUnnecessaryRating = false;	// エラーのときはROMヘッダに不要と登録されていても無視する
-		this->hParentalErrorList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", 0x1b0, 0x1b3, "レーティング表示が不要かどうかを判断できません。再設定してください。",
-			"Parental Control Info.", "Can't judge wheather rating display is unnecessary.", true, true ) );
+		this->hParentalErrorList->Add( this->makeMrcError("UnnecessaryRatingIllegal") );
 	}
 	else
 	{
-		this->hParentalWarnList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-			"読み込み時のROMにはレーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。",
-			"Parental Control",
-			"In the loaded ROM, rating is unnecessary. This selection is available for only tool application which is not game. Please contact Nintendo for checking validation of this selection",
-			true, true ) );
+		this->hParentalWarnList->Add( this->makeMrcError("UnnecessaryRatingSetting") );
 	}
 }
 
@@ -463,11 +452,7 @@ void RCSrl::setOneRatingOrgInfo( int ogn )
 	if( !enable )	// 未定義
 	{
 		index = -1;
-		this->hParentalErrorList->Add( gcnew RCMrcError( 
-			"ペアレンタルコントロール情報", 0x2f0, 0x2ff,
-			name + ": 未定義です。",
-			"Parental Control Info.", 
-			name + ": Undefined.", true, true ) );
+		this->hParentalErrorList->Add( this->makeMrcError("RatingUndefine", name) );
 	}
 	else
 	{
@@ -476,20 +461,12 @@ void RCSrl::setOneRatingOrgInfo( int ogn )
 			if( age == 0 ) // 年齢が0のときは審査中とみなす
 			{
 				index = ages->Length;	// 配列の最後の要素の次が「審査中」
-				this->hParentalWarnList->Add( gcnew RCMrcError( 
-					"ペアレンタルコントロール情報", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-					name + ": 読み込み時のROMには審査中であると指定されています。審査が決まりしだい、再提出してください。",
-					"Parental Control",
-					name + ": In the loaded ROM, no rating yet. Please submit again when rating is dicided.", true, true ) );
+				this->hParentalWarnList->Add( this->makeMrcError("RatingPendingSetting", name) );
 			}
 			else
 			{
 				index = -1;		// それ以外はエラー
-				this->hParentalErrorList->Add( gcnew RCMrcError( 
-					"ペアレンタルコントロール情報", 0x2f0, 0x2ff,
-					name + ": 審査中指定とレーティング年齢が同時に設定されています。",
-					"Parental Control Info.", 
-					name + ": Both the Rating-Peding setting and the rating age are setting.", true, true ) );
+				this->hParentalErrorList->Add( this->makeMrcError("RatingPendingConcurrent", name) );
 			}
 		}
 		else
@@ -505,11 +482,7 @@ void RCSrl::setOneRatingOrgInfo( int ogn )
 			}
 			if( index < 0 )
 			{
-				this->hParentalErrorList->Add( gcnew RCMrcError( 
-					"ペアレンタルコントロール情報", 0x2f0, 0x2ff,
-					name + ": レーティング年齢が団体によって指定された値ではありません。",
-					"Parental Control Info.", 
-					name + ": An age isn't accepted by the organization.", true, true ) );
+				this->hParentalErrorList->Add( this->makeMrcError("IllegalRating", name) );
 			}
 		}
 	}
@@ -980,3 +953,31 @@ void RCSrl::calcNandUsedSize(FILE *fp)
 	//System::Diagnostics::Debug::WriteLine( "SUB " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->SubBannerSizeRoundUp) );
 	//System::Diagnostics::Debug::WriteLine( "ALL " + MasterEditorTWL::transSizeToString(this->hNandUsedSize->NandUsedSize) );
 }//RCSrl::calcNandUsedSize()
+
+// -------------------------------------------------------------------
+// MRCメッセージを取得
+// -------------------------------------------------------------------
+RCMrcError^ RCSrl::makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args )
+{
+	// パラメータも取得(日本語版から)
+	System::UInt32  beg = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/begin", "J" ), System::Globalization::NumberStyles::HexNumber );
+	System::UInt32  end = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/end",   "J" ), System::Globalization::NumberStyles::HexNumber );
+	System::Boolean isEnableModify = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/modify", "J" ) );
+	System::Boolean isAffectRom    = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/affect", "J" ) );
+
+	return (this->makeMrcError( beg, end, isEnableModify, isAffectRom, tag, args ));
+}
+RCMrcError^ RCSrl::makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
+								 System::String ^tag, ... cli::array<System::String^> ^args )
+{
+	// 外部ファイルから項目名を取得
+	System::String ^nameJ = this->hMrcMsg->getMessage( tag+"/name", "J" );
+	System::String ^nameE = this->hMrcMsg->getMessage( tag+"/name", "E" );
+	// メッセージを取得
+	System::String ^fmtJ  = this->hMrcMsg->getMessage( tag+"/sentence", "J" );	// メッセージファイルから書式を取得
+	System::String ^msgJ = System::String::Format( fmtJ, args );					// 書式をStringに展開
+	System::String ^fmtE  = this->hMrcMsg->getMessage( tag+"/sentence", "E" );
+	System::String ^msgE = System::String::Format( fmtE, args );
+
+	return (gcnew RCMrcError( nameJ, beg, end, msgJ, nameE, msgE, isEnableModify, isAffectRom ));
+}

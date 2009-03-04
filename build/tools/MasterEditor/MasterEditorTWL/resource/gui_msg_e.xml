@@ -12,8 +12,8 @@
 <E_Start_SDK>Cannot read the SDK version in the configuration file. </E_Start_SDK>
 
 <!-- Load Rom -->
-<E_LoadRom_Sign>Illegal ROM data. Not a TWL ROM or ROM data may have been modified.</E_LoadRom_Sign>
-<E_LoadRom_Platform>This tool is for TWL only. Cannot read a ROM that does not support TWL, such as a NTR-only ROM.</E_LoadRom_Platform>
+<E_LoadRom_Sign>Illegal ROM data. Either this is not TWL-compatible or TWL-exclusive ROM data, or the ROM data may have been modified.</E_LoadRom_Sign>
+<E_LoadRom_Platform>This tool is for TWL-compatible ROMs only. Cannot read a ROM that does not support TWL, such as a NTR-only ROM.</E_LoadRom_Platform>
 <E_LoadRom_Default>Failed to read ROM data file. Read ROM data again.</E_LoadRom_Default>
 <E_LoadRom_CRC>ROM data CRC calculation failed. ROM data read canceled.</E_LoadRom_CRC>
 <E_LoadRom_Exist>Cannot read because the ROM data file does not exist.</E_LoadRom_Exist>
@@ -105,7 +105,7 @@ Exception:{0}
 <LabelRegion>Market</LabelRegion>
 <LabelRating>Rating</LabelRating>
 <RatingInput>{0}: Select data.</RatingInput>
-<RatingPendingSelect>{0}: "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
+<RatingPendingSelect>{0}: A "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
 <RatingUnnecessarySelect>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</RatingUnnecessarySelect>
 
 </message>

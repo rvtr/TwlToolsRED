@@ -33,7 +33,7 @@
 	</MakerCodeAscii>
 	<DeviceType>
 		<name>デバイスタイプ</name>
-		<sentence>不正な値です。00hを設定してください</sentence>
+		<sentence>不正な値です。00hを設定してください。</sentence>
 		<begin>13</begin><end>13</end><modify>False</modify><affect>True</affect>
 	</DeviceType>
 	<RemasterVersion>
@@ -108,23 +108,23 @@
 		<sentence>指定可能な容量ではありません。</sentence>
 		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
 	</CapacityCardRange>
-	<CapacityCardFraction>
-		<name>デバイス容量</name>
-		<sentence>中途半端な値です。通常では2のべき乗[Mbit]の値です。</sentence>
-		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
-	</CapacityCardFraction>
 	<CapacityNandRange>
 		<name>デバイス容量</name>
 		<sentence>NANDアプリに対して指定可能な容量ではありません。</sentence>
 		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
 	</CapacityNandRange>
+	<FilesizeFraction>
+		<name>実ファイルサイズ</name>
+		<sentence>中途半端な値です。通常では2のべき乗[Mbit]の値です。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</FilesizeFraction>
 	<UsedNandSizeLimit>
-		<name>NAND領域の使用サイズ</name>
+		<name>NAND使用サイズ</name>
 		<sentence>NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が32MBを超えています。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</UsedNandSizeLimit>
 	<UsedNandSizeExceed>
-		<name>NAND領域の使用サイズ</name>
+		<name>NAND使用サイズ</name>
 		<sentence>NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が16MBを超えています。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</UsedNandSizeExceed>
@@ -155,7 +155,7 @@
 	</ExtraRegion>
 	<NormalJump>
 		<name>ノーマルアプリジャンプ</name>
-		<sentence>ノーマルアプリジャンプは許可されていません</sentence>
+		<sentence>ノーマルアプリジャンプは許可されていません。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</NormalJump>
 	<RomSpeedType>

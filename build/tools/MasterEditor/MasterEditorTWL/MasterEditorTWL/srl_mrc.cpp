@@ -282,7 +282,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 		if( (filesizeMb < 1) || (MasterEditorTWL::countBits(filesizeMb) != 1) )
 		{
-			this->hWarnList->Add( this->makeMrcError("CapacityCardFraction") );
+			this->hWarnList->Add( this->makeMrcError("FilesizeFraction") );
 		}
 	} //if( *(this->hIsNAND) == false )
 	else	// NANDアプリのときのみのチェック

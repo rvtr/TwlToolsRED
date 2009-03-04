@@ -85,7 +85,7 @@ void Form1::construct(void)
 	this->tboxGuideNandSizeInfo->Text = this->tboxGuideNandSizeInfo->Text->Replace( "<newline>", "\r\n" );
 	this->tboxGuideErrorInfo->Text    = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 
-	// 言語バージョンにあわせてメニューにチェックを入れる
+	// システムの言語バージョンにあわせて言語切り替え
 	if( System::Threading::Thread::CurrentThread->CurrentUICulture->Name->StartsWith( "ja" ) )
 	{
 		this->stripItemJapanese->Checked = true;
@@ -94,10 +94,12 @@ void Form1::construct(void)
 	else
 	{
 		this->stripItemJapanese->Checked = false;
+		this->stripItemJapanese->Enabled = false;	// 日本語を選択できなくする
 		this->stripItemEnglish->Checked  = true;
+		this->changeEnglish();
 	}
 
-	// 非表示項目
+	// 非公開情報を非表示にする
 	this->changeVisibleForms( false );
 
 	// 設定ファイルの読み込み

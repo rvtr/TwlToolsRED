@@ -280,6 +280,9 @@
   <data name="cboxIsInputPerson2.Text" xml:space="preserve">
     <value>Enter Contact 2 (optional)</value>
   </data>
+  <data name="gboxPerson2.Text" xml:space="preserve">
+    <value>Contact 2</value>
+  </data>
   <data name="labArbit4.Size" type="System.Drawing.Size, System.Drawing">
     <value>55, 12</value>
   </data>
@@ -292,8 +295,8 @@
   <data name="labArbit3.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
-  <data name="gboxPerson2.Text" xml:space="preserve">
-    <value>Contact 2</value>
+  <data name="gboxPerson1.Text" xml:space="preserve">
+    <value>Contact 1</value>
   </data>
   <data name="labArbit2.Size" type="System.Drawing.Size, System.Drawing">
     <value>55, 12</value>
@@ -307,20 +310,17 @@
   <data name="labArbit1.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
-  <data name="gboxPerson1.Text" xml:space="preserve">
-    <value>Contact 1</value>
-  </data>
   <data name="gboxUsage.Text" xml:space="preserve">
     <value>Usage</value>
+  </data>
+  <data name="gboxSubmitWay.Text" xml:space="preserve">
+    <value>Submission Method</value>
   </data>
   <data name="rSubmitHand.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 16</value>
   </data>
   <data name="rSubmitHand.Text" xml:space="preserve">
     <value>Internet</value>
-  </data>
-  <data name="gboxSubmitWay.Text" xml:space="preserve">
-    <value>Submission Method</value>
   </data>
   <data name="labSubmiteDate.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 143</value>
@@ -361,14 +361,14 @@
   <data name="labProductCodeForeign.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 74</value>
   </data>
+  <data name="gboxShared2Size.Text" xml:space="preserve">
+    <value>Shared 2 File Size</value>
+  </data>
   <data name="cboxIsShared2.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 16</value>
   </data>
   <data name="cboxIsShared2.Text" xml:space="preserve">
     <value>Use of Shared 2 File</value>
-  </data>
-  <data name="gboxShared2Size.Text" xml:space="preserve">
-    <value>Shared 2 File Size</value>
   </data>
   <data name="labLib.Size" type="System.Drawing.Size, System.Drawing">
     <value>161, 12</value>
@@ -418,14 +418,14 @@
   <data name="cboxIsTmpJump.Text" xml:space="preserve">
     <value>Permit Tmp Jump Landing</value>
   </data>
+  <data name="gboxAccess.Text" xml:space="preserve">
+    <value>Access Control Information</value>
+  </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 12</value>
   </data>
   <data name="labAccessOther.Text" xml:space="preserve">
     <value>Other</value>
-  </data>
-  <data name="gboxAccess.Text" xml:space="preserve">
-    <value>Access Control Information</value>
   </data>
   <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 11</value>
@@ -505,11 +505,17 @@
   <data name="stripItemMiddlewareHtml.Text" xml:space="preserve">
     <value>Create middleware list only (HTML format)</value>
   </data>
+  <data name="tabRomInfo.Text" xml:space="preserve">
+    <value>Basic ROM Info</value>
+  </data>
   <data name="tboxGuideRomInfo.Text" xml:space="preserve">
     <value>Information on this tab cannot be edited. If data errors exist, review the ROM's build settings.</value>
   </data>
-  <data name="tabRomInfo.Text" xml:space="preserve">
-    <value>Basic ROM Info</value>
+  <data name="tabTWLInfo.Text" xml:space="preserve">
+    <value>TWL Extended Info</value>
+  </data>
+  <data name="gboxLaunch.Text" xml:space="preserve">
+    <value>Launch Control on DSi Menu</value>
   </data>
   <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>198, 12</value>
@@ -517,17 +523,17 @@
   <data name="labConnectIcon.Text" xml:space="preserve">
     <value>Display Connection Icon on DSi Menu</value>
   </data>
-  <data name="gboxLaunch.Text" xml:space="preserve">
-    <value>Launch Control on DSi Menu</value>
-  </data>
   <data name="tboxGuideTWLInfo.Text" xml:space="preserve">
     <value>Information on this tab cannot be edited. If data errors exist, review the ROM's build settings.</value>
   </data>
-  <data name="tabTWLInfo.Text" xml:space="preserve">
-    <value>TWL Extended Info</value>
+  <data name="tabNandSizeInfo.Text" xml:space="preserve">
+    <value>DSiWare Info</value>
   </data>
   <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
     <value>Information on this tab is required to confirm the amount of space a given Nintendo DSiWare title (NAND application) uses in the system memory. &lt;newline&gt;If the media of the application is a Game Card, there is no need to check the amount of system memory used.</value>
+  </data>
+  <data name="gboxNandSize.Text" xml:space="preserve">
+    <value>Amount of System NAND Memory Used by DSiWare Application</value>
   </data>
   <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>154, 23</value>
@@ -557,13 +563,16 @@
     <value>Actual ROM File Size</value>
   </data>
   <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>111, 194</value>
+    <value>139, 195</value>
   </data>
   <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
     <value>147, 12</value>
   </data>
   <data name="labSumSize2.Text" xml:space="preserve">
     <value>(Total NAND memory used)</value>
+  </data>
+  <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>209, 180</value>
   </data>
   <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 12</value>
@@ -581,7 +590,7 @@
     <value>Sub-Banner File Size</value>
   </data>
   <data name="labTmdSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 144</value>
+    <value>99, 144</value>
   </data>
   <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 12</value>
@@ -589,11 +598,11 @@
   <data name="labTmdSize.Text" xml:space="preserve">
     <value>Other</value>
   </data>
-  <data name="gboxNandSize.Text" xml:space="preserve">
-    <value>Amount of System NAND Memory Used by DSiWare Application</value>
+  <data name="tabRomEditInfo.Text" xml:space="preserve">
+    <value>Market and Rating</value>
   </data>
-  <data name="tabNandSizeInfo.Text" xml:space="preserve">
-    <value>DSiWare Info</value>
+  <data name="gboxOtherSpec.Text" xml:space="preserve">
+    <value>Other ROM Specifications</value>
   </data>
   <data name="cboxIsUGC.Size" type="System.Drawing.Size, System.Drawing">
     <value>227, 16</value>
@@ -601,14 +610,14 @@
   <data name="cboxIsUGC.Text" xml:space="preserve">
     <value>UGC (User Generated Content) Support</value>
   </data>
-  <data name="gboxOtherSpec.Text" xml:space="preserve">
-    <value>Other ROM Specifications</value>
-  </data>
   <data name="butSetBack.Text" xml:space="preserve">
     <value>Restore Initial Settings</value>
   </data>
   <data name="tboxGuideRomEditInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist and Master ROM. &lt;newline&gt;This information is used as ROM registration data when the Master ROM is created (excluding "Other ROM Specifications").</value>
+  </data>
+  <data name="gboxParental.Text" xml:space="preserve">
+    <value>Market and Rating Information</value>
   </data>
   <data name="cboxIsUnnecessaryRating.Size" type="System.Drawing.Size, System.Drawing">
     <value>195, 16</value>
@@ -616,18 +625,18 @@
   <data name="cboxIsUnnecessaryRating.Text" xml:space="preserve">
     <value>Rating Not Required (Tools Only)</value>
   </data>
-  <data name="gboxParental.Text" xml:space="preserve">
-    <value>Market and Rating Information</value>
-  </data>
-  <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Market and Rating</value>
+  <data name="tabSubmitInfo.Text" xml:space="preserve">
+    <value>Submission Info</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
     <value>(30 characters or less)</value>
   </data>
   <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist.
-    </value>
+</value>
+  </data>
+  <data name="gboxForeign.Text" xml:space="preserve">
+    <value>Foreign Version</value>
   </data>
   <data name="labProductNameLimitForeign.Text" xml:space="preserve">
     <value>(30 characters or less)</value>
@@ -638,29 +647,26 @@
   <data name="labMultiForeign2.Text" xml:space="preserve">
     <value>(When for &gt;1 market)</value>
   </data>
-  <data name="gboxForeign.Text" xml:space="preserve">
-    <value>Foreign Version</value>
-  </data>
-  <data name="tabSubmitInfo.Text" xml:space="preserve">
-    <value>Submission Info</value>
+  <data name="tabCompanyInfo.Text" xml:space="preserve">
+    <value>Company Info</value>
   </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist. Enter all information.</value>
   </data>
-  <data name="tabCompanyInfo.Text" xml:space="preserve">
-    <value>Company Info</value>
+  <data name="tabErrorInfo.Text" xml:space="preserve">
+    <value>Error Info</value>
   </data>
   <data name="tboxGuideErrorInfo.Text" xml:space="preserve">
     <value>This tab lists problems in the ROM data file and editing mistakes made when using this program. &lt;newline&gt;Items in red cannot be corrected using this program. You must modify the ROM build settings. &lt;newline&gt;Items in blue indicate problems with the ROM data that can be can corrected using this program. &lt;newline&gt;Items in black indicate errors or omissions in the Submission Info and Company Info tabs.</value>
+  </data>
+  <data name="gboxErrorTiming.Text" xml:space="preserve">
+    <value>Display Information From</value>
   </data>
   <data name="rErrorCurrent.Size" type="System.Drawing.Size, System.Drawing">
     <value>121, 16</value>
   </data>
   <data name="rErrorCurrent.Text" xml:space="preserve">
     <value>Apply current input</value>
-  </data>
-  <data name="gboxErrorTiming.Text" xml:space="preserve">
-    <value>Display Information From</value>
   </data>
   <data name="labWarn.Size" type="System.Drawing.Size, System.Drawing">
     <value>466, 12</value>
@@ -685,8 +691,5 @@
   </data>
   <data name="colErrorBegin.HeaderText" xml:space="preserve">
     <value>Start</value>
-  </data>
-  <data name="tabErrorInfo.Text" xml:space="preserve">
-    <value>Error Info</value>
   </data>
 </root>

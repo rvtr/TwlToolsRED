@@ -632,8 +632,7 @@
     <value>(30 characters or less)</value>
   </data>
   <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
-    <value>You must complete all items on this tab to create a submission checklist.
-</value>
+    <value>You must complete all items on this tab to create a submission checklist.</value>
   </data>
   <data name="gboxForeign.Text" xml:space="preserve">
     <value>Foreign Version</value>

@@ -222,45 +222,61 @@
 	</DifferentAppType>
 
 	<!-- Access Control -->
-	<CardAccess>
+	<CardAccessSystem>
 		<name>Access Control Information</name>
 		<sentence>Cannot set the Game Card access method to both Normal mode and NTR mode.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</CardAccess>
-	<SDAccess>
-		<name>Access Control Information</name>
-		<sentence>Access to the SD Card is not permitted.</sentence>
-		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</SDAccess>
-	<NandAccess>
+	</CardAccessSystem>
+	<NandAccessUser>
 		<name>Access Control Information</name>
 		<sentence>Access to the NAND flash is not permitted.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</NandAccess>
+	</NandAccessUser>
+	<SDAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the SD Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessUser>
+	<SDAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The SD Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessSystem>
+	<GameCardNormalAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the Game Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessUser>
+	<GameCardNormalAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The Game Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessSystem>
+	<GameCardNTRAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the NTR-compatible region in the Game Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessUser>
+	<GameCardNTRAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The NTR-compatible region in the Game Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessSystem>
+	<IllegalAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the {0} is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUser>
+	<IllegalAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The {0} can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessSystem>
 	<AccessDefault>
 		<name>Access Control Information</name>
-		<sentence>Configured not to allow access.</sentence>
+		<sentence>Illegal access bit(s) are set. This setting is not permitted.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</AccessDefault>
-
-	<!-- Padding -->
-	<PaddingRead>
-		<name>Padding</name>
-		<sentence>Last {0} cannot be read.</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</PaddingRead>
-	<PaddingValue>
-		<name>Padding</name>
-		<sentence>Last {0} must be padded by FFh. The limitations of {1} ROMs are not being observed.</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</PaddingValue>
-
-	<!-- Reserved Area -->
-	<ReservedArea>
-		<name>Reserved region</name>
-		<sentence>An illegal value is included. Pad this region with 00h only.</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</ReservedArea>
 
 	<!-- Shared2 file -->
 	<Shared2Disable>

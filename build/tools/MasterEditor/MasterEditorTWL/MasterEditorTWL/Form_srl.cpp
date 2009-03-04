@@ -199,7 +199,7 @@ void Form1::setSrlForms(void)
 	}
 	if( this->hSrl->IsCommonClientKeyForDebugger == true )
 	{
-		acc += "commonClientKey(Debug).\r\n";
+		acc += "commonClientKey(Debugger).\r\n";
 	}
 	this->tboxAccessOther->Text = acc;
 

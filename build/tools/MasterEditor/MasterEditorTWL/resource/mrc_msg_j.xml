@@ -222,24 +222,59 @@
 	</DifferentAppType>
 
 	<!-- Access Control -->
-	<CardAccess>
+	<CardAccessSystem>
 		<name>アクセスコントロール情報</name>
 		<sentence>ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</CardAccess>
-	<SDAccess>
-		<name>アクセスコントロール情報</name>
-		<sentence>SDカードへのアクセスは許可されていません。</sentence>
-		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</SDAccess>
-	<NandAccess>
+	</CardAccessSystem>
+	<NandAccessUser>
 		<name>アクセスコントロール情報</name>
 		<sentence>ゲームカード用ソフトはNANDフラッシュメモリへのアクセスを許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</NandAccess>
+	</NandAccessUser>
+	<SDAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>SDカードへのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessUser>
+	<SDAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>SDカードへアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessSystem>
+	<GameCardNormalAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessUser>
+	<GameCardNormalAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessSystem>
+	<GameCardNTRAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードNTR互換領域へのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessUser>
+	<GameCardNTRAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードNTR互換領域へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessSystem>
+	<IllegalAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUser>
+	<IllegalAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessSystem>
 	<AccessDefault>
 		<name>アクセスコントロール情報</name>
-		<sentence>許可されていないアクセスが設定されています。この設定は許可されていません。</sentence>
+		<sentence>未定義のアクセスビットが設定されています。この設定は許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</AccessDefault>
 

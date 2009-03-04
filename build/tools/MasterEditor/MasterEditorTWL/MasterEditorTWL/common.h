@@ -6,7 +6,6 @@
 #define   METWL_LIGHT_CHECK					// 提出条件を緩くするか
 
 // 定数
-#define   METWL_ERRLIST_NORANGE			0			// エラーのアドレス範囲を指定しないことを表す特別な値
 #define   METWL_ROMSIZE_MIN				256			// 最小のデバイス容量 256Mbit
 #define   METWL_ROMSIZE_MAX				4096		// 最大の..           4Gbit
 #define   METWL_ROMSIZE_MIN_NAND		1

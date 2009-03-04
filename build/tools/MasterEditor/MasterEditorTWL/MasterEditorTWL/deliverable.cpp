@@ -117,7 +117,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	}
 	if( hSrl->IsCommonClientKeyForDebugger )
 	{
-		access += "commonClientKey(Debug). ";
+		access += "commonClientKey(Debugger). ";
 	}
 
 	// 使用ライセンス

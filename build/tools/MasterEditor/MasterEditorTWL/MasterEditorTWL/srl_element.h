@@ -308,7 +308,7 @@ namespace MasterEditorTWL
 		// gridView‚Ì•\Ž¦Œ`Ž®‚É‚ ‚í‚¹‚é
 		cli::array<System::Object^>^ getAll( System::Boolean isJapanese )
 		{
-			if( (this->begin == METWL_ERRLIST_NORANGE) && (this->end == METWL_ERRLIST_NORANGE) )
+			if( (this->begin == 0) && (this->end == 0) )
 			{
 				if( isJapanese )
 					return (gcnew array<System::Object^>{this->hName,  "-", "-", this->hMsg});

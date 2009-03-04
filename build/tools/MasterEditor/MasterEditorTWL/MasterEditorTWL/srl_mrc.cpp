@@ -558,28 +558,110 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
 			(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
 		{
-			this->hErrorList->Add( this->makeMrcError("CardAccess") );
+			this->hErrorList->Add( this->makeMrcError("CardAccessSystem") );
+		}
+
+		if( this->pRomHeader->s.access_control.common_client_key != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Common Client Key") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot B for ES") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_C != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot C for NAM") );
+		}
+		if( !this->IsMediaNand && (this->pRomHeader->s.access_control.nand_access != 0) )	// カードアプリのときのみ
+		{
+			this->hWarnList->Add( this->makeMrcError("NandAccessSystem") );
+		}
+		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("SDAccessSystem") );
+		}
+		if( this->pRomHeader->s.access_control.game_card_on != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("GameCardNormalAccessSystem") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForLauncher != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot B (JPEG signature) for the launcher") );
+		}
+		if( this->pRomHeader->s.access_control.game_card_nitro_mode != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("GameCardNTRAccessSystem") );
+		}
+		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES SlotB (JPEG signature) for the user") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot A for the SSL client certification") );
+		}
+		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Common Client Key for the debugger system menu") );
+		}
+
+		// その他のビット
+		u32 okbits = 0x80001FFF;
+		u32 *p = (u32*)&(this->pRomHeader->s);
+		if( p[ 0x1b4 / 4 ] & ~okbits )
+		{
+			this->hErrorList->Add( this->makeMrcError("AccessDefault") );
 		}
 	}
 	else	// ユーザアプリ
 	{
+		if( this->pRomHeader->s.access_control.common_client_key != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "Common Client Key") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot B for ES") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_C != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot C for NAM") );
+		}
+		if( !this->IsMediaNand && (this->pRomHeader->s.access_control.nand_access != 0) )	// カードアプリのときのみ
+		{
+			this->hErrorList->Add( this->makeMrcError("NandAccessUser") );
+		}
 		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("SDAccess") );
+			this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
 		}
-		if( !this->IsMediaNand )	// カードアプリのときのみ
+		if( this->pRomHeader->s.access_control.game_card_on != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("NandAccess") );
+			this->hErrorList->Add( this->makeMrcError("GameCardNormalAccessUser") );
 		}
-		u32 okbits;
-		if( !this->IsMediaNand )
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForLauncher != 0 )
 		{
-			okbits = 0x00000008 | 0x00000010 | 0x00000040;	// NAND | SD | Shared2ファイル (それぞれ個別でチェックするためここではチェックしない)
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot B (JPEG signature) for the launcher") );
 		}
-		else
+		if( this->pRomHeader->s.access_control.game_card_nitro_mode != 0 )
 		{
-			okbits = 0x00000008 | 0x00000010 | 0x00000040 | 0x00000400;		// NANDアプリのときはJpegSignフラグは許される
+			this->hErrorList->Add( this->makeMrcError("GameCardNTRAccessUser") );
 		}
+		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES SlotB (JPEG signature) for the user") );
+		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
+		}
+		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "Common Client Key for the debugger system menu") );
+		}
+
+		u32 okbits = 0x80001FFF;
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{

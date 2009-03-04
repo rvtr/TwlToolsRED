@@ -34,19 +34,62 @@ void Form1::changeMaxLength( System::Windows::Forms::TextBox ^tbox, System::Int3
 }
 
 // ----------------------------------------------
+// フォームのEnableやVisibleを変える
+// ----------------------------------------------
+void Form1::changeFormInput( System::String ^langname )
+{
+	// 日本語のみの入力項目
+	if( langname->StartsWith("ja") )
+	{
+		// ふりがなは日本のみ
+		this->tboxFurigana1->Enabled = true;
+		this->tboxNTSC1->Enabled     = true;
+		this->tboxFurigana2->Enabled = true;
+		this->tboxNTSC2->Enabled     = true;
+
+		// 日本ではInternet提出を認めない
+		if( this->rSubmitInternet->Checked )
+		{
+			this->rSubmitInternet->Checked = false;		// 表示を消したときに選択されている項目がない状況を防ぐ
+			this->rSubmitPost->Checked     = true;
+		}
+		this->rSubmitInternet->Enabled = false;
+		this->rSubmitInternet->Visible = false;
+
+		// 入力文字数制限を変更する
+		this->changeMaxLength( this->tboxCompany1, 35 );
+		this->changeMaxLength( this->tboxDepart1,  35 );
+		this->changeMaxLength( this->tboxPerson1,  25 );
+		this->changeMaxLength( this->tboxCompany2, 35 );
+		this->changeMaxLength( this->tboxDepart2,  35 );
+		this->changeMaxLength( this->tboxPerson2,  25 );
+	}
+	else
+	{
+		this->tboxFurigana1->Enabled = false;
+		this->tboxNTSC1->Enabled     = false;
+		this->tboxFurigana2->Enabled = false;
+		this->tboxNTSC2->Enabled     = false;
+
+		this->rSubmitInternet->Enabled = true;
+		this->rSubmitInternet->Visible = true;
+
+		this->changeMaxLength( this->tboxCompany1, 70 );
+		this->changeMaxLength( this->tboxDepart1,  70 );
+		this->changeMaxLength( this->tboxPerson1,  50 );
+		this->changeMaxLength( this->tboxCompany2, 70 );
+		this->changeMaxLength( this->tboxDepart2,  70 );
+		this->changeMaxLength( this->tboxPerson2,  50 );
+	}
+}
+
+// ----------------------------------------------
 // 日本語版への切り替え
 // ----------------------------------------------
 void Form1::changeJapanese(void)
 {
 	this->changeLanguage( "ja" );
 
-	// 入力文字数制限を変更する
-	this->changeMaxLength( this->tboxCompany1, 35 );
-	this->changeMaxLength( this->tboxDepart1,  35 );
-	this->changeMaxLength( this->tboxPerson1,  25 );
-	this->changeMaxLength( this->tboxCompany2, 35 );
-	this->changeMaxLength( this->tboxDepart2,  35 );
-	this->changeMaxLength( this->tboxPerson2,  25 );
 }
 
 // ----------------------------------------------
@@ -55,13 +98,6 @@ void Form1::changeJapanese(void)
 void  Form1::changeEnglish(void)
 {
 	this->changeLanguage( "en" );
-
-	this->changeMaxLength( this->tboxCompany1, 70 );
-	this->changeMaxLength( this->tboxDepart1,  70 );
-	this->changeMaxLength( this->tboxPerson1,  50 );
-	this->changeMaxLength( this->tboxCompany2, 70 );
-	this->changeMaxLength( this->tboxDepart2,  70 );
-	this->changeMaxLength( this->tboxPerson2,  50 );
 }
 
 // ----------------------------------------------
@@ -69,7 +105,7 @@ void  Form1::changeEnglish(void)
 // ----------------------------------------------
 void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 {
-	int  index;
+	//int  index;
 
 	System::Threading::Thread::CurrentThread->CurrentUICulture = gcnew System::Globalization::CultureInfo(langname,true);
 	System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
@@ -93,14 +129,14 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->tboxTitleName, L"tboxTitleName");
 	resources->ApplyResources(this->labBackup, L"labBackup");
 
-	index = this->combBackup->SelectedIndex;
+	int indexBackup = this->combBackup->SelectedIndex;
 	this->combBackup->Items->Clear();
 	this->combBackup->Items->AddRange(gcnew cli::array< System::Object^  >(10) {resources->GetString(L"combBackup.Items"), resources->GetString(L"combBackup.Items1"), 
 		resources->GetString(L"combBackup.Items2"), resources->GetString(L"combBackup.Items3"), resources->GetString(L"combBackup.Items4"), 
 		resources->GetString(L"combBackup.Items5"), resources->GetString(L"combBackup.Items6"), resources->GetString(L"combBackup.Items7"), 
 		resources->GetString(L"combBackup.Items8"), resources->GetString(L"combBackup.Items9")});
 	resources->ApplyResources(this->combBackup, L"combBackup");
-	this->combBackup->SelectedIndex = index;
+	this->combBackup->SelectedIndex = indexBackup;
 
 	resources->ApplyResources(this->tboxBackupOther, L"tboxBackupOther");
 	resources->ApplyResources(this->gboxCRC, L"gboxCRC");
@@ -119,66 +155,59 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labCERO, L"labCERO");
 
 	resources->ApplyResources(this->combOFLC, L"combOFLC");
-	index = this->combOFLC->SelectedIndex;
+	int indexOFLC = this->combOFLC->SelectedIndex;
 	this->combOFLC->Items->Clear();
 	this->combOFLC->Items->AddRange(gcnew cli::array< System::Object^  >(5) {resources->GetString(L"combOFLC.Items"), resources->GetString(L"combOFLC.Items1"), 
 		resources->GetString(L"combOFLC.Items2"), resources->GetString(L"combOFLC.Items3"), resources->GetString(L"combOFLC.Items4")});
-	this->combOFLC->SelectedIndex = index;
 
 	resources->ApplyResources(this->combPEGI_BBFC, L"combPEGI_BBFC");
-	index = this->combPEGI_BBFC->SelectedIndex;
+	int indexPEGI_BBFC = this->combPEGI_BBFC->SelectedIndex;
 	this->combPEGI_BBFC->Items->Clear();
 	this->combPEGI_BBFC->Items->AddRange(gcnew cli::array< System::Object^  >(10) {resources->GetString(L"combPEGI_BBFC.Items"), 
 		resources->GetString(L"combPEGI_BBFC.Items1"), resources->GetString(L"combPEGI_BBFC.Items2"), resources->GetString(L"combPEGI_BBFC.Items3"), 
 		resources->GetString(L"combPEGI_BBFC.Items4"), resources->GetString(L"combPEGI_BBFC.Items5"), resources->GetString(L"combPEGI_BBFC.Items6"), 
 		resources->GetString(L"combPEGI_BBFC.Items7"), resources->GetString(L"combPEGI_BBFC.Items8"), resources->GetString(L"combPEGI_BBFC.Items9")});
-	this->combPEGI_BBFC->SelectedIndex = index;
 
 	resources->ApplyResources(this->combPEGI_PRT, L"combPEGI_PRT");
-	index = this->combPEGI_PRT->SelectedIndex;
+	int indexPEGI_PRT = this->combPEGI_PRT->SelectedIndex;
 	this->combPEGI_PRT->Items->Clear();
 	this->combPEGI_PRT->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combPEGI_PRT.Items"), 
 		resources->GetString(L"combPEGI_PRT.Items1"), resources->GetString(L"combPEGI_PRT.Items2"), resources->GetString(L"combPEGI_PRT.Items3"), 
 		resources->GetString(L"combPEGI_PRT.Items4"), resources->GetString(L"combPEGI_PRT.Items5"), resources->GetString(L"combPEGI_PRT.Items6")});
-	this->combPEGI_PRT->SelectedIndex = index;
 
 	resources->ApplyResources(this->combPEGI, L"combPEGI");
-	index = this->combPEGI->SelectedIndex;
+	int indexPEGI = this->combPEGI->SelectedIndex;
 	this->combPEGI->Items->Clear();
 	this->combPEGI->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combPEGI.Items"), resources->GetString(L"combPEGI.Items1"), 
 		resources->GetString(L"combPEGI.Items2"), resources->GetString(L"combPEGI.Items3"), resources->GetString(L"combPEGI.Items4"), 
 		resources->GetString(L"combPEGI.Items5"), resources->GetString(L"combPEGI.Items6")});
-	this->combPEGI->SelectedIndex = index;
 
 	resources->ApplyResources(this->combUSK, L"combUSK");
-	index = this->combUSK->SelectedIndex;
+	int indexUSK = this->combUSK->SelectedIndex;
 	this->combUSK->Items->Clear();
 	this->combUSK->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combUSK.Items"), resources->GetString(L"combUSK.Items1"), 
 		resources->GetString(L"combUSK.Items2"), resources->GetString(L"combUSK.Items3"), resources->GetString(L"combUSK.Items4"), resources->GetString(L"combUSK.Items5")});
-	this->combUSK->SelectedIndex = index;
 
 	resources->ApplyResources(this->combESRB, L"combESRB");
-	index = this->combESRB->SelectedIndex;
+	int indexESRB = this->combESRB->SelectedIndex;
 	this->combESRB->Items->Clear();
 	this->combESRB->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combESRB.Items"), resources->GetString(L"combESRB.Items1"), 
 		resources->GetString(L"combESRB.Items2"), resources->GetString(L"combESRB.Items3"), resources->GetString(L"combESRB.Items4"), 
 		resources->GetString(L"combESRB.Items5"), resources->GetString(L"combESRB.Items6")});
-	this->combESRB->SelectedIndex = index;
 
 	resources->ApplyResources(this->combCERO, L"combCERO");
-	index = this->combCERO->SelectedIndex;
+	int indexCERO = this->combCERO->SelectedIndex;
 	this->combCERO->Items->Clear();
 	this->combCERO->Items->AddRange(gcnew cli::array< System::Object^  >(6) {resources->GetString(L"combCERO.Items"), resources->GetString(L"combCERO.Items1"), 
 		resources->GetString(L"combCERO.Items2"), resources->GetString(L"combCERO.Items3"), resources->GetString(L"combCERO.Items4"), 
 		resources->GetString(L"combCERO.Items5")});
-	this->combCERO->SelectedIndex = index;
 
 	resources->ApplyResources(this->labParentalRating, L"labParentalRating");
 	resources->ApplyResources(this->labRegion, L"labRegion");
 	resources->ApplyResources(this->cboxIsEULA, L"cboxIsEULA");
 
 	resources->ApplyResources(this->combRegion, L"combRegion");
-	index = this->combRegion->SelectedIndex;
+	int indexRegion = this->combRegion->SelectedIndex;
 	this->combRegion->Items->Clear();
 	this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
 		resources->GetString(L"combRegion.Items2"), resources->GetString(L"combRegion.Items3"), resources->GetString(L"combRegion.Items4"), 
@@ -193,7 +222,16 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->combRegion->Items->Add( gcnew System::String( L"All Region" ) );
 	}
 #endif
-	this->combRegion->SelectedIndex = index;
+	this->combRegion->SelectedIndex = indexRegion;
+
+	// Region が変わったときのイベントが勝手に呼ばれて index が -1 にされるので Region 変更後に index を設定
+	this->combCERO->SelectedIndex = indexCERO;
+	this->combESRB->SelectedIndex = indexESRB;
+	this->combUSK->SelectedIndex = indexUSK;
+	this->combPEGI->SelectedIndex = indexPEGI;
+	this->combPEGI_PRT->SelectedIndex = indexPEGI_PRT;
+	this->combPEGI_BBFC->SelectedIndex = indexPEGI_BBFC;
+	this->combOFLC->SelectedIndex = indexOFLC;
 
 	//resources->ApplyResources(this->combDLCategory, L"combDLCategory");
 	//index = this->combDLCategory->SelectedIndex;
@@ -435,21 +473,8 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->unnecessaryRating( this->combOFLC );
 	}
 
-	// 日本語のみの入力項目
-	if( langname->StartsWith("ja") )
-	{
-		this->tboxFurigana1->Enabled = true;
-		this->tboxNTSC1->Enabled  = true;
-		this->tboxFurigana2->Enabled = true;
-		this->tboxNTSC2->Enabled  = true;
-	}
-	else
-	{
-		this->tboxFurigana1->Enabled = false;
-		this->tboxNTSC1->Enabled  = false;
-		this->tboxFurigana2->Enabled = false;
-		this->tboxNTSC2->Enabled  = false;
-	}
+	// フォームのEnableやVisibleを切り替え
+	this->changeFormInput( langname );
 
 	// 複数行表示の改行を挿入
 	this->tboxGuideRomEditInfo->Text = this->tboxGuideRomEditInfo->Text->Replace( "<newline>", "\r\n" );

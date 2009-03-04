@@ -80,7 +80,11 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hSDK = gcnew System::String( "" );
 	}
 	// ’ño•û–@
-	if( this->rSubmitPost->Checked == true )
+	if( this->rSubmitInternet->Checked == true )
+	{
+		this->hDeliv->hSubmitWay = this->rSubmitInternet->Text;
+	}
+	else if( this->rSubmitPost->Checked == true )
 	{
 		this->hDeliv->hSubmitWay = this->rSubmitPost->Text;
 	}
@@ -88,6 +92,7 @@ void Form1::setDeliverableProperties(void)
 	{
 		this->hDeliv->hSubmitWay = this->rSubmitHand->Text;
 	}
+
 	// —p“r
 	if( this->rUsageSale->Checked == true )
 	{

@@ -90,6 +90,7 @@ void Form1::construct(void)
 	{
 		this->stripItemJapanese->Checked = true;
 		this->stripItemEnglish->Checked  = false;
+		this->changeFormInput("ja");
 	}
 	else
 	{

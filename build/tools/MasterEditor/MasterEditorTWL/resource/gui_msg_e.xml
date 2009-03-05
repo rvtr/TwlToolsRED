@@ -89,8 +89,8 @@ Exception:{0}
 <LabelProductName>Product Name</LabelProductName>
 <LabelProductCode>Product Code</LabelProductCode>
 <LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
-<LabelProductNameForeign>Product Name(Roreign Version)</LabelProductNameForeign>
-<LabelProductCodeForeign>Product Code(Roreign Version)</LabelProductCodeForeign>
+<LabelProductNameForeign>Product Name(Foreign Version)</LabelProductNameForeign>
+<LabelProductCodeForeign>Product Code(Foreign Version)</LabelProductCodeForeign>
 <LabelUsage>Usage</LabelUsage>
 <LabelBackup>Backup Memory</LabelBackup>
 <LabelPerson1>Contact1</LabelPerson1>

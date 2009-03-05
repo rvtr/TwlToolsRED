@@ -278,6 +278,25 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</AccessDefault>
 
+	<!-- Padding -->
+	<PaddingRead>
+		<name>Padding</name>
+		<sentence>Last {0} cannot be read.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingRead>
+	<PaddingValue>
+		<name>Padding</name>
+		<sentence>Last {0} must be padded by FFh. The limitations of {1} ROMs are not being observed.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingValue>
+
+	<!-- Reserved Area -->
+	<ReservedArea>
+		<name>Reserved region</name>
+		<sentence>An illegal value is included. Pad this region with 00h only.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ReservedArea>
+
 	<!-- Shared2 file -->
 	<Shared2Disable>
 		<name>Shared2 file</name>

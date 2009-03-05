@@ -47,7 +47,6 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductName", this->tboxProductName->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode1", this->tboxProductCode1->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode2", this->tboxProductCode2->Text );
-	MasterEditorTWL::appendXmlTag( doc, form, "CountryCode", this->combCountryCode->SelectedIndex.ToString() );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductNameForeign", this->tboxProductNameForeign->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode1Foreign", this->tboxProductCode1Foreign->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ProductCode2Foreign1", this->tboxProductCode2Foreign1->Text );
@@ -145,26 +144,10 @@ void Form1::loadTmp( System::String ^filename )
 		}
 	}
 
-	// 言語
-	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Lang" );
-	if( !System::String::IsNullOrEmpty(text) && text->Equals("E") )
-	{
-		this->stripItemEnglish->Checked  = true;
-		this->stripItemJapanese->Checked = false;
-		this->changeEnglish();
-	}
-	else
-	{
-		this->stripItemEnglish->Checked  = false;
-		this->stripItemJapanese->Checked = true;
-		this->changeJapanese();
-	}
-
 	// フォーム
 	this->parseTmp( root, "/MasterEditorTWL/Form/ProductName", this->tboxProductName );
 	this->parseTmp( root, "/MasterEditorTWL/Form/ProductCode1", this->tboxProductCode1 );
 	this->parseTmp( root, "/MasterEditorTWL/Form/ProductCode2", this->tboxProductCode2 );
-	this->parseTmp( root, "/MasterEditorTWL/Form/CountryCode", this->combCountryCode );
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitVersion", this->numSubmitVersion );
 	this->parseTmp( root, "/MasterEditorTWL/Form/ReleaseDate", this->dateRelease );
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitDate",  this->dateSubmit );
@@ -295,6 +278,21 @@ void Form1::loadTmp( System::String ^filename )
 
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsUGC", this->cboxIsUGC );
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsPhotoEx", this->cboxIsPhotoEx );
+
+	// 言語
+	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Lang" );
+	if( !System::String::IsNullOrEmpty(text) && text->Equals("E") )
+	{
+		this->stripItemEnglish->Checked  = true;
+		this->stripItemJapanese->Checked = false;
+		this->changeEnglish();
+	}
+	else
+	{
+		this->stripItemEnglish->Checked  = false;
+		this->stripItemJapanese->Checked = true;
+		this->changeJapanese();
+	}
 
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる
 	this->changeUnnecessaryRatingForms(true);	// 一度コンボボックスがenableになるので再設定

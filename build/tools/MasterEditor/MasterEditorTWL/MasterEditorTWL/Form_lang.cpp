@@ -46,6 +46,14 @@ void Form1::changeFormInput( System::String ^langname )
 		this->tboxNTSC1->Enabled     = true;
 		this->tboxFurigana2->Enabled = true;
 		this->tboxNTSC2->Enabled     = true;
+		this->labFurigana1->Visible  = true;
+		this->labNTSC1Pre->Visible   = true;
+		this->labNTSC1Sur->Visible   = true;
+		this->labFurigana2->Visible  = true;
+		this->labNTSC2Pre->Visible   = true;
+		this->labNTSC2Sur->Visible   = true;
+		this->labArbit2->Visible     = true;
+		this->labArbit4->Visible     = true;
 
 		// “ú–{‚Å‚ÍInternet’ño‚ð”F‚ß‚È‚¢
 		if( this->rSubmitInternet->Checked )
@@ -70,6 +78,14 @@ void Form1::changeFormInput( System::String ^langname )
 		this->tboxNTSC1->Enabled     = false;
 		this->tboxFurigana2->Enabled = false;
 		this->tboxNTSC2->Enabled     = false;
+		this->labFurigana1->Visible  = false;
+		this->labNTSC1Pre->Visible   = false;
+		this->labNTSC1Sur->Visible   = false;
+		this->labFurigana2->Visible  = false;
+		this->labNTSC2Pre->Visible   = false;
+		this->labNTSC2Sur->Visible   = false;
+		this->labArbit2->Visible     = false;
+		this->labArbit4->Visible     = false;
 
 		this->rSubmitInternet->Enabled = true;
 		this->rSubmitInternet->Visible = true;

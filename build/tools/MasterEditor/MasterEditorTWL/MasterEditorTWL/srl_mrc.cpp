@@ -289,7 +289,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	{
 		if( (romsize < METWL_ROMSIZE_MIN_NAND) || (METWL_ROMSIZE_MAX_NAND < romsize) )
 		{
-			this->hErrorList->Add( this->makeMrcError("CapacityNandRangel") );
+			this->hErrorList->Add( this->makeMrcError("CapacityNandRange") );
 		}
 		//u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
 		u32  allsize = this->hNandUsedSize->NandUsedSize;	// TMDやサブバナーのサイズを含める
@@ -553,14 +553,14 @@ void RCSrl::mrcAppType(FILE *fp)
 // -------------------------------------------------------------------
 void RCSrl::mrcAccessControl(FILE *fp)
 {
+	if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
+		(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
+	{
+		this->hErrorList->Add( this->makeMrcError("CardAccess") );
+	}
+
 	if( !this->IsAppUser )
 	{
-		if( (this->pRomHeader->s.access_control.game_card_on != 0) &&
-			(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
-		{
-			this->hErrorList->Add( this->makeMrcError("CardAccessSystem") );
-		}
-
 		if( this->pRomHeader->s.access_control.common_client_key != 0 )
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Common Client Key") );
@@ -572,10 +572,6 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		if( this->pRomHeader->s.access_control.hw_aes_slot_C != 0 )
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot C for NAM") );
-		}
-		if( !this->IsMediaNand && (this->pRomHeader->s.access_control.nand_access != 0) )	// カードアプリのときのみ
-		{
-			this->hWarnList->Add( this->makeMrcError("NandAccessSystem") );
 		}
 		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 		{
@@ -597,7 +593,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot A for the SSL client certification") );
 		}
-		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES SlotB (JPEG signature) for the user") );
 		}
@@ -652,9 +648,16 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
 		}
-		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES SlotB (JPEG signature) for the user") );
+			if( !this->IsMediaNand )
+			{
+				this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES SlotB (JPEG signature) for the user") );
+			}
+			else
+			{
+				this->hWarnList->Add( this->makeMrcError("IllegalAccessUserWarn", "HW AES SlotB (JPEG signature) for the user") );
+			}
 		}
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
 		{
@@ -821,6 +824,7 @@ void RCSrl::mrcShared2(FILE *fp)
 					this->hWarnList->Add( this->makeMrcError("Shared2SizeSystem", 
 										                     i.ToString(), MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i])) );
 				}
+				else
 				{
 					this->hWarnList->Add( this->makeMrcError("Shared2SizeUser", 
 										                     i.ToString(), MasterEditorTWL::transSizeToString(this->hShared2SizeArray[i])) );

@@ -2,17 +2,17 @@
 <message>
 	<!-- NTR Compatible Area -->
 	<TitleNameAscii>
-		<name>Software Title Name</name>
+		<name>Game Title</name>
 		<sentence>Uses non-usable ASCII code.</sentence>
 		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
 	</TitleNameAscii>
 	<TitleNameSuffix>
-		<name>Software Title Name</name>
+		<name>Game Title</name>
 		<sentence>Register 00h in the area not used.</sentence>
 		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
 	</TitleNameSuffix>
 	<TitleNameSpace>
-		<name>Software Title Name</name>
+		<name>Game Title</name>
 		<sentence>Register 20h for spaces.</sentence>
 		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
 	</TitleNameSpace>
@@ -27,7 +27,7 @@
 		<begin>c</begin><end>f</end><modify>False</modify><affect>True</affect>
 	</InitialCodeSDKDefault>
 	<MakerCodeAscii>
-		<name>Manufacturer code</name>
+		<name>Maker Code</name>
 		<sentence>Uses non-usable ASCII code.</sentence>
 		<begin>10</begin><end>11</end><modify>False</modify><affect>True</affect>
 	</MakerCodeAscii>
@@ -160,7 +160,7 @@
 	</NormalJump>
 	<RomSpeedType>
 		<name>Flags</name>
-		<sentence>ROMSpeedType is not configured in the RSF file.</sentence>
+		<sentence>RomSpeedType is not configured in the RSF file.</sentence>
 		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
 	</RomSpeedType>
 	<RomControl>
@@ -222,11 +222,11 @@
 	</DifferentAppType>
 
 	<!-- Access Control -->
-	<CardAccessSystem>
+	<CardAccess>
 		<name>Access Control Information</name>
 		<sentence>Cannot set the Game Card access method to both Normal mode and NTR mode.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</CardAccessSystem>
+	</CardAccess>
 	<NandAccessUser>
 		<name>Access Control Information</name>
 		<sentence>Access to the NAND flash is not permitted.</sentence>
@@ -267,6 +267,11 @@
 		<sentence>Access to the {0} is not permitted.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</IllegalAccessUser>
+	<IllegalAccessUserWarn>
+		<name>Access Control Information</name>
+		<sentence>The {0} can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUserWarn>
 	<IllegalAccessSystem>
 		<name>Access Control Information</name>
 		<sentence>The {0} can be accessed.</sentence>

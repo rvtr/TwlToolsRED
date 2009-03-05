@@ -427,12 +427,6 @@
   <data name="gboxAccess.Text" xml:space="preserve">
     <value>Access Control Information</value>
   </data>
-  <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 11</value>
-  </data>
-  <data name="labIsGameCardOn2.Text" xml:space="preserve">
-    <value>(From NAND Application)</value>
-  </data>
   <data name="labAppType.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 79</value>
   </data>

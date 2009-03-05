@@ -160,7 +160,7 @@
 	</NormalJump>
 	<RomSpeedType>
 		<name>諸フラグ</name>
-		<sentence>rsfファイルでROMSpeedTypeが設定されていません。</sentence>
+		<sentence>RSFファイルでRomSpeedTypeが設定されていません。</sentence>
 		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
 	</RomSpeedType>
 	<RomControl>
@@ -222,11 +222,11 @@
 	</DifferentAppType>
 
 	<!-- Access Control -->
-	<CardAccessSystem>
+	<CardAccess>
 		<name>アクセスコントロール情報</name>
 		<sentence>ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</CardAccessSystem>
+	</CardAccess>
 	<NandAccessUser>
 		<name>アクセスコントロール情報</name>
 		<sentence>ゲームカード用ソフトはNANDフラッシュメモリへのアクセスを許可されていません。</sentence>
@@ -267,6 +267,11 @@
 		<sentence>{0} へのアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</IllegalAccessUser>
+	<IllegalAccessUserWarn>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUserWarn>
 	<IllegalAccessSystem>
 		<name>アクセスコントロール情報</name>
 		<sentence>{0} へアクセス可能になっています。</sentence>

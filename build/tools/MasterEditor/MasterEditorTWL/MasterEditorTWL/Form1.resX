@@ -1465,7 +1465,7 @@
     <value>True</value>
   </data>
   <data name="labArbit4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>230, 207</value>
+    <value>227, 204</value>
   </data>
   <data name="labArbit4.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 12</value>
@@ -1492,7 +1492,7 @@
     <value>True</value>
   </data>
   <data name="labArbit3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>230, 156</value>
+    <value>227, 153</value>
   </data>
   <data name="labArbit3.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 12</value>
@@ -1981,7 +1981,7 @@
     <value>True</value>
   </data>
   <data name="labArbit2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>219, 207</value>
+    <value>216, 204</value>
   </data>
   <data name="labArbit2.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 12</value>
@@ -2008,7 +2008,7 @@
     <value>True</value>
   </data>
   <data name="labArbit1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>219, 156</value>
+    <value>216, 153</value>
   </data>
   <data name="labArbit1.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 12</value>

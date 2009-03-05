@@ -83,9 +83,9 @@ Exception:{0}
 <E_LoadTemp>Failed to read temporary information.</E_LoadTemp>
 
 <!-- Check -->
-<TextBoxInput>Input omission: Input data.</TextBoxInput>
-<NumRangeInput>Input omission: Illegal value.</NumRangeInput>
-<ComboBoxInput>Input omission: Select data.</ComboBoxInput>
+<TextBoxInput>Insufficient input: Input data.</TextBoxInput>
+<NumRangeInput>Insufficient input: Illegal value.</NumRangeInput>
+<ComboBoxInput>Insufficient input: Select data.</ComboBoxInput>
 <LabelProductName>Product Name</LabelProductName>
 <LabelProductCode>Product Code</LabelProductCode>
 <LabelCountryCode>Product Code(Region Code)</LabelCountryCode>

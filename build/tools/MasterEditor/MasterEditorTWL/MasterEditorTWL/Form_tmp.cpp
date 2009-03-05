@@ -281,17 +281,17 @@ void Form1::loadTmp( System::String ^filename )
 
 	// 言語
 	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Lang" );
-	if( !System::String::IsNullOrEmpty(text) && text->Equals("E") )
-	{
-		this->stripItemEnglish->Checked  = true;
-		this->stripItemJapanese->Checked = false;
-		this->changeEnglish();
-	}
-	else
+	if( !System::String::IsNullOrEmpty(text) && text->Equals("J") && this->stripItemJapanese->Enabled )	// 日本語が選択可能なときのみ
 	{
 		this->stripItemEnglish->Checked  = false;
 		this->stripItemJapanese->Checked = true;
 		this->changeJapanese();
+	}
+	else
+	{
+		this->stripItemEnglish->Checked  = true;
+		this->stripItemJapanese->Checked = false;
+		this->changeEnglish();
 	}
 
 	this->maskRatingForms();	// ペアレンタルコントロール情報をリージョンに合わせる

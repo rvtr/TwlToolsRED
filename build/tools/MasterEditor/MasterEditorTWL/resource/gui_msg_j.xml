@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
 <!-- common -->
-<OverWrite>{0}はすでに存在します。上書きしますか?</OverWrite>
+<OverWrite>{0} はすでに存在します。上書きしますか?</OverWrite>
 
 <!-- Start Up -->
 <E_Start_InitExist>設定ファイルが見つかりません。</E_Start_InitExist>
@@ -16,7 +16,7 @@
 <E_LoadRom_Platform>本ツールはTWL用です。NTR専用ROMなどのTWL非対応ROMを読み込むことはできません。</E_LoadRom_Platform>
 <E_LoadRom_Default>ROMデータファイルの読み込みに失敗しました。再度ROMデータを読み込ませてください。</E_LoadRom_Default>
 <E_LoadRom_CRC>ROMデータのCRC計算に失敗しました。ROMデータの読み込みはキャンセルされました。</E_LoadRom_CRC>
-<E_LoadRom_Exist>ファイルが存在しませんので読み込むことができません。</E_LoadRom_Exist>
+<E_LoadRom_Exist>ファイルが存在しないので読み込むことができません。</E_LoadRom_Exist>
 <E_LoadRom_Tad>TADファイルの読み込みに失敗しました。</E_LoadRom_Tad>
 
 <!-- Create Submission Set -->
@@ -33,7 +33,9 @@
 <SaveSet_Folder>保存先フォルダを選択してください。</SaveSet_Folder>
 <E_SaveSet_FolderCancel>フォルダの選択がキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_FolderCancel>
 <E_SaveSet_OWCancel>ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_OWCancel>
-<E_SaveSet_FileDefault>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_FileDefault>
+<E_SaveSet_FileDefault>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。
+
+</E_SaveSet_FileDefault>
 <E_SaveSet_FileOpen>原因:出力ファイルのオープンに失敗しました。</E_SaveSet_FileOpen>
 <E_SaveSet_FileRead>原因:ファイルの読み込みに失敗しました。</E_SaveSet_FileRead>
 <E_SaveSet_FileWrite>原因:出力ファイルへの書き出しに失敗しました。</E_SaveSet_FileWrite>
@@ -48,7 +50,7 @@
 {1}</E_SaveSet_Exception>
 <E_SaveSet_SheetTemplate>提出確認書のテンプレートが開けなかったため、提出確認書の作成に失敗しました。</E_SaveSet_SheetTemplate>
 <E_SaveSet_SheetOpen>提出確認書にデータを書き込みできませんでした。同名ファイルがすでに開かれていないかご確認ください。</E_SaveSet_SheetOpen>
-<E_SaveSet_Sheet_Default>提出確認書の作成に失敗しました。</E_SaveSet_Sheet_Default>
+<E_SaveSet_SheetDefault>提出確認書の作成に失敗しました。</E_SaveSet_SheetDefault>
 <SaveSet_Success>提出データ一式の作成に成功しました。</SaveSet_Success>
 
 <!-- Create Master Rom -->
@@ -60,7 +62,9 @@
 <SaveRom_Folder>保存先フォルダを選択してください。</SaveRom_Folder>
 <E_SaveRom_FolderCancel>フォルダの選択がキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_FolderCancel>
 <E_SaveRom_OWCancel>ファイルの上書きがキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_OWCancel>
-<E_SaveRom_FileDefault>マスターROMの作成に失敗しました。</E_SaveRom_FileDefault>
+<E_SaveRom_FileDefault>マスターROMの作成に失敗しました。
+
+</E_SaveRom_FileDefault>
 <E_SaveRom_Exception>マスターROMの作成に失敗しました。
 
 例外:{0}

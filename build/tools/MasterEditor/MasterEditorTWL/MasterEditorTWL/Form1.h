@@ -4731,7 +4731,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 				ECFormResult result = this->saveRom( srlfile );
 				if( result != ECFormResult::NOERROR )
 				{
-					System::String ^msg = this->makeMsg( "E_SaveSet_FileDefault" );
+					System::String ^msg = this->makeMsg( "E_SaveRom_FileDefault" );
 					switch( result )
 					{
 						case ECFormResult::ERROR_FILE_OPEN:
@@ -4927,7 +4927,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 					break;
 
 					default:
-						this->errMsg( "E_SaveSet_Sheet_Default" );
+						this->errMsg( "E_SaveSet_SheetDefault" );
 					break;
 				}
 				return;

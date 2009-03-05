@@ -593,13 +593,13 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hWarnList->Add( this->makeMrcError("GameCardNTRAccessSystem") );
 		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot A for the SSL client certification") );
+		}
 		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES SlotB (JPEG signature) for the user") );
-		}
-		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert )
-		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot A for the SSL client certification") );
 		}
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
 		{
@@ -648,13 +648,13 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("GameCardNTRAccessUser") );
 		}
+		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
+		}
 		if( !this->IsMediaNand && this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES SlotB (JPEG signature) for the user") );
-		}
-		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert )
-		{
-			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
 		}
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
 		{

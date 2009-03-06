@@ -93,9 +93,10 @@ System::Void checkRom( System::String ^orgSrl, System::String ^targetSrl )
 		return;
 	}
 	// マスタエディタで書き換えられていない領域をチェック
-	verifyArea( fp1, fp2, 0, 0x1b0 );
-	verifyArea( fp1, fp2, 0x1b4, 0x2f0 - 0x1b4 );
-	verifyArea( fp1, fp2, 0x300, 0xf80 - 0x300 );
+	verifyArea( fp1, fp2, 0, 0x1b0 );				// リージョンまで
+	verifyArea( fp1, fp2, 0x1b4, 0x20f - 0x1b4 );	// Unnecessaryフラグまで
+	verifyArea( fp1, fp2, 0x210, 0x2f0 - 0x210 );	// レーティングまで
+	verifyArea( fp1, fp2, 0x300, 0xf80 - 0x300 );	// 署名まで
 	verifyArea( fp1, fp2, 0x1000, filesize1 - 0x1000 );
 	Console::WriteLine( "--------------------------------------------------------" );
 }

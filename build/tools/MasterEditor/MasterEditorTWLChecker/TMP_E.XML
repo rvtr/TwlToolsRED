@@ -2,37 +2,36 @@
 <MasterEditorTWL>
   <Lang>E</Lang>
   <Form>
-    <MasterEditorVersion>1.3</MasterEditorVersion>
+    <MasterEditorVersion>1.4</MasterEditorVersion>
     <ProductName>Sample Game Name</ProductName>
     <ProductCode1>P</ProductCode1>
-    <ProductCode2>KUGJ</ProductCode2>
-    <ProductNameForeign>Sample Game Name F</ProductNameForeign>
+    <ProductCode2>KUGE</ProductCode2>
+    <ProductNameForeign>Sample Game Name Foreign</ProductNameForeign>
     <ProductCode1Foreign>P</ProductCode1Foreign>
-    <ProductCode2Foreign1>0CZE</ProductCode2Foreign1>
-    <ProductCode2Foreign2>0CZP</ProductCode2Foreign2>
-    <ProductCode2Foreign3>0CZU</ProductCode2Foreign3>
+    <ProductCode2Foreign1>KUGJ</ProductCode2Foreign1>
+    <ProductCode2Foreign2>KUGP</ProductCode2Foreign2>
+    <ProductCode2Foreign3>KUGU</ProductCode2Foreign3>
     <SubmitVersion>0</SubmitVersion>
     <Backup>4</Backup>
     <ReleaseForeign>Y</ReleaseForeign>
-    <Remarks>Sample File.</Remarks>
+    <Remarks>Sample.</Remarks>
     <SubmitWay>Mail</SubmitWay>
     <Purpose>Sale</Purpose>
-    <ReleaseDate>2009/02/15 10:54:03</ReleaseDate>
-    <SubmitDate>2009/01/21 10:54:03</SubmitDate>
+    <ReleaseDate>4/30/2009 2:33:14 AM</ReleaseDate>
+    <SubmitDate>3/1/2009 2:33:14 AM</SubmitDate>
     <Company1>Nintendo Co., Ltd.</Company1>
-    <Depart1>RED</Depart1>
-    <Name1>Taro Ninten</Name1>
+    <Depart1>Research and Engineering Division</Depart1>
+    <Name1>Ninten Tarou</Name1>
     <Tel1>075-662-9600</Tel1>
     <Fax1>075-662-9624</Fax1>
     <Mail1>taro@nintendo.co.jp</Mail1>
     <InputPerson2>Y</InputPerson2>
     <Company2>Nintendo Co., Ltd.</Company2>
-    <Depart2>RED</Depart2>
-    <Name2>Jiro Ninten</Name2>
+    <Depart2>Research and Engineering Division</Depart2>
+    <Name2>Ninten Jirou</Name2>
     <Tel2>075-662-9600</Tel2>
     <Fax2>075-662-9624</Fax2>
     <Mail2>jiro@nintendo.co.jp</Mail2>
-    <NTSC2>ninten_jiro</NTSC2>
     <Region>-1</Region>
     <IsUnnecessaryRating>N</IsUnnecessaryRating>
     <RatingCERO>-1</RatingCERO>

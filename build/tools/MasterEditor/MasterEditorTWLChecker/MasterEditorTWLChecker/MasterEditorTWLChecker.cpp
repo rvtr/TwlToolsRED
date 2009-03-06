@@ -40,20 +40,26 @@ int main(array<System::String ^> ^args)
 			throw (gcnew System::Exception("Argc is less than 2."));
 		}
 
+		// ミドルウェアリストをはじく
+		if( System::IO::Path::GetFileNameWithoutExtension(args[1])->ToUpper()->EndsWith("MIDDLEWARE") )
+		{
+			Console::WriteLine( "File: " + args[1] );
+			Console::WriteLine( "========================================================" );
+			Console::WriteLine( "Not Support to Middleware List." );
+			return 0;	// 正常終了扱い
+		}
+
 		// 拡張子で判定
 		if( System::IO::Path::GetExtension(args[1])->ToUpper() == ".XML" )
 		{
 			// args[0] はダミー
 			System::String ^sheet = args[1];
 			DebugPrint( "Sheet file : " + sheet );
-			Console::Write( System::IO::Path::GetFileName( sheet ) + "\t" );
 			DebugPrint( "\n" );
 
-			FilenameItem ^fItem = gcnew FilenameItem;
-			fItem->parseFilename( sheet );
 			SheetItem ^sItem = gcnew SheetItem;
 			sItem->readSheet( sheet );
-			checkSheet( fItem, sItem );
+			checkSheet( sItem );
 		}
 		else
 		{
@@ -61,20 +67,18 @@ int main(array<System::String ^> ^args)
 			System::String ^target   = args[1];
 			DebugPrint( "Original file : " + original );
 			DebugPrint( "Target file   : " + target );
-			Console::Write( System::IO::Path::GetFileName( target ) + "\t" );
 			DebugPrint( "\n" );
 
-			FilenameItem ^fItem = gcnew FilenameItem;
-			fItem->parseFilename( target );
-			checkRom( fItem, original, target );
+			checkRom( original, target );
 		}
 	}
 	catch( System::Exception ^ex )
 	{
+		Console::WriteLine( "========================================================" );
 		Console::WriteLine( "NG - " + ex->Message);
 		return -1;
 	}
-	Console::WriteLine( "OK" );
+	Console::WriteLine( "END" );
     return 0;
 }
 

@@ -14,10 +14,12 @@
 System::Void checkRomHeaderSign( ROM_Header *prh );
 System::Void verifyArea( FILE *fp1, FILE *fp2, const int offset, const int size );
 
+using namespace System;
+
 // -------------------------------------------------------------------
 // 出力SRLのチェック
 // -------------------------------------------------------------------
-System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::String ^targetSrl )
+System::Void checkRom( System::String ^orgSrl, System::String ^targetSrl )
 {
 	const char *chorg = 
 		(const char*)System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( orgSrl ).ToPointer();
@@ -45,115 +47,24 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	// 署名のチェック
 	checkRomHeaderSign( &rh );
 
-	DebugPrint( "--------------------------------------------------------" );
-	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "TrueValue", "RomHeader" );
-	DebugPrint( "--" );
+	Console::WriteLine( "--------------------------------------------------------" );
+	Console::WriteLine( "{0,-15} {1,-20}", nullptr, "RomHeader" );
+	Console::WriteLine( "--" );
 
-	// リージョンのチェック
-	u32 region = fItem->getRegionBitmap();	// ファイル名に対応する真値を取得
-	DebugPrint( "{0,-10} {1,-20:X04} {2,-20:X04}", "Region", region, rh.s.card_region_bitmap );
-	DebugPrint( "--" );
-	if( rh.s.card_region_bitmap != region )
-	{
-		throw (gcnew System::Exception("In Rom Header, illegal region in the ROM Header."));
-		return;
-	}
+	// リージョンの表示
+	Console::WriteLine( "{0,-15} {1,-20:X04}", "Region", rh.s.card_region_bitmap );
+	Console::WriteLine( "--" );
 
-	// 設定したレーティングが正しいかどうかをチェック
-	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
-	if( fItem->getOgnNumber() >= 0 )
-	{
-		// 「レーティング表示不要」でないとき
-
-		int ogn = fItem->getOgnNumber();			// ファイル名に対応する真値を取得
-		u8  rating = fItem->getRatingValue();
-		DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), rating, rh.s.parental_control_rating_info[ogn] );
-		if( rh.s.parental_control_rating_info[ ogn ] != rating )
-		{
-			throw (gcnew System::Exception("In Rom Header, mismatch Rating Ogn " + ogn.ToString() + "."));
-			return;
-		}
-
-		// リージョンに含まれるその他の団体が「全年齢」になっているかチェック
-		for each ( int ogn in ognlist )
-		{
-			if( ogn != fItem->getOgnNumber() )
-			{
-				u8  zero = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
-				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), zero, rh.s.parental_control_rating_info[ogn] );
-				if( rh.s.parental_control_rating_info[ogn] != zero )
-				{
-					throw (gcnew System::Exception("In Rom Header, Rating Ogn " + ogn.ToString() + " is not enabled."));
-					return;
-				}
-			}
-		}
-
-		// 「レーティング不要」フラグが立っていてはいけない
-		if( rh.s.unnecessary_rating_display != 0 )
-		{
-			throw (gcnew System::Exception("In Rom Header, \"Unnecessary\" flag is asserted."));
-			return;
-		}
-	}
-	else
-	{
-		// 「レーティング表示不要」のとき
-
-		// リージョンに含まれるすべての団体が「全年齢」になっているかチェック
-		for each ( int ogn in ognlist )
-		{
-			u8  zero = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
-			DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(ogn), zero, rh.s.parental_control_rating_info[ogn] );
-			if( rh.s.parental_control_rating_info[ogn] != zero )
-			{
-				throw (gcnew System::Exception("In Rom Header, Rating Ogn " + ogn.ToString() + " is not enabled."));
-				return;
-			}
-		}
-
-		// フラグチェック
-		if( rh.s.unnecessary_rating_display == 0 )
-		{
-			throw (gcnew System::Exception("In Rom Header, \"Unnecessary\" flag is negated."));
-			return;
-		}
-	}
-
-	// 表示
-	System::Collections::Generic::List<int> ^alllist = gcnew System::Collections::Generic::List<int>();
-	alllist->Clear();
-	alllist->Add( OS_TWL_PCTL_OGN_CERO );
-	alllist->Add( OS_TWL_PCTL_OGN_ESRB );
-	alllist->Add( OS_TWL_PCTL_OGN_USK );
-	alllist->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
-	alllist->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
-	alllist->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
-	alllist->Add( OS_TWL_PCTL_OGN_OFLC );
-	//alllist->Add( OS_TWL_PCTL_OGN_GRB );
-
-	// リージョンに含まれない団体のレーティングがクリアされているかチェック
+	// レーティングの表示
 	int i;
 	for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
 	{
-		if( ognlist->IndexOf(i) < 0 )
-		{
-			if( alllist->IndexOf(i) >= 0 )
-			{
-				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", fItem->getOgnString(i), (u8)0, rh.s.parental_control_rating_info[i] );
-			}
-			else
-			{
-				DebugPrint( "{0,-10} {1,-20:X02} {2,-20:X02}", "Ogn" + i.ToString("D2") + "(rsv)", (u8)0, rh.s.parental_control_rating_info[i] );
-			}
-			if( rh.s.parental_control_rating_info[i] != 0 )
-			{
-				throw (gcnew System::Exception("In Rom Header, Rating Ogn " + i.ToString() + " is not cleared in ROM Header."));
-				return;
-			}
-		}
+		Console::WriteLine( "{0,-15} {1,-10:X02} {2}", 
+			getOgnString(i), rh.s.parental_control_rating_info[i], getRatingString(rh.s.parental_control_rating_info[i]) );
 	}
-	DebugPrint( "--------------------------------------------------------" );
+	Console::WriteLine( "--" );
+	Console::WriteLine( "{0,-15} {1:X}", "Unnecessary", rh.s.unnecessary_rating_display );
+	Console::WriteLine( "--------------------------------------------------------" );
 	
 	// 全領域ベリファイ
 	FILE       *fp1 = NULL;
@@ -173,9 +84,9 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	u32 filesize1 = ftell( fp1 );
 	fseek(fp2, 0, SEEK_END);
 	u32 filesize2 = ftell( fp2 );
-	DebugPrint( "{0,-10} {1,-20} {2,-20}", nullptr, "Original File", "Target File" );
-	DebugPrint( "{0,-10} {1,-20:X08} {2,-20:X08}", "Filesize", filesize1, filesize2 );
-	DebugPrint( "--------------------------------------------------------" );
+	Console::WriteLine( "{0,-15} {1,-20} {2,-20}", nullptr, "Original File", "Target File" );
+	Console::WriteLine( "{0,-15} {1,-20:X08} {2,-20:X08}", "Filesize", filesize1, filesize2 );
+	Console::WriteLine( "--------------------------------------------------------" );
 	if( filesize1 != filesize2 )
 	{
 		throw (gcnew System::Exception("Incorrect filesize"));
@@ -186,7 +97,7 @@ System::Void checkRom( FilenameItem ^fItem, System::String ^orgSrl, System::Stri
 	verifyArea( fp1, fp2, 0x1b4, 0x2f0 - 0x1b4 );
 	verifyArea( fp1, fp2, 0x300, 0xf80 - 0x300 );
 	verifyArea( fp1, fp2, 0x1000, filesize1 - 0x1000 );
-	DebugPrint( "--------------------------------------------------------" );
+	Console::WriteLine( "--------------------------------------------------------" );
 }
 
 // -------------------------------------------------------------------
@@ -263,7 +174,7 @@ System::Void verifyArea( FILE *fp1, FILE *fp2, const int offset, const int size 
         return;
     }
 
-	DebugPrint( "{0,-10} {1:X08} - {2:X08}", "Verify", offset, offset+size-1 );
+	Console::WriteLine( "{0,-15} {1:X08} - {2:X08}", "Verify", offset, offset+size-1 );
 
 	cli::array<System::Byte> ^mbuf1 = gcnew cli::array<System::Byte>(VERIFY_AREA_BUFSIZE);	// 解放の必要なし
 	pin_ptr<unsigned char> buf1 = &mbuf1[0];

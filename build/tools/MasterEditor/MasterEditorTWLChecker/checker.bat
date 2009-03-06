@@ -30,7 +30,6 @@ rem ループ開始 (%0を使うのはここまで、%1を使うのはここから、%2以降は使わない)
 
 rem 出力パス設定
 set input_file=%~dpnx1
-set log_file=%~dp1%\log.txt
 
 rem プログラム確認
 if not exist "%checker_tool%" (
@@ -52,11 +51,10 @@ rem 処理本体
 echo.
 echo %~nx1をチェックします。
 echo.
-"%checker_tool%" "%org_file%" "%input_file%" >> "%log_file%"
+"%checker_tool%" "%org_file%" "%input_file%"
 
 if not %ERRORLEVEL% == 0 (
 	echo "%input_file%" のチェックに失敗しました。
-rem 	goto end
 ) else (
 	echo "%input_file%" は正常です。
 )

@@ -4940,6 +4940,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 			if( !filename || !this->saveMiddlewareListXmlEmbeddedXsl(filename) )
 			{
 				this->errMsg( "E_MWList_Default" );
+				return;
 			}
 			this->sucMsg( "MWList_Success" );
 		} //stripItemMiddlewareXml_Click()
@@ -4961,6 +4962,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 			if( !filename || !this->saveMiddlewareListHtml(filename) )
 			{
 				this->errMsg( "E_MWList_Default" );
+				return;
 			}
 			this->sucMsg( "MWList_Success" );
 		} //stripItemMiddlewareHtml_Click

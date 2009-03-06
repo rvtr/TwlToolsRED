@@ -4941,6 +4941,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 			{
 				this->errMsg( "E_MWList_Default" );
 			}
+			this->sucMsg( "MWList_Success" );
 		} //stripItemMiddlewareXml_Click()
 
 	private:
@@ -4961,6 +4962,7 @@ private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 			{
 				this->errMsg( "E_MWList_Default" );
 			}
+			this->sucMsg( "MWList_Success" );
 		} //stripItemMiddlewareHtml_Click
 
 

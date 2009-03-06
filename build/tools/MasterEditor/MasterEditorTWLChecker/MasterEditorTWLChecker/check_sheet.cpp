@@ -62,7 +62,7 @@ System::Void SheetItem::readSheet( System::String ^sheetfile )
 	// ’†ŠÔƒtƒ@ƒCƒ‹‚ğíœ
 	if( System::IO::File::Exists( tmpfile ) )
 	{
-		//System::IO::File::Delete( tmpfile );
+		System::IO::File::Delete( tmpfile );
 	}
 }
 

@@ -43,7 +43,7 @@ int main(array<System::String ^> ^args)
 		// ミドルウェアリストをはじく
 		if( System::IO::Path::GetFileNameWithoutExtension(args[1])->ToUpper()->EndsWith("MIDDLEWARE") )
 		{
-			Console::WriteLine( "File: " + args[1] );
+			//Console::WriteLine( "File: " + args[1] );
 			Console::WriteLine( "========================================================" );
 			Console::WriteLine( "Not Support to Middleware List." );
 			return 0;	// 正常終了扱い

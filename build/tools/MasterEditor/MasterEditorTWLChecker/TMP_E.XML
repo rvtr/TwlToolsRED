@@ -5,12 +5,12 @@
     <MasterEditorVersion>1.4</MasterEditorVersion>
     <ProductName>Sample Game Name</ProductName>
     <ProductCode1>P</ProductCode1>
-    <ProductCode2>KUGE</ProductCode2>
+    <ProductCode2>KGUE</ProductCode2>
     <ProductNameForeign>Sample Game Name Foreign</ProductNameForeign>
     <ProductCode1Foreign>P</ProductCode1Foreign>
-    <ProductCode2Foreign1>KUGJ</ProductCode2Foreign1>
-    <ProductCode2Foreign2>KUGP</ProductCode2Foreign2>
-    <ProductCode2Foreign3>KUGU</ProductCode2Foreign3>
+    <ProductCode2Foreign1>KGUJ</ProductCode2Foreign1>
+    <ProductCode2Foreign2>KGUP</ProductCode2Foreign2>
+    <ProductCode2Foreign3>KGUU</ProductCode2Foreign3>
     <SubmitVersion>0</SubmitVersion>
     <Backup>4</Backup>
     <ReleaseForeign>Y</ReleaseForeign>

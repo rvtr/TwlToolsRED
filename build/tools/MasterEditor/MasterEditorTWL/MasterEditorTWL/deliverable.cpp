@@ -208,10 +208,6 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = this->hUsage;
 			}
-			if( node->FirstChild->Value->Equals( "TagUsageOther" ) )
-			{
-				node->FirstChild->Value = this->hUsageOther;	// nullptr ‚Ì‚Æ‚«‚ÍƒZƒ‹‚ª‹ó‚É‚È‚é‚Ì‚ÅD“s‡
-			}
 			if( node->FirstChild->Value->Equals( "TagRomVersion" ) )
 			{
 				node->FirstChild->Value = hSrl->RomVersion.ToString("X2");

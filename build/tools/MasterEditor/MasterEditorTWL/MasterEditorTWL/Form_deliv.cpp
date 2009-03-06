@@ -96,22 +96,18 @@ void Form1::setDeliverableProperties(void)
 	if( this->rUsageSale->Checked == true )
 	{
 		this->hDeliv->hUsage = this->rUsageSale->Text;
-		this->hDeliv->hUsageOther = nullptr;
 	}
 	else if( this->rUsageSample->Checked == true )
 	{
 		this->hDeliv->hUsage = this->rUsageSample->Text;
-		this->hDeliv->hUsageOther = nullptr;
 	}
 	else if( this->rUsageDst->Checked == true )
 	{
 		this->hDeliv->hUsage = this->rUsageDst->Text;
-		this->hDeliv->hUsageOther = nullptr;
 	}
 	else if( this->rUsageOther->Checked == true )
 	{
-		this->hDeliv->hUsage = this->rUsageOther->Text;
-		this->hDeliv->hUsageOther = this->tboxUsageOther->Text;
+		this->hDeliv->hUsage = this->tboxUsageOther->Text;
 	}
 
 	// ‰ïŽÐî•ñ

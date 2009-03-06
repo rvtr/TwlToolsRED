@@ -53,7 +53,6 @@ namespace MasterEditorTWL
 		property System::Int32   SubmitDay;
 		property System::String ^hSubmitWay;		// 提出方法
 		property System::String ^hUsage;			// 用途
-		property System::String ^hUsageOther;		// その他の用途
 		property System::Int32   SubmitVersion;		// 提出バージョン
 		property System::String ^hSDK;				// SDKバージョン
 		property System::Boolean  IsReleaseForeign;	// 海外版の予定

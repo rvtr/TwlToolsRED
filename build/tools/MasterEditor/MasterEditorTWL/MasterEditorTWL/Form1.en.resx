@@ -599,7 +599,7 @@
     <value>Other</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Market and Rating</value>
+    <value>Market and Rating (Editable)</value>
   </data>
   <data name="gboxOtherSpec.Text" xml:space="preserve">
     <value>Other ROM Specifications</value>
@@ -626,7 +626,7 @@
     <value>Rating Not Required (Tools Only)</value>
   </data>
   <data name="tabSubmitInfo.Text" xml:space="preserve">
-    <value>Submission Info</value>
+    <value>Submission Info ***</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
     <value>(30 characters or less)</value>
@@ -647,7 +647,7 @@
     <value>(When for &gt;1 market)</value>
   </data>
   <data name="tabCompanyInfo.Text" xml:space="preserve">
-    <value>Company Info</value>
+    <value>Company Info ***</value>
   </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist. Enter all information.</value>

@@ -15,8 +15,8 @@ rem 引数チェック
 set usage=USAGE: %~nx0 INPUT_FILE...
 if ""%1"" == """" (
 	echo %usage%
-	echo 使用方法が間違っています。
-	echo SRLもしくはXMLをドラッグアンドドロップしてください。
+	echo argument error.
+	echo drug and drop SRL/XML.
 	echo.
 	goto end
 )
@@ -49,12 +49,12 @@ if not exist "%input_file%" (
 
 rem 処理本体
 echo.
-echo %~nx1をチェックします。
+echo checking %~nx1 ...
 echo.
 "%checker_tool%" "%org_file%" "%input_file%"
 
 if not %ERRORLEVEL% == 0 (
-	echo "%input_file%" のチェックでエラーが発生しました。
+	echo error in checking "%input_file%".
 )
 
 rem 入力ファイルが残っているならbeginに戻る
@@ -64,5 +64,5 @@ if ""%1"" neq """" goto begin
 rem 終了 (キー入力待ち)
 :end
 echo.
-echo すべてのチェックが終了しました。
+echo checking end.
 pause

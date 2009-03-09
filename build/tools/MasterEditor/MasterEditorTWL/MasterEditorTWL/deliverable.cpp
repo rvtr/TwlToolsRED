@@ -9,6 +9,9 @@
 #include <cstring>
 #include <cstdio>
 
+#define  METWL_SHEET_YES  ("Yes")
+#define  METWL_SHEET_NO   ("No")
+
 using namespace MasterEditorTWL;
 
 //
@@ -160,9 +163,9 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			if( node->FirstChild->Value->Equals( "TagReleaseForeign" ) )
 			{
 				if( this->IsReleaseForeign )
-					node->FirstChild->Value = gcnew System::String( "○" );
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagProductNameForeign" ) )
 			{
@@ -280,16 +283,16 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			if( node->FirstChild->Value->Equals( "TagIsNormalJump" ) )
 			{
 				if( hSrl->IsNormalJump )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsTmpJump" ) )
 			{
 				if( hSrl->IsTmpJump )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagNormalRomOffset" ) )
 			{
@@ -317,51 +320,51 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			if( node->FirstChild->Value->Equals( "TagIsEULA" ) )
 			{
 				if( hSrl->IsEULA )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsSubBanner" ) )
 			{
 				if( hSrl->IsSubBanner )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsWiFiIcon" ) )
 			{
 				if( hSrl->IsWiFiIcon )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsWirelessIcon" ) )
 			{
 				if( hSrl->IsWirelessIcon )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsSD" ) )
 			{
 				if( hSrl->IsSD )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsNAND" ) )
 			{
 				if( hSrl->IsNAND )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsShared2" ) )
 			{
 				if( hSrl->IsShared2 )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsGameCardOn" ) )
 			{
@@ -515,11 +518,11 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				if( hSrl->IsUnnecessaryRating )
 				{
-					node->FirstChild->Value = "○";
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				}
 				else
 				{
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 				}
 			}
 
@@ -542,16 +545,16 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			if( node->FirstChild->Value->Equals( "TagIsUGC" ) )
 			{
 				if( this->IsUGC )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 			if( node->FirstChild->Value->Equals( "TagIsPhotoEx" ) )
 			{
 				if( this->IsPhotoEx )
-					node->FirstChild->Value = gcnew System::String("○");
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_YES);
 				else
-					node->FirstChild->Value = nullptr;
+					node->FirstChild->Value = gcnew System::String(METWL_SHEET_NO);
 			}
 
 			// ROM内登録データを1バイトずつ表に書き込む

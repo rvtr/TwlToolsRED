@@ -118,7 +118,7 @@ System::Boolean readSheet( System::String ^sheetfile, SheetItem ^item )
 		}
 
 		text = getXPathText( root, "/Sheet/IsUnnecessaryRating" );
-		if( !System::String::IsNullOrEmpty( text ) && text->Equals( "›" ) )
+		if( !System::String::IsNullOrEmpty( text ) && (text->Equals( "›" ) || text->Equals( "Yes" )) )
 		{
 			item->IsUnnecessaryRating = true;
 		}

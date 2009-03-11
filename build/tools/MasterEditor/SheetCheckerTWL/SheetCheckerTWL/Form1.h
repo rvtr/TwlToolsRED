@@ -302,8 +302,8 @@ private:
 			this->gridCompare->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 		}
 
-		tmp1 = this->fileCRC->ToString( "X02" );
-		tmp2 = this->sheet->FileCRC.ToString( "X02" );
+		tmp1 = this->fileCRC->ToString( "X04" );
+		tmp2 = this->sheet->FileCRC.ToString( "X04" );
 		this->gridCompare->Rows->Add( "ファイル全体のCRC", tmp1, tmp2 );
 		if( *this->error == SheetCheckerError::ERROR_VERIFY_CRC )
 		{

@@ -105,7 +105,7 @@ void Form1::setRegionForms(void)
 		index = -1;	// 不正
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 	if( isJapan && isAmerica && isEurope && isAustralia )
-	index = 5;
+	index = 7;
 #endif
 	this->combRegion->SelectedIndex = index;
 	this->maskRatingForms();		// ペアレンタルコントロール用フォームの表示/非表示切り替え

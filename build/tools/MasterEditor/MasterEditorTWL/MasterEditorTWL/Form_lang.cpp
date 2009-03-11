@@ -500,6 +500,22 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	// バージョンがなくなるので再設定
 	System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 	this->labAssemblyVersion->Text = "ver." + this->getVersion();
+
+	// アプリ種別をつける
+	System::String ^appstr = nullptr;
+#ifdef METWL_VER_APPTYPE_LAUNCHER
+	appstr += "Launcher/";
+#endif
+#ifdef METWL_VER_APPTYPE_SECURE
+	appstr += "Secure/";
+#endif
+#ifdef METWL_VER_APPTYPE_SYSTEM
+	appstr += "System/";
+#endif
+	if( appstr != nullptr)
+	{
+		this->Text += " [ Supported App: " + appstr + "User ]";
+	}
 }
 
 // end of file

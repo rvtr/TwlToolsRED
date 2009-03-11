@@ -21,13 +21,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_109D5B14804B42B2AC530C66C1F31A73"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_156A9EFCC7984AACBAC54A17F9B3818A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_1D2E12753E1B4DFDBE94E2C70E30E580"
+        "MsmKey" = "8:_27E90AF43DB3439EB36EA01489F6CACE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -39,13 +45,43 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4BB8C23694B340C4924C2AA570B91957"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_53579BE266D44903AD8FB3B217C4471D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_53CE44B091204A75B7C0E8631BBF0D36"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6B317BC0E2EF4782BC91F55C52FA3453"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
+        "MsmKey" = "8:_85BB2DA46AEF42EAA0089F5FBC1AD663"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_883CEC9776BD47B2BE99F44F587A2469"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B892193EF9E140F2BF973918018AEAEB"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -80,6 +116,19 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
+                    {
+                    "Name" = "8:.NET Framework 3.5"
+                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
+                    {
+                    "Name" = "8:Windows Installer 3.1"
+                    "ProductCode" = "8:Microsoft.Windows.Installer.3.1"
+                    }
+                }
             }
         }
         "Release"
@@ -167,6 +216,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_109D5B14804B42B2AC530C66C1F31A73"
+            {
+            "SourcePath" = "8:..\\resource\\mrc_msg_j.xml"
+            "TargetName" = "8:mrc_msg_j.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_156A9EFCC7984AACBAC54A17F9B3818A"
             {
             "SourcePath" = "8:..\\resource\\middleware_e.xsl"
@@ -187,10 +256,10 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D2E12753E1B4DFDBE94E2C70E30E580"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_27E90AF43DB3439EB36EA01489F6CACE"
             {
-            "SourcePath" = "8:..\\resource\\sheet_templete.xml"
-            "TargetName" = "8:sheet_templete.xml"
+            "SourcePath" = "8:..\\resource\\gui_msg_j.xml"
+            "TargetName" = "8:gui_msg_j.xml"
             "Tag" = "8:"
             "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
             "Condition" = "8:"
@@ -227,6 +296,86 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4BB8C23694B340C4924C2AA570B91957"
+            {
+            "SourcePath" = "8:..\\resource\\mrc_msg_e.xml"
+            "TargetName" = "8:mrc_msg_e.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_53579BE266D44903AD8FB3B217C4471D"
+            {
+            "SourcePath" = "8:..\\resource\\sheet_template_jp.xml"
+            "TargetName" = "8:sheet_template_jp.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_53CE44B091204A75B7C0E8631BBF0D36"
+            {
+            "SourcePath" = "8:..\\resource\\ini_memo.xml"
+            "TargetName" = "8:ini_memo.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_85BB2DA46AEF42EAA0089F5FBC1AD663"
+            {
+            "SourcePath" = "8:..\\resource\\gui_msg_e.xml"
+            "TargetName" = "8:gui_msg_e.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_883CEC9776BD47B2BE99F44F587A2469"
             {
             "SourcePath" = "8:..\\resource\\middleware.xsl"
@@ -247,11 +396,31 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B892193EF9E140F2BF973918018AEAEB"
+            {
+            "SourcePath" = "8:..\\resource\\sheet_template_en.xml"
+            "TargetName" = "8:sheet_template_en.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_02F1563AC4AE47ED981A4F47CBB36889"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D4ACBE74D68F4C1492C5038B79BF68A6"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.3.3300.29056, Culture=ja, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.3.3357.21234, Culture=ja, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }

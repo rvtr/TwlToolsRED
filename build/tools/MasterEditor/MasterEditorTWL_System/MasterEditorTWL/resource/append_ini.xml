@@ -2,7 +2,7 @@
 <init>
 	<!-- 非表示項目を表示したいときにはONを指定してください。-->
 	<visible>ON</visible>
-	<!-- SDKのバージョンとShared2ファイルサイズのチェックをする場合にはONを指定してください。-->
+	<!-- SDKのバージョンのチェックをする場合にはONを指定してください。-->
 	<spcheck>ON</spcheck>
 	<!-- SDKバージョンの真値を指定してください。 -->
 	<sdk>
@@ -10,13 +10,4 @@
 		<minor>0</minor>
 		<relstep>30000</relstep>
 	</sdk>
-	<!-- Shared2ファイルサイズの真値を指定してください。 -->
-	<shared2>
-		<size0>2097152</size0>
-		<size1>0</size1>
-		<size2>0</size2>
-		<size3>0</size3>
-		<size4>0</size4>
-		<size5>0</size5>
-	</shared2>
 </init>

@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\message_bank.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\split_tad.cpp"
 				>
 			</File>
@@ -320,6 +324,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form1.en.resx"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form1.h"
 				>
 			</File>
@@ -352,6 +360,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\lang.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\message_bank.h"
 				>
 			</File>
 			<File

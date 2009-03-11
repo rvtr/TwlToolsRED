@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<message>
+	<!-- NTR Compatible Area -->
+	<TitleNameAscii>
+		<name>Game Title</name>
+		<sentence>Uses non-usable ASCII code.</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameAscii>
+	<TitleNameSuffix>
+		<name>Game Title</name>
+		<sentence>Register 00h in the area not used.</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameSuffix>
+	<TitleNameSpace>
+		<name>Game Title</name>
+		<sentence>Register 20h for spaces.</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameSpace>
+	<InitialCodeAscii>
+		<name>Game Code</name>
+		<sentence>Uses non-usable ASCII code.</sentence>
+		<begin>c</begin><end>f</end><modify>False</modify><affect>True</affect>
+	</InitialCodeAscii>
+	<InitialCodeSDKDefault>
+		<name>Game Code</name>
+		<sentence>SDK default code (NTRJ) is being used.</sentence>
+		<begin>c</begin><end>f</end><modify>False</modify><affect>True</affect>
+	</InitialCodeSDKDefault>
+	<MakerCodeAscii>
+		<name>Maker Code</name>
+		<sentence>Uses non-usable ASCII code.</sentence>
+		<begin>10</begin><end>11</end><modify>False</modify><affect>True</affect>
+	</MakerCodeAscii>
+	<DeviceType>
+		<name>Device type</name>
+		<sentence>Illegal value. Set 00h.</sentence>
+		<begin>13</begin><end>13</end><modify>False</modify><affect>True</affect>
+	</DeviceType>
+	<RemasterVersion>
+		<name>Remaster Version</name>
+		<sentence>Illegal value. Register one of 00h-0Fh for official releases, and E0h for pre-release versions.</sentence>
+		<begin>1e</begin><end>1e</end><modify>False</modify><affect>True</affect>
+	</RemasterVersion>
+	<BannerOffset>
+		<name>Banner Offset</name>
+		<sentence>Banner data has not been set.</sentence>
+		<begin>68</begin><end>6b</end><modify>False</modify><affect>True</affect>
+	</BannerOffset>
+	<RomValidSize>
+		<name>Effective ROM Size</name>
+		<sentence>A value has not been set.</sentence>
+		<begin>80</begin><end>83</end><modify>False</modify><affect>True</affect>
+	</RomValidSize>
+	<SecureCRCAddress>
+		<name>CRC of Secure Region</name>
+		<sentence>Illgal address of secure region.</sentence>
+		<begin>7c</begin><end>7d</end><modify>False</modify><affect>True</affect>
+	</SecureCRCAddress>
+	<SecureCRCVerify>
+		<name>CRC of Secure Region</name>
+		<sentence>Does not match calculated result. The secure region may have been modified.</sentence>
+		<begin>7c</begin><end>7d</end><modify>False</modify><affect>True</affect>
+	</SecureCRCVerify>
+	<LogoCRC>
+		<name>Character Data CRC</name>
+		<sentence>Does not match calculated result. The character data may have been modified.</sentence>
+		<begin>15c</begin><end>15d</end><modify>False</modify><affect>True</affect>
+	</LogoCRC>
+	<HeaderCRC>
+		<name>ROM Header CRC</name>
+		<sentence>Does not match calculated result. The ROM header may have been modified.</sentence>
+		<begin>15e</begin><end>15f</end><modify>False</modify><affect>True</affect>
+	</HeaderCRC>
+	<Syscall>
+		<name>System Call Library</name>
+		<sentence>SDK default is used for the system call library.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Syscall>
+
+	<!-- TWL Unique Area -->
+	<NandHybrid>
+		<name>NAND Application HYBRID Conditions</name>
+		<sentence>Creation of HYBRID versions of NAND applications that do not support clone booting is not permitted.</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandHybrid>
+	<NandLimited>
+		<name>NAND Application LIMITED Conditions</name>
+		<sentence>NAND applications that support clone booting are created as LIMITED versions.</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandLimited>
+	<OldDevFlag>
+		<name>Encryption Flag for Old Developments</name>
+		<sentence>This ROM is an application that supports clone booting, but clone booting cannot be performed on retail systems.</sentence>
+		<begin>1c</begin><end>1c</end><modify>False</modify><affect>True</affect>
+	</OldDevFlag>
+	<CapacityCardLess>
+		<name>Device capacity</name>
+		<sentence>A value smaller than the actual file size has been set.</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardLess>
+	<CapacityCardWaste>
+		<name>Device capacity</name>
+		<sentence>A value that is excessively larger than the actual file size has been set.</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardWaste>
+	<CapacityCardRange>
+		<name>Device capacity</name>
+		<sentence>Not a specifiable capacity.</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardRange>
+	<CapacityNandRange>
+		<name>Device capacity</name>
+		<sentence>Not a specifiable capacity for a NAND application.</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityNandRange>
+	<FilesizeFraction>
+		<name>Actual File Size</name>
+		<sentence>Ill-defined value. Usually, the value is a power of 2.</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</FilesizeFraction>
+	<UsedNandSizeLimit>
+		<name>Size in NAND Memory</name>
+		<sentence>The size of NAND region used by the NAND application exceeds 32 MB.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</UsedNandSizeLimit>
+	<UsedNandSizeExceed>
+		<name>Size in NAND Memory</name>
+		<sentence>The size of NAND region used by the NAND application exceeds 16 MB</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</UsedNandSizeExceed>
+	<Seg3CRC>
+		<name>Segment 3 CRC</name>
+		<sentence>There is a data error in the segment 3 region.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Seg3CRC>
+	<TwlRomOffset>
+		<name>TWL ROM Offset</name>
+		<sentence>The TWL normal region ROM offset (NA) and the TWL-exclusive region ROM offset (EA) must both be values greater than 1, and NA must not exceed EA.</sentence>
+		<begin>90</begin><end>93</end><modify>False</modify><affect>True</affect>
+	</TwlRomOffset>
+	<DisableDebugSystem>
+		<name>Debugger Operation Prohibited Flag</name>
+		<sentence>Current settings can be analyzed by the debugger. If you are releasing the ROM as software for debugging, verify that there are no security problems in doing so.</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</DisableDebugSystem>
+	<DisableDebugUser>
+		<name>Debugger Operation Prohibited Flag</name>
+		<sentence>Current settings cannot be analyzed by the debugger. This setting is not permitted.</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</DisableDebugUser>
+	<ExtraRegion>
+		<name>Specific Markets</name>
+		<sentence>Illegal bit(s) are set. This setting is not permitted.</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ExtraRegion>
+	<NormalJump>
+		<name>Normal Application Jump</name>
+		<sentence>Normal application jumps are not permitted.</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJump>
+	<RomSpeedType>
+		<name>Flags</name>
+		<sentence>RomSpeedType is not configured in the RSF file.</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</RomSpeedType>
+	<RomControl>
+		<name>ROM Control Information</name>
+		<sentence>Mask ROM is not available for TWL. Set as one-time PROM.</sentence>
+		<begin>60</begin><end>67</end><modify>False</modify><affect>True</affect>
+	</RomControl>
+	<AES>
+		<name>AES Encryption</name>
+		<sentence>AES encryption is disabled. This is a security problem.</sentence>
+		<begin>220</begin><end>22f</end><modify>False</modify><affect>True</affect>
+	</AES>
+	<WhiteList>
+		<name>TWL Expanded Flags</name>
+		<sentence>Flags are set that normally are not set. Check the settings configured at the time of the build.</sentence>
+		<begin>1bf</begin><end>1bf</end><modify>False</modify><affect>True</affect>
+	</WhiteList>
+	<ConnectIcon>
+		<name>Icon Display Flag</name>
+		<sentence>The wireless communication icon and Wi-Fi communication icon cannot be displayed at the same time.</sentence>
+		<begin>1bf</begin><end>1bf</end><modify>False</modify><affect>True</affect>
+	</ConnectIcon>
+	<LimitedStatic>
+		<name>Extended Resident Module</name>
+		<sentence>There is a problem with the location of the TWL extended resident module. Contact your Nintendo representative.</sentence>
+		<begin>1c0</begin><end>1c3</end><modify>False</modify><affect>True</affect>
+	</LimitedStatic>
+	<SCFGAccess>
+		<name>SCFG Settings</name>
+		<sentence>The SCFG register can be accessed.</sentence>
+		<begin>1b8</begin><end>1bb</end><modify>False</modify><affect>True</affect>
+	</SCFGAccess>
+	<TitleID>
+		<name>TitleID</name>
+		<sentence>The game code does not match the TitleID.</sentence>
+		<begin>230</begin><end>233</end><modify>False</modify><affect>True</affect>
+	</TitleID>
+	<SaveData>
+		<name>Public/Private Save Data</name>
+		<sentence>With software intended for Game Cards, the size of Public and Private save data cannot be specified.</sentence>
+		<begin>238</begin><end>23f</end><modify>False</modify><affect>True</affect>
+	</SaveData>
+	<DebugBuild>
+		<name>Debug/Release Build</name>
+		<sentence>This ROM is not the FINALROM build. Be sure to submit the FINALROM build of the ROM.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DebugBuild>
+
+	<!-- Application Type -->
+	<IllegalAppType>
+		<name>Application Types</name>
+		<sentence>Illegal value.</sentence>
+		<begin>230</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</IllegalAppType>
+	<DifferentAppType>
+		<name>Application Types</name>
+		<sentence>This software is a {0} application. Not supported by this program.</sentence>
+		<begin>230</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</DifferentAppType>
+
+	<!-- Access Control -->
+	<CardAccess>
+		<name>Access Control Information</name>
+		<sentence>Cannot set the Game Card access method to both Normal mode and NTR mode.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</CardAccess>
+	<NandAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the NAND flash is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</NandAccessUser>
+	<SDAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the SD Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessUser>
+	<SDAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The SD Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessSystem>
+	<GameCardNormalAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the Game Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessUser>
+	<GameCardNormalAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The Game Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessSystem>
+	<GameCardNTRAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the NTR-compatible region in the Game Card is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessUser>
+	<GameCardNTRAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The NTR-compatible region in the Game Card can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessSystem>
+	<IllegalAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Access to the {0} is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUser>
+	<IllegalAccessUserWarn>
+		<name>Access Control Information</name>
+		<sentence>The {0} can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUserWarn>
+	<IllegalAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>The {0} can be accessed.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessSystem>
+	<AccessDefault>
+		<name>Access Control Information</name>
+		<sentence>Illegal access bit(s) are set. This setting is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</AccessDefault>
+
+	<!-- Padding -->
+	<PaddingRead>
+		<name>Padding</name>
+		<sentence>Last {0} cannot be read.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingRead>
+	<PaddingValue>
+		<name>Padding</name>
+		<sentence>Last {0} must be padded by FFh. The limitations of {1} ROMs are not being observed.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingValue>
+
+	<!-- Reserved Area -->
+	<ReservedArea>
+		<name>Reserved region</name>
+		<sentence>An illegal value is included. Pad this region with 00h only.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ReservedArea>
+
+	<!-- Shared2 file -->
+	<Shared2Disable>
+		<name>Shared2 file</name>
+		<sentence>File size is configured even if access to the Shared2 file is not specified.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2Disable>
+	<Shared2Enable>
+		<name>Shared2 file</name>
+		<sentence>File size is not configured even if access to the Shared2 file is specified.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2Enable>
+	<Shared2AccessSystem>
+		<name>Shared2 file</name>
+		<sentence>The Shared2 file (No.{0}) is configured for private access only. Verify whether access is permitted.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2AccessSystem>
+	<Shared2AccessUser>
+		<name>Shared2 file</name>
+		<sentence>Access to the Shared2 file (No.{0}) is not permitted.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2AccessUser>
+	<Shared2SizeSystem>
+		<name>Shared2 file</name>
+		<sentence>The file size of the Shared2 file (No.{0}) is {1}. Verify that the value is correct.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2SizeSystem>
+	<Shared2SizeUser>
+		<name>Shared2 file</name>
+		<sentence>The file size of the Shared2 file (No.{0}) is {1}. Verify that the value is correct.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2SizeUser>
+
+	<!-- SDK Version -->
+	<SDKVersionOld>
+		<name>SDK ver.</name>
+		<sentence>Does not match the version information registered for the program.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionOld>
+	<SDKVersionPR>
+		<name>SDK ver.</name>
+		<sentence>You are using the PR version of the SDK.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionPR>
+	<SDKVersionRC>
+		<name>SDK ver.</name>
+		<sentence>You are using the RC version of the SDK.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionRC>
+
+	<!-- Banner -->
+	<BannerRead>
+		<name>Banner</name>
+		<sentence>Cannot be read.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</BannerRead>
+	<BannerChar>
+		<name>Banner</name>
+		<sentence>An illegal character set is being used.</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</BannerChar>
+
+	<!-- Region -->
+	<IllegalRegion>
+		<name>Markets</name>
+		<sentence>The combination of regions is illegal. It has been loaded, but the Parental Controls information has been ignored.</sentence>
+		<begin>1b0</begin><end>1b4</end><modify>True</modify><affect>True</affect>
+	</IllegalRegion>
+	<AllRegion>
+		<name>Markets</name>
+		<sentence>All markets are set. Confirm that different markets do not require separate settings.</sentence>
+		<begin>1b0</begin><end>1b4</end><modify>True</modify><affect>True</affect>
+	</AllRegion>
+
+	<!-- Rating -->
+	<UnnecessaryRatingIllegal>
+		<name>Rating</name>
+		<sentence>Cannot determine whether rating needs to be shown.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</UnnecessaryRatingIllegal>
+	<UnnecessaryRatingSetting>
+		<name>Rating</name>
+		<sentence>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</UnnecessaryRatingSetting>
+	<RatingUndefine>
+		<name>Rating</name>
+		<sentence>{0}: The rating is undefined.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingUndefine>
+	<RatingPendingSetting>
+		<name>Rating</name>
+		<sentence>{0}: "Rating Pending" has been specified. Re-submit when examination is finished.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingPendingSetting>
+	<RatingPendingConcurrent>
+		<name>Rating</name>
+		<sentence>{0}: A "Rating Pending" specification and rating age are both specified at the same time.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingPendingConcurrent>
+	<IllegalRating>
+		<name>Rating</name>
+		<sentence>{0}: The rating age is not an age specified by the organization.</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</IllegalRating>
+</message>

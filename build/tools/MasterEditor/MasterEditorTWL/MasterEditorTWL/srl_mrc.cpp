@@ -681,6 +681,12 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			{
 				this->hErrorList->Add( this->makeMrcError("JpegSignAccessUserNand") );
 			}
+			// Jpeg署名を有効にせずにSDにアクセスする場合には確認のメッセージを出しておく
+			if( (this->pRomHeader->s.access_control.sd_card_access != 0) &&
+				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser == 0) )
+			{
+				this->hWarnList->Add( this->makeMrcError("SDJpegSignAccessUser") );
+			}
 		}
 
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )

@@ -292,6 +292,11 @@
 		<sentence>Jpeg signature(JpegSign) is configured.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessSystem>
+	<SDJpegSignAccessUser>
+		<name>Access Control Information</name>
+		<sentence>It is necessary to append and verify the Jpeg signature(JpegSign) if reading and writing the Jpeg image to the SD Card is configured.(Otherwise, ignore this warning.)</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDJpegSignAccessUser>
 	<IllegalAccessUser>
 		<name>Access Control Information</name>
 		<sentence>Access to the {0} is not permitted.</sentence>

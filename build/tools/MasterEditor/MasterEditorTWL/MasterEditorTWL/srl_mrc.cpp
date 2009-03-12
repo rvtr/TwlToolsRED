@@ -679,7 +679,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 				(this->pRomHeader->s.access_control.sd_card_access == 0) &&
 				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0) )
 			{
-				this->hWarnList->Add( this->makeMrcError("JpegSignAccessUserNand") );
+				this->hErrorList->Add( this->makeMrcError("JpegSignAccessUserNand") );
 			}
 		}
 

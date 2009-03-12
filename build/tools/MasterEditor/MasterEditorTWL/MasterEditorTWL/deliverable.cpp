@@ -108,19 +108,19 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	}
 	if( hSrl->IsAesSlotBForJpegEnc )
 	{
-		access += "AES-SlotB(Jpeg Launcher). ";
+		access += "JpegSign for the Launcher. ";
 	}
 	if( hSrl->IsAesSlotBForJpegEncUser )
 	{
-		access += "AES-SlotB(Jpeg User). ";
+		access += "JpegSign. ";
 	}
 	if( hSrl->IsAesSlotAForSSL )
 	{
-		access += "AES-SlotA(SSL). ";
+		access += "AES-SlotA(SSL Client Cert). ";
 	}
 	if( hSrl->IsCommonClientKeyForDebugger )
 	{
-		access += "commonClientKey(Debugger). ";
+		access += "commonClientKey(Debugger System Menu). ";
 	}
 
 	// 使用ライセンス

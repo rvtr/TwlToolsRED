@@ -187,19 +187,19 @@ void Form1::setSrlForms(void)
 	}
 	if( this->hSrl->IsAesSlotBForJpegEnc == true )
 	{
-		acc += "AES-SlotB(Jpeg Launcher).\r\n";
+		acc += "Jpeg Signature for the Launcher.\r\n";
 	}
 	if( this->hSrl->IsAesSlotBForJpegEncUser == true )
 	{
-		acc += "AES-SlotB(Jpeg User).\r\n";
+		acc += "Jpeg Signature.\r\n";
 	}
 	if( this->hSrl->IsAesSlotAForSSL == true )
 	{
-		acc += "AES-SlotA(SSL).\r\n";
+		acc += "AES-SlotA(SSL Client Cert).\r\n";
 	}
 	if( this->hSrl->IsCommonClientKeyForDebugger == true )
 	{
-		acc += "commonClientKey(Debugger).\r\n";
+		acc += "commonClientKey(Debugger System Menu).\r\n";
 	}
 	this->tboxAccessOther->Text = acc;
 

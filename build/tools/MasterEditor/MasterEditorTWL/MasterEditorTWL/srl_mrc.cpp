@@ -593,9 +593,9 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES Slot A for the SSL client certification") );
 		}
-		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+		if( (this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0) )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "HW AES SlotB (JPEG signature) for the user") );
+			this->hWarnList->Add( this->makeMrcError("JpegSignAccessSystem") );
 		}
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
 		{
@@ -648,17 +648,41 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
 		}
-		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+
+		if( !this->IsMediaNand )
 		{
-			if( !this->IsMediaNand )
+			// カードだと写真領域へのアクセスは禁止
+			if( this->pRomHeader->s.access_control.photo_access_read != 0 )
 			{
-				this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES SlotB (JPEG signature) for the user") );
+				this->hErrorList->Add( this->makeMrcError("PhotoReadAccessUser") );
 			}
-			else
+			if( this->pRomHeader->s.access_control.photo_access_write != 0 )
 			{
-				this->hWarnList->Add( this->makeMrcError("IllegalAccessUserWarn", "HW AES SlotB (JPEG signature) for the user") );
+				this->hErrorList->Add( this->makeMrcError("PhotoWriteAccessUser") );
+			}
+			// Jpeg署名も禁止
+			if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0 )
+			{
+				this->hErrorList->Add( this->makeMrcError("JpegSignAccessUserCard") );
 			}
 		}
+		else
+		{
+			// photoへのライトアクセス権があるのにJpeg署名がないとき
+			if( (this->pRomHeader->s.access_control.photo_access_write != 0) && 
+				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser == 0) )
+			{
+				this->hErrorList->Add( this->makeMrcError("PhotoJpegSignAccessUser") );
+			}
+			// photoやSDへライトしないくせにJpeg署名が有効なとき
+			if( (this->pRomHeader->s.access_control.photo_access_write == 0) &&
+				(this->pRomHeader->s.access_control.sd_card_access == 0) &&
+				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0) )
+			{
+				this->hWarnList->Add( this->makeMrcError("JpegSignAccessUserNand") );
+			}
+		}
+
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "Common Client Key for the debugger system menu") );

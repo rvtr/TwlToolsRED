@@ -262,6 +262,36 @@
 		<sentence>The NTR-compatible region in the Game Card can be accessed.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</GameCardNTRAccessSystem>
+	<PhotoReadAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Read access to the Photo Database is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoReadAccessUser>
+	<PhotoWriteAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Write access to the Photo Database is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoWriteAccessUser>
+	<PhotoJpegSignAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Jpeg signature(JpegSign) is not configured even if write access to Photo Database is specified.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoJpegSignAccessUser>
+	<JpegSignAccessUserCard>
+		<name>Access Control Information</name>
+		<sentence>Jpeg signature(JpegSign) is configured.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserCard>
+	<JpegSignAccessUserNand>
+		<name>Access Control Information</name>
+		<sentence>Jpeg signature(JpegSign) is configured even if either write access to Photo Database or access to SD Card is not specified.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserNand>
+	<JpegSignAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>Jpeg signature(JpegSign) is configured.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessSystem>
 	<IllegalAccessUser>
 		<name>Access Control Information</name>
 		<sentence>Access to the {0} is not permitted.</sentence>

@@ -96,7 +96,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	System::String ^access = gcnew System::String("");
 	if( hSrl->IsCommonClientKey )
 	{
-		access += "commonClientKey. ";
+		access += "CommonClientKey. ";
 	}
 	if( hSrl->IsAesSlotBForES )
 	{
@@ -108,11 +108,11 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	}
 	if( hSrl->IsAesSlotBForJpegEnc )
 	{
-		access += "JpegSign for the Launcher. ";
+		access += "Jpeg Signature for the Launcher.";
 	}
 	if( hSrl->IsAesSlotBForJpegEncUser )
 	{
-		access += "JpegSign. ";
+		access += "Jpeg Signature.";
 	}
 	if( hSrl->IsAesSlotAForSSL )
 	{
@@ -120,7 +120,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	}
 	if( hSrl->IsCommonClientKeyForDebugger )
 	{
-		access += "commonClientKey(Debugger System Menu). ";
+		access += "CommonClientKey(Debugger System Menu). ";
 	}
 
 	// 使用ライセンス

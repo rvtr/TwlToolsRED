@@ -175,7 +175,7 @@ void Form1::setSrlForms(void)
 	System::String ^acc = gcnew System::String("");
 	if( this->hSrl->IsCommonClientKey == true )
 	{
-		acc += "commonClientKey.\r\n";
+		acc += "CommonClientKey.\r\n";
 	}
 	if( this->hSrl->IsAesSlotBForES == true )
 	{
@@ -199,7 +199,7 @@ void Form1::setSrlForms(void)
 	}
 	if( this->hSrl->IsCommonClientKeyForDebugger == true )
 	{
-		acc += "commonClientKey(Debugger System Menu).\r\n";
+		acc += "CommonClientKey(Debugger System Menu).\r\n";
 	}
 	this->tboxAccessOther->Text = acc;
 

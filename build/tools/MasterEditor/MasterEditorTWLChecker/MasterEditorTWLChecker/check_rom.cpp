@@ -52,7 +52,7 @@ System::Void checkRom( System::String ^orgSrl, System::String ^targetSrl )
 	Console::WriteLine( "--" );
 
 	// リージョンの表示
-	Console::WriteLine( "{0,-15} {1,-20:X04}", "Region", rh.s.card_region_bitmap );
+	Console::WriteLine( "{0,-15} {1,-10:X04} {2}", "Region", rh.s.card_region_bitmap, getRegionString(rh.s.card_region_bitmap) );
 	Console::WriteLine( "--" );
 
 	// レーティングの表示

@@ -24,6 +24,7 @@ System::Void checkRom( System::String ^orgSrl, System::String ^targetSrl );
 System::Void checkSheet( SheetItem ^sItem );
 
 // ROMƒwƒbƒ_‚Ì’l‚ð‰ðŽß
+System::String^ getRegionString(System::UInt32 region);
 System::String^ getOgnString(int ogn);
 System::String^ getRatingString( u8 rating );
 

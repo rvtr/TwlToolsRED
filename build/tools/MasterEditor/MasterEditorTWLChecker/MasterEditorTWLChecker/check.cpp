@@ -28,6 +28,39 @@ void DebugPrint( System::String ^fmt, ... cli::array<System::Object^> ^args )
 // ------------------------------------------------------------------
 // ROMƒwƒbƒ_’†‚Ì’l‚Ì‰ðŽß
 // ------------------------------------------------------------------
+System::String^ getRegionString(System::UInt32 region)
+{
+	if( region == METWL_MASK_REGION_ALL )
+	{
+		return (gcnew System::String("ALL"));
+	}
+
+	System::String ^str = "";
+	if( region & METWL_MASK_REGION_JAPAN )
+	{
+		str += "Japan ";
+	}
+	if( region & METWL_MASK_REGION_AMERICA )
+	{
+		str += "America ";
+	}
+	if( region & METWL_MASK_REGION_EUROPE )
+	{
+		str += "Europe ";
+	}
+	if( region & METWL_MASK_REGION_AUSTRALIA )
+	{
+		str += "Australia ";
+	}
+	if( region & METWL_MASK_REGION_KOREA )
+	{
+		str += "Korea ";
+	}
+	str = str->TrimEnd( ' ' );
+	str = str->Replace( ' ', ',' );
+	return str;
+}
+
 System::String^ getOgnString(int ogn)
 {
 	System::String ^str = nullptr;

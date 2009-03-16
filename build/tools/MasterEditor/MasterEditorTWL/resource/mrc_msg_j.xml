@@ -274,27 +274,27 @@
 	</PhotoWriteAccessUser>
 	<PhotoJpegSignAccessUser>
 		<name>アクセスコントロール情報</name>
-		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJpeg署名(JpegSign)が有効になっていません。</sentence>
+		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJPEG署名(JpegSign)が有効になっていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoJpegSignAccessUser>
 	<JpegSignAccessUserCard>
 		<name>アクセスコントロール情報</name>
-		<sentence>Jpeg署名(JpegSign)が有効になっています。</sentence>
+		<sentence>JPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserCard>
 	<JpegSignAccessUserNand>
 		<name>アクセスコントロール情報</name>
-		<sentence>写真データベースへのライトアクセスもしくはSDカードへのアクセスが指定されていないにもかかわらずJpeg署名(JpegSign)が有効になっています。</sentence>
+		<sentence>写真データベースへのライトアクセスもしくはSDカードへのアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserNand>
 	<JpegSignAccessSystem>
 		<name>アクセスコントロール情報</name>
-		<sentence>Jpeg署名(JpegSign)が有効になっています。</sentence>
+		<sentence>JPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessSystem>
 	<SDJpegSignAccessUser>
 		<name>アクセスコントロール情報</name>
-		<sentence>Jpeg画像をSDカードに読み書きする場合にはJpeg署名(JpegSign)の付与と検証が必要になりますのでご注意ください。(Jpeg画像をSDカードに読み書きしない場合、この警告を無視していただいて構いません。)</sentence>
+		<sentence>JPEG画像をSDカードに読み書きする場合にはJPEG署名(JpegSign)の付与と検証が必要になりますのでご注意ください。(JPEG画像をSDカードに読み書きしない場合、この警告を無視していただいて構いません。)</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDJpegSignAccessUser>
 	<IllegalAccessUser>

@@ -274,27 +274,27 @@
 	</PhotoWriteAccessUser>
 	<PhotoJpegSignAccessUser>
 		<name>Access Control Information</name>
-		<sentence>Jpeg signature(JpegSign) is not configured even if write access to Photo Database is specified.</sentence>
+		<sentence>JPEG signatures (JpegSign) are not enabled, even though write access to the Photo Database has been specified.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoJpegSignAccessUser>
 	<JpegSignAccessUserCard>
 		<name>Access Control Information</name>
-		<sentence>Jpeg signature(JpegSign) is configured.</sentence>
+		<sentence>JPEG signatures (JpegSign) have been enabled.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserCard>
 	<JpegSignAccessUserNand>
 		<name>Access Control Information</name>
-		<sentence>Jpeg signature(JpegSign) is configured even if either write access to Photo Database or access to SD Card is not specified.</sentence>
+		<sentence>JPEG signatures (JpegSign) are enabled, even though neither write access to the Photo Database nor access to the SD Card have been specified.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserNand>
 	<JpegSignAccessSystem>
 		<name>Access Control Information</name>
-		<sentence>Jpeg signature(JpegSign) is configured.</sentence>
+		<sentence>JPEG signatures (JpegSign) have been enabled.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessSystem>
 	<SDJpegSignAccessUser>
 		<name>Access Control Information</name>
-		<sentence>It is necessary to append and verify the Jpeg signature(JpegSign) if reading and writing the Jpeg image to the SD Card is configured.(Otherwise, ignore this warning.)</sentence>
+		<sentence>If you are reading or writing JPEG images from/to an SD Card, you must append and verify the JPEG signatures (JpegSign). Otherwise, ignore this warning.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDJpegSignAccessUser>
 	<IllegalAccessUser>

@@ -128,6 +128,71 @@ static BOOL start_my_thread(void)
   return FALSE;
 }
 
+static void *AllocForNAM(size_t size)
+{
+  OSIntrMode old = OS_DisableInterrupts();
+  void* p = OS_Alloc(size);
+  OS_RestoreInterrupts(old);
+  return p;
+}
+
+static void FreeForNAM(void* ptr)
+{
+  if( ptr != NULL ) {
+    OSIntrMode old = OS_DisableInterrupts();
+    OS_Free(ptr);
+    OS_RestoreInterrupts(old);
+  }
+}
+
+
+static int Check_User_Titles(void)
+{
+
+#define NAM_TITLE_ID_S 128
+
+  NAMTitleId pArray[NAM_TITLE_ID_S];
+  s32 i;
+  s32 num = 0;
+  int user_tilte_count = 0;
+  u64 id;
+
+
+  num = NAM_GetNumTitles();
+  if( num > 0 ) {
+    if( NAM_OK !=  NAM_GetTitleList( pArray , NAM_TITLE_ID_S ) ) {
+      return -1; /* error */
+    }
+    OS_TPrintf("NAND Installed titles\n");
+    for( i = 0 ; i < num ; i++ ) {
+      id = pArray[i];
+
+      /*
+	No. 0 0003000f484e4c41
+	No. 1 0003000f484e4841
+	No. 2 0003000f484e4341 
+	No. 3 00030015484e4241 
+	No. 4 00030017484e4141 launcher
+	             ^
+                     | ここの最下位ビットが１のやつがシステムアプリ
+                     | 
+  		 システムアプリはダウンロード対象外
+      */
+      if( id & 0x0000000100000000 ) {
+	/* system app. */
+	OS_TPrintf(" sys.:%3d:0x%llx\n", i, id);
+
+      }
+      else {
+	/* user app. */
+	OS_TPrintf(" usr.:%3d:0x%llx\n", i, id);
+	user_tilte_count++;
+      }
+    }
+  }
+  return user_tilte_count;
+}
+
 
 
 static BOOL SDBackupToSDCard2(void)
@@ -444,10 +509,15 @@ static BOOL SDBackupToSDCard7(void)
   }
   (void)ClearDirEntryList( &dir_entry_list_head );
 
+
   if( TRUE == Error_Report_Display(tc[0]) ) {
     mprintf("\n");
   }
   Error_Report_End();
+
+  if(TRUE == no_sd_clean_flag ) {
+    mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app);
+  }
 
   return flag;
 }
@@ -525,7 +595,7 @@ static void MyThreadProc(void *arg)
     (void)OS_ReceiveMessage(&MyMesgQueue_request, &message, OS_MESSAGE_BLOCK);
 
     if( no_sd_clean_flag == FALSE ) {
-      mprintf("cleaning up SD card.. ");
+      mprintf("cleaning up SD card files ");
       (void)CleanSDCardFiles(NULL);
       mprintf("done.\n");
     }
@@ -804,9 +874,14 @@ void TwlMain(void)
   if( es_error_code == ES_ERR_OK ) {
     if( TRUE == CheckShopRecord( NULL ) ) {
       mydata.shop_record_flag = TRUE;
+      mprintf("Shop record was found.\n");
     }
     else {
-      mprintf("no shop record\n");
+      /*
+	ショップに繋いだことがあるかどうかを判定している。
+	プリインストール時はどうなの？
+      */
+      mprintf("no Shop record.\n");
     }
   }
   else {
@@ -818,6 +893,15 @@ void TwlMain(void)
     // OS_TPrintf("DeviceID:  %08X %u\n", mydata.deviceId, mydata.deviceId);
     OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
+
+
+  /* NAM の初期化 */
+  NAM_Init(&AllocForNAM, &FreeForNAM);
+
+
+  mydata.num_of_user_download_app_by_nam = Check_User_Titles();
+  mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app_by_nam);
+
 
   mprintf("\n");
 

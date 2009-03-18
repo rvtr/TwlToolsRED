@@ -189,6 +189,11 @@ BOOL MiyaBackupTWLSettings(const char *path)
     return FALSE;
   }
 
+#if 0				/* miya */
+  mprintf("cfg_data.country = %d\n", cfg_data.country );
+#endif
+
+
 #if 0
   writtenSize = FS_WriteFile(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
 #else
@@ -284,6 +289,10 @@ BOOL MiyaRestoreTWLSettings(const char *path)
   readSize = my_fs_crypto_read(&f, (void *)&cfg_data, (s32)sizeof(LCFGTWLSettingsData) );
 
 
+#if 0				/* miya */
+  mprintf("cfg_data.country = %d\n", cfg_data.country );
+#endif
+
   if( readSize != sizeof(LCFGTWLSettingsData) ) {
     fsResult = FS_GetArchiveResultCode(path);
     mprintf("Failed read file 2 - HWNormal Info.:%d\n", fsResult );
@@ -306,6 +315,11 @@ BOOL MiyaRestoreTWLSettings(const char *path)
   if( FALSE == WriteTWLSettings( &cfg_data ) ) {
     return FALSE;
   }
+
+  //  LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
+  LCFG_TSD_SetCountry(cfg_data.country);
+
+
 
   return TRUE;
 }

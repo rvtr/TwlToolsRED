@@ -225,12 +225,7 @@ BOOL nvram_restore(char *path)
   int len;
   //  char nor_file_path[FS_FILE_NAME_MAX];
   char *nor_file_path = path;
-  NCFGConfig *p_ncfgc = NULL;
-#if 0
-  DWCWiFiInfo buf_content;
-  DWCWiFiInfo *buf = &buf_content;
-  u8 Wifi[14];
-#endif
+
   u64 id1;
   u64 id2;
 
@@ -267,52 +262,18 @@ BOOL nvram_restore(char *path)
   }
 
 
-  p_ncfgc = (NCFGConfig *)my_nor_buf;
   
   // DWCWiFiInfo *buf;
   //  u8 Wifi[14];
 
   // > となります。DWCライブラリによる修復を使わない場合は
   // > ・0x0f0と0x1f0にあるIDを確認して、両方のIDが同じ、かつ0でない場合にコピーする
-#if 0
-  MI_CpuCopy8(&p_ncfgc->slot[0].wifi[0], Wifi, 14);
-  MI_CpuCopy8(&Wifi[ 0], &buf->attestedUserId, 6);
-  buf->attestedUserId &= 0x07FFFFFFFFFF;
-
-  MI_CpuCopy8(&Wifi[ 5], &buf->notAttestedId, 6);
-  buf->notAttestedId >>= 3;
-  buf->notAttestedId  &= 0x07FFFFFFFFFF;
-  MI_CpuCopy8(&Wifi[10], &buf->pass, 2);
-  buf->pass >>= 6;
-  buf->pass  &= 0x03FF;
-  MI_CpuCopy8(&Wifi[12], &buf->randomHistory, 2);
-
-  id1 = buf->attestedUserId;
-#else
   //  MI_CpuCopy8(&p_ncfgc->slot[0].wifi[0], &id1, 6);
   MI_CpuCopy8(&my_nor_buf[0x600+ 0xf0], &id1, 6);
   id1 &= 0x07FFFFFFFFFF;
-#endif
 
-
-#if 0
-  MI_CpuCopy8(&p_ncfgc->slot[1].wifi[0], Wifi, 14);
-  MI_CpuCopy8(&Wifi[ 0], &buf->attestedUserId, 6);
-  buf->attestedUserId &= 0x07FFFFFFFFFF;
-  MI_CpuCopy8(&Wifi[ 5], &buf->notAttestedId, 6);
-  buf->notAttestedId >>= 3;
-  buf->notAttestedId  &= 0x07FFFFFFFFFF;
-  MI_CpuCopy8(&Wifi[10], &buf->pass, 2);
-  buf->pass >>= 6;
-  buf->pass  &= 0x03FF;
-  MI_CpuCopy8(&Wifi[12], &buf->randomHistory, 2);
-
-  id2 = buf->attestedUserId;
-#else
-  //  MI_CpuCopy8(&p_ncfgc->slot[1].wifi[0], &id2, 6);
   MI_CpuCopy8(&my_nor_buf[0x600+ 0x1f0], &id2, 6);
   id2 &= 0x07FFFFFFFFFF;
-#endif
 
   if( (id1 == id2) && (id1 != 0) ) {
     if( TRUE !=  my_nvram_write( offset , /* size */ NVRAM_PERSONAL_DATA_SIZE, (void* )my_nor_buf) ) {

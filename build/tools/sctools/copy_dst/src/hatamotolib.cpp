@@ -79,6 +79,8 @@ static void*   AllocForEC(u32 size, int align)
   if(align <= 32) {
     return Alloc(size);
   }
+  mprintf("Failed to %s %d\n", __FUNCTION__,__LINE__);
+
   return NULL;
 }
 
@@ -93,6 +95,11 @@ static void* ReallocForNSSL(void* p, u32 size)
   if( p != NULL )
     {
       void* newp = Alloc(size);
+      if( newp == NULL ) {
+	Free(p);
+	mprintf("Failed to %s %d\n", __FUNCTION__,__LINE__);
+	return NULL;
+      }
       MI_CpuCopy8(p, newp, size);
       Free(p);
       return newp;
@@ -411,7 +418,7 @@ BOOL SetupEC(void)
   return TRUE;
 }
 
-
+static ECError WaitEC_result;
 BOOL WaitEC(ECOpId opId)
 {
   ECError result;
@@ -430,6 +437,7 @@ BOOL WaitEC(ECOpId opId)
   for(;;)
     {
       result = EC_GetProgress(opId, &progress);
+      WaitEC_result = result;
       if( (result != EC_ERROR_OK) && (result != EC_ERROR_NOT_DONE) )
         {
 	  if( result == EC_ERROR_NOT_ACTIVE )
@@ -493,7 +501,7 @@ BOOL WaitEC(ECOpId opId)
 	  break;
         }
 
-      OS_Sleep(300);
+      OS_Sleep(100);
     }
   return TRUE;;
 }
@@ -692,6 +700,14 @@ static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
       game_code_buf[4] = '\0';
       mprintf("  downloading.. [%s]       ", game_code_buf);
       if( FALSE == WaitEC(progress) ) {
+
+	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
+	/* 
+	   if( WaitEC_result == EC_ERROR_NET_CONTENT ) {
+	    tid を記録だけしてエラーにしない。
+	   } 
+
+	 */
 	m_set_palette(tc[0], M_TEXT_COLOR_RED );
 	mprintf("NG.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -769,7 +785,7 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
@@ -785,7 +801,7 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
   }
   else {
     miya_log_fprintf(log_fd, "OK.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }

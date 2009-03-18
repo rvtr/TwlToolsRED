@@ -130,7 +130,7 @@ char *my_fs_util_get_fs_result_word( FSResult res )
     { FS_RESULT_UNSUPPORTED, "FS_RESULT_UNSUPPORTED" },
     { FS_RESULT_ERROR, "FS_RESULT_ERROR" },
     { FS_RESULT_INVALID_PARAMETER, "FS_RESULT_INVALID_PARAMETER" },
-    { FS_RESULT_NO_MORE_RESOUCE, "FS_RESULT_NO_MORE_RESOUCE" },
+    { FS_RESULT_NO_MORE_RESOURCE, "FS_RESULT_NO_MORE_RESOURCE" },
     { FS_RESULT_ALREADY_DONE, "FS_RESULT_ALREADY_DONE" },
     { FS_RESULT_PERMISSION_DENIED, "FS_RESULT_PERMISSION_DENIED" },
     { FS_RESULT_MEDIA_FATAL, "FS_RESULT_MEDIA_FATAL" },
@@ -2525,6 +2525,133 @@ BOOL CheckShopRecord(FSFile *log_fd)
 }
 
 
+//static BOOL 
+
+static BOOL myCleanDirectory(char *path, FSFile *log_fd, int level)
+{
+  FSFile f;
+  BOOL ret_value = TRUE;
+  //  FSDirectoryEntryInfo direntry;
+  //  char path_full[FILE_PATH_LEN];
+  FSDirectoryEntryInfo *direntry;
+  char *path_full;
+
+  //  OS_TPrintf("level = %d\n", level); /* 8になったらOpenDirectoryでエラーになる。 */
+
+  path_full = (char *)OS_Alloc( FILE_PATH_LEN );
+  if( path_full == NULL ) {
+    miya_log_fprintf(log_fd, "Error: alloc error path_full\n");
+    ret_value = FALSE;
+    goto end_process;
+  }
+
+  direntry = (FSDirectoryEntryInfo *)OS_Alloc( sizeof(FSDirectoryEntryInfo) );
+  if( direntry == NULL ) {
+    miya_log_fprintf(log_fd, "Error: alloc error FSDirectoryEntryInfo\n");
+    ret_value = FALSE;
+    goto end_process;
+  }
+
+  /* ソースディレクトリオープン */
+  FS_InitFile(&f);
+
+  if(FS_OpenDirectory(&f, path, FS_PERMIT_R | FS_PERMIT_W ) == FALSE ) {
+    //  if(FS_OpenDirectory(&f, path, 0 ) == FALSE ) {
+
+    miya_log_fprintf(log_fd, "%s %d: Failed Open Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ) );
+    ret_value = FALSE;
+    (void)Error_Report_Printf(" Open directory failed:%s\n",path);
+    goto end_process;
+  }
+
+  while( FS_ReadDirectory(&f, direntry) ) {
+    if( STD_StrCmp(direntry->longname, ".") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry->longname, "..") == 0 ) {
+    }
+    else if( direntry->attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
+    }
+    else {
+
+      STD_StrCpy( path_full , path );
+      STD_StrCat( path_full, "/");
+      STD_StrCat( path_full , direntry->longname );
+
+      if( (direntry->attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
+	if( level >= 6 ) {
+	  if( FALSE == FS_DeleteDirectoryAuto( path_full ) ) {
+	    OS_TPrintf("FS_DeleteDirectoryAuto failed.: ");
+	    PrintAttributes(direntry->attributes, log_fd);
+	    OS_TPrintf(" %s\n", path_full);
+	    OS_TPrintf(" %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_full) ) );
+	    mprintf("FS_DeleteDirectoryAuto failed. %s\n", path_full);
+	    ret_value = FALSE;
+	  }
+	  else {
+	    // OS_TPrintf("done\n");
+	  }
+	}
+	else {
+	  (void)myCleanDirectory(path_full, log_fd, level+1 );
+	  //	OS_TPrintf("FS_DeleteDirectory ");
+
+	  if( FALSE == FS_DeleteDirectory( path_full ) ) {
+	    OS_TPrintf("FS_DeleteDirectory failed.: ");
+	    PrintAttributes(direntry->attributes, log_fd);
+	    OS_TPrintf(" %s\n", path_full);
+	    OS_TPrintf(" %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_full) ) );
+	    mprintf("FS_DeleteDirectory failed. %s\n", path_full);
+	    ret_value = FALSE;
+	  }
+	  else {
+	    // OS_TPrintf("done\n");
+	  }
+	}
+      }
+      else {
+	/* ファイルの場合 */
+	//	OS_TPrintf("FS_DeleteFile ");
+
+	if( FALSE == FS_DeleteFile( path_full ) ) {
+	  OS_TPrintf("FS_DeleteFile failed.: ");
+	  PrintAttributes(direntry->attributes, log_fd);
+	  OS_TPrintf(" %s\n", path_full);
+	  mprintf("FS_DeleteFile failed. %s\n", path_full);
+	  ret_value = FALSE;
+	}
+	else {
+	  //	  OS_TPrintf("done\n");
+	}
+      }
+    }
+  }
+
+ end_process:
+
+
+  if( FS_CloseDirectory(&f) == FALSE) {
+    miya_log_fprintf(log_fd, "%s %d: Failed Close Directory\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
+    //    ret_value |= 1; /* いらないかも？あとで考える */
+  }
+
+  if( path_full != NULL ) {
+    OS_Free(path_full);
+  }
+
+  if( direntry != NULL ) {
+    OS_Free(direntry);
+  }
+
+  return ret_value;
+
+
+}
+
+
 BOOL CleanSDCardFiles(char *log_file_name)
 {
   char *path = "sdmc:/";
@@ -2567,11 +2694,15 @@ BOOL CleanSDCardFiles(char *log_file_name)
     else if( direntry.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
     }
     else {
+
       STD_StrCpy( path_full , path );
       STD_StrCat( path_full , direntry.longname );
 
       if( (direntry.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
 	/* ディレクトリの場合 */
+#if 0
+	OS_TPrintf("FS_DeleteDirectoryAuto ");
+
 	if( FALSE == FS_DeleteDirectoryAuto( path_full ) ) {
 	  OS_TPrintf("FS_DeleteDirectoryAuto failed.: ");
 	  PrintAttributes(direntry.attributes, log_fd);
@@ -2579,9 +2710,31 @@ BOOL CleanSDCardFiles(char *log_file_name)
 	  mprintf("FS_DeleteDirectoryAuto failed. %s\n", path_full);
 	  ret_value = FALSE;
 	}
+	else {
+	  OS_TPrintf("done. \n");
+	}
+#else
+	ret_value = myCleanDirectory(path_full, log_fd, 1 /* 0? */ );
+	if( FALSE == FS_DeleteDirectory( path_full ) ) {
+	  OS_TPrintf("FS_DeleteDirectory failed.: ");
+	  PrintAttributes(direntry.attributes, log_fd);
+	  OS_TPrintf(" %s\n", path_full);
+	  OS_TPrintf(" %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path_full) ) );
+	  mprintf("FS_DeleteDirectory failed. %s\n", path_full);
+	  ret_value = FALSE;
+	}
+	else {
+	  // OS_TPrintf("done. \n");
+	}
+
+
+#endif
+
       }
       else {
 	/* ファイルの場合 */
+	OS_TPrintf("FS_DeleteFile \n");
+
 	if( FALSE == FS_DeleteFile( path_full ) ) {
 	  OS_TPrintf("FS_DeleteFile failed.: ");
 	  PrintAttributes(direntry.attributes, log_fd);
@@ -2589,9 +2742,16 @@ BOOL CleanSDCardFiles(char *log_file_name)
 	  mprintf("FS_DeleteFile failed. %s\n", path_full);
 	  ret_value = FALSE;
 	}
+	else {
+	  OS_TPrintf("done. \n");
+	}
       }
     }
   }
+
+  OS_TPrintf("\n");
+
+ end_process:
 
   /* ソースディレクトリクローズ */
   if( FS_CloseDirectory(&f) == FALSE) {
@@ -2601,7 +2761,7 @@ BOOL CleanSDCardFiles(char *log_file_name)
     //    ret_value |= 1; /* いらないかも？あとで考える */
   }
 
- end_process:
+
 
   miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
   Log_File_Close(log_fd);

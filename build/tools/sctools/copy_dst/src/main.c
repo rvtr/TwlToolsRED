@@ -68,7 +68,6 @@
 #define FREE_REG_RESTOREMODE_REBOOT 0x55
 #define FREE_REG_RESTOREMODE_AND_RTC_DONE_REBOOT 0x66
 
-// #define MIYA_MCU 1
 
 static BOOL only_wifi_config_data_trans_flag = FALSE;
 static BOOL user_and_wifi_config_data_trans_flag = FALSE;
@@ -200,6 +199,113 @@ static BOOL start_my_thread(u32 command)
   }
   return FALSE;
 }
+
+#if 0
+
+static void DeleteKnownTitles(NAMTitleId* pTitleIds, int num)
+{
+  int i;
+  NAMTitleId tid;
+  u32 hi;
+
+  /* 
+     
+     タイトルIDリスト
+     「TitleID_Hi」_「TitleID_Lo」
+     ------------------------------------------
+     システムアプリ
+     　　00030017_484E41?? [HNA?]    DSiメニュー
+     　　00030015_484E42?? [HNB?]    本体設定
+     　　00030015_484E46?? [HNF?]    DSiショップ
+     　　0003000F_484E4341 [HNCA]    無線ファーム
+     　　0003000F_484E4841 [HNHA]    ホワイトリスト
+     　　0003000F_484E4C?? [HNL?]    バージョン情報
+     　　00030005_484E4441 [HNDA]    ダウンロードプレイ
+     　　00030005_484E4541 [HNEA]    PictChat
+     　　00030005_484E49?? [HNI?]    DSiカメラ
+     　　00030005_484E4A?? [HNJ?]    ニンテンドーゾーンビューア
+     　　00030005_484E4B?? [HNK?]    DSiサウンド
+     
+     ユーザーアプリ
+     　　00030004_484E47?? [HNG?]    DSiブラウザ
+     　　00030004_4B4755?? [KGU?]    うごくメモ帳
+     
+     TitleID_Loの４桁目（言語コード）
+     　　?=[J, E, P, U]=[4A, 45, 50, 55]
+     
+     アプリのインストールされるパス
+     　　"nand:/title/<titleID_Hi>/<titleID_Lo>"
+
+ */
+
+
+  for( i = 0; i < num; i++ )  {
+    tid = *pTitleIds++;
+    hi = NAM_GetTitleIdHi(tid);
+    if( hi == 0x00030004 ) {
+      //      NAM_DeleteTitleCompletely(tid);
+      NAM_DeleteTitle(tid);
+    }
+  }
+}
+
+#endif
+
+static BOOL Clean_User_Titles(void)
+{
+#define NAM_TITLE_ID_S 128
+
+  NAMTitleId pArray[NAM_TITLE_ID_S];
+  s32 i;
+  BOOL ret_flag = TRUE;
+  s32 num = 0;
+  u64 id;
+
+  num = NAM_GetNumTitles();
+  if( num > 0 ) {
+    if( NAM_OK !=  NAM_GetTitleList( pArray , NAM_TITLE_ID_S ) ) {
+      return FALSE;
+    }
+    OS_TPrintf("NAND Installed titles\n");
+    for( i = 0 ; i < num ; i++ ) {
+      id = pArray[i];
+
+      /*
+	No. 0 0003000f484e4c41
+	No. 1 0003000f484e4841
+	No. 2 0003000f484e4341 
+	No. 3 00030015484e4241 
+	No. 4 00030017484e4141 launcher
+	             ^
+                     | ここの最下位ビットが１のやつがシステムアプリ
+                     | 
+  		 システムアプリはダウンロード対象外
+      */
+      if( id & 0x0000000100000000 ) {
+	/* system app. */
+	OS_TPrintf(" sys.:%3d:0x%llx\n", i, id);
+
+      }
+      else {
+	/* user app. */
+	OS_TPrintf(" usr.:%3d:0x%llx\n", i, id);
+	if( NAM_OK != NAM_DeleteTitle( id ) ) {
+	  OS_TPrintf(" Error: NAM_DeleteTitle id = 0x%llx\n", id);
+	  ret_flag = FALSE;
+	}
+	else {
+	  OS_TPrintf(" Delete Title id = 0x%llx\n", id);
+	}
+      }
+    }
+  }
+  return ret_flag;
+}
+
+
+
+
+
 
 
 static void RTC_NTP_SYNC(void)
@@ -620,12 +726,19 @@ static BOOL RestoreFromSDCard7(void)
   log_fd = hatamotolib_log_start( MyFile_GetEcDownloadLogFileName() );
 
 
-  if( mydata.shop_record_flag == FALSE ) {
+  if( mydata.shop_record_flag == FALSE && mydata.num_of_user_download_app == 0 ) {
     /* ネットワークにつながなくていいか？ */
-    miya_log_fprintf(log_fd,"no shop record\n");
+    miya_log_fprintf(log_fd,"no shop record \n");
     mprintf(" (--no shop record--)\n");
   }
   else {
+#ifdef PRE_INSTALLED_APP
+    /* miya 2009/03/03 */
+    if( mydata.shop_record_flag == FALSE ) {
+      miya_log_fprintf(log_fd,"only pre-installed apps\n");
+      mprintf("only pre-installed apps\n");
+    }
+#endif
     miya_log_fprintf(log_fd,"EC download\n");
     mprintf("EC download\n");
     
@@ -829,7 +942,7 @@ static BOOL RestoreFromSDCard8(void)
 
     if( (no_network_flag == TRUE) 
 	|| (ec_download_success_flag == FALSE)
-	|| ( mydata.shop_record_flag == FALSE )	) {
+	|| ( mydata.shop_record_flag == FALSE && mydata.num_of_user_download_app == 0 )	) {
       mprintf("Sys-App. save data restore   ");
       if( TRUE == RestoreDirEntryListSystemBackupOnly( MyFile_GetSaveDataListFileName() , 
 						       MyFile_GetSaveDataRestoreLogFileName(),
@@ -918,6 +1031,23 @@ static void MyThreadProc(void *arg)
     command = (u32)message;
     switch( command ) {
     case THREAD_COMMAND_FULL_FUNCTION:
+
+#ifdef PRE_INSTALLED_APP
+      /* miya 2009/2/23 */
+      mprintf("CleanUp installed user titles ");
+      if( TRUE == Clean_User_Titles() ) {
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+	mprintf("OK.\n");
+      }
+      else {
+	m_set_palette(tc[0], M_TEXT_COLOR_RED ); /* red  */
+	mprintf("NG.\n");
+	flag = FALSE;
+      }
+#endif
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      
+
       if( miya_debug_level == 1 ) {
 	m_set_palette(tc[0], M_TEXT_COLOR_PINK );
 	mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
@@ -1271,11 +1401,6 @@ void TwlMain(void)
   /* OS_IsRebootedなんかおかしい・・ */
 
 
-#if 1 /* miya */
-  OS_TPrintf("NCFGConfig = %d 0x%04x\n", sizeof(NCFGConfig),sizeof(NCFGConfig));
-  OS_TPrintf("NCFGConfigEx = %d 0x%04x\n", sizeof(NCFGConfigEx), sizeof(NCFGConfigEx));
-#endif
-
   MIYA_MCU_Init();
 
   OS_TPrintf("MCU Free Reg. 0x%02x\n", MCU_GetFreeReg());
@@ -1361,15 +1486,52 @@ void TwlMain(void)
   }
 
 
-  // 国が選択されていないなら適当に設定
-  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
-    LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
-    //    mprintf("Set dummy Country code\n");
-  }
 
   // region
   org_region = LCFG_THW_GetRegion();
   // ES Device ID
+
+  // 国が選択されていないなら適当に設定
+  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
+
+    mprintf("Set dummy Country code ");
+
+    switch( org_region ) {
+    case OS_TWL_REGION_JAPAN:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
+      mprintf("JPN");
+      break;
+    case OS_TWL_REGION_AMERICA:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_UNITED_STATES);
+      mprintf("USA");
+      break;
+    case OS_TWL_REGION_EUROPE:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_UNITED_KINGDOM);
+      mprintf("UK");
+      break;
+    case OS_TWL_REGION_AUSTRALIA:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_AUSTRALIA);
+      mprintf("AUS");
+      break;
+    case OS_TWL_REGION_CHINA:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_CHINA);
+      mprintf("CHN");
+      break;
+    case OS_TWL_REGION_KOREA:
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_SOUTH_KOREA);
+      mprintf("KOR");
+      break;
+    case OS_TWL_REGION_MAX:
+    default:
+      mprintf("JPN");
+      LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
+      break;
+    }
+    mprintf("\n");
+
+  }
+
+
 
   org_fuseId = SCFG_ReadFuseData();
   OS_TPrintf("eFuseID:   %08X%08X\n", (u32)(org_fuseId >> 32), (u32)(org_fuseId));
@@ -1443,10 +1605,11 @@ void TwlMain(void)
       text_blink_current_line(tc[0]);
       mprintf("insert SD card\n");
     }
-
+   
   }
+  /* FALSE == reboot_flag ここまで */
   else {
-
+    /* ここからリブート後 */
     if( FALSE == wlan_active_flag ) {
       select_mode = 1;	
       no_network_flag = TRUE;
@@ -1858,6 +2021,8 @@ void TwlMain(void)
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
     mfprintf(tc[1],"Device ID: ");
     m_set_palette(tc[1], M_TEXT_COLOR_WHITE );
+
+    /* ここで mydata.shop_record_flag　といっしょに */
     if( TRUE == mydata.shop_record_flag ) {
       mfprintf(tc[1],"%s\n", mydata.bmsDeviceId);
     }

@@ -262,6 +262,41 @@
 		<sentence>The NTR-compatible region in the Game Card can be accessed.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</GameCardNTRAccessSystem>
+	<PhotoReadAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Read access to the Photo Database is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoReadAccessUser>
+	<PhotoWriteAccessUser>
+		<name>Access Control Information</name>
+		<sentence>Write access to the Photo Database is not permitted.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoWriteAccessUser>
+	<PhotoJpegSignAccessUser>
+		<name>Access Control Information</name>
+		<sentence>JPEG signatures (JpegSign) are not enabled, even though write access to the Photo Database has been specified.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoJpegSignAccessUser>
+	<JpegSignAccessUserCard>
+		<name>Access Control Information</name>
+		<sentence>JPEG signatures (JpegSign) have been enabled.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserCard>
+	<JpegSignAccessUserNand>
+		<name>Access Control Information</name>
+		<sentence>JPEG signatures (JpegSign) are enabled, even though neither write access to the Photo Database nor access to the SD Card have been specified.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserNand>
+	<JpegSignAccessSystem>
+		<name>Access Control Information</name>
+		<sentence>JPEG signatures (JpegSign) have been enabled.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessSystem>
+	<SDJpegSignAccessUser>
+		<name>Access Control Information</name>
+		<sentence>If you are reading or writing JPEG images from/to an SD Card, you must append and verify the JPEG signatures (JpegSign). Otherwise, ignore this warning.</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDJpegSignAccessUser>
 	<IllegalAccessUser>
 		<name>Access Control Information</name>
 		<sentence>Access to the {0} is not permitted.</sentence>

@@ -272,6 +272,11 @@
 		<sentence>写真データベースへのライトアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoWriteAccessUser>
+	<PhotoTclAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoTclAccessUser>
 	<PhotoJpegSignAccessUser>
 		<name>アクセスコントロール情報</name>
 		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJPEG署名(JpegSign)が有効になっていません。</sentence>

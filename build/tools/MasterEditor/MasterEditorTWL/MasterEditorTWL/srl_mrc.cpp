@@ -687,6 +687,23 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			{
 				this->hWarnList->Add( this->makeMrcError("SDJpegSignAccessUser") );
 			}
+			// photoアクセスするのにTCLライブラリを使用していないとき
+			if( (this->pRomHeader->s.access_control.photo_access_read  != 0) ||
+				(this->pRomHeader->s.access_control.photo_access_write != 0) )
+			{
+				System::Boolean useTcl = false;
+				for each( RCLicense ^lic in this->hLicenseList )
+				{
+					if( lic->Publisher->StartsWith("NINTENDO") && lic->Name->StartsWith("TCL") )
+					{
+						useTcl = true;
+					}
+				}
+				if( !useTcl )
+				{
+					this->hErrorList->Add( this->makeMrcError("PhotoTclAccessUser") );
+				}
+			}
 		}
 
 		if( this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0 )

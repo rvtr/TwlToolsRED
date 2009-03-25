@@ -272,6 +272,11 @@
 		<sentence>Write access to the Photo Database is not permitted.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoWriteAccessUser>
+	<PhotoTclAccessUser><!-- 未翻訳 -->
+		<name>アクセスコントロール情報</name>
+		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoTclAccessUser>
 	<PhotoJpegSignAccessUser>
 		<name>Access Control Information</name>
 		<sentence>JPEG signatures (JpegSign) are not enabled, even though write access to the Photo Database has been specified.</sentence>

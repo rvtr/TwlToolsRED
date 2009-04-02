@@ -22,7 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			ManagedExtensions="1"
+			ManagedExtensions="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -60,9 +60,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libacsign_X86.a libaes_X86.a libdigest_X86.a libflags_X86.a $(NOINHERIT)"
+				AdditionalDependencies="$(NOINHERIT)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL_Common\flags\lib\X86&quot;;C:\twlsdk\build\tools\makerom.TWL\digest\lib\X86;C:\twlsdk\build\tools\makerom.TWL\aes\lib\X86;C:\twlsdk\build\tools\makerom.TWL\acsign\lib\X86"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				TargetMachine="1"
@@ -95,7 +95,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
-			ManagedExtensions="1"
+			ManagedExtensions="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -115,6 +115,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\nishikawa_takeshi\My Documents\Visual Studio 2008\Projects\MasterEditorTWL\MasterEditorTWL&quot;;C:\twlsdk\build\tools\makerom.TWL;C:\twlsdk\include"
 				PreprocessorDefinitions="WIN32;NDEBUG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -132,8 +133,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit)"
+				AdditionalDependencies="$(NOINHERIT)"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
 				TargetMachine="1"
 			/>

@@ -220,6 +220,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad_util.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -261,6 +269,14 @@
 			</File>
 			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\split_tad_util.h"
 				>
 			</File>
 			<File

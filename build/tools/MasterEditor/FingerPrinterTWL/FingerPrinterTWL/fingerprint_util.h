@@ -7,14 +7,26 @@
 // ファイル処理
 // ----------------------------------------------------------------------
 
-// ファイルコピー
-void CopyFile( System::String ^srcpath, System::String ^dstpath );
+// ファイル全体の読み込み
+cli::array<System::Byte>^ ReadBin( System::String ^path );
+
+// ファイル全体のライト
+void WriteBin( System::String ^path, cli::array<System::Byte> ^bin );
 
 // ROMヘッダのリード
 void ReadRomHeader( System::String ^srlpath, ROM_Header *dstrh );
 
 // ROMヘッダのライト
 void WriteRomHeader( System::String ^srlpath, ROM_Header *srcrh );
+
+// バイナリからのROMヘッダの抽出
+void ExtractRomHeader( cli::array<System::Byte> ^bin, ROM_Header *dstrh );
+
+// バイナリへのROMヘッダの上書き
+void OverwriteRomHeader( cli::array<System::Byte> ^bin, ROM_Header *srcrh );
+
+// ファイルコピー
+void CopyFile( System::String ^srcpath, System::String ^dstpath );
 
 // ----------------------------------------------------------------------
 // 署名
@@ -52,3 +64,13 @@ System::String^ OpenFileUsingDialog( System::String ^defdir, System::String ^fil
 // @arg [in] ファイルの拡張子が不正なときに追加するときの正しい拡張子
 // @ret 取得したファイル名 エラーのとき nullptr
 System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^filter, System::String ^extension );
+
+// ----------------------------------------------------------------------
+// 外部プログラムの実行
+// ----------------------------------------------------------------------
+
+// maketadの実行
+// @arg [in] maketadのパス
+// @arg [in] 入力SRLのパス
+// @arg [in] 出力SRLのパス
+void makeTad( System::String ^maketad_path, System::String ^srlpath, System::String ^tadpath );

@@ -14,6 +14,178 @@ using namespace MasterEditorTWL;
 // ファイル処理
 // ----------------------------------------------------------------------
 
+// ファイル全体の読み込み
+cli::array<System::Byte>^ ReadBin( System::String ^path )
+{
+	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( path );
+	const char *pch = (const char*)ptr.ToPointer();
+	FILE       *fp = NULL;
+	System::Exception ^ex = nullptr;
+	cli::array<System::Byte> ^bin = nullptr;
+
+	try
+	{
+		if( fopen_s( &fp, pch, "rb" ) != NULL )
+		{
+			ex = gcnew System::Exception( "Fail to open file:" + path );
+			throw ex;
+		}
+
+		// ファイルサイズ分のメモリ割り当て
+		fseek( fp, 0, SEEK_END );
+		int size = ftell(fp);
+		bin = gcnew cli::array<System::Byte>(size);
+		pin_ptr<unsigned char> pbin = &bin[0];
+		
+		fseek( fp, 0, SEEK_SET );
+		if( fread( (void*)pbin, 1, size, fp ) != size )
+		{
+			ex = gcnew System::Exception( "Fail to read data from " + path );
+			throw ex;
+		}
+	}
+	finally
+	{
+		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
+		if( fp ) fclose(fp);
+		if( ex )
+		{
+			throw ex;
+		}
+	}
+	return bin;
+}
+
+// ファイル全体のライト
+void WriteBin( System::String ^path, cli::array<System::Byte> ^bin )
+{
+	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( path );
+	const char *pch = (const char*)ptr.ToPointer();
+	FILE       *fp = NULL;
+	System::Exception ^ex = nullptr;
+
+	try
+	{
+		if( fopen_s( &fp, pch, "w+b" ) != NULL )	// 上書き・バイナリ
+		{
+			ex = gcnew System::Exception( "Fail to open file:" + path );
+			throw ex;
+		}
+
+		int size = bin->Length;
+		pin_ptr<unsigned char> pbin = &bin[0];
+
+		(void)fseek( fp, 0, SEEK_SET );
+		if( fwrite( (const void*)pbin, 1, size, fp ) != size )
+		{
+			ex = gcnew System::Exception( "Fail to write data to " + path );
+			throw ex;
+		}
+	}
+	finally
+	{
+		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
+		if( fp ) fclose( fp );
+		if( ex )
+		{
+			throw ex;
+		}
+	}
+}
+
+// ROMヘッダのリード
+void ReadRomHeader( System::String ^srlpath, ROM_Header *dstrh )
+{
+	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlpath );
+	const char *pchFile = (const char*)ptr.ToPointer();
+	FILE       *fp = NULL;
+	System::Exception ^ex = nullptr;
+
+	try
+	{
+		if( fopen_s( &fp, pchFile, "rb" ) != NULL )
+		{
+			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
+			throw ex;
+		}
+		fseek( fp, 0, SEEK_SET );
+		if( fread( (void*)dstrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
+		{
+			ex = gcnew System::Exception( "Fail to read data from " + srlpath );
+			throw ex;
+		}
+	}
+	finally
+	{
+		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
+		if( fp ) fclose(fp);
+		if( ex )
+		{
+			throw ex;
+		}
+	}
+}
+
+// ROMヘッダのライト
+void WriteRomHeader( System::String ^srlpath, ROM_Header *srcrh )
+{
+	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlpath );
+	const char *pchFile = (const char*)ptr.ToPointer();
+	FILE       *fp = NULL;
+	System::Exception ^ex = nullptr;
+
+	try
+	{
+		if( fopen_s( &fp, pchFile, "r+b" ) != NULL )	// 上書き・バイナリ
+		{
+			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
+			throw ex;
+		}
+		(void)fseek( fp, 0, SEEK_SET );
+
+		if( fwrite( (const void*)srcrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
+		{
+			ex = gcnew System::Exception( "Fail to write data to " + srlpath );
+			throw ex;
+		}
+	}
+	finally
+	{
+		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
+		if( fp ) fclose( fp );
+		if( ex )
+		{
+			throw ex;
+		}
+	}
+}
+
+// バイナリからのROMヘッダの抽出
+void ExtractRomHeader( cli::array<System::Byte> ^bin, ROM_Header *dstrh )
+{
+	int size = bin->Length;
+	pin_ptr<unsigned char> pbin = &bin[0];
+
+	if( size < sizeof(ROM_Header) )
+	{
+		throw gcnew System::Exception( "The binary size is less than size of the ROM Header." );
+	}
+	memcpy( dstrh, pbin, sizeof(ROM_Header) );
+}
+
+// バイナリへのROMヘッダの上書き
+void OverwriteRomHeader( cli::array<System::Byte> ^bin, ROM_Header *srcrh )
+{
+	int size = bin->Length;
+	pin_ptr<unsigned char> pbin = &bin[0];
+
+	if( size < sizeof(ROM_Header) )
+	{
+		throw gcnew System::Exception( "The binary size is less than size of the ROM Header." );
+	}
+	memcpy( pbin, srcrh, sizeof(ROM_Header) );
+}
+
 // ファイルコピー
 #define COPY_FILE_BUFSIZE   (10*1024*1024)
 void CopyFile( System::String ^srcpath, System::String ^dstpath )
@@ -70,74 +242,6 @@ void CopyFile( System::String ^srcpath, System::String ^dstpath )
 		System::Runtime::InteropServices::Marshal::FreeHGlobal( dstptr );
 		if( ifp ) fclose(ifp);
 		if( ofp ) fclose(ofp);
-		if( ex )
-		{
-			throw ex;
-		}
-	}
-}
-
-// ROMヘッダのリード
-void ReadRomHeader( System::String ^srlpath, ROM_Header *dstrh )
-{
-	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlpath );
-	const char *pchFile = (const char*)ptr.ToPointer();
-	FILE       *fp = NULL;
-	System::Exception ^ex = nullptr;
-
-	try
-	{
-		if( fopen_s( &fp, pchFile, "rb" ) != NULL )
-		{
-			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
-			throw ex;
-		}
-		fseek( fp, 0, SEEK_SET );
-		if( fread( (void*)dstrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
-		{
-			ex = gcnew System::Exception( "Fail to read data from " + srlpath );
-			throw ex;
-		}
-	}
-	finally
-	{
-		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
-		if( fp ) fclose(fp);
-		if( ex )
-		{
-			throw ex;
-		}
-	}
-}
-
-// ROMヘッダのライト
-void WriteRomHeader( System::String ^srlpath, ROM_Header *srcrh )
-{
-	System::IntPtr ptr = System::Runtime::InteropServices::Marshal::StringToHGlobalAnsi( srlpath );
-	const char *pchFile = (const char*)ptr.ToPointer();
-	FILE       *fp = NULL;
-	System::Exception ^ex = nullptr;
-
-	// ファイルにROMヘッダをライト
-	try
-	{
-		if( fopen_s( &fp, pchFile, "r+b" ) != NULL )	// 上書き・バイナリ
-		{
-			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
-			throw ex;
-		}
-		(void)fseek( fp, 0, SEEK_SET );
-
-		if( fwrite( (const void*)srcrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
-		{
-			ex = gcnew System::Exception( "Fail to write data to " + srlpath );
-			throw ex;
-		}
-	}
-	finally
-	{
-		System::Runtime::InteropServices::Marshal::FreeHGlobal( ptr );
-		if( fp ) fclose( fp );
 		if( ex )
 		{
 			throw ex;
@@ -321,7 +425,6 @@ System::String^ OpenFileUsingDialog( System::String ^defdir, System::String ^fil
 	{
 		return nullptr;
 	}
-	defdir = System::IO::Path::GetDirectoryName( dlg->FileName );	// デフォルトディレクトリの更新
 	return System::String::Copy(dlg->FileName);
 }
 
@@ -351,11 +454,23 @@ System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^fil
 	{
 		return nullptr;
 	}
-	defdir = System::IO::Path::GetDirectoryName( dlg->FileName );
 	retfile = dlg->FileName;
 	if( !System::String::IsNullOrEmpty(extension) && !(dlg->FileName->ToLower()->EndsWith( extension->ToLower() )) )
 	{
 		retfile += extension;
 	}
 	return retfile;
+}
+
+// ----------------------------------------------------------------------
+// 外部プログラムの実行
+// ----------------------------------------------------------------------
+
+// maketadの実行
+// @arg [in] maketadのパス
+// @arg [in] 入力SRLのパス
+// @arg [in] 出力SRLのパス
+void makeTad( System::String ^maketad_path, System::String ^srlpath, System::String ^tadpath )
+{
+	System::Diagnostics::Process::Start( maketad_path, "\"" + srlpath + "\" -o \"" + tadpath + "\"" );
 }

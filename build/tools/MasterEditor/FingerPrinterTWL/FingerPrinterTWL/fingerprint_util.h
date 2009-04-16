@@ -45,8 +45,11 @@ cli::array<System::Byte>^ TransStringToBytes( System::String ^src, const int len
 // 16進文字列をバイト配列に変換
 cli::array<System::Byte>^ TransHexStringToBytes( System::String ^src, const int len );
 
-// バイト配列を16進文字列に変換
+// バイト配列を文字列に変換
 System::String^ TransBytesToString( cli::array<System::Byte> ^bytes );
+
+// バイト配列を16進文字列に変換
+System::String^ TransBytesToHexString( cli::array<System::Byte> ^bytes );
 
 // ----------------------------------------------------------------------
 // GUI

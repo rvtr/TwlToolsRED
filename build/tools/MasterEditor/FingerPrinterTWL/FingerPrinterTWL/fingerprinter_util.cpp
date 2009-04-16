@@ -382,6 +382,31 @@ cli::array<System::Byte>^ TransHexStringToBytes( System::String ^src, const int 
 	return bytes;
 }
 
+// バイト配列を文字列に変換
+System::String^ TransBytesToString( cli::array<System::Byte> ^bytes )
+{
+	System::String ^str = gcnew System::String("");
+	int i;
+	for( i=0; i < bytes->Length; i++ )
+	{
+		if( (0x20 <= bytes[i]) && (bytes[i] <= 0x7E) )
+		{
+			char c[2];
+			c[0] = bytes[i]; c[1] = 0;
+			str += gcnew System::String( c );
+		}
+		else
+		{
+			str += " ";
+		}
+		if( !((i+1) % 16) )
+		{
+			str += "\r\n";
+		}
+	}
+	return str;
+}
+
 // バイト配列を16進文字列に変換
 System::String^ TransBytesToHexString( cli::array<System::Byte> ^bytes )
 {
@@ -392,7 +417,14 @@ System::String^ TransBytesToHexString( cli::array<System::Byte> ^bytes )
 	{
 		System::Byte b = bytes[i];
 		str += System::String::Format( "{0:X02}", (char)b );
-		str += " ";
+		if( (i+1) % 16 )
+		{
+			str += " ";
+		}
+		else
+		{
+			str += "\r\n";
+		}
 	}
 	return str;
 }

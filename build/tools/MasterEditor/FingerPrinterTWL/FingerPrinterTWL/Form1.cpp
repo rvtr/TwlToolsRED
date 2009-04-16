@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
 #include "Form1.h"
+#include "FormCheck.h"
+#include "FormAbout.h"
 #include <twl/types.h>
 #include <twl/os/common/format_rom.h>
 #include <cstring>
@@ -103,6 +105,14 @@ void Form1::commonOpenRom( System::String ^srcpath )
 	}
 	memset( this->rh, 0, sizeof(ROM_Header) );
 	ExtractRomHeader( this->srlbin, this->rh );
+
+	// すでにフィンガープリントされている場合には注意書きを表示
+	if( this->isFingerprint() )
+	{
+		FormCheck ^form = gcnew FormCheck;
+		form->displayFingerprint( this->rh->s.reserved_C );
+		form->Show();
+	}
 }
 
 void Form1::commonSaveRom( System::String ^dstpath )
@@ -211,6 +221,18 @@ void Form1::procSaveRomButton()
 	}
 }
 
+void Form1::procAboutButton()
+{
+	try
+	{
+		FormAbout ^form = gcnew FormAbout;
+		form->Show();
+	}
+	catch( System::Exception ^ex )
+	{
+		this->errMsg( ex->Message );
+	}
+}
 
 // ------------------------------------------------------------------
 // エラーメッセージ

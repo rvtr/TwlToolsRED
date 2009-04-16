@@ -216,6 +216,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FormAbout.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\FormCheck.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\MasterEditorTWL\MasterEditorTWL\keys.cpp"
 				>
 			</File>
@@ -263,6 +271,26 @@
 				>
 				<File
 					RelativePath=".\Form1.resX"
+					SubType="Designer"
+					>
+				</File>
+			</File>
+			<File
+				RelativePath=".\FormAbout.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\FormAbout.resx"
+					SubType="Designer"
+					>
+				</File>
+			</File>
+			<File
+				RelativePath=".\FormCheck.h"
+				FileType="3"
+				>
+				<File
+					RelativePath=".\FormCheck.resx"
 					SubType="Designer"
 					>
 				</File>

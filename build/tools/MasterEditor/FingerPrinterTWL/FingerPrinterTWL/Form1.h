@@ -94,6 +94,9 @@ namespace FingerPrinterTWL {
 			this->labFile = (gcnew System::Windows::Forms::Label());
 			this->butFile = (gcnew System::Windows::Forms::Button());
 			this->gboxFP = (gcnew System::Windows::Forms::GroupBox());
+			this->gboxFormat = (gcnew System::Windows::Forms::GroupBox());
+			this->rTad = (gcnew System::Windows::Forms::RadioButton());
+			this->rSrl = (gcnew System::Windows::Forms::RadioButton());
 			this->labFP = (gcnew System::Windows::Forms::Label());
 			this->labShorter = (gcnew System::Windows::Forms::Label());
 			this->butFP = (gcnew System::Windows::Forms::Button());
@@ -104,12 +107,9 @@ namespace FingerPrinterTWL {
 			this->rString = (gcnew System::Windows::Forms::RadioButton());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->gboxFormat = (gcnew System::Windows::Forms::GroupBox());
-			this->rSrl = (gcnew System::Windows::Forms::RadioButton());
-			this->rTad = (gcnew System::Windows::Forms::RadioButton());
 			this->gboxFP->SuspendLayout();
-			this->gboxType->SuspendLayout();
 			this->gboxFormat->SuspendLayout();
+			this->gboxType->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tboxFile
@@ -153,6 +153,40 @@ namespace FingerPrinterTWL {
 			this->gboxFP->Size = System::Drawing::Size(458, 299);
 			this->gboxFP->TabIndex = 3;
 			this->gboxFP->TabStop = false;
+			// 
+			// gboxFormat
+			// 
+			this->gboxFormat->Controls->Add(this->rTad);
+			this->gboxFormat->Controls->Add(this->rSrl);
+			this->gboxFormat->Location = System::Drawing::Point(22, 101);
+			this->gboxFormat->Name = L"gboxFormat";
+			this->gboxFormat->Size = System::Drawing::Size(161, 76);
+			this->gboxFormat->TabIndex = 6;
+			this->gboxFormat->TabStop = false;
+			this->gboxFormat->Text = L"Output Format";
+			// 
+			// rTad
+			// 
+			this->rTad->AutoSize = true;
+			this->rTad->Location = System::Drawing::Point(12, 49);
+			this->rTad->Name = L"rTad";
+			this->rTad->Size = System::Drawing::Size(46, 16);
+			this->rTad->TabIndex = 1;
+			this->rTad->TabStop = true;
+			this->rTad->Text = L"TAD";
+			this->rTad->UseVisualStyleBackColor = true;
+			// 
+			// rSrl
+			// 
+			this->rSrl->AutoSize = true;
+			this->rSrl->Checked = true;
+			this->rSrl->Location = System::Drawing::Point(12, 24);
+			this->rSrl->Name = L"rSrl";
+			this->rSrl->Size = System::Drawing::Size(44, 16);
+			this->rSrl->TabIndex = 0;
+			this->rSrl->TabStop = true;
+			this->rSrl->Text = L"SRL";
+			this->rSrl->UseVisualStyleBackColor = true;
 			// 
 			// labFP
 			// 
@@ -242,6 +276,7 @@ namespace FingerPrinterTWL {
 			this->button1->TabIndex = 4;
 			this->button1->Text = L"About This Application";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Form1::button1_Click);
 			// 
 			// label1
 			// 
@@ -251,40 +286,6 @@ namespace FingerPrinterTWL {
 			this->label1->Size = System::Drawing::Size(260, 12);
 			this->label1->TabIndex = 5;
 			this->label1->Text = L"Supported ROM type: TWL application (SRL/TAD)";
-			// 
-			// gboxFormat
-			// 
-			this->gboxFormat->Controls->Add(this->rTad);
-			this->gboxFormat->Controls->Add(this->rSrl);
-			this->gboxFormat->Location = System::Drawing::Point(22, 101);
-			this->gboxFormat->Name = L"gboxFormat";
-			this->gboxFormat->Size = System::Drawing::Size(161, 76);
-			this->gboxFormat->TabIndex = 6;
-			this->gboxFormat->TabStop = false;
-			this->gboxFormat->Text = L"Output Format";
-			// 
-			// rSrl
-			// 
-			this->rSrl->AutoSize = true;
-			this->rSrl->Checked = true;
-			this->rSrl->Location = System::Drawing::Point(12, 24);
-			this->rSrl->Name = L"rSrl";
-			this->rSrl->Size = System::Drawing::Size(44, 16);
-			this->rSrl->TabIndex = 0;
-			this->rSrl->TabStop = true;
-			this->rSrl->Text = L"SRL";
-			this->rSrl->UseVisualStyleBackColor = true;
-			// 
-			// rTad
-			// 
-			this->rTad->AutoSize = true;
-			this->rTad->Location = System::Drawing::Point(12, 49);
-			this->rTad->Name = L"rTad";
-			this->rTad->Size = System::Drawing::Size(46, 16);
-			this->rTad->TabIndex = 1;
-			this->rTad->TabStop = true;
-			this->rTad->Text = L"TAD";
-			this->rTad->UseVisualStyleBackColor = true;
 			// 
 			// Form1
 			// 
@@ -303,10 +304,10 @@ namespace FingerPrinterTWL {
 			this->DragEnter += gcnew System::Windows::Forms::DragEventHandler(this, &Form1::Form1_DragEnter);
 			this->gboxFP->ResumeLayout(false);
 			this->gboxFP->PerformLayout();
-			this->gboxType->ResumeLayout(false);
-			this->gboxType->PerformLayout();
 			this->gboxFormat->ResumeLayout(false);
 			this->gboxFormat->PerformLayout();
+			this->gboxType->ResumeLayout(false);
+			this->gboxType->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -339,6 +340,7 @@ namespace FingerPrinterTWL {
 	private:
 		void procOpenRomButton( System::String ^path );
 		void procSaveRomButton();
+		void procAboutButton();
 
 	// ダイアログ
 	private:
@@ -375,6 +377,12 @@ namespace FingerPrinterTWL {
 			array<String^> ^files = dynamic_cast< array<String^> ^>(e->Data->GetData( DataFormats::FileDrop ) );
 			String ^path = files[0];
 			this->procOpenRomButton( path );	// ボタンが押されたときと同じ挙動
+		}
+		// 再びボタン
+	private:
+		System::Void button1_Click(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->procAboutButton();
 		}
 };
 }

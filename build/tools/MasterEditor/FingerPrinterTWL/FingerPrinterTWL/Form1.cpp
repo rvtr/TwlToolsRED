@@ -27,7 +27,7 @@ void Form1::construct()
 	System::String ^example = "Input Example\r\n\r\n"
 							+ "(1)String of ASCII Charactors\r\n"
 		                    + "  *ABCD\r\n"
-							+ "  => register \"41424344\" (\'T\' \'E\' \'S\' \'T\')\r\n\r\n"
+							+ "  => register \"41424344\" (\'A\' \'B\' \'C\' \'D\')\r\n\r\n"
 							+ "(2)Hexadecimal Numbers\r\n"
 							+ "  *5A6B78014A235A\r\n"
 							+ "  *5a6b78014a235a\r\n"

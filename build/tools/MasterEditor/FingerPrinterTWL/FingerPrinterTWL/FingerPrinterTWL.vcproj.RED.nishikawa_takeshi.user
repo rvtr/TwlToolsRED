@@ -11,7 +11,7 @@
 			<DebugSettings
 				Command="$(TargetPath)"
 				WorkingDirectory=""
-				CommandArguments="-a TEST &quot;C:\\test_program.nand.tad&quot; -t test.tad"
+				CommandArguments=""
 				Attach="false"
 				DebuggerType="3"
 				Remote="1"

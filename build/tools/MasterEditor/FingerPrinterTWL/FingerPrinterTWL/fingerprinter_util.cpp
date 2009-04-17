@@ -344,12 +344,12 @@ cli::array<System::Byte>^ TransStringToBytes( System::String ^src, const int len
 		bytes[i] = 0;
 	}
 
-	int j=0;
+	int n = (len < src->Length)?len:src->Length;
 	for( i=0; i < src->Length; i++ )
 	{
-		if( (src[i] != ' ') && (j < len) )
+		if( i < len )
 		{
-			bytes[j++] = (System::Byte)src[i];
+			bytes[i] = (System::Byte)src[i];
 		}
 	}
 	return bytes;
@@ -376,6 +376,10 @@ cli::array<System::Byte>^ TransHexStringToBytes( System::String ^src, const int 
 		}
 		if( (src[i] != ' ') && (j < len) )
 		{
+			if( (i+1) >= src->Length )
+			{
+				throw gcnew System::Exception("One hexadecimal number must be expressed by 2 charactors, for example \"6B\".");
+			}
 			bytes[j++] = System::Byte::Parse(src->Substring(i,2), System::Globalization::NumberStyles::HexNumber);
 			i += 2;
 		}
@@ -521,6 +525,10 @@ void makeTad( System::String ^maketad_path, System::String ^srlpath, System::Str
 	if( output != "" )
 	{
 		throw gcnew System::Exception("Failed to transform SRL to TAD.");
+	}
+	else
+	{
+		System::Console::WriteLine( "Succeeded to transform." );
 	}
 }
 

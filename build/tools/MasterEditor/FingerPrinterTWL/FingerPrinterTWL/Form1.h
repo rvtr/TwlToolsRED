@@ -338,8 +338,9 @@ namespace FingerPrinterTWL {
 
 	// ボタンが押されたときの処理(例外catchを入れること)
 	private:
-		void procOpenRomButton( System::String ^path );
+		void procOpenRomButton();
 		void procSaveRomButton();
+		void procDragDrop( System::String ^rompath );
 		void procAboutButton();
 
 	// ダイアログ
@@ -355,7 +356,7 @@ namespace FingerPrinterTWL {
 	private:
 		System::Void butFile_Click(System::Object^  sender, System::EventArgs^  e)
 		{
-			this->procOpenRomButton(nullptr);
+			this->procOpenRomButton();
 		}
 	private:
 		System::Void butFP_Click(System::Object^  sender, System::EventArgs^  e)
@@ -376,7 +377,7 @@ namespace FingerPrinterTWL {
 		{
 			array<String^> ^files = dynamic_cast< array<String^> ^>(e->Data->GetData( DataFormats::FileDrop ) );
 			String ^path = files[0];
-			this->procOpenRomButton( path );	// ボタンが押されたときと同じ挙動
+			this->procDragDrop( path );
 		}
 		// 再びボタン
 	private:

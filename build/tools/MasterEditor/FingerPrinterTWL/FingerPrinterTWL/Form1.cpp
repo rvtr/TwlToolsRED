@@ -94,7 +94,7 @@ void Form1::commonOpenRom( System::String ^srcpath )
 		System::String ^tmp = ".\\tmp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".srl";
 		if( splitTad(srcpath, tmp) < 0 )
 		{
-			throw gcnew Exception("Fail to transform TAD => SRL.");
+			throw gcnew Exception("Failed to transform TAD => SRL.");
 		}
 		this->srlbin = ReadBin(tmp);
 		System::IO::File::Delete(tmp);	// 中間ファイルを削除する
@@ -132,7 +132,7 @@ void Form1::commonSaveRom( System::String ^dstpath )
 
 	if( this->rTad->Checked && !(this->rh->s.titleID_Hi && TITLE_ID_MEDIA_MASK) )
 	{
-		throw gcnew Exception("Cannot make TAD file for software intended for Game Card.");	
+		throw gcnew Exception("Cannot make TAD file from the software intended for Game Card.");	
 	}
 
 	this->fingerprintRomHeader();
@@ -144,6 +144,7 @@ void Form1::commonSaveRom( System::String ^dstpath )
 		System::String ^tmp = ".\\tmp" + System::DateTime::Now.ToString("yyyyMMddHHmmss") + ".srl";
 		WriteBin( tmp, this->srlbin );
 		makeTad( maketad_path, tmp, dstpath );
+		System::IO::File::Delete(tmp);
 	}
 	else
 	{
@@ -155,19 +156,11 @@ void Form1::commonSaveRom( System::String ^dstpath )
 // ボタンが押されたときの処理 (catch文必須)
 // ------------------------------------------------------------------
 
-void Form1::procOpenRomButton( System::String ^path )
+void Form1::procOpenRomButton()
 {
 	try
 	{
-		System::String ^rompath = nullptr;
-		if( !path )
-		{
-			rompath = OpenFileUsingDialog( this->prevDir, "rom format (*.srl;*.tad)|*.srl;*.tad|All files (*.*)|*.*" );
-		}
-		else
-		{
-			rompath = System::String::Copy(path);
-		}
+		System::String ^rompath = OpenFileUsingDialog( this->prevDir, "rom format (*.srl;*.tad)|*.srl;*.tad|All files (*.*)|*.*" );
 		if( !rompath )
 		{
 			return;
@@ -177,10 +170,7 @@ void Form1::procOpenRomButton( System::String ^path )
 		this->tboxFile->SelectionStart = rompath->Length;	// 入りきらないときに右端を表示する
 		this->rSrl->Checked = true;
 		this->rTad->Checked = false;
-		if( !path )
-		{
-			this->prevDir = System::IO::Path::GetDirectoryName( rompath );	// あらかじめパスが指定されたときには更新しない
-		}
+		this->prevDir = System::IO::Path::GetDirectoryName( rompath );	// あらかじめパスが指定されたときには更新しない
 	}
 	catch( System::Exception ^ex )
 	{
@@ -217,6 +207,23 @@ void Form1::procSaveRomButton()
 	}
 	catch( System::Exception ^ex )
 	{
+		this->errMsg( ex->Message );
+	}
+}
+
+void Form1::procDragDrop( System::String ^rompath )
+{
+	try
+	{
+		this->commonOpenRom( rompath );
+		this->tboxFile->Text = rompath;
+		this->tboxFile->SelectionStart = rompath->Length;	// 入りきらないときに右端を表示する
+		this->rSrl->Checked = true;
+		this->rTad->Checked = false;
+	}
+	catch( System::Exception ^ex )
+	{
+		this->tboxFile->Text = "";		// クリア
 		this->errMsg( ex->Message );
 	}
 }

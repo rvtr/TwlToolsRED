@@ -7,6 +7,7 @@
 #include <cstring>
 #include <cstdio>
 #include <MasterEditorTWL/keys.h>
+#include "fingerprint_util.h"
 
 using namespace MasterEditorTWL;
 
@@ -27,7 +28,7 @@ cli::array<System::Byte>^ ReadBin( System::String ^path )
 	{
 		if( fopen_s( &fp, pch, "rb" ) != NULL )
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + path );
+			ex = gcnew System::Exception( "Failed to open file:" + path );
 			throw ex;
 		}
 
@@ -40,7 +41,7 @@ cli::array<System::Byte>^ ReadBin( System::String ^path )
 		fseek( fp, 0, SEEK_SET );
 		if( fread( (void*)pbin, 1, size, fp ) != size )
 		{
-			ex = gcnew System::Exception( "Fail to read data from " + path );
+			ex = gcnew System::Exception( "Failed to read data from " + path );
 			throw ex;
 		}
 	}
@@ -68,7 +69,7 @@ void WriteBin( System::String ^path, cli::array<System::Byte> ^bin )
 	{
 		if( fopen_s( &fp, pch, "w+b" ) != NULL )	// 上書き・バイナリ
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + path );
+			ex = gcnew System::Exception( "Failed to open file:" + path );
 			throw ex;
 		}
 
@@ -78,7 +79,7 @@ void WriteBin( System::String ^path, cli::array<System::Byte> ^bin )
 		(void)fseek( fp, 0, SEEK_SET );
 		if( fwrite( (const void*)pbin, 1, size, fp ) != size )
 		{
-			ex = gcnew System::Exception( "Fail to write data to " + path );
+			ex = gcnew System::Exception( "Failed to write data to " + path );
 			throw ex;
 		}
 	}
@@ -105,13 +106,13 @@ void ReadRomHeader( System::String ^srlpath, ROM_Header *dstrh )
 	{
 		if( fopen_s( &fp, pchFile, "rb" ) != NULL )
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
+			ex = gcnew System::Exception( "Failed to open file:" + srlpath );
 			throw ex;
 		}
 		fseek( fp, 0, SEEK_SET );
 		if( fread( (void*)dstrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
 		{
-			ex = gcnew System::Exception( "Fail to read data from " + srlpath );
+			ex = gcnew System::Exception( "Failed to read data from " + srlpath );
 			throw ex;
 		}
 	}
@@ -138,14 +139,14 @@ void WriteRomHeader( System::String ^srlpath, ROM_Header *srcrh )
 	{
 		if( fopen_s( &fp, pchFile, "r+b" ) != NULL )	// 上書き・バイナリ
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + srlpath );
+			ex = gcnew System::Exception( "Failed to open file:" + srlpath );
 			throw ex;
 		}
 		(void)fseek( fp, 0, SEEK_SET );
 
 		if( fwrite( (const void*)srcrh, 1, sizeof(ROM_Header), fp ) != sizeof(ROM_Header) )
 		{
-			ex = gcnew System::Exception( "Fail to write data to " + srlpath );
+			ex = gcnew System::Exception( "Failed to write data to " + srlpath );
 			throw ex;
 		}
 	}
@@ -202,12 +203,12 @@ void CopyFile( System::String ^srcpath, System::String ^dstpath )
 	{
 		if( fopen_s( &ifp, pchSrcFile, "rb" ) != NULL )
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + srcpath );
+			ex = gcnew System::Exception( "Failed to open file:" + srcpath );
 			throw ex;
 		}
 		if( fopen_s( &ofp, pchDstFile, "wb" ) != NULL )	// 同名ファイルを削除して新規にライト・バイナリ
 		{
-			ex = gcnew System::Exception( "Fail to open file:" + dstpath );
+			ex = gcnew System::Exception( "Failed to open file:" + dstpath );
 			throw ex;
 		}
 
@@ -225,12 +226,12 @@ void CopyFile( System::String ^srcpath, System::String ^dstpath )
 
 			if( datasize != fread(buf, 1, datasize, ifp) )
 			{
-				ex = gcnew System::Exception( "Fail to read data from " + srcpath );
+				ex = gcnew System::Exception( "Failed to read data from " + srcpath );
 				throw ex;
 			}
 			if( datasize != fwrite(buf, 1, datasize, ofp) )
 			{
-				ex = gcnew System::Exception( "Fail to write data to " + dstpath );
+				ex = gcnew System::Exception( "Failed to write data to " + dstpath );
 				throw ex;
 			}
 			size -= datasize;
@@ -307,7 +308,7 @@ void SignRomHeader( ROM_Header *rh )
 	result = ACSign_Encrypto( signDst, privateKey, &signSrc, sizeof(SignatureData) ); 
 	if( !result )
 	{
-		throw gcnew System::Exception( "Exception: Fail to calc the hash of the ROM header." );
+		throw gcnew System::Exception( "Exception: Failed to calc the hash of the ROM header." );
 	}
 
 	// 署名を解除してダイジェストと一致するかベリファイする
@@ -319,7 +320,7 @@ void SignRomHeader( ROM_Header *rh )
 	}
 	if( !result || (memcmp( &signSrc, &(decryptBlock[pos+1]), sizeof(SignatureData) ) != 0) )
 	{
-		throw gcnew System::Exception( "Exception: Fail to compare the hash of the ROM header." );
+		throw gcnew System::Exception( "Exception: Failed to compare the hash of the ROM header." );
 	}
 
 	// ROMヘッダに署名を上書き
@@ -504,5 +505,97 @@ System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^fil
 // @arg [in] 出力SRLのパス
 void makeTad( System::String ^maketad_path, System::String ^srlpath, System::String ^tadpath )
 {
-	System::Diagnostics::Process::Start( maketad_path, "\"" + srlpath + "\" -o \"" + tadpath + "\"" );
+	System::Diagnostics::ProcessStartInfo ^info = gcnew System::Diagnostics::ProcessStartInfo();
+	info->FileName  = maketad_path; 
+	info->Arguments = "\"" + srlpath + "\" -o \"" + tadpath + "\"";
+	info->CreateNoWindow  = true;
+	info->UseShellExecute = false;
+	info->RedirectStandardError  = true;
+
+	System::Diagnostics::Process ^p = System::Diagnostics::Process::Start( info );
+	//p->WaitForExit();
+	System::String ^output = p->StandardError->ReadToEnd();
+	output->Replace( (char)'\r\r\n', (char)'\n' );
+	System::Console::WriteLine( "{0}", output );
+
+	if( output != "" )
+	{
+		throw gcnew System::Exception("Failed to transform SRL to TAD.");
+	}
+}
+
+// ----------------------------------------------------------------------
+// コンソール
+// ----------------------------------------------------------------------
+
+// getopt : 引数を解析してオプションが見つかったら1つ返す
+// @arg [in/out] 引数 (オプションが見つかった場合削除されていく)
+// @arg [in]     オプション許可リスト
+// @arg [out]    オプション引数の格納場所 (ない場合 nullptrが入る)
+// @ret          最初に見つかったオプション
+char getopt( cli::array<System::String^> ^%args, System::String ^condition, System::String ^% optarg )
+{
+	char opt=0;
+
+	// 初期化
+	optarg = nullptr;
+
+	// オプションを探して条件に合うかどうかを調べる
+	int ai;
+	int ci = 0;
+	for( ai=0; ai < args->Length; ai++ )
+	{
+		System::String ^arg = args[ai];
+		if( arg->StartsWith("-") && arg->Length >= 2 )
+		{
+			// 条件に合うオプションかどうかを調べる
+			ci = condition->IndexOf( arg[1] );
+			if( ci >= 0 )
+			{
+				opt = (char)condition[ci];
+			}
+			break;
+		}
+	}
+	// オプションはあったが条件にない不正なオプションだった
+	if( ci < 0 )
+	{
+		return ((char)0);
+	}
+	// オプションが存在しなかった
+	if( ai == args->Length )
+	{
+		return ((char)-1);
+	}
+
+	// オプション引数があるかチェック
+	if( ((ci+1) < condition->Length) && (condition[ci+1] == ':') )
+	{
+		if( ((ai+1) < args->Length) && !args[ai+1]->StartsWith("-") )
+		{
+			optarg = System::String::Copy(args[ai+1]);
+			shrinkArgs( args, ai+1);
+		}
+		else
+		{
+			return ((char)0);	// オプション引数がない
+		}
+	}
+
+	// オプションを削除する
+	shrinkArgs( args, ai );
+	return opt;	
+}
+
+// args から特定の要素を削除
+// @arg [in] 引数
+// @arg [in] 削除する要素のインデックス
+void shrinkArgs( cli::array<System::String^> ^%args, const int index )
+{
+	int i;
+	for( i=index+1; i < args->Length; i++ )
+	{
+		args[i-1] = args[i];
+	}
+	cli::array<System::String^>::Resize( args, args->Length - 1 );
 }

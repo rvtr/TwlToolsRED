@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fingerprint_console.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\fingerprinter_util.cpp"
 				>
 			</File>

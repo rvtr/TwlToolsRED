@@ -77,3 +77,19 @@ System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^fil
 // @arg [in] 入力SRLのパス
 // @arg [in] 出力SRLのパス
 void makeTad( System::String ^maketad_path, System::String ^srlpath, System::String ^tadpath );
+
+// ----------------------------------------------------------------------
+// コンソール
+// ----------------------------------------------------------------------
+
+// getopt : 引数を解析してオプションが見つかったら1つ返す
+// @arg [in/out] 引数 (オプションが見つかった場合削除されていく)
+// @arg [in]     オプション許可リスト
+// @arg [out]    オプション引数の格納場所 (ない場合 nullptrが入る)
+// @ret          最初に見つかったオプション
+char getopt( cli::array<System::String^> ^%args, System::String ^condition, System::String ^% optarg );
+
+// args から特定の要素を削除
+// @arg [in] 引数
+// @arg [in] 削除する要素のインデックス
+void shrinkArgs( cli::array<System::String^> ^%args, const int index );

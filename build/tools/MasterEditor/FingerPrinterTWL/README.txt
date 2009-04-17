@@ -29,10 +29,12 @@ Required Environment
 
 Microsoft Windows XP SP2
 Microsoft .NET Framework 2.0
-maketad.exe : included in TwlSDK
-And following DLLs, which are not included in this package.
-  - cygwin1.dll
-  - cygcrypto-0.9.8.dll
+
+Store following program and DLLs, which are not included in this package,
+into the install folder.
+  - maketad.exe (included in TwlSDK)
+  - cygwin1.dll (included in Cygwin)
+  - cygcrypto-0.9.8.dll (included in OpenSSL)
 
 =======================================================================
 Using the Tool

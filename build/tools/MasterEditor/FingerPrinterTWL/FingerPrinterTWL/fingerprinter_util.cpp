@@ -269,34 +269,10 @@ void SignRomHeader( ROM_Header *rh )
 	ACSign_DigestUnit(
 		signSrc.digest,
 		rh,
-		(u32)&(rh->certificate) - (u32)rh		// this->pRomHeader はマネージヒープ上にあるので実アドレスを取得できない
+		(u32)&(rh->certificate) - (u32)rh
 	);
 
 	// 鍵を選ぶ
-#ifdef METWL_VER_APPTYPE_LAUNCHER
-	if( this->IsAppLauncher )
-	{
-		privateKey = (u8*)g_devPrivKey_DER_launcher;
-		publicKey  = (u8*)g_devPubKey_DER_launcher;
-	}
-	else
-#endif //METWL_VER_APPTYPE_LAUNCHER
-#ifdef METWL_VER_APPTYPE_SECURE
-	if( this->IsAppSecure )
-	{
-		privateKey = (u8*)g_devPrivKey_DER_secure;
-		publicKey  = (u8*)g_devPubKey_DER_secure;
-	}
-	else
-#endif //METWL_VER_APPTYPE_SECURE
-#ifdef METWL_VER_APPTYPE_SYSTEM
-	if( this->IsAppSystem )
-	{
-		privateKey = (u8*)g_devPrivKey_DER_system;
-		publicKey  = (u8*)g_devPubKey_DER_system;
-	}
-	else
-#endif //METWL_VER_APPTYPE_SYSTEM
 #ifdef METWL_VER_APPTYPE_USER
 	{
 		privateKey = (u8*)g_devPrivKey_DER;
@@ -328,6 +304,49 @@ void SignRomHeader( ROM_Header *rh )
 
 } // ECSrlResult RCSrl::signRomHeader(void)
 
+// ROMヘッダの署名チェック
+void AuthenticateRomHeader( ROM_Header *rh )
+{
+	u8     original[ RSA_KEY_LENGTH ];	// 署名外した後のデータ格納先
+	s32    pos = 0;						// ブロックの先頭アドレス
+	u8     digest[ DIGEST_SIZE_SHA1 ];	// ROMヘッダのダイジェスト
+	u8    *publicKey = (u8*)g_devPubKey_DER;
+
+	// <データの流れ>
+	// (1) 公開鍵で復号した結果(ブロック)をローカル変数(original)に格納
+	// (2) ブロックから余分な部分を取り除いて引数(pDst)にコピー
+
+#ifdef METWL_VER_APPTYPE_USER
+	{
+		publicKey  = (u8*)g_devPubKey_DER;
+	}
+#endif //METWL_VER_APPTYPE_USER
+
+	// 署名の解除 = 公開鍵で復号
+	if( !ACSign_Decrypto( original, publicKey, rh->signature, RSA_KEY_LENGTH ) )
+	{
+		throw gcnew System::Exception("Failed to decrypt the ROM signature.");
+	}
+	// 署名前データを復号後ブロックからゲット
+	for( pos=0; pos < (RSA_KEY_LENGTH-2); pos++ )   // 本来ブロックの先頭は0x00だが復号化の内部処理によって消える仕様
+	{
+		// 暗号ブロック形式 = 0x00, BlockType, Padding, 0x00, 実データ
+		if( original[pos] == 0x00 )                               // 実データの直前の0x00をサーチ
+		{
+			break;
+		}
+	}
+	// ベリファイ
+	// ROMヘッダのダイジェストを算出(先頭から証明書領域の直前までが対象)
+	ACSign_DigestUnit( digest,	rh, (u32)&(rh->certificate) - (u32)rh );
+	if( memcmp( &(original[pos+1]), digest, DIGEST_SIZE_SHA1 ) != 0 )
+	{
+		System::String ^msg =
+			"Failed to verify the ROM digest data.\r\n" 
+			+"Either this is not TWL-compatible or TWL-exclusive ROM data, or the ROM data may have been modified.";
+		throw gcnew System::Exception(msg);
+	}
+}
 
 // ----------------------------------------------------------------------
 // 変換

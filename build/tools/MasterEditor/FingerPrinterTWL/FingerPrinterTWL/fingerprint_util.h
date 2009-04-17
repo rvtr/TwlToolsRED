@@ -35,6 +35,9 @@ void CopyFile( System::String ^srcpath, System::String ^dstpath );
 // ROMヘッダに署名をつける
 void SignRomHeader( ROM_Header *rh );
 
+// ROMヘッダの署名チェック
+void AuthenticateRomHeader( ROM_Header *rh );
+
 // ----------------------------------------------------------------------
 // 変換
 // ----------------------------------------------------------------------

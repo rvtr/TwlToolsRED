@@ -26,8 +26,8 @@ void Form1::construct()
 
 	System::String ^example = "Input Example\r\n\r\n"
 							+ "(1)String of ASCII Charactors\r\n"
-		                    + "  *ABCD\r\n"
-							+ "  => register \"41424344\" (\'A\' \'B\' \'C\' \'D\')\r\n\r\n"
+		                    + "  *AB  CD\r\n"
+							+ "  => register \"4142204344\" (\'A\' \'B\' \'  \' \'C\' \'D\')\r\n\r\n"
 							+ "(2)Hexadecimal Numbers\r\n"
 							+ "  *5A6B78014A235A\r\n"
 							+ "  *5a6b78014a235a\r\n"
@@ -105,6 +105,7 @@ void Form1::commonOpenRom( System::String ^srcpath )
 	}
 	memset( this->rh, 0, sizeof(ROM_Header) );
 	ExtractRomHeader( this->srlbin, this->rh );
+	AuthenticateRomHeader( this->rh );
 
 	// すでにフィンガープリントされている場合には注意書きを表示
 	if( this->isFingerprint() )
@@ -183,6 +184,10 @@ void Form1::procSaveRomButton()
 {
 	try
 	{
+		if( System::String::IsNullOrEmpty(this->tboxFile->Text) )
+		{
+			throw gcnew Exception("The input ROM file has not read yet.");
+		}
 		System::String ^format = nullptr;
 		System::String ^ext = nullptr;
 		if( this->rTad->Checked )
@@ -248,7 +253,7 @@ void Form1::procAboutButton()
 void Form1::sucMsg( System::String ^fmt, ... cli::array<System::String^> ^args )
 {
 	System::String ^msg = System::String::Format( fmt, args );	// 書式をStringに展開
-	MessageBox::Show( msg, "SUCCESS", MessageBoxButtons::OK, MessageBoxIcon::Information );
+	MessageBox::Show( msg, "SUCCESS", MessageBoxButtons::OK, MessageBoxIcon::None );
 }
 
 void Form1::errMsg( System::String ^fmt, ... cli::array<System::String^> ^args )

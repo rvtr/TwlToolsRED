@@ -4,6 +4,7 @@
 #include "Form1.h"
 
 extern void fingerprintConsole( cli::array<System::String^> ^args );
+void setpath();
 
 using namespace FingerPrinterTWL;
 
@@ -17,6 +18,8 @@ int main(array<System::String ^> ^args)
 		if( arg->StartsWith("-") && (arg->IndexOf('g') >= 0) )
 		{
 			guimode = true;
+			setpath();
+			break;
 		}
 	}
 
@@ -31,6 +34,7 @@ int main(array<System::String ^> ^args)
 	}
 	else
 	{
+		setpath();	// コマンドライン起動のときにはPATHを設定する
 		try
 		{
 			fingerprintConsole( args );
@@ -43,3 +47,11 @@ int main(array<System::String ^> ^args)
 	}
 	return 0;
 }
+
+// 環境変数PATHの設定
+void setpath()
+{
+	System::String ^bindir = System::IO::Path::GetDirectoryName( System::Reflection::Assembly::GetEntryAssembly()->Location );
+	System::Environment::SetEnvironmentVariable( "PATH", bindir );
+}
+

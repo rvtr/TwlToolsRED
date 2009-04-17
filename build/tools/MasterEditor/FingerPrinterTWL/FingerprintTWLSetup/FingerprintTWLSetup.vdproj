@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:FingerprintTWLSetup"
+"ProjectName" = "8:FingerprinterTWLSetup"
 "LanguageId" = "3:0"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:0"
@@ -15,13 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_3B49ADDB433A430DBABEA66B4C6F4E5F"
-        "OwnerKey" = "8:_3DFFDFF35E454135AD3FBE6F59C6BCA0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3DFFDFF35E454135AD3FBE6F59C6BCA0"
+        "MsmKey" = "8:_AEAD81F7D6FC43AFB5C54B548CEE51B2"
         "OwnerKey" = "8:_B144741D3BBE43B9B8E91A95FE18B531"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -29,6 +23,18 @@
         {
         "MsmKey" = "8:_B144741D3BBE43B9B8E91A95FE18B531"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D4ECA7596ABB498FB1CB5014C2A62F23"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F0BED259DF1F4E8FAC8CF1BA7C2C89DA"
+        "OwnerKey" = "8:_AEAD81F7D6FC43AFB5C54B548CEE51B2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,7 +57,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:Debug\\FingerprintTWLSetup.msi"
+        "OutputFilename" = "8:Debug\\FingerprinterTWLSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -88,7 +94,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\FingerprintTWLSetup.msi"
+        "OutputFilename" = "8:Release\\FingerprinterTWLSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -148,6 +154,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D4ECA7596ABB498FB1CB5014C2A62F23"
+            {
+            "SourcePath" = "8:..\\LICENSE.txt"
+            "TargetName" = "8:LICENSE.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_9AD562D239AE45538903EC973D3A7011"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F83AF9653A3844EA828993912994ADDB"
             {
             "SourcePath" = "8:..\\README.txt"
@@ -223,9 +249,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:FingerprintTWL"
+        "ProductName" = "8:FingerprinterTWL"
         "ProductCode" = "8:{2DB70A66-66FE-4745-AA22-8E4B8CEAA172}"
-        "PackageCode" = "8:{C7186ADF-21B0-4BD0-AB86-46BEC5003DCB}"
+        "PackageCode" = "8:{CEA2AF13-CCD2-4A56-8F78-B6127BC766BA}"
         "UpgradeCode" = "8:{7E1BDE16-5571-4BC2-8270-A59334D41679}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -235,7 +261,7 @@
         "Manufacturer" = "8:Nintendo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:FingerprintTWLSetup"
+        "Title" = "8:FingerprinterTWLSetup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Nintendo"
         "Keywords" = "8:"
@@ -754,11 +780,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3B49ADDB433A430DBABEA66B4C6F4E5F"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_AEAD81F7D6FC43AFB5C54B548CEE51B2"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_debugcrt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -768,11 +794,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3DFFDFF35E454135AD3FBE6F59C6BCA0"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_F0BED259DF1F4E8FAC8CF1BA7C2C89DA"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_DebugCRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -787,7 +813,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B144741D3BBE43B9B8E91A95FE18B531"
             {
-            "SourcePath" = "8:..\\Debug\\FingerPrinterTWL.exe"
+            "SourcePath" = "8:..\\Release\\FingerPrinterTWL.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9AD562D239AE45538903EC973D3A7011"

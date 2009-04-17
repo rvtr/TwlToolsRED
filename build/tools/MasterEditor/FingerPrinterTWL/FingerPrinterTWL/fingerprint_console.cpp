@@ -122,6 +122,7 @@ void fingerprintConsole( cli::array<System::String^> ^args )
 	}
 	ROM_Header rh;
 	ExtractRomHeader( srlbin, &rh );
+	AuthenticateRomHeader( &rh );
 
 	// fingerprint ‚ª–„‚ß‚Ü‚ê‚Ä‚¢‚½‚ç•\¦‚µ‚Äã‘‚«Šm”F‚ğ‚·‚é
 	bool isFingerprint = false;

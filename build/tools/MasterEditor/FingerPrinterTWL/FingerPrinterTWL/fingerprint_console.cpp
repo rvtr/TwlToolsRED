@@ -87,7 +87,7 @@ void fingerprintConsole( cli::array<System::String^> ^args )
 	{
 		throw gcnew System::Exception( "Arguments error." );
 	}
-
+	
 	// 入出力ファイルのパス
 	System::String ^srcpath = args[0];
 	System::Console::WriteLine( "Input file:  {0}", srcpath );
@@ -208,6 +208,12 @@ void fingerprintConsole( cli::array<System::String^> ^args )
 		System::Console::WriteLine( "Hexadecimal Numbers:" );
 		System::Console::WriteLine( "{0}", TransBytesToHexString(bytes) );
 		System::Console::WriteLine();
+	}
+
+	// ありえないオプション
+	if( isTad && !(rh.s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK) )
+	{
+		throw gcnew Exception("Cannot make TAD file from the software intended for Game Card.");	
 	}
 
 	// maketad

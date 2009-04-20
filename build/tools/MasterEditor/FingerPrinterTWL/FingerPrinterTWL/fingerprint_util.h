@@ -71,6 +71,14 @@ System::String^ OpenFileUsingDialog( System::String ^defdir, System::String ^fil
 // @ret 取得したファイル名 エラーのとき nullptr
 System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^filter, System::String ^extension );
 
+// セーブするファイルをダイアログで取得
+// @arg [in] デフォルトのディレクトリ
+// @arg [in] デフォルトのファイル名
+// @arg [in] 拡張子フィルタ
+// @arg [in] ファイルの拡張子が不正なときに追加するときの正しい拡張子
+// @ret 取得したファイル名 エラーのとき nullptr
+System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^defname, System::String ^filter, System::String ^extension );
+
 // ----------------------------------------------------------------------
 // 外部プログラムの実行
 // ----------------------------------------------------------------------

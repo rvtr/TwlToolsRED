@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="FingerPrinterTWL"
+	Name="FingerprinterTWL"
 	ProjectGUID="{F41F8415-6AF1-46DF-B771-30B5AE234B89}"
 	RootNamespace="FingerPrinterTWL"
 	Keyword="ManagedCProj"

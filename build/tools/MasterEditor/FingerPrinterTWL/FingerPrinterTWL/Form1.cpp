@@ -131,11 +131,6 @@ void Form1::commonSaveRom( System::String ^dstpath )
 		throw gcnew Exception("The input ROM file has not read yet.");
 	}
 
-	if( this->rTad->Checked && !(this->rh->s.titleID_Hi && TITLE_ID_MEDIA_MASK) )
-	{
-		throw gcnew Exception("Cannot make TAD file from the software intended for Game Card.");	
-	}
-
 	this->fingerprintRomHeader();
 	OverwriteRomHeader( this->srlbin, this->rh );
 
@@ -188,6 +183,10 @@ void Form1::procSaveRomButton()
 		{
 			throw gcnew Exception("The input ROM file has not read yet.");
 		}
+		if( this->rTad->Checked && !(this->rh->s.titleID_Hi & TITLE_ID_HI_MEDIA_MASK) )
+		{
+			throw gcnew Exception("Cannot make TAD file from the software intended for Game Card.");	
+		}
 		System::String ^format = nullptr;
 		System::String ^ext = nullptr;
 		if( this->rTad->Checked )
@@ -200,8 +199,11 @@ void Form1::procSaveRomButton()
 			format = "rom format (*.srl)|*.srl|All files (*.*)|*.*";
 			ext    = ".srl";
 		}
+		// デフォルトのファイル名を決める
+		System::String ^defname = System::IO::Path::GetFileNameWithoutExtension( this->tboxFile->Text )
+								  + ".fp" + ext;
 
-		System::String ^rompath = SaveFileUsingDialog( this->prevDir, format, ext );
+		System::String ^rompath = SaveFileUsingDialog( this->prevDir, defname, format, ext );
 		if( !rompath )
 		{
 			return;
@@ -222,9 +224,10 @@ void Form1::procDragDrop( System::String ^rompath )
 	{
 		this->commonOpenRom( rompath );
 		this->tboxFile->Text = rompath;
-		this->tboxFile->SelectionStart = rompath->Length;	// 入りきらないときに右端を表示する
+		this->tboxFile->SelectionStart = rompath->Length;
 		this->rSrl->Checked = true;
 		this->rTad->Checked = false;
+		this->prevDir = System::IO::Path::GetDirectoryName( rompath );
 	}
 	catch( System::Exception ^ex )
 	{

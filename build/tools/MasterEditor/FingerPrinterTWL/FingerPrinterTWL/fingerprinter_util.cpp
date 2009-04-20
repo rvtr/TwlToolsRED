@@ -491,6 +491,17 @@ System::String^ OpenFileUsingDialog( System::String ^defdir, System::String ^fil
 // @ret 取得したファイル名 エラーのとき nullptr
 System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^filter, System::String ^extension )
 {
+	return (SaveFileUsingDialog( defdir, nullptr, filter, extension ));
+}
+
+// セーブするファイルをダイアログで取得
+// @arg [in] デフォルトのディレクトリ
+// @arg [in] デフォルトのファイル名
+// @arg [in] 拡張子フィルタ
+// @arg [in] ファイルの拡張子が不正なときに追加するときの正しい拡張子
+// @ret 取得したファイル名 エラーのとき nullptr
+System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^defname, System::String ^filter, System::String ^extension )
+{
 	System::String ^retfile;
 	System::Windows::Forms::SaveFileDialog ^dlg = gcnew (System::Windows::Forms::SaveFileDialog);
 
@@ -505,6 +516,10 @@ System::String^ SaveFileUsingDialog( System::String ^defdir, System::String ^fil
 	dlg->Filter      = filter;
 	dlg->FilterIndex = 1;
 	dlg->RestoreDirectory = true;
+	if( defname )
+	{
+		dlg->FileName = defname;
+	}
 
 	if( dlg->ShowDialog() != System::Windows::Forms::DialogResult::OK )
 	{

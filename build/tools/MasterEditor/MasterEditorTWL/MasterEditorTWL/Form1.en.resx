@@ -154,6 +154,36 @@
   <data name="labCaption.Text" xml:space="preserve">
     <value>Remarks - Enter any other related information.</value>
   </data>
+  <data name="labOFLC.Location" type="System.Drawing.Point, System.Drawing">
+    <value>71, 253</value>
+  </data>
+  <data name="labOFLC.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 12</value>
+  </data>
+  <data name="labOFLC.Text" xml:space="preserve">
+    <value>AGCB (OFLC)</value>
+  </data>
+  <data name="labPEGI_BBFC.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 226</value>
+  </data>
+  <data name="labPEGI_BBFC.Size" type="System.Drawing.Size, System.Drawing">
+    <value>138, 12</value>
+  </data>
+  <data name="labPEGI_BBFC.Text" xml:space="preserve">
+    <value>PEGI (General) and BBFC</value>
+  </data>
+  <data name="labPEGI_PRT.Location" type="System.Drawing.Point, System.Drawing">
+    <value>67, 200</value>
+  </data>
+  <data name="labPEGI.Location" type="System.Drawing.Point, System.Drawing">
+    <value>67, 174</value>
+  </data>
+  <data name="labPEGI.Size" type="System.Drawing.Size, System.Drawing">
+    <value>81, 12</value>
+  </data>
+  <data name="labPEGI.Text" xml:space="preserve">
+    <value>PEGI (General)</value>
+  </data>
   <data name="combPEGI_BBFC.Items1" xml:space="preserve">
     <value>Ages 3 and up</value>
   </data>
@@ -310,6 +340,12 @@
   <data name="labArbit1.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
+  <data name="labMail1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>39, 12</value>
+  </data>
+  <data name="labMail1.Text" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
   <data name="gboxUsage.Text" xml:space="preserve">
     <value>Usage</value>
   </data>
@@ -426,6 +462,12 @@
   </data>
   <data name="gboxAccess.Text" xml:space="preserve">
     <value>Access Control Information</value>
+  </data>
+  <data name="labPhotoAccess.Size" type="System.Drawing.Size, System.Drawing">
+    <value>128, 12</value>
+  </data>
+  <data name="labPhotoAccess.Text" xml:space="preserve">
+    <value>Photo Database Access</value>
   </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 12</value>
@@ -599,7 +641,7 @@
     <value>Other</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Market and Rating (Editable)</value>
+    <value>Market and Rating (***)</value>
   </data>
   <data name="gboxOtherSpec.Text" xml:space="preserve">
     <value>Other ROM Specifications</value>
@@ -629,7 +671,7 @@
     <value>Submission Info ***</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
-    <value>(30 characters or less)</value>
+    <value>(100 characters or less)</value>
   </data>
   <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist.</value>
@@ -638,7 +680,7 @@
     <value>Foreign Version</value>
   </data>
   <data name="labProductNameLimitForeign.Text" xml:space="preserve">
-    <value>(30 characters or less)</value>
+    <value>(100 characters or less)</value>
   </data>
   <data name="labMultiForeign2.Size" type="System.Drawing.Size, System.Drawing">
     <value>113, 12</value>

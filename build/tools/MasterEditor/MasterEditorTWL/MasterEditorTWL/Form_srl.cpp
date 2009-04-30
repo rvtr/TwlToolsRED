@@ -117,7 +117,7 @@ void Form1::setSrlForms(void)
 	}
 	else
 	{
-		this->tboxPhotoAccess->Text = gcnew System::String("Not Access");
+		this->tboxPhotoAccess->Text = gcnew System::String("None");
 	}
 
 	// NANDÁ”ïƒTƒCƒY

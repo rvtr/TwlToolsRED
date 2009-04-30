@@ -63,14 +63,6 @@ void Form1::changeFormInput( System::String ^langname )
 		}
 		this->rSubmitInternet->Enabled = false;
 		this->rSubmitInternet->Visible = false;
-
-		// “ü—Í•¶Žš”§ŒÀ‚ð•ÏX‚·‚é
-		this->changeMaxLength( this->tboxCompany1, 35 );
-		this->changeMaxLength( this->tboxDepart1,  35 );
-		this->changeMaxLength( this->tboxPerson1,  25 );
-		this->changeMaxLength( this->tboxCompany2, 35 );
-		this->changeMaxLength( this->tboxDepart2,  35 );
-		this->changeMaxLength( this->tboxPerson2,  25 );
 	}
 	else
 	{
@@ -89,13 +81,6 @@ void Form1::changeFormInput( System::String ^langname )
 
 		this->rSubmitInternet->Enabled = true;
 		this->rSubmitInternet->Visible = true;
-
-		this->changeMaxLength( this->tboxCompany1, 70 );
-		this->changeMaxLength( this->tboxDepart1,  70 );
-		this->changeMaxLength( this->tboxPerson1,  50 );
-		this->changeMaxLength( this->tboxCompany2, 70 );
-		this->changeMaxLength( this->tboxDepart2,  70 );
-		this->changeMaxLength( this->tboxPerson2,  50 );
 	}
 }
 
@@ -367,6 +352,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->cboxIsNormalJump, L"cboxIsNormalJump");
 	resources->ApplyResources(this->cboxIsTmpJump, L"cboxIsTmpJump");
 	resources->ApplyResources(this->gboxAccess, L"gboxAccess");
+	resources->ApplyResources(this->labPhotoAccess, L"labPhotoAccess");
 	resources->ApplyResources(this->labAccessOther, L"labAccessOther");
 	resources->ApplyResources(this->tboxAccessOther, L"tboxAccessOther");
 	resources->ApplyResources(this->tboxIsGameCardOn, L"tboxIsGameCardOn");

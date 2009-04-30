@@ -205,7 +205,7 @@ cli::array<System::Byte>^ MasterEditorTWL::getOgnRatingAges( int ogn )
 	{
 		ages = gcnew cli::array<System::Byte>{0,3,4,7,8,12,15,16,18};
 	}
-	else if( ogn == OS_TWL_PCTL_OGN_OFLC )
+	else if( ogn == OS_TWL_PCTL_OGN_AGCB )
 	{
 		ages = gcnew cli::array<System::Byte>{0,7,14,15};
 	}
@@ -245,7 +245,7 @@ System::String^ MasterEditorTWL::getOgnName( int ogn )
 	{
 		name = gcnew System::String("PEGI and BBFC");
 	}
-	else if( ogn == OS_TWL_PCTL_OGN_OFLC )
+	else if( ogn == OS_TWL_PCTL_OGN_AGCB )
 	{
 		name = gcnew System::String("OFLC");
 	}
@@ -280,7 +280,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 		break;
 
 		case METWL_MASK_REGION_AUSTRALIA:
-			list->Add( OS_TWL_PCTL_OGN_OFLC );
+			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 
 		case (METWL_MASK_REGION_EUROPE|METWL_MASK_REGION_AUSTRALIA):
@@ -288,12 +288,12 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
-			list->Add( OS_TWL_PCTL_OGN_OFLC );
+			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 
 		case (METWL_MASK_REGION_AMERICA|METWL_MASK_REGION_AUSTRALIA):
 			list->Add( OS_TWL_PCTL_OGN_ESRB );
-			list->Add( OS_TWL_PCTL_OGN_OFLC );
+			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 
 		case (METWL_MASK_REGION_AMERICA|METWL_MASK_REGION_EUROPE|METWL_MASK_REGION_AUSTRALIA):
@@ -302,7 +302,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
-			list->Add( OS_TWL_PCTL_OGN_OFLC );
+			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
@@ -314,7 +314,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_PEGI_GEN );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
-			list->Add( OS_TWL_PCTL_OGN_OFLC );
+			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 #endif //#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 

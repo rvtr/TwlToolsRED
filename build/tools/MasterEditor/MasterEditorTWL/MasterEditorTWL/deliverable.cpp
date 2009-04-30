@@ -412,7 +412,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				else if( hSrl->IsPhotoWrite )
 					node->FirstChild->Value = gcnew System::String("Write Only");
 				else
-					node->FirstChild->Value = gcnew System::String("Not Access");
+					node->FirstChild->Value = gcnew System::String("None");
 			}
 
 			// ‰ïĞî•ñ

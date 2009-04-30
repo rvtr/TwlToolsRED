@@ -125,7 +125,7 @@ void Form1::setRatingSrlProperties(void)
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_GEN ]  = this->combPEGI->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ]  = this->combPEGI_PRT->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ] = this->combPEGI_BBFC->SelectedIndex;
-	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_OFLC ] = this->combOFLC->SelectedIndex;
+	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_AGCB ] = this->combOFLC->SelectedIndex;
 
 	// レーティング表示不要かどうかを設定
 	this->hSrl->IsUnnecessaryRating = this->cboxIsUnnecessaryRating->Checked;
@@ -145,7 +145,7 @@ void Form1::setRatingForms(void)
 	this->combPEGI->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_GEN ];
 	this->combPEGI_PRT->SelectedIndex  = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ];
 	this->combPEGI_BBFC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ];
-	this->combOFLC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_OFLC ];
+	this->combOFLC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_AGCB ];
 } //setRatingForms()
 
 // リージョン情報からペアレンタルコントロールの編集可能団体をマスクする

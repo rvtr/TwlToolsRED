@@ -32,6 +32,8 @@ void Form1::setRegionSrlPropaties(void)
 	this->hSrl->IsRegionAmerica   = false;
 	this->hSrl->IsRegionEurope    = false;
 	this->hSrl->IsRegionAustralia = false;
+	this->hSrl->IsRegionKorea     = false;
+	this->hSrl->IsRegionChina     = false;
 	switch( this->combRegion->SelectedIndex )
 	{
 		case 0:
@@ -66,12 +68,22 @@ void Form1::setRegionSrlPropaties(void)
 			this->hSrl->IsRegionAustralia = true;
 		break;
 
-#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case 7:
+			this->hSrl->IsRegionKorea = true;
+		break;
+
+		case 8:
+			this->hSrl->IsRegionChina = true;
+		break;
+
+#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+		case 9:
 			this->hSrl->IsRegionJapan     = true;
 			this->hSrl->IsRegionAmerica   = true;
 			this->hSrl->IsRegionEurope    = true;
 			this->hSrl->IsRegionAustralia = true;
+			this->hSrl->IsRegionKorea     = true;
+			this->hSrl->IsRegionChina     = true;
 		break;
 #endif //defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		default:
@@ -86,25 +98,31 @@ void Form1::setRegionForms(void)
 	System::Boolean isAmerica = this->hSrl->IsRegionAmerica;
 	System::Boolean isEurope  = this->hSrl->IsRegionEurope;
 	System::Boolean isAustralia = this->hSrl->IsRegionAustralia;
+	System::Boolean isKorea   = this->hSrl->IsRegionKorea;
+	System::Boolean isChina   = this->hSrl->IsRegionChina;
 	System::Int32  index;
 	if( isJapan && !isAmerica && !isEurope && !isAustralia )
 		index = 0;
-	else if( !isJapan && isAmerica && !isEurope && !isAustralia )
+	else if( !isJapan && isAmerica && !isEurope && !isAustralia && !isKorea && !isChina )
 		index = 1;
-	else if( !isJapan && !isAmerica && isEurope && !isAustralia )
+	else if( !isJapan && !isAmerica && isEurope && !isAustralia && !isKorea && !isChina )
 		index = 2;
-	else if( !isJapan && !isAmerica && !isEurope && isAustralia )
+	else if( !isJapan && !isAmerica && !isEurope && isAustralia && !isKorea && !isChina )
 		index = 3;
-	else if( !isJapan && !isAmerica && isEurope && isAustralia )
+	else if( !isJapan && !isAmerica && isEurope && isAustralia && !isKorea && !isChina )
 		index = 4;
-	else if( !isJapan && isAmerica && !isEurope && isAustralia )
+	else if( !isJapan && isAmerica && !isEurope && isAustralia && !isKorea && !isChina )
 		index = 5;
-	else if( !isJapan && isAmerica && isEurope && isAustralia )
+	else if( !isJapan && isAmerica && isEurope && isAustralia && !isKorea && !isChina )
 		index = 6;
+	else if( !isJapan && !isAmerica && !isEurope && !isAustralia && isKorea && !isChina )
+		index = 7;
+	else if( !isJapan && !isAmerica && !isEurope && !isAustralia && !isKorea && isChina )
+		index = 8;
 	else
 		index = -1;	// 不正
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-	if( isJapan && isAmerica && isEurope && isAustralia )
+	if( isJapan && isAmerica && isEurope && isAustralia %% isKorea && isChina )
 	index = 7;
 #endif
 	this->combRegion->SelectedIndex = index;
@@ -126,6 +144,7 @@ void Form1::setRatingSrlProperties(void)
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ]  = this->combPEGI_PRT->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ] = this->combPEGI_BBFC->SelectedIndex;
 	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_AGCB ] = this->combOFLC->SelectedIndex;
+	this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_GRB]   = this->combGRB->SelectedIndex;
 
 	// レーティング表示不要かどうかを設定
 	this->hSrl->IsUnnecessaryRating = this->cboxIsUnnecessaryRating->Checked;
@@ -146,6 +165,7 @@ void Form1::setRatingForms(void)
 	this->combPEGI_PRT->SelectedIndex  = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_PRT ];
 	this->combPEGI_BBFC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_PEGI_BBFC ];
 	this->combOFLC->SelectedIndex = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_AGCB ];
+	this->combGRB->SelectedIndex  = this->hSrl->hArrayParentalIndex[ OS_TWL_PCTL_OGN_GRB ];
 } //setRatingForms()
 
 // リージョン情報からペアレンタルコントロールの編集可能団体をマスクする
@@ -158,6 +178,7 @@ void Form1::maskRatingForms(void)
 	this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 	this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 	this->enableRating( this->combOFLC, this->labOFLC, nullptr );
+	this->enableRating( this->combGRB, this->labGRB, nullptr );
 	switch( this->combRegion->SelectedIndex )
 	{
 		case 0:
@@ -169,6 +190,7 @@ void Form1::maskRatingForms(void)
 			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 1:
@@ -180,6 +202,7 @@ void Form1::maskRatingForms(void)
 			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 2:
@@ -191,6 +214,7 @@ void Form1::maskRatingForms(void)
 			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->disableRating( this->combOFLC, this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 3:
@@ -202,6 +226,7 @@ void Form1::maskRatingForms(void)
 			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 4:
@@ -213,6 +238,7 @@ void Form1::maskRatingForms(void)
 			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 5:
@@ -224,6 +250,7 @@ void Form1::maskRatingForms(void)
 			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		case 6:
@@ -235,6 +262,31 @@ void Form1::maskRatingForms(void)
 			this->enableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
 			this->enableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
 			this->enableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
+		break;
+
+		case 7:
+			// 韓国
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB,  this->labESRB, nullptr );
+			this->disableRating( this->combUSK,   this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI,  this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->disableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->enableRating( this->combGRB, this->labGRB, nullptr );
+		break;
+
+		case 8:
+			// 中国
+			this->disableRating( this->combCERO, this->labCERO, nullptr );
+			this->disableRating( this->combESRB,  this->labESRB, nullptr );
+			this->disableRating( this->combUSK,   this->labUSK,  nullptr );
+			this->disableRating( this->combPEGI,  this->labPEGI, nullptr );
+			this->disableRating( this->combPEGI_PRT,  this->labPEGI_PRT,  nullptr );
+			this->disableRating( this->combPEGI_BBFC, this->labPEGI_BBFC, nullptr );
+			this->disableRating( this->combOFLC,  this->labOFLC, nullptr );
+			this->disableRating( this->combGRB, this->labGRB, nullptr );
 		break;
 
 		// 全リージョンのときは何もdisableにしない
@@ -255,6 +307,7 @@ void Form1::changeUnnecessaryRatingForms( System::Boolean bInitial )
 		this->unnecessaryRating( this->combPEGI_PRT );
 		this->unnecessaryRating( this->combPEGI_BBFC );
 		this->unnecessaryRating( this->combOFLC );
+		this->unnecessaryRating( this->combGRB );
 	}
 	else
 	{
@@ -265,6 +318,7 @@ void Form1::changeUnnecessaryRatingForms( System::Boolean bInitial )
 		this->necessaryRating( this->combPEGI_PRT, bInitial );
 		this->necessaryRating( this->combPEGI_BBFC, bInitial );
 		this->necessaryRating( this->combOFLC, bInitial );
+		this->necessaryRating( this->combGRB, bInitial );
 	}
 }
 
@@ -342,7 +396,7 @@ void Form1::unnecessaryRating( System::Windows::Forms::ComboBox ^comb )
 	}
 	else
 	{
-		msg = gcnew System::String( "Unnecessary Rating(All ages)" );
+		msg = gcnew System::String( "Rating Not Required (All ages)" );
 	}
 	comb->Text = msg;
 	comb->Enabled = false;		// 編集不可能にする

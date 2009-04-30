@@ -237,6 +237,7 @@ void Form1::setDeliverableProperties(void)
 	this->hDeliv->hPEGI_PRT  = this->setDeliverableRatingOgnProperties( this->combPEGI_PRT );
 	this->hDeliv->hPEGI_BBFC = this->setDeliverableRatingOgnProperties( this->combPEGI_BBFC );
 	this->hDeliv->hOFLC = this->setDeliverableRatingOgnProperties( this->combOFLC );
+	this->hDeliv->hGRB  = this->setDeliverableRatingOgnProperties( this->combGRB );
 
 	// SRL‚É‚Í“o˜^‚³‚ê‚È‚¢ROMŽd—l
 	this->hDeliv->IsUGC     = this->cboxIsUGC->Checked;

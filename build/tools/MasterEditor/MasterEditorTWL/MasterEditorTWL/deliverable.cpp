@@ -514,6 +514,10 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = this->hOFLC;
 			}
+			if( node->FirstChild->Value->Equals( "TagRatingGRB" ) )
+			{
+				node->FirstChild->Value = this->hGRB;
+			}
 			if( node->FirstChild->Value->Equals( "TagIsUnnecessaryRating" ) )
 			{
 				if( hSrl->IsUnnecessaryRating )

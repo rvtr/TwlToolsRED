@@ -97,6 +97,7 @@ namespace MasterEditorTWL
 		property System::String  ^hPEGI_PRT;
 		property System::String  ^hPEGI_BBFC;
 		property System::String  ^hOFLC;
+		property System::String  ^hGRB;
 		property System::String  ^hAppTypeOther;		// ì¡ãLéñçÄ
 
 		// SRLÇ…ÇÕìoò^Ç≥ÇÍÇ»Ç¢ROMédól

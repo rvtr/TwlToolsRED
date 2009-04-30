@@ -362,6 +362,8 @@ bool RCSrl::setRegionInfo( u32 region )
 	this->IsRegionAmerica   = ((region & METWL_MASK_REGION_AMERICA)   != 0)?true:false;
 	this->IsRegionEurope    = ((region & METWL_MASK_REGION_EUROPE)    != 0)?true:false;
 	this->IsRegionAustralia = ((region & METWL_MASK_REGION_AUSTRALIA) != 0)?true:false;
+	this->IsRegionKorea     = ((region & METWL_MASK_REGION_KOREA)     != 0)?true:false;
+	this->IsRegionChina     = ((region & METWL_MASK_REGION_CHINA)     != 0)?true:false;
 
 	// リージョンに含まれる団体がなかったらリージョンは不正
 	if( MasterEditorTWL::getOgnListInRegion( region ) == nullptr )
@@ -504,9 +506,12 @@ ECSrlResult RCSrl::setRomHeader(void)
 	if( this->IsRegionAmerica == true )  { map |= METWL_MASK_REGION_AMERICA; }
 	if( this->IsRegionEurope  == true )  { map |= METWL_MASK_REGION_EUROPE; }
 	if( this->IsRegionAustralia == true ){ map |= METWL_MASK_REGION_AUSTRALIA; }
+	if( this->IsRegionKorea == true ){ map |= METWL_MASK_REGION_KOREA; }
+	if( this->IsRegionChina == true ){ map |= METWL_MASK_REGION_CHINA; }
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 	if( (this->IsRegionJapan == true ) && (this->IsRegionAmerica == true)
 		&& (this->IsRegionEurope == true ) && (this->IsRegionAustralia == true)
+		&& (this->IsRegionKorea == true) && (this->IsRegionChina == true)
 	  )
 	{
 		map |= METWL_MASK_REGION_ALL;	// オールリージョンを許す
@@ -547,6 +552,10 @@ void RCSrl::setRatingRomHeader( u32 region )
 
 	// リージョンに含まれる団体のみを設定
 	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	if( !ognlist )
+	{
+		return;		// 中国のときリストは空になる
+	}
 	for each( int ogn in ognlist )
 	{
 		u8 rating = 0;

@@ -155,7 +155,7 @@
     <value>Remarks - Enter any other related information.</value>
   </data>
   <data name="labOFLC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>71, 253</value>
+    <value>67, 247</value>
   </data>
   <data name="labOFLC.Size" type="System.Drawing.Size, System.Drawing">
     <value>78, 12</value>
@@ -164,7 +164,7 @@
     <value>AGCB (OFLC)</value>
   </data>
   <data name="labPEGI_BBFC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 226</value>
+    <value>11, 220</value>
   </data>
   <data name="labPEGI_BBFC.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 12</value>
@@ -173,10 +173,10 @@
     <value>PEGI (General) and BBFC</value>
   </data>
   <data name="labPEGI_PRT.Location" type="System.Drawing.Point, System.Drawing">
-    <value>67, 200</value>
+    <value>67, 194</value>
   </data>
   <data name="labPEGI.Location" type="System.Drawing.Point, System.Drawing">
-    <value>67, 174</value>
+    <value>67, 168</value>
   </data>
   <data name="labPEGI.Size" type="System.Drawing.Size, System.Drawing">
     <value>81, 12</value>
@@ -277,12 +277,6 @@
   <data name="combCERO.Items4" xml:space="preserve">
     <value>Z (Ages 18 and up)</value>
   </data>
-  <data name="labParentalRating.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 12</value>
-  </data>
-  <data name="labParentalRating.Text" xml:space="preserve">
-    <value>Ratings</value>
-  </data>
   <data name="labRegion.Text" xml:space="preserve">
     <value>Market</value>
   </data>
@@ -303,6 +297,12 @@
   </data>
   <data name="combRegion.Items6" xml:space="preserve">
     <value>USA, Europe, and Australia</value>
+  </data>
+  <data name="combRegion.Items7" xml:space="preserve">
+    <value>Korea only</value>
+  </data>
+  <data name="combRegion.Items8" xml:space="preserve">
+    <value>China only</value>
   </data>
   <data name="cboxIsInputPerson2.Size" type="System.Drawing.Size, System.Drawing">
     <value>157, 16</value>

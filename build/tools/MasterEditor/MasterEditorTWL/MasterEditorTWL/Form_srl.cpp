@@ -335,6 +335,7 @@ System::Boolean Form1::checkSrlForms(void)
 	System::Boolean bAmerica   = false;
 	System::Boolean bEurope    = false;
 	System::Boolean bAustralia = false;
+	System::Boolean bKorea     = false;
 	switch( this->combRegion->SelectedIndex )
 	{
 		case 0:
@@ -362,13 +363,19 @@ System::Boolean Form1::checkSrlForms(void)
 			bEurope    = true;
 			bAustralia = true;
 		break;
+		case 7:
+			bKorea = true;
+		break;
+		case 8:
+		break;
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-		case 7:
+		case 9:
 			bJapan = true;
 			bAmerica = true;
 			bEurope = true;
 			bAustralia = true;
+			bKorea = true;
 			this->hWarnList->Add( gcnew RCMrcError( 
 			"リージョン", 0x1b0, 0x1b3, "全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。",
 			"Region", "All Region is set. Please check necessity for setting each region individually.", true, true ) );
@@ -392,6 +399,7 @@ System::Boolean Form1::checkSrlForms(void)
 		this->checkRatingForms( bEurope, this->combPEGI_PRT, this->labPEGI_PRT->Text );
 		this->checkRatingForms( bEurope, this->combPEGI_BBFC, this->labPEGI_BBFC->Text );
 		this->checkRatingForms( bAustralia, this->combOFLC, this->labOFLC->Text );
+		this->checkRatingForms( bKorea, this->combGRB, this->labGRB->Text );
 	}
 
 	// ひととおりエラー登録をした後で

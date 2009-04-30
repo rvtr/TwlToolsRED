@@ -147,6 +147,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->tboxWholeCRC, L"tboxWholeCRC");
 	resources->ApplyResources(this->labCaption, L"labCaption");
 	resources->ApplyResources(this->tboxCaption, L"tboxCaption");
+	resources->ApplyResources(this->labGRB, L"labGRB");
 	resources->ApplyResources(this->labOFLC, L"labOFLC");
 	resources->ApplyResources(this->labPEGI_BBFC, L"labPEGI_BBFC");
 	resources->ApplyResources(this->labPEGI_PRT, L"labPEGI_PRT");
@@ -154,6 +155,11 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labUSK, L"labUSK");
 	resources->ApplyResources(this->labESRB, L"labESRB");
 	resources->ApplyResources(this->labCERO, L"labCERO");
+
+	int indexGRB = this->combGRB->SelectedIndex;
+	this->combGRB->Items->Clear();
+	this->combGRB->Items->AddRange(gcnew cli::array< System::Object^  >(5) {resources->GetString(L"combGRB.Items"), resources->GetString(L"combGRB.Items1"), 
+		resources->GetString(L"combGRB.Items2"), resources->GetString(L"combGRB.Items3"), resources->GetString(L"combGRB.Items4")});
 
 	resources->ApplyResources(this->combOFLC, L"combOFLC");
 	int indexOFLC = this->combOFLC->SelectedIndex;
@@ -203,16 +209,16 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		resources->GetString(L"combCERO.Items2"), resources->GetString(L"combCERO.Items3"), resources->GetString(L"combCERO.Items4"), 
 		resources->GetString(L"combCERO.Items5")});
 
-	resources->ApplyResources(this->labParentalRating, L"labParentalRating");
 	resources->ApplyResources(this->labRegion, L"labRegion");
 	resources->ApplyResources(this->cboxIsEULA, L"cboxIsEULA");
 
 	resources->ApplyResources(this->combRegion, L"combRegion");
 	int indexRegion = this->combRegion->SelectedIndex;
 	this->combRegion->Items->Clear();
-	this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
+	this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(9) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
 		resources->GetString(L"combRegion.Items2"), resources->GetString(L"combRegion.Items3"), resources->GetString(L"combRegion.Items4"), 
-		resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6")});
+		resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6"), resources->GetString(L"combRegion.Items7"), 
+		resources->GetString(L"combRegion.Items8")});
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 	if( langname->Equals( "ja" ) )
 	{
@@ -233,6 +239,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	this->combPEGI_PRT->SelectedIndex = indexPEGI_PRT;
 	this->combPEGI_BBFC->SelectedIndex = indexPEGI_BBFC;
 	this->combOFLC->SelectedIndex = indexOFLC;
+	this->combGRB->SelectedIndex = indexGRB;
 
 	//resources->ApplyResources(this->combDLCategory, L"combDLCategory");
 	//index = this->combDLCategory->SelectedIndex;
@@ -473,6 +480,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->unnecessaryRating( this->combPEGI_PRT );
 		this->unnecessaryRating( this->combPEGI_BBFC );
 		this->unnecessaryRating( this->combOFLC );
+		this->unnecessaryRating( this->combGRB );
 	}
 
 	// ƒtƒH[ƒ€‚ÌEnable‚âVisible‚ğØ‚è‘Ö‚¦

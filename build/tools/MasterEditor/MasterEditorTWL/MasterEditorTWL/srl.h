@@ -102,6 +102,8 @@ namespace MasterEditorTWL
 		property System::Boolean IsRegionAmerica;
 		property System::Boolean IsRegionEurope;
 		property System::Boolean IsRegionAustralia;
+		property System::Boolean IsRegionKorea;
+		property System::Boolean IsRegionChina;
 
 		// SDKバージョンと使用ライブラリのリスト
 		property System::Collections::Generic::List<RCSDKVersion^> ^hSDKList;

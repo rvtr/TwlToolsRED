@@ -209,6 +209,10 @@ cli::array<System::Byte>^ MasterEditorTWL::getOgnRatingAges( int ogn )
 	{
 		ages = gcnew cli::array<System::Byte>{0,7,14,15};
 	}
+	else if( ogn == OS_TWL_PCTL_OGN_GRB )
+	{
+		ages = gcnew cli::array<System::Byte>{0,12,15,18};
+	}
 	return ages;
 }
 
@@ -248,6 +252,10 @@ System::String^ MasterEditorTWL::getOgnName( int ogn )
 	else if( ogn == OS_TWL_PCTL_OGN_AGCB )
 	{
 		name = gcnew System::String("OFLC");
+	}
+	else if( ogn == OS_TWL_PCTL_OGN_GRB )
+	{
+		name = gcnew System::String("GRB");
 	}
 	return name;
 }
@@ -305,6 +313,10 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_AGCB );
 		break;
 
+		case METWL_MASK_REGION_KOREA:
+			list->Add( OS_TWL_PCTL_OGN_GRB );
+		break;
+
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case METWL_MASK_REGION_ALL:
 
@@ -315,6 +327,7 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 			list->Add( OS_TWL_PCTL_OGN_PEGI_PRT );
 			list->Add( OS_TWL_PCTL_OGN_PEGI_BBFC );
 			list->Add( OS_TWL_PCTL_OGN_AGCB );
+			list->Add( OS_TWL_PCTL_OGN_GRB );
 		break;
 #endif //#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 

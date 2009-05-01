@@ -127,9 +127,13 @@ static BOOL ReadTWLSettings( LCFGTWLSettingsData *cfg_data )
       STD_CopyMemory( (void *)cfg_data, (void *)LCFGi_GetTSD(), sizeof(LCFGTWLSettingsData) );
       OS_TPrintf( "TSD read succeeded.\n" );
     }else {
-      OS_TPrintf( "TSD read failed.\n" );
+      OS_TPrintf( "TSD read func. failed.\n" );
+      mprintf( "TSD read func. failed.\n" );
     }
     OS_Free( pBuffer );
+  }
+  else {
+    mprintf( "TSD read alloc failed.\n" );
   }
   return isReadTSD;
 }  
@@ -148,13 +152,19 @@ static BOOL WriteTWLSettings( LCFGTWLSettingsData *cfg_data )
     STD_CopyMemory( (void *)LCFGi_GetTSD(), (void *)cfg_data, sizeof(LCFGTWLSettingsData) );
     isWriteTSD = LCFG_WriteTWLSettings( (u8 (*)[ LCFG_TEMP_BUFFER_SIZE ] )pBuffer );
     if( isWriteTSD == FALSE ) {
-      OS_TPrintf( "TSD write failed.\n" );
-      mprintf( "TSD write failed.\n" );
+      OS_TPrintf( "TSD write func. failed.\n" );
+      mprintf( "TSD write func. failed.\n" );
     }
     OS_Free( pBuffer );
   }
+  else {
+    mprintf( "TSD write alloc failed.\n" );
+  }
   return isWriteTSD;
 }
+
+
+
 
 BOOL MiyaBackupTWLSettings(const char *path)
 {
@@ -176,6 +186,41 @@ BOOL MiyaBackupTWLSettings(const char *path)
     mprintf("Failed read cfg file 1.\n" );
     return FALSE;
   }
+
+
+
+#if 1
+  // 国が選択されていないなら適当に設定
+  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
+    switch( LCFG_THW_GetRegion() ) {
+    case OS_TWL_REGION_JAPAN:
+      cfg_data.country = LCFG_TWL_COUNTRY_JAPAN;
+      break;
+    case OS_TWL_REGION_AMERICA:
+      cfg_data.country = LCFG_TWL_COUNTRY_UNITED_STATES;
+      break;
+    case OS_TWL_REGION_EUROPE:
+      cfg_data.country = LCFG_TWL_COUNTRY_UNITED_KINGDOM;
+      break;
+    case OS_TWL_REGION_AUSTRALIA:
+      cfg_data.country = LCFG_TWL_COUNTRY_AUSTRALIA;
+      break;
+    case OS_TWL_REGION_CHINA:
+      cfg_data.country = LCFG_TWL_COUNTRY_CHINA;
+      break;
+    case OS_TWL_REGION_KOREA:
+      cfg_data.country = LCFG_TWL_COUNTRY_SOUTH_KOREA;
+      break;
+    case OS_TWL_REGION_MAX:
+    default:
+      // cfg_data.country = LCFG_TWL_COUNTRY_JAPAN;
+      mprintf("detect unknown region code..\n");
+      break;
+    }
+  }
+#endif
+
+
 
   FS_InitFile(&f);
 
@@ -237,7 +282,6 @@ void  MiyaReadTpCalData(void)
   OS_TPrintf("tp.dx2 = %d\n",tp_cal_data.data.dx2);
   OS_TPrintf("tp.dy2 = %d\n",tp_cal_data.data.dy2);
 }
-
 
 
 
@@ -311,13 +355,45 @@ BOOL MiyaRestoreTWLSettings(const char *path)
     STD_CopyMemory( (void *)&cfg_data.tp, (void *)&tp_cal_data ,sizeof(LCFGTWLTPCalibData) );
   }
 
+
+#if 1
+  // 国が選択されていないなら適当に設定
+  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
+    switch( LCFG_THW_GetRegion() ) {
+    case OS_TWL_REGION_JAPAN:
+      cfg_data.country = LCFG_TWL_COUNTRY_JAPAN;
+      break;
+    case OS_TWL_REGION_AMERICA:
+      cfg_data.country = LCFG_TWL_COUNTRY_UNITED_STATES;
+      break;
+    case OS_TWL_REGION_EUROPE:
+      cfg_data.country = LCFG_TWL_COUNTRY_UNITED_KINGDOM;
+      break;
+    case OS_TWL_REGION_AUSTRALIA:
+      cfg_data.country = LCFG_TWL_COUNTRY_AUSTRALIA;
+      break;
+    case OS_TWL_REGION_CHINA:
+      cfg_data.country = LCFG_TWL_COUNTRY_CHINA;
+      break;
+    case OS_TWL_REGION_KOREA:
+      cfg_data.country = LCFG_TWL_COUNTRY_SOUTH_KOREA;
+      break;
+    case OS_TWL_REGION_MAX:
+    default:
+      cfg_data.country = LCFG_TWL_COUNTRY_JAPAN;
+      mprintf("detect unknown region code..\n");
+      break;
+    }
+  }
+#endif
+
   /* 実際に書き出し */
   if( FALSE == WriteTWLSettings( &cfg_data ) ) {
     return FALSE;
   }
 
   //  LCFG_TSD_SetCountry(LCFG_TWL_COUNTRY_JAPAN);
-  LCFG_TSD_SetCountry(cfg_data.country);
+  LCFG_TSD_SetCountry( (LCFGTWLCountryCode)cfg_data.country );
 
 
 

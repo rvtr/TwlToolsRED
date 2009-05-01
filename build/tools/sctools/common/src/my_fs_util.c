@@ -2041,6 +2041,8 @@ BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd
   readSize = my_fs_crypto_read(&f, pBuffer, (s32)size);
   if( readSize != size ) {
     miya_log_fprintf(log_fd, "%s Failed Read File: %s\n",__FUNCTION__,path);
+    (void)FS_CloseFile(&f);
+    return FALSE;
   }
   bSuccess = FS_CloseFile(&f);
   if( ! bSuccess ) {
@@ -2690,6 +2692,8 @@ BOOL CleanSDCardFiles(char *log_file_name)
     else if( STD_StrCmp(direntry.longname, "wlan_cfg.txt") == 0 ) {
     }
     else if( STD_StrCmp(direntry.longname, "nup_log.txt") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry.longname, "tad") == 0 ) {
     }
     else if( direntry.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
     }

@@ -58,8 +58,12 @@
 #define ROMHEADER_FOR_KOREA_BIT     0x40
 
 /* 使用 DMA 番号 */
-#define DMA_NO_FATFS        FATFS_DMA_4     // = 0
-#define DMA_NO_NWM          NWMSP_DMA_7
+//#define DMA_NO_FATFS        FATFS_DMA_4     // = 0
+//#define DMA_NO_NWM          NWMSP_DMA_7
+#define DMA_NO_FATFS        FATFS_DMA_4 // 0
+#define DMA_NO_NWM          NWMSP_DMA_5 // 1
+#define DMA_NO_AES_SEND     AES_DMA_6   // 2
+#define DMA_NO_AES_RECV     AES_DMA_7   // 3
 
 /*---------------------------------------------------------------------------*
     内部関数定義
@@ -172,7 +176,8 @@ TwlSpMain(void)
     (void)OS_EnableInterrupts();
 
     /* 各ライブラリ初期化 */
-    AES_Init(THREAD_PRIO_AES);                  // AES
+    AES_Init(DMA_NO_AES_SEND, DMA_NO_AES_RECV, THREAD_PRIO_AES); // AES
+    //    AES_Init(THREAD_PRIO_AES);                  // AES
     SEA_Init(THREAD_PRIO_SEA);                  // SEA
 //  FS_Init(FS_DMA_NOT_USE);                    // FS for CARD
 //  FS_CreateReadServerThread(THREAD_PRIO_FS);  // FS for CARD

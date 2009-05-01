@@ -55,6 +55,10 @@
 #include        "menu_version.h"
 
 #include        "ntp.h"
+#include        "myimport.h"
+
+
+// #define PRE_INSTALL 1
 
 //================================================================================
 #define THREAD_COMMAND_NUP_FUNCTION               0
@@ -774,6 +778,14 @@ static BOOL RestoreFromSDCard7(void)
       miya_log_fprintf(log_fd,"Original user download app. list saving failed\n");
       mprintf("Original user download app. list saving failed\n");
     }
+
+#ifdef PRE_INSTALL
+    /* ここでプリンストールする。 */
+    miya_log_fprintf(log_fd,"start Import Tad..\n");
+    (void)myImportTad("sdmc:/tad/HNLJ.tad");
+    miya_log_fprintf(log_fd,"end Import Tad.\n");
+#endif
+
 
     //    mprintf("                             ");
     miya_log_fprintf(log_fd,"-wireless AP conf. load.. ");
@@ -1528,9 +1540,29 @@ void TwlMain(void)
       break;
     }
     mprintf("\n");
-
   }
 
+  /******************
+
+    static inline LCFGTWLCountryCode LCFG_TSD_GetCountry( void )
+    {
+      return  (LCFGTWLCountryCode)LCFGi_GetTSD()->country;
+    }
+
+	// 国コードのセット。
+    static inline void LCFG_TSD_SetCountry( LCFGTWLCountryCode country )
+    {
+        LCFGi_GetTSD()->country = (u8)country;
+	LCFGi_GetTSD_OS()->country = (u8)country;
+    }
+
+    extern LCFGTWLSettingsData s_settings;
+    #define LCFGi_GetTSD()      ( &s_settings )
+    #define LCFGi_GetTSD_OS()	( (OSTWLSettingsData*)HW_PARAM_TWL_SETTINGS_DATA )
+
+
+
+  *******************/
 
 
   org_fuseId = SCFG_ReadFuseData();

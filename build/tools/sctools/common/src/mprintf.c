@@ -115,6 +115,11 @@ static void *proutPrintf(void *txb, const char *buf, size_t n)
   return ((void *)txb);
 }
 
+void mputchar(int c)
+{
+  //  TEXT_CTRL *tc;
+  m_putchar(tc[0], c );
+}
 
 void mprintf(const char *fmt, ...)
 {

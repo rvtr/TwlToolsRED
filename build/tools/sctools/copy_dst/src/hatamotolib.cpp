@@ -18,13 +18,17 @@
 #include "sitedefs.h"
 #include "wcm_control.h"
 
+#include        "my_fs_util.h"
 #include "hatamotolib.h"
+
 
 #include        "text.h"
 #include        "mprintf.h"
 #include        "logprintf.h"
+#include        "error_report.h"
 
-#include        "my_fs_util.h"
+
+static BOOL WaitEC(ECOpId opId);
 
 #ifdef SDK_DEBUG
 #define ECDL_LOG(msg)   OS_TPrintf("----\nECDL-LOG: %s\n----\n", msg);
@@ -203,12 +207,14 @@ BOOL SetupVerData(void)
 
 
 
-void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds)
+//void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds)
+void SetupTitlesDataFile(const MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
 {
   NAMTitleId tid;
   for( u32 i = 0; i < numTitleIds; i++ )
     {
-      tid = pTitleIds[i];
+      //      tid = pTitleIds[i];
+      tid = pTitleIds[i].tid;
       NAM_SetupTitleDataFile(tid);
     }
 }
@@ -283,13 +289,11 @@ GetDeviceCode(char *deviceCode, u32 bufSize)
   deviceCode[bufSize - 1] = '\0';
 }
 
-static void
-Dummy_WWW_AddJSPlugin()
+static void Dummy_WWW_AddJSPlugin()
 {
 }
 
-static BOOL
-LoadCert(void** ppCert, u32* pSize, const char* name)
+static BOOL LoadCert(void** ppCert, u32* pSize, const char* name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -307,8 +311,8 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   bSuccess = FS_OpenFile(&f, path);
   if( ! bSuccess )
     {
-      miya_log_fprintf(log_fd, "Cannot open %s\n", path);
-      mprintf("Cannot open %s\n", path);
+      miya_log_fprintf(log_fd, "%s Cannot open %s\n", __FUNCTION__, path);
+      mprintf("%s Cannot open %s\n", __FUNCTION__,path);
       return FALSE;
     }
 
@@ -316,8 +320,8 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   pCert = OS_Alloc(certSize);
   if ( pCert == NULL )
     {
-      miya_log_fprintf(log_fd, "Cannot allocate work memroy\n");
-      mprintf("Cannot allocate work memroy\n");
+      miya_log_fprintf(log_fd, "%s Cannot allocate work memroy\n",__FUNCTION__);
+      mprintf("%s Cannot allocate work memroy \n",__FUNCTION__);
       return FALSE;
     }
 
@@ -325,17 +329,54 @@ LoadCert(void** ppCert, u32* pSize, const char* name)
   if( readSize != certSize )
     {
       miya_log_fprintf(log_fd, "%s fail to read file\n", __FUNCTION__);
-      mprintf("fail to read file\n");
+      mprintf("%s fail to read file\n",__FUNCTION__);
       return FALSE;
     }
 
   FS_CloseFile(&f);
 
+
+  //  LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");
+  //  LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der");
+
+  // static inline s32  NA_DecodeVersionData(const void* src, u32 srcSize, void* dst, u32 dstSize)
+  //    { return OS_IsRunOnTwl() ? NAi_DecodeVersionData(src, srcSize, dst, dstSize): -4; }
+
+  /*
+    s32 NAi_DecodeVersionData(const void* src, u32 srcSize, void* dst, u32 dstSize)
+    {
+    u32 decryptedSize;
+    AESResult result;
+    
+    if ( !SEAi_IsHWInitialized() )
+    {
+    return -1;
+    }
+    
+    decryptedSize = srcSize - AES_SIGN_HEADER_SIZE;
+    
+    if ( src == NULL || dst == NULL || decryptedSize > dstSize )
+    {
+    return -2;
+    }
+    
+    SEA_UseWeakKeyTemporary(SEA_WEAK_KEY_VERSION);
+    result = SEA_Decrypt(src, srcSize, dst);
+    
+    if( result != AES_RESULT_SUCCESS )
+    {
+    return -3;
+    }
+    
+    return (s32)decryptedSize;
+    }
+  */
+
   result = NA_DecodeVersionData(pCert, certSize, pCert, certSize);
   if( result <= 0 )
     {
       miya_log_fprintf(log_fd, "%s fail to decode version info %d\n",__FUNCTION__,result);
-      mprintf("fail to decode version info %d\n", result);
+      mprintf("%s fail to decode version info %d\n", __FUNCTION__,result);
       return FALSE;
     }
 
@@ -419,7 +460,8 @@ BOOL SetupEC(void)
 }
 
 static ECError WaitEC_result;
-BOOL WaitEC(ECOpId opId)
+
+static BOOL WaitEC(ECOpId opId)
 {
   ECError result;
   ECProgress progress;
@@ -507,45 +549,128 @@ BOOL WaitEC(ECOpId opId)
 }
 
 
+static BOOL WaitEC_with_NG_print(ECOpId opId)
+{
+  ECError result;
+  ECProgress progress;
+  ECProgress progress_prev;
+  
+  if( opId < 0 )
+    {
+      miya_log_fprintf(log_fd, "NG.\n");
+      miya_log_fprintf(log_fd, "  %s WaitEC error %d\n   %s\n", __FUNCTION__,opId, GetECErrorString(opId));
+
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+      mprintf("   WaitEC error %d\n   %s\n", opId, GetECErrorString(opId));
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      return FALSE;
+    }
+  
+  MI_CpuClear(&progress_prev, sizeof(progress_prev));
+  
+  for(;;)
+    {
+      result = EC_GetProgress(opId, &progress);
+      WaitEC_result = result;
+      if( (result != EC_ERROR_OK) && (result != EC_ERROR_NOT_DONE) ) {
+
+	miya_log_fprintf(log_fd, "NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+
+	if( result == EC_ERROR_NOT_ACTIVE ) {
+	  miya_log_fprintf(log_fd, "   %s opId=%d\n", __FUNCTION__, opId);
+	  mprintf("   %s opId=%d\n", __FUNCTION__, opId);
+	}
+	miya_log_fprintf(log_fd, "   %s Failed to EC_GetProgress, result=%d %s\n", 
+			 __FUNCTION__, result, GetECErrorString(result));
+	mprintf("   EC_GetProgress failed %d\n   %s\n", result, GetECErrorString(result));
+
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	
+	if( MI_CpuComp8(&progress_prev, &progress, sizeof(progress)) != 0 ) {
+	  miya_log_fprintf(log_fd, "---------\n");
+	  miya_log_fprintf(log_fd, "progress report\n");
+	  miya_log_fprintf(log_fd, "  status            %5d %s\n", progress.status, 
+			   GetECErrorString(progress.status));
+	  miya_log_fprintf(log_fd, "  operation         %5d %s\n", progress.operation,
+			   GetECOperationString(progress.operation));
+	  miya_log_fprintf(log_fd, "  phase             %5d %s\n", progress.phase, 
+			   GetECOpPhaseString(progress.phase));
+	  miya_log_fprintf(log_fd, "  isCancelRequested %5d\n", progress.isCancelRequested);
+	  miya_log_fprintf(log_fd, "  totalSize         %5d\n", progress.totalSize);
+	  miya_log_fprintf(log_fd, "  downloadedSize    %5d\n", progress.downloadedSize);
+	  miya_log_fprintf(log_fd, "  errCode           %5d\n", progress.errCode);
+	  miya_log_fprintf(log_fd, "  errInfo           %s\n", progress.errInfo);
+	  progress_prev = progress;
+	  /*
+	    progress report
+	    status            -4015 EC_ERROR_WS_REPORT
+	    operation            12 EC_OP_Transfer
+	    phase                 2 EC_PHASE_Done
+	    isCancelRequested     0
+	    totalSize             0
+	    downloadedSize      553
+	    errCode           -5986
+	    errInfo           IAS - TWL device unmatched
+	  */ 
+	}
+	return FALSE;
+      }
+      
+      if( progress.phase == EC_PHASE_Done ) {
+	break;
+      }
+      OS_Sleep(100);
+    }
+  return TRUE;;
+}
 
 
-static char CheckRegistration()
+
+
+static BOOL CheckRegistration( char *status )
 {
   s32 progress;
   ECError ecError;
   ECDeviceInfo di;
   BOOL printf_status_flag = FALSE;
 
-  //ECDL_LOG("check registeration");
   progress = EC_CheckRegistration();
-  if( FALSE == WaitEC(progress) ) {
-    return '\0'; // 微妙・・
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
+    return FALSE;
   }
 
   ecError = EC_GetDeviceInfo(&di);
-  //  SDK_ASSERT( ecError == EC_ERROR_OK );
   if( ecError != EC_ERROR_OK ) {
-    return '\0'; // 微妙・・
+    miya_log_fprintf(log_fd, "NG.\n");
+    miya_log_fprintf(log_fd, " GetDeviceInfo failed\n");
+
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("  GetDeviceInfo failed\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
 
 
   switch( di.registrationStatus[0] ) {
   case '\0':
-    // mprintf(" my error.\n");
     printf_status_flag = TRUE;
     break;
   case 'U':
-    // mprintf("  acount not transfered yet,\n");
-    //    mprintf("   OR, acount already cleared\n\n");
     printf_status_flag = TRUE;
     break;
   case 'R':
-    //    mprintf(" already registered. please delete acount.\n");
     printf_status_flag = TRUE;
     break;
   case 'P':
   case 'T':
-    // mprintf("  invalid registration status '%c'\n", status );
     printf_status_flag = TRUE;
     break;
   default:
@@ -586,7 +711,8 @@ static char CheckRegistration()
     miya_log_fprintf(log_fd, ECDL_DI_FMT " %d\n", "isNeedTicketSyncImportAll", di.isNeedTicketSyncImportAll);
   }
 
-  return di.registrationStatus[0];
+  *status = di.registrationStatus[0];
+  return TRUE;
 }
 
 static    BOOL GetChallenge(char* challenge)
@@ -596,15 +722,22 @@ static    BOOL GetChallenge(char* challenge)
 
   //ECDL_LOG("get challenge");
   progress = EC_SendChallengeReq();
-  if( FALSE == WaitEC(progress) ) {
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
 
   ecError = EC_GetChallengeResp(challenge);
-  if( ecError == EC_ERROR_OK ) {
-    return TRUE;
+  if( ecError != EC_ERROR_OK ) {
+    miya_log_fprintf(log_fd, "NG.\n");
+    miya_log_fprintf(log_fd, "   EC_GetChallengeResp error.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("   EC_GetChallengeResp error.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    return FALSE;
   }
-  return FALSE;
+  return TRUE;
 }
 
 static BOOL SyncRegistration(const char* challenge)
@@ -613,7 +746,7 @@ static BOOL SyncRegistration(const char* challenge)
 
   // ECDL_LOG("sync registration");
   progress = EC_SyncRegistration(challenge);
-  if( FALSE == WaitEC(progress) ) {
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
   return TRUE;
@@ -637,7 +770,7 @@ static BOOL Transfer(const char* challenge)
 
   //  ECDL_LOG("transfer");
   progress = EC_Transfer(challenge);
-  if( FALSE == WaitEC(progress) ) {
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
   return TRUE;
@@ -649,7 +782,7 @@ static BOOL SyncTickets()
 
   //  ECDL_LOG("sync tickets");
   progress = EC_SyncTickets(EC_SYNC_TYPE_IMPORT_ALL);
-  if( FALSE == WaitEC(progress) ) {
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
   return TRUE;
@@ -669,22 +802,10 @@ static int a_to_int(char c)
   return -1;
 }
 
-BOOL Tid_To_GameCode(u64 tid, char *gcode)
-{
-  u32 code;
-  char *str;
-  OS_TPrintf("tid = %016X\n",tid);
-  str = gcode;
-  code = (u32)(tid & 0xffffffff);
-  *str++ = (char)((code >> 24) & 0xff);
-  *str++ = (char)((code >> 16) & 0xff);
-  *str++ = (char)((code >> 8) & 0xff);
-  *str++ = (char)(code  & 0xff);
-  return TRUE;
-}
 
 
-static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
+// static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
+static BOOL DownloadTitles(MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
 {
   s32 progress;
   NAMTitleId tid;
@@ -693,38 +814,59 @@ static BOOL DownloadTitles(const NAMTitleId* pTitleIds, u32 numTitleIds)
   char game_code_buf[5];
 
   for( u32 i = 0; i < numTitleIds; i++ ) {
-      tid = pTitleIds[i];
+    //      tid = pTitleIds[i];
+    if( pTitleIds[i].is_personalized == 1 ) {
+      /* 
+	 personalized ticketのときは何もしない、というかプリンストールもの 
+	 pTitleIds[i].is_personalized = 1 -> common 
+	 pTitleIds[i].is_personalized = 2 -> personalized
+      */
+    }
+    else {
+      tid = pTitleIds[i].tid;
       progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
       //      mprintf("-check registration..        ");
-      (void)Tid_To_GameCode((u64)tid, game_code_buf);
+      (void)my_fs_Tid_To_GameCode((u64)tid, game_code_buf);
       game_code_buf[4] = '\0';
       mprintf("  downloading.. [%s]       ", game_code_buf);
+#if 0
       if( FALSE == WaitEC(progress) ) {
-
+	
 	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
 	/* 
 	   if( WaitEC_result == EC_ERROR_NET_CONTENT ) {
-	    tid を記録だけしてエラーにしない。
+	   tid を記録だけしてエラーにしない。
 	   } 
-
-	 */
+	   
+	*/
 	m_set_palette(tc[0], M_TEXT_COLOR_RED );
 	mprintf("NG.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
 	ret_flag = FALSE;
       }
+#else
+      if( FALSE == WaitEC_with_NG_print(progress) ) {
+	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
+	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
+	ret_flag = FALSE;
+      }
+#endif
       else {
+	pTitleIds[i].install_success_flag = TRUE;
+
 	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
 	mprintf("OK.\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 	miya_log_fprintf(log_fd, " %s download OK.\n",game_code_buf);
       }
     }
+  }
   return ret_flag;
 }
 
-int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
+//int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
+int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
 {
   char challenge[EC_CHALLENGE_BUF_SIZE];
   char status;
@@ -732,9 +874,13 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 
   STD_MemSet((void *)challenge,(int)0, EC_CHALLENGE_BUF_SIZE);
 
+  /*********************************/
   mprintf("-check registration..        ");
   miya_log_fprintf(log_fd, "-check registration...");
-  status = CheckRegistration();
+
+  if( FALSE == CheckRegistration( &status ) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
 
   // U  unregistered
   // R  registered
@@ -745,6 +891,7 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
     mprintf(" my error.\n");
     miya_log_fprintf(log_fd, " my error.\n");
     return ECDOWNLOAD_FAILURE;
@@ -790,13 +937,11 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+
+  /*********************************/
   miya_log_fprintf(log_fd, "-get challenge1..");
   mprintf("-get challenge1              ");
   if( FALSE == GetChallenge(challenge) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return ECDOWNLOAD_FAILURE;
   }
   else {
@@ -806,13 +951,10 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  /*********************************/
   miya_log_fprintf(log_fd, "-transfer.. ");
   mprintf("-transfer                    ");
   if( FALSE == Transfer(challenge) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return ECDOWNLOAD_FAILURE;
   }
   else {
@@ -822,14 +964,10 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
-
+  /*********************************/
   miya_log_fprintf(log_fd, "-get challenge.. ");
   mprintf("-get challenge2              ");
   if( FALSE == GetChallenge(challenge) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return ECDOWNLOAD_FAILURE;
   }
   else {
@@ -839,14 +977,10 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
-
+  /*********************************/
   miya_log_fprintf(log_fd, "-sync registration..");
   mprintf("-sync registration           ");
   if( FALSE == SyncRegistration(challenge) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return ECDOWNLOAD_FAILURE;
   }
   else {
@@ -856,13 +990,10 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  /*********************************/
   miya_log_fprintf(log_fd, "-sync tickets..");
   mprintf("-sync tickets                ");
   if( FALSE == SyncTickets() ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     return ECDOWNLOAD_FAILURE;
   }
   else {
@@ -872,6 +1003,7 @@ int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
 
+  /*********************************/
   // ここでアプリをダウンロードしている
   miya_log_fprintf(log_fd, "-download titles\n");
   mprintf("-download titles\n");
@@ -896,11 +1028,7 @@ BOOL KPSClient()
   miya_log_fprintf(log_fd, "-generate key pair ..");
   mprintf("-generate key pair           ");
   progress = EC_GenerateKeyPair();
-  if( FALSE == WaitEC(progress) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( FALSE == WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
   else {
@@ -914,11 +1042,7 @@ BOOL KPSClient()
   miya_log_fprintf(log_fd, "-confirm key pair .. ");
   mprintf("-confirm key pair            ");
   progress = EC_ConfirmKeyPair();
-  if( FALSE ==  WaitEC(progress) ) {
-    miya_log_fprintf(log_fd, "NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_RED );
-    mprintf("NG.\n");
-    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  if( FALSE ==  WaitEC_with_NG_print(progress) ) {
     return FALSE;
   }
   else {

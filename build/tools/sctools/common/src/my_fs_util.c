@@ -28,6 +28,26 @@ void Miya_debug_OFF(void)
 }
 
 
+static BOOL print_debug_flag = FALSE;
+
+void my_fs_print_debug_ON(void)
+{
+  print_debug_flag = TRUE;
+}
+
+void my_fs_print_debug_OFF(void)
+{
+  print_debug_flag = FALSE;
+}
+
+BOOL my_fs_get_print_debug_flag(void)
+{
+  return print_debug_flag;
+}
+
+
+
+
 /*
   NAND -> SDコピーの時、アトリビュートと時間とパーミッションを合わせる必要あり？
 
@@ -151,6 +171,23 @@ char *my_fs_util_get_fs_result_word( FSResult res )
     }
   }
   return my_fs_result_word[0].string;
+}
+
+
+
+BOOL my_fs_Tid_To_GameCode(u64 tid, char *gcode)
+{
+  u32 code;
+  char *str;
+  //  OS_TPrintf("tid = %016X\n",tid);
+  str = gcode;
+  code = (u32)(tid & 0xffffffff);
+  *str++ = (char)((code >> 24) & 0xff);
+  *str++ = (char)((code >> 16) & 0xff);
+  *str++ = (char)((code >> 8) & 0xff);
+  *str++ = (char)(code  & 0xff);
+  *str  = '\0';
+  return TRUE;
 }
 
 
@@ -1166,12 +1203,77 @@ static void AppErrorReport(const char *path, char *msg)
     (void)Error_Report_Printf(" Photo :%s\n", msg);
   }
   else if( TRUE == GetAppGameCode(path, game_code, NULL ) ) {
-    (void)Error_Report_Printf(" %s  :%s\n", game_code, msg);
+    (void)Error_Report_Printf(" [ %s ]:%s\n", game_code, msg);
   }
   else {
-    (void)Error_Report_Printf(" ????  :%s\n   path=%s\n",msg, path);
+    (void)Error_Report_Printf(" [ ???? ]:%s\n   path=%s\n",msg, path);
   }
 }
+
+
+static u64 GetTitleIdFromSrcPath(char path[])
+{
+  u64 tid = 0;
+  int i;
+
+  // 01234567890123456789012345678
+  // nand:/title/00030017/484e4141 (ランチャー)
+
+  for( i = 0 ; i < 8 ; i++ ) {
+    tid |= ( ((u64)a_to_int( path[12+i] )) << (60-(4*i)) );
+  }
+
+  for( i = 0 ; i < 8 ; i++ ) {
+    tid |= ( ((u64)a_to_int( path[21+i] )) << (28-(4*i)) );
+  }
+  return tid;
+}
+
+static BOOL CheckInstallSuccessApp( char *path , MY_USER_APP_TID *title_id_buf, int title_id_count )
+{
+  u64 tid;
+  int i;
+  MY_USER_APP_TID *temp_title_id_buf;
+
+  temp_title_id_buf = title_id_buf;
+
+  tid = GetTitleIdFromSrcPath( path );
+
+  for( i = 0 ; i < title_id_count ; i++ ) {
+    if( tid == temp_title_id_buf[i].tid ) {
+      if(temp_title_id_buf[i].install_success_flag == TRUE) {
+	/* このときだけバックアップを復活してやる。 */
+	return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}
+
+static int CheckInstallSuccessAppEx( char *path , MY_USER_APP_TID *title_id_buf, int title_id_count )
+{
+  u64 tid;
+  int i;
+  MY_USER_APP_TID *temp_title_id_buf;
+
+  temp_title_id_buf = title_id_buf;
+
+  tid = GetTitleIdFromSrcPath( path );
+
+  for( i = 0 ; i < title_id_count ; i++ ) {
+    if( tid == temp_title_id_buf[i].tid ) {
+      if(temp_title_id_buf[i].install_success_flag == TRUE) {
+	/* このときだけバックアップを復活してやる。 */
+	return 1;
+      }
+      else {
+	return 2;
+      }
+    }
+  }
+  return -1; /* そんなＩＤない */
+}
+
 
 static BOOL CheckSystemApp(char path[])
 {
@@ -1209,12 +1311,14 @@ static BOOL CheckSystemApp(char path[])
   }
 }
 
-BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name )
+//BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name )
+BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, MY_USER_APP_TID **pBuffer, int *size, char *log_file_name )
 {
   int i;
   int count = 0;
   MY_DIR_ENTRY_LIST *list_temp;
-  u64 *buf = NULL;
+  //  u64 *buf = NULL;
+  MY_USER_APP_TID *buf = NULL;
   char c;
   u8 hex;
   BOOL log_active = FALSE;
@@ -1244,9 +1348,11 @@ BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, cha
     miya_log_fprintf(log_fd, "User App. count = %d\n", count); 
 
     if( count ) {
-      buf = (u64 *)OS_Alloc( (u32)(count * sizeof(u64)) );
+      //      buf = (u64 *)OS_Alloc( (u32)(count * sizeof(u64)) );
+      buf = (MY_USER_APP_TID *)OS_Alloc( (u32)(count * sizeof(MY_USER_APP_TID)) );
       if( buf ) {
-	STD_MemSet((void *)buf, 0, count * sizeof(u64));
+	//	STD_MemSet((void *)buf, 0, count * sizeof(u64));
+	STD_MemSet((void *)buf, 0, count * sizeof(MY_USER_APP_TID));
       }
       else {
 	miya_log_fprintf(log_fd, "%s memory allocate error\n",__FUNCTION__);
@@ -1290,7 +1396,8 @@ BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, cha
 	      }
 	      goto next_loop;
 	    }
-	    *buf |= (((u64)hex) << ((7-i)*4 + 32 ));
+	    // *buf |= (((u64)hex) << ((7-i)*4 + 32 ));
+	    buf->tid |= (((u64)hex) << ((7-i)*4 + 32 ));
 	  }
 	  for( i =  0 ; i < 8 ; i++ ) {
 	    c = list_temp->src_path[21 + i];
@@ -1305,7 +1412,8 @@ BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, cha
 	      }
 	      goto next_loop;
 	    }
-	    *buf |= (((u64)hex) << ((7-i)*4 ));
+	    // *buf |= (((u64)hex) << ((7-i)*4 ));
+	    buf->tid |= (((u64)hex) << ((7-i)*4 ));
 	  }
 	  buf++;
 	  count++;
@@ -1870,7 +1978,6 @@ BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int 
 	}
 	else {
 	  /* ユーザーアプリだった場合。 */
-	  
 	}
       }
     }
@@ -1910,6 +2017,249 @@ BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int 
   }
   return TRUE;
 }
+
+
+BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_file_name, int *list_count, int *error_count,
+						      MY_USER_APP_TID *title_id_buf, int title_id_count )
+{
+  FSFile f;
+  FSFile f_dir;
+  BOOL bSuccess;
+  FSResult fsResult;
+  s32 readSize;
+  MY_DIR_ENTRY_LIST list_temp;
+  FSPathInfo path_info;
+  MY_DIR_ENTRY_LIST *readonly_list_head = NULL;
+  BOOL copy_error_flag;
+  FSFile log_fd_real;
+  FSFile *log_fd;
+  BOOL log_active = FALSE;
+  u64 tid;
+  char game_code_buf[5];
+
+  log_fd = &log_fd_real;
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+
+  if( (list_count == NULL) || (error_count == NULL) ) {
+    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
+    miya_log_fprintf(log_fd, " list ptr=0x%08x error ptr=0x%08x\n", list_count, error_count);
+    return FALSE;
+  }
+
+  *list_count = 0;
+  *error_count = 0;
+
+  FS_InitFile(&f);
+  FS_InitFile(&f_dir);
+
+  if( FS_OpenFileEx(&f, path, FS_FILEMODE_R) == FALSE) {
+    fsResult = FS_GetArchiveResultCode(path);
+    miya_log_fprintf(log_fd, "%s %d: Failed Open file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+    return FALSE; /* error */
+  }
+
+  while( 1 ) {
+    /* リストはルートディレクトリに近い順から入っている */
+    readSize = FS_ReadFile(&f, (void *)&list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
+    if( readSize == 0 ) {
+      /* 終わり */
+      break;
+    }
+    else if( readSize != (s32)sizeof(MY_DIR_ENTRY_LIST) ) {
+      miya_log_fprintf(log_fd, "%s %d: Failed Read file\n", __FUNCTION__ , __LINE__ );
+      miya_log_fprintf(log_fd, " %s\n", path);
+      break;
+    }
+
+    copy_error_flag = TRUE;
+
+    /* NAND側にディレクトリの作成とファイルのコピー */
+    if( (list_temp.content.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
+      /* ディレクトリの場合 */
+      if( TRUE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
+	/* 復元される側(NAND)にすでに何かファイルかディレクトリがある場合 */
+	if( (path_info.attributes & FS_ATTRIBUTE_IS_DIRECTORY) == 0 ) {
+	  /* ディレクトリでない場合 エラー */
+	  /* SDにログを残す場合 */
+	  miya_log_fprintf(log_fd, "%s %d: NOT a directory\n", __FUNCTION__ , __LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  /* require backup file */
+	  /* パニック?? */
+	  /* それとも一度デリートする?? */
+	  FS_DeleteFile( list_temp.src_path ); /* ちょっと無理やりか？ */
+	  goto label1;
+	}
+	/* read onlyディレクトリだった場合の処理は下のほうでやる。 */
+      }
+      else {
+      label1:
+	/* 復元される側(NAND)にディレクトリエントリがない場合 */
+	bSuccess = FS_CreateDirectory(list_temp.src_path, FS_PERMIT_RW);
+	if(!bSuccess) {
+	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
+	    miya_log_fprintf(log_fd, "%s %d: Failed Create NAND Directory\n", __FUNCTION__,__LINE__);
+	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    miya_log_fprintf(log_fd, " %s\n", list_temp.src_path);
+	    copy_error_flag = FALSE;
+	  }
+	}
+	if( FALSE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
+	  miya_log_fprintf(log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  //  return FALSE;
+	}
+      }
+
+
+#ifdef ATTRIBUTE_BACK
+      /* このディレクトリを記憶しておき、あとで属性をまとめて戻す */
+      if( FALSE == add_entry_list( &readonly_list_head, &list_temp, log_fd ) ) {
+	miya_log_fprintf(log_fd, "%s %d: ERROR: add_entry_list\n", __FUNCTION__,__LINE__ );
+	miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+      }
+#endif
+
+      if( (path_info.attributes & FS_ATTRIBUTE_DOS_READONLY) != 0 ) {
+	/* リードオンリーの場合,一度リードライト可能にする */
+	path_info.attributes &= ~FS_ATTRIBUTE_DOS_READONLY;
+	if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
+	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	  miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	  miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	}
+      }
+    }
+    else {
+      /* ファイルの場合 */
+      if( !STD_StrCmp( list_temp.src_path, "nand:" ) ) {
+	/* nandのルートディレクトリはスルーする。 */
+	OS_TPrintf("nand: root detect \n");
+      }
+      else {
+
+	// CopyFile( dst <= src );
+	if( (TRUE == CheckSystemApp( list_temp.src_path )) ||
+	    (TRUE == CheckInstallSuccessApp(list_temp.src_path, title_id_buf, title_id_count)) ) {
+
+	  /* 一応拡張子(*.sav)もチェックしといたほうがいいか？ */
+	  miya_log_fprintf(log_fd, "backup %s\n",list_temp.src_path);
+
+	  tid = GetTitleIdFromSrcPath( list_temp.src_path );
+	  (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+
+	  if( print_debug_flag == TRUE ) {
+	    mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+	  }
+	  miya_log_fprintf(log_fd, " id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+
+#ifdef COPY_FILE_ENCRYPTION
+	  copy_error_flag = CopyFileCrypto( list_temp.src_path, list_temp.dst_path, log_fd );
+#else
+	  copy_error_flag = CopyFile( list_temp.src_path, list_temp.dst_path, log_fd );
+#endif
+
+	  if( TRUE == copy_error_flag ) {
+	    path_info.attributes  = list_temp.content.attributes;
+	    path_info.ctime  = list_temp.content.ctime;
+	    path_info.mtime = list_temp.content.mtime;
+	    path_info.atime = list_temp.content.atime;
+	    path_info.id = list_temp.content.id;
+	    path_info.filesize = list_temp.content.filesize;
+	    if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
+	      fsResult = FS_GetArchiveResultCode(list_temp.src_path);
+	      miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
+	      miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
+	      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+	    }
+	    else {
+	    }
+	    (*list_count)++;
+
+	    /* success */
+	    if( print_debug_flag == TRUE ) {
+	      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	      mprintf("OK.\n");
+	      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    }
+	    miya_log_fprintf(log_fd, "OK.\n");
+	  }
+	  else {
+	    /* fail */
+	    if( print_debug_flag == TRUE ) {
+	      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	      mprintf("NG.\n");
+	      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    }
+	    miya_log_fprintf(log_fd, "NG.\n");
+	  }
+	}
+	else {
+	  /* インストール失敗アプリの場合。 */
+	  if( 2 == CheckInstallSuccessAppEx(list_temp.src_path, title_id_buf, title_id_count) ) {
+	    tid = GetTitleIdFromSrcPath( list_temp.src_path );
+	    (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+	    
+	    if( print_debug_flag == TRUE ) {
+	      mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+	      /* fail */
+	      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	      mprintf("NG.\n");
+	      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    }
+	    miya_log_fprintf(log_fd, " id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+	    miya_log_fprintf(log_fd, "NG.\n");
+	    copy_error_flag = FALSE;
+	  }
+
+	}
+      }
+    }
+
+    if( copy_error_flag == FALSE ) {
+      (*error_count)++;
+      AppErrorReport(list_temp.src_path, "copy file failed");
+    }
+  }
+
+  miya_log_fprintf(log_fd, "%s Read entry count %d error count %d\n",__FUNCTION__ , *list_count, *error_count );
+
+#ifdef ATTRIBUTE_BACK
+  /* add_entry_list( &readonly_list_head, &list_temp );
+     でリストにしたエントリーのアトリビュートを逆順で元に戻す。*/
+  if( FALSE == restore_entry_list(&readonly_list_head, log_fd) ) {
+    miya_log_fprintf(log_fd, "%s %d: ERROR: restore_entry_list\n", __FUNCTION__,__LINE__ );
+  }
+#endif
+
+ exit_label:
+
+  //  FS_FlushFile(&f); //リードだからいらない
+  if( FS_CloseFile(&f) == FALSE) {
+    fsResult = FS_GetArchiveResultCode(path);
+    miya_log_fprintf(log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
+    miya_log_fprintf(log_fd, " %s\n", path);
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
+  }
+
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+  if( log_active ) {
+    Log_File_Close(log_fd);
+  }
+  if( *error_count > 0 ) {
+    return FALSE;
+  }
+  return TRUE;
+}
+
 
 
 
@@ -2169,7 +2519,8 @@ BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
 }
 #endif
 
-BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name)
+//BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name)
+BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -2211,16 +2562,18 @@ BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_nam
 
 
   *count = id_count;
-  size = (int)sizeof(u64) * id_count;
+  //  size = (int)sizeof(u64) * id_count;
+  size = (int)sizeof(MY_USER_APP_TID) * id_count;
 
-  *pBuffer = (u64 *)OS_Alloc( (u32)size );
+  //  *pBuffer = (u64 *)OS_Alloc( (u32)size );
+  *pBuffer = (MY_USER_APP_TID *)OS_Alloc( (u32)size );
   if( *pBuffer == NULL ) {
     ret_flag = FALSE;
     miya_log_fprintf(log_fd, "%s Failed memory alloc size %d\n",__FUNCTION__, size);
     goto function_end;
   }
 
-  readSize = FS_ReadFile(&f, *pBuffer, (s32)size );
+  readSize = FS_ReadFile(&f, (void *)*pBuffer, (s32)size );
   if( readSize != size ) {
     miya_log_fprintf(log_fd, "Failed Read File: %s request size %d read size %d\n",path, size, readSize);
     if( readSize != size ) {
@@ -2245,7 +2598,9 @@ BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_nam
   return ret_flag;
 }
 
-BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
+// BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
+BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name )
+
 {
 
   FSFile f;
@@ -2262,6 +2617,7 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
 
   FS_InitFile(&f);
 
+  //MY_USER_APP_TID
 
   log_active = Log_File_Open( log_fd, log_file_name );
   if( !log_active ) {
@@ -2315,7 +2671,8 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
 
   if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16文字だから */
-    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+    //    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+    if( (count*sizeof(MY_USER_APP_TID)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_APP_TID)) )) {
       res = FS_GetArchiveResultCode( path );
       miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
       miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
@@ -2324,10 +2681,13 @@ BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
     }
     else {
       int j;
-      u64 *ptr = pData;
+      // u64 *ptr = pData;
+      MY_USER_APP_TID *ptr = pData;
+  
       if( ptr != NULL && count > 0 )  {
 	for( j = 0 ; j < count ; j++ ) {
-	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j,*ptr);
+	  //	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j,*ptr);
+	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j,ptr->tid);
 	  ptr++;
 	}
       }
@@ -2693,7 +3053,7 @@ BOOL CleanSDCardFiles(char *log_file_name)
     }
     else if( STD_StrCmp(direntry.longname, "nup_log.txt") == 0 ) {
     }
-    else if( STD_StrCmp(direntry.longname, "tad") == 0 ) {
+    else if( STD_StrCmp(direntry.longname, "tads") == 0 ) {
     }
     else if( direntry.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
     }

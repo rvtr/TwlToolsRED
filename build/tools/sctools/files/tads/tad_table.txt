@@ -1,0 +1,18 @@
+/*
+ title id
+ 0x00000000 00000000, region , country code, file name,
+*/
+
+--00030004_484E47?? [HNG?]    DSiブラウザ
+--00030004_4B4755?? [KGU?]    うごくメモ帳
+
+-- TitleID_Loの４桁目（言語コード）
+-- ?=[J, E, P, U]=[4A, 45, 50, 55]
+
+
+0x00030004484E474A, 0 , 0 ,rom:/tads/TWL-HNGJ-v256.tad.out,
+0x000300044B32444A, 0 , 0 ,rom:/tads/TWL-K2DJ-v0.tad.out,
+0x000300044B47554A, 0 , 0 ,rom:/tads/TWL-KGUJ-v257.tad.out,
+
+
+

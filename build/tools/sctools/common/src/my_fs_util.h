@@ -12,9 +12,21 @@ typedef struct _MY_DIR_ENTRY_LIST {
 } MY_DIR_ENTRY_LIST;
 
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+typedef struct {
+  u64 tid;
+  int is_personalized;
+  BOOL install_success_flag;
+} MY_USER_APP_TID;
+
+
+
+BOOL my_fs_Tid_To_GameCode(u64 tid, char *gcode);
 
 char *my_fs_util_get_fs_result_word( FSResult res );
 s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size);
@@ -33,8 +45,13 @@ void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd);
 BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, int *error_count, char *log_file_name);
 BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int *error_count);
 BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int *list_count, int *error_count);
+BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_file_name, int *list_count, int *error_count,
+							MY_USER_APP_TID *title_id_buf, int title_id_count );
 
-BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name);
+
+  //BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name);
+BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, MY_USER_APP_TID **pBuffer, int *size, char *log_file_name);
+
 BOOL ClearDirEntryList( MY_DIR_ENTRY_LIST **headp );
 
 void write_debug_data(void);
@@ -52,8 +69,10 @@ BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd
 BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
 
 
-BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name);
-BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name);
+// BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name);
+// BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name);
+BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name);
+BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name);
 
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );
 
@@ -63,7 +82,9 @@ BOOL Log_File_Open(FSFile *log_fd, const char *log_file_name);
 
 void Miya_debug_OFF(void);
 void Miya_debug_ON(void);
-
+void my_fs_print_debug_ON(void);
+void my_fs_print_debug_OFF(void);
+BOOL my_fs_get_print_debug_flag(void);
 
 #ifdef __cplusplus
 }

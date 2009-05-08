@@ -37,6 +37,8 @@
 
 #include        "myfilename.h"
 #include        "menu_version.h"
+#include        "pre_install.h"
+
 
 //================================================================================
 #define LCD_UPPER_LOWER_FLIP 1
@@ -156,7 +158,7 @@ static int Check_User_Titles(void)
   s32 num = 0;
   int user_tilte_count = 0;
   u64 id;
-
+  char game_code[5];
 
   num = NAM_GetNumTitles();
   if( num > 0 ) {
@@ -178,14 +180,16 @@ static int Check_User_Titles(void)
                      | 
   		 システムアプリはダウンロード対象外
       */
+      (void)my_fs_Tid_To_GameCode(id, game_code);
+
       if( id & 0x0000000100000000 ) {
 	/* system app. */
-	OS_TPrintf(" sys.:%3d:0x%llx\n", i, id);
+	OS_TPrintf(" sys.:%3d:0x%llx %s\n", i, id, game_code);
 
       }
       else {
 	/* user app. */
-	OS_TPrintf(" usr.:%3d:0x%llx\n", i, id);
+	OS_TPrintf(" usr.:%3d:0x%llx %s\n", i, id, game_code);
 	user_tilte_count++;
       }
     }
@@ -433,11 +437,16 @@ static BOOL SDBackupToSDCard7(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
   int save_dir_info = 0;
-  u64 *pBuffer;
+  //  u64 *pBuffer;
+  // u64 *ptr;
+
+  MY_USER_APP_TID *pBuffer;
+  MY_USER_APP_TID *ptr;
+
   int count;
   int j;
-  u64 *ptr;
   BOOL flag = TRUE;
+  int common_or_presonalized_flag;
 
   /* タイトルリストの生成 */
   /* 
@@ -477,11 +486,63 @@ static BOOL SDBackupToSDCard7(void)
       ptr = pBuffer;
       mydata.num_of_user_download_app = count;
       mydata.num_of_error_user_download_app = 0;
+      mydata.num_of_user_pre_installed_app = 0;
+
+      if( no_sd_clean_flag == TRUE ) {
+	mprintf("\n");
+      }
+
       
       if( ptr != NULL && count != 0 )  {
 	for( j = 0 ; j < count ; j++ ) {
-	  OS_TPrintf("No. %d 0x%016llx\n",j,*ptr);
-	  mfprintf(tc[2],"No. %d 0x%016llx\n",j,*ptr);
+	  //	  OS_TPrintf("No. %d 0x%016llx\n",j, *ptr);
+	  //	  mfprintf(tc[2],"No. %d 0x%016llx\n",j,*ptr);
+	  OS_TPrintf("No. %d 0x%016llx",j, ptr->tid);
+	  mfprintf(tc[2],"No. %d 0x%016llx",j,ptr->tid);
+
+	  if( no_sd_clean_flag == TRUE ) {
+	    mprintf("No. %d 0x%016llx",j,ptr->tid);
+	  }
+
+	  if( TRUE == pre_install_check_download_or_pre_install(ptr->tid, &common_or_presonalized_flag, NULL) ) {
+	    ptr->is_personalized = common_or_presonalized_flag;
+	    if( ptr->is_personalized == 1 ) {
+	      OS_TPrintf(" common");
+	      mfprintf(tc[2]," common");
+	      if( no_sd_clean_flag == TRUE ) {
+		mprintf(" common");
+	      }
+	      mydata.num_of_user_pre_installed_app++;
+
+	    }
+	    else if( ptr->is_personalized == 2 ) {
+	      OS_TPrintf(" personalized");
+	      mfprintf(tc[2]," personalized");
+	      if( no_sd_clean_flag == TRUE ) {
+		mprintf(" personalized");
+	      }
+	    }
+	    else {
+	      OS_TPrintf(" ?=%d",ptr->is_personalized);
+	      mfprintf(tc[2]," ?=%d",ptr->is_personalized);
+	      if( no_sd_clean_flag == TRUE ) {
+		mprintf(" ?=%d",ptr->is_personalized);
+	      }
+	    }
+	  }
+	  else {
+	    OS_TPrintf(" ticketv fail");
+	    mfprintf(tc[2]," ticketv fail");
+	    if( no_sd_clean_flag == TRUE ) {
+	      mprintf(" ticketv fail");
+	    }
+	    ptr->is_personalized = 0;
+	  }
+	  OS_TPrintf("\n");
+	  mfprintf(tc[2],"\n");
+	  if( no_sd_clean_flag == TRUE ) {
+	    mprintf("\n");
+	  }
 	  ptr++;
 	}
       }
@@ -899,9 +960,9 @@ void TwlMain(void)
   NAM_Init(&AllocForNAM, &FreeForNAM);
 
 
-  mydata.num_of_user_download_app_by_nam = Check_User_Titles();
-  mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app_by_nam);
-
+  //  mydata.num_of_user_download_app_by_nam = Check_User_Titles();
+  //  mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app_by_nam);
+  mprintf("num of user tiltes = %d\n",Check_User_Titles());
 
   mprintf("\n");
 

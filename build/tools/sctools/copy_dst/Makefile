@@ -27,7 +27,7 @@ SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
 				hatamotolib.cpp miya_mcu.c error_report.c \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
 				mynuc.c nuc_error_msg.c stream.c myfilename.c menu_version.c \
-				ntp.c myimport.c
+				ntp.c myimport.c pre_install.c
 
 TARGET_BIN		=	copy_dst.srl
 ROM_SPEC		=	copy_dst.rsf
@@ -48,7 +48,6 @@ LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib/$(TWL_BUILDTYPE)
 LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				liblcfg$(TWL_LIBSUFFIX).a  \
 				libnhttp.nssl$(TWL_LIBSUFFIX).a	\
-				libnssl$(TWL_LIBSUFFIX).a	\
 				libshr$(TWL_LIBSUFFIX).a   \
 				libnuc$(TWL_LIBSUFFIX).a	\
 				libnup$(TWL_LIBSUFFIX).a	\
@@ -59,11 +58,20 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				libsfs$(TWL_LIBSUFFIX).a   \
 				libna$(TWL_LIBSUFFIX).a    \
 
+#				libnssl$(TWL_LIBSUFFIX).a	\
 #				libnhttp$(TWL_LIBSUFFIX).a \
 
 
 MAKEROM_ROMROOT  = ../files
-MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav
+MAKEROM_TAD_ROMFILES = tads/tad_table.txt \
+			tads/nandAppSample.tad tads/backupSample.tad tads/encodeSD.tad \
+			tads/TWL-KGUJ-v257.tad.out \
+			tads/TWL-K2DJ-v0.tad.out \
+			tads/TWL-HNGJ-v256.tad.out
+
+MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav $(MAKEROM_TAD_ROMFILES)
+
+
 
 MY_TWL_COMPONENTSDIR	= ../my_armadillo.TWL/bin
 COMPONENT_NAME      =   armadillo

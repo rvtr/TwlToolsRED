@@ -25,7 +25,7 @@ SRCDIR			=	../common/src ./src
 SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
 				gfx.c hwi.c mynvram.c my_fs_util.c miya_mcu.c error_report.c \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
-				stream.c myfilename.c menu_version.c
+				stream.c myfilename.c menu_version.c pre_install.c myimport.c
 
 TARGET_BIN		=	copy_org.srl
 ROM_SPEC		=	copy_org.rsf
@@ -48,7 +48,6 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				liblcfg$(TWL_LIBSUFFIX).a  \
 				libshr$(TWL_LIBSUFFIX).a   \
 				libnhttp.nssl$(TWL_LIBSUFFIX).a	\
-				libnssl$(TWL_LIBSUFFIX).a	\
 				libnuc$(TWL_LIBSUFFIX).a	\
 				libnup$(TWL_LIBSUFFIX).a	\
 				libnam$(TWL_LIBSUFFIX).a   \
@@ -58,7 +57,7 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				libsfs$(TWL_LIBSUFFIX).a   \
 				libna$(TWL_LIBSUFFIX).a    \
 
-
+#				libnssl$(TWL_LIBSUFFIX).a	\
 #				libnhttp$(TWL_LIBSUFFIX).a \
 
 

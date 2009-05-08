@@ -11,6 +11,7 @@ extern "C" {
 
 void mfprintf(TEXT_CTRL *tc, const char *fmt, ...);
 void mprintf(const char *fmt, ...);
+void mputchar(int c);
 
 #ifdef __cplusplus
 }

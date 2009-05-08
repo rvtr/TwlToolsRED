@@ -829,29 +829,11 @@ static BOOL DownloadTitles(MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
       (void)my_fs_Tid_To_GameCode((u64)tid, game_code_buf);
       game_code_buf[4] = '\0';
       mprintf("  downloading.. [%s]       ", game_code_buf);
-#if 0
-      if( FALSE == WaitEC(progress) ) {
-	
-	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
-	/* 
-	   if( WaitEC_result == EC_ERROR_NET_CONTENT ) {
-	   tid を記録だけしてエラーにしない。
-	   } 
-	   
-	*/
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
-	ret_flag = FALSE;
-      }
-#else
       if( FALSE == WaitEC_with_NG_print(progress) ) {
 	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
 	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
 	ret_flag = FALSE;
       }
-#endif
       else {
 	pTitleIds[i].install_success_flag = TRUE;
 
@@ -901,7 +883,7 @@ int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-    mprintf("  acount not transfered yet.\n");
+    mprintf(" acount not transfered yet.\n");
     //    mprintf("   OR, acount already cleared\n\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     miya_log_fprintf(log_fd, " acount not transfered yet.\n");
@@ -916,16 +898,16 @@ int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-    mprintf("  already registered. please delete acount.\n");
+    mprintf(" already registered.\n please delete acount.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    miya_log_fprintf(log_fd, "  already registered. please delete acount.\n");
+    miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
     return ECDOWNLOAD_FAILURE;
   }
   else if( (status != 'P') && (status != 'T') ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
-    mprintf("  invalid registration status '%c'\n", status );
+    mprintf(" invalid registration status '%c'\n", status );
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     miya_log_fprintf(log_fd, " invalid registration status '%c'\n", status );
     return ECDOWNLOAD_FAILURE;

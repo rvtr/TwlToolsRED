@@ -1203,10 +1203,10 @@ static void AppErrorReport(const char *path, char *msg)
     (void)Error_Report_Printf(" Photo :%s\n", msg);
   }
   else if( TRUE == GetAppGameCode(path, game_code, NULL ) ) {
-    (void)Error_Report_Printf(" [ %s ]:%s\n", game_code, msg);
+    (void)Error_Report_Printf(" [%s]:%s\n", game_code, msg);
   }
   else {
-    (void)Error_Report_Printf(" [ ???? ]:%s\n   path=%s\n",msg, path);
+    (void)Error_Report_Printf(" [????]:%s\n   path=%s\n",msg, path);
   }
 }
 
@@ -1622,6 +1622,8 @@ BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, in
 /********************************************
  * NANDにディレクトリエントリとファイルを復活させる。
 *********************************************/
+
+
 BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int *error_count)
 {
   FSFile f;
@@ -1789,202 +1791,6 @@ BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int
     }
     else {
       (*list_count)++;
-    }
-  }
-
-  miya_log_fprintf(log_fd, "%s Read entry count %d error count %d\n",__FUNCTION__ , *list_count, *error_count );
-
-#ifdef ATTRIBUTE_BACK
-  /* add_entry_list( &readonly_list_head, &list_temp );
-     でリストにしたエントリーのアトリビュートを逆順で元に戻す。*/
-  if( FALSE == restore_entry_list(&readonly_list_head, log_fd) ) {
-    miya_log_fprintf(log_fd, "%s %d: ERROR: restore_entry_list\n", __FUNCTION__,__LINE__ );
-  }
-#endif
-
- exit_label:
-
-  //  FS_FlushFile(&f); //リードだからいらない
-  if( FS_CloseFile(&f) == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd, "%s %d: Failed Close file\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(log_fd, " %s\n", path);
-    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-  }
-
-  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
-  if( log_active ) {
-    Log_File_Close(log_fd);
-  }
-  if( *error_count > 0 ) {
-    return FALSE;
-  }
-  return TRUE;
-}
-
-
-
-BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int *list_count, int *error_count)
-{
-  FSFile f;
-  FSFile f_dir;
-  BOOL bSuccess;
-  FSResult fsResult;
-  s32 readSize;
-  MY_DIR_ENTRY_LIST list_temp;
-  FSPathInfo path_info;
-  MY_DIR_ENTRY_LIST *readonly_list_head = NULL;
-  BOOL copy_error_flag;
-  FSFile log_fd_real;
-  FSFile *log_fd;
-  BOOL log_active = FALSE;
-  
-
-
-  log_fd = &log_fd_real;
-  log_active = Log_File_Open( log_fd, log_file_name );
-  if( !log_active ) {
-    log_fd = NULL;
-  }
-  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
-
-
-  if( (list_count == NULL) || (error_count == NULL) ) {
-    miya_log_fprintf(log_fd, "%s Error:invalid argument\n", __FUNCTION__);
-    miya_log_fprintf(log_fd, " list ptr=0x%08x error ptr=0x%08x\n", list_count, error_count);
-    return FALSE;
-  }
-
-  *list_count = 0;
-  *error_count = 0;
-
-  FS_InitFile(&f);
-  FS_InitFile(&f_dir);
-
-  if( FS_OpenFileEx(&f, path, FS_FILEMODE_R) == FALSE) {
-    fsResult = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd, "%s %d: Failed Open file\n", __FUNCTION__ , __LINE__ );
-    miya_log_fprintf(log_fd, " %s\n", path);
-    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-    return FALSE; /* error */
-  }
-
-  while( 1 ) {
-    /* リストはルートディレクトリに近い順から入っている */
-    readSize = FS_ReadFile(&f, (void *)&list_temp, (s32)sizeof(MY_DIR_ENTRY_LIST) );
-    if( readSize == 0 ) {
-      /* 終わり */
-      break;
-    }
-    else if( readSize != (s32)sizeof(MY_DIR_ENTRY_LIST) ) {
-      miya_log_fprintf(log_fd, "%s %d: Failed Read file\n", __FUNCTION__ , __LINE__ );
-      miya_log_fprintf(log_fd, " %s\n", path);
-      break;
-    }
-
-    copy_error_flag = TRUE;
-
-    /* NAND側にディレクトリの作成とファイルのコピー */
-    if( (list_temp.content.attributes & FS_ATTRIBUTE_IS_DIRECTORY) != 0 ) {
-      /* ディレクトリの場合 */
-      if( TRUE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
-	/* 復元される側(NAND)にすでに何かファイルかディレクトリがある場合 */
-	if( (path_info.attributes & FS_ATTRIBUTE_IS_DIRECTORY) == 0 ) {
-	  /* ディレクトリでない場合 エラー */
-	  /* SDにログを残す場合 */
-	  miya_log_fprintf(log_fd, "%s %d: NOT a directory\n", __FUNCTION__ , __LINE__ );
-	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
-	  /* require backup file */
-	  /* パニック?? */
-	  /* それとも一度デリートする?? */
-	  FS_DeleteFile( list_temp.src_path ); /* ちょっと無理やりか？ */
-	  goto label1;
-	}
-	/* read onlyディレクトリだった場合の処理は下のほうでやる。 */
-      }
-      else {
-      label1:
-	/* 復元される側(NAND)にディレクトリエントリがない場合 */
-	bSuccess = FS_CreateDirectory(list_temp.src_path, FS_PERMIT_RW);
-	if(!bSuccess) {
-	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
-	  if( fsResult != FS_RESULT_ALREADY_DONE ) {
-	    miya_log_fprintf(log_fd, "%s %d: Failed Create NAND Directory\n", __FUNCTION__,__LINE__);
-	    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	    miya_log_fprintf(log_fd, " %s\n", list_temp.src_path);
-	    copy_error_flag = FALSE;
-	  }
-	}
-	if( FALSE == FS_GetPathInfo(list_temp.src_path, &path_info) ) {
-	  miya_log_fprintf(log_fd, "%s %d: Failed GetPathInfo\n", __FUNCTION__,__LINE__ );
-	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
-	  //  return FALSE;
-	}
-      }
-
-
-#ifdef ATTRIBUTE_BACK
-      /* このディレクトリを記憶しておき、あとで属性をまとめて戻す */
-      if( FALSE == add_entry_list( &readonly_list_head, &list_temp, log_fd ) ) {
-	miya_log_fprintf(log_fd, "%s %d: ERROR: add_entry_list\n", __FUNCTION__,__LINE__ );
-	miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
-      }
-#endif
-
-      if( (path_info.attributes & FS_ATTRIBUTE_DOS_READONLY) != 0 ) {
-	/* リードオンリーの場合,一度リードライト可能にする */
-	path_info.attributes &= ~FS_ATTRIBUTE_DOS_READONLY;
-	if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
-	  fsResult = FS_GetArchiveResultCode(list_temp.src_path);
-	  miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
-	  miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
-	  miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	}
-      }
-    }
-    else {
-      /* ファイルの場合 */
-      if( !STD_StrCmp( list_temp.src_path, "nand:" ) ) {
-	/* nandのルートディレクトリはスルーする。 */
-	OS_TPrintf("nand: root detect \n");
-      }
-      else {
-
-	// CopyFile( dst <= src );
-	if( TRUE == CheckSystemApp( list_temp.src_path ) ) {
-	  /* 一応拡張子(*.sav)もチェックしといたほうがいいか？ */
-	  OS_TPrintf("sys backup %s\n",list_temp.src_path);
-#ifdef COPY_FILE_ENCRYPTION
-	  copy_error_flag = CopyFileCrypto( list_temp.src_path, list_temp.dst_path, log_fd );
-#else
-	  copy_error_flag = CopyFile( list_temp.src_path, list_temp.dst_path, log_fd );
-#endif
-
-	  if( TRUE == copy_error_flag ) {
-	    path_info.attributes  = list_temp.content.attributes;
-	    path_info.ctime  = list_temp.content.ctime;
-	    path_info.mtime = list_temp.content.mtime;
-	    path_info.atime = list_temp.content.atime;
-	    path_info.id = list_temp.content.id;
-	    path_info.filesize = list_temp.content.filesize;
-	    if( FALSE == FS_SetPathInfo( list_temp.src_path, &path_info) ) {
-	      fsResult = FS_GetArchiveResultCode(list_temp.src_path);
-	      miya_log_fprintf(log_fd, "%s %d: Failed SetPathInfo\n", __FUNCTION__,__LINE__ );
-	      miya_log_fprintf(log_fd, " %s\n", list_temp.src_path );
-	      miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( fsResult ) );
-	    }
-	    (*list_count)++;
-	  }
-	}
-	else {
-	  /* ユーザーアプリだった場合。 */
-	}
-      }
-    }
-
-    if( copy_error_flag == FALSE ) {
-      (*error_count)++;
-      AppErrorReport(list_temp.src_path, "copy file failed");
     }
   }
 

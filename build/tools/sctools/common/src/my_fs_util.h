@@ -43,8 +43,8 @@ void PrintDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd );
 void PrintSrcDirEntryListBackward( MY_DIR_ENTRY_LIST *head, FSFile *log_fd);
 
 BOOL SaveDirEntryList( MY_DIR_ENTRY_LIST *head , char *path, int *list_count, int *error_count, char *log_file_name);
+
 BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int *error_count);
-BOOL RestoreDirEntryListSystemBackupOnly( char *path , char *log_file_name, int *list_count, int *error_count);
 BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_file_name, int *list_count, int *error_count,
 							MY_USER_APP_TID *title_id_buf, int title_id_count );
 

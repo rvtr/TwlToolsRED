@@ -916,11 +916,6 @@ static BOOL RestoreFromSDCard8(void)
   Error_Report_Init();
 
   if( mydata.num_of_app_save_data  > 0 ) { 
-
-    //miya 2009.05.07
-    /* システムアプリ、プリインストールアプリのバックアップデータを復活させるとき */
-    /* きっちり作り直した方がええかも */
-
     mprintf("App. save data restore       ");
     if( TRUE == RestoreDirEntryList_System_And_InstallSuccessApp( MyFile_GetSaveDataListFileName() , 
 								  MyFile_GetSaveDataRestoreLogFileName(),
@@ -945,17 +940,19 @@ static BOOL RestoreFromSDCard8(void)
     mprintf("Original app. save data saving failed\n");
   }
 
-
   if( title_id_buf_ptr != NULL ) {
     OS_Free( title_id_buf_ptr );
     title_id_buf_ptr = NULL;
   }
   title_id_count = 0;
 
+  m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
 
   if( TRUE == Error_Report_Display(tc[0]) ) {
     mprintf("\n");
   }
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
   Error_Report_End();
 
   return ret_flag;

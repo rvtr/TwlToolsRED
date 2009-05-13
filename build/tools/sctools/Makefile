@@ -18,7 +18,7 @@
 
 
 
-SUBDIRS		= my_armadillo.TWL copy_org copy_dst
+SUBDIRS		= make_tad_table my_armadillo.TWL copy_org copy_dst
 
 
 include	$(TWLSDK_ROOT)/build/buildtools/commondefs

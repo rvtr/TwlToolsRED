@@ -475,7 +475,6 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
        pTitleIds[i].is_personalized = 2 -> personalized
     */
     if( title_id_buf_ptr[i].is_personalized == 1 ) {
-      /* common e-ticketのやつ */
       /*
 	0x00030004484E474A "rom:/tads/TWL-KGUJ-v257.tad.out"
 	0x000300044B32444A "rom:/tads/TWL-K2DJ-v0.tad.out"
@@ -502,7 +501,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
 	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
 	  mprintf("OK.\n");
 	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	  title_id_buf_ptr[i].install_success_flag = TRUE;
+	  title_id_buf_ptr[i].install_success_flag = TRUE; /* これを入れとかないと後でセーブデータを復活しない */
 	}
       }
       else {

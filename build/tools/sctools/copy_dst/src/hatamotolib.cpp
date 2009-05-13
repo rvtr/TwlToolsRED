@@ -214,8 +214,16 @@ void SetupTitlesDataFile(const MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
   for( u32 i = 0; i < numTitleIds; i++ )
     {
       //      tid = pTitleIds[i];
-      tid = pTitleIds[i].tid;
-      NAM_SetupTitleDataFile(tid);
+      if( (pTitleIds[i].is_personalized == 2) &&
+	  (pTitleIds[i].install_success_flag == TRUE) ) {
+	/* 
+	   personalized ticketのときは何もしない、というかプリンストールもの 
+	   pTitleIds[i].is_personalized = 1 -> common 
+	   pTitleIds[i].is_personalized = 2 -> personalized
+	*/
+	tid = pTitleIds[i].tid;
+	NAM_SetupTitleDataFile(tid);
+      }
     }
 }
 

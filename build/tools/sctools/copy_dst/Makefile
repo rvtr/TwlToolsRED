@@ -15,7 +15,7 @@
 # $Rev: 3650 $
 # $Author: okubata_ryoma $
 #----------------------------------------------------------------------------
-SUBDIRS			 = ./banner
+SUBDIRS			 = ./banner ../files/tads
 
 TARGET_PLATFORM		:= TWL
 TWL_ARCHGEN		:= LIMITED
@@ -58,18 +58,16 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				libsfs$(TWL_LIBSUFFIX).a   \
 				libna$(TWL_LIBSUFFIX).a    \
 
-#				libnssl$(TWL_LIBSUFFIX).a	\
-#				libnhttp$(TWL_LIBSUFFIX).a \
 
 
 MAKEROM_ROMROOT  = ../files
-MAKEROM_TAD_ROMFILES = tads/tad_table.txt \
-			tads/nandAppSample.tad tads/backupSample.tad tads/encodeSD.tad \
-			tads/TWL-KGUJ-v257.tad.out \
-			tads/TWL-K2DJ-v0.tad.out \
-			tads/TWL-HNGJ-v256.tad.out
 
-MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav $(MAKEROM_TAD_ROMFILES)
+TAD_TABLE_TXT	= ../files/tads/tad_table.txt
+
+include Makefile.TadIncludes
+
+MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav tads/tad_table.txt $(MAKEROM_TAD_ROMFILES)
+
 
 
 
@@ -95,10 +93,13 @@ MAKEROM			 := $(TWL_TOOLSDIR)/bin/makerom.TWL.secure.exe
 
 #----------------------------------------------------------------------------
 
+
 $(TARGET_AUTOBOOT): ./bin/$(TWL_BUILDTYPE)/$(TARGET_BIN)
 		../bin/FakeRomHeader.secure.exe  -c -f $< $@
 
-do-build:		$(TARGETS) $(TARGET_AUTOBOOT)
+
+
+do-build:	$(TARGETS) $(TARGET_AUTOBOOT)
 
 #----------------------------------------------------------------------------
 

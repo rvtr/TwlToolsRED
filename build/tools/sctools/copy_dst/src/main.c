@@ -207,58 +207,36 @@ static BOOL start_my_thread(u32 command)
   return FALSE;
 }
 
-#if 0
 
-static void DeleteKnownTitles(NAMTitleId* pTitleIds, int num)
-{
-  int i;
-  NAMTitleId tid;
-  u32 hi;
-
-  /* 
-     
-     タイトルIDリスト
-     「TitleID_Hi」_「TitleID_Lo」
-     ------------------------------------------
-     システムアプリ
-     　　00030017_484E41?? [HNA?]    DSiメニュー
-     　　00030015_484E42?? [HNB?]    本体設定
-     　　00030015_484E46?? [HNF?]    DSiショップ
-     　　0003000F_484E4341 [HNCA]    無線ファーム
-     　　0003000F_484E4841 [HNHA]    ホワイトリスト
-     　　0003000F_484E4C?? [HNL?]    バージョン情報
-     　　00030005_484E4441 [HNDA]    ダウンロードプレイ
-     　　00030005_484E4541 [HNEA]    PictChat
-     　　00030005_484E49?? [HNI?]    DSiカメラ
-     　　00030005_484E4A?? [HNJ?]    ニンテンドーゾーンビューア
-     　　00030005_484E4B?? [HNK?]    DSiサウンド
-     
-     ユーザーアプリ
-     　　00030004_484E47?? [HNG?]    DSiブラウザ
-     　　00030004_4B4755?? [KGU?]    うごくメモ帳
-     
-     TitleID_Loの４桁目（言語コード）
-     　　?=[J, E, P, U]=[4A, 45, 50, 55]
-     
-     アプリのインストールされるパス
-     　　"nand:/title/<titleID_Hi>/<titleID_Lo>"
-
- */
-
-
-  for( i = 0; i < num; i++ )  {
-    tid = *pTitleIds++;
-    hi = NAM_GetTitleIdHi(tid);
-    if( hi == 0x00030004 ) {
-      //      NAM_DeleteTitleCompletely(tid);
-      NAM_DeleteTitle(tid);
-    }
-  }
-}
-
-#endif
-
-
+/* 
+   
+   タイトルIDリスト
+   「TitleID_Hi」_「TitleID_Lo」
+   ------------------------------------------
+   システムアプリ
+   　　00030017_484E41?? [HNA?]    DSiメニュー
+   　　00030015_484E42?? [HNB?]    本体設定
+   　　00030015_484E46?? [HNF?]    DSiショップ
+   　　0003000F_484E4341 [HNCA]    無線ファーム
+   　　0003000F_484E4841 [HNHA]    ホワイトリスト
+   　　0003000F_484E4C?? [HNL?]    バージョン情報
+   　　00030005_484E4441 [HNDA]    ダウンロードプレイ
+   　　00030005_484E4541 [HNEA]    PictChat
+   　　00030005_484E49?? [HNI?]    DSiカメラ
+   　　00030005_484E4A?? [HNJ?]    ニンテンドーゾーンビューア
+   　　00030005_484E4B?? [HNK?]    DSiサウンド
+   
+   ユーザーアプリ
+   　　00030004_484E47?? [HNG?]    DSiブラウザ
+   　　00030004_4B4755?? [KGU?]    うごくメモ帳
+   
+   TitleID_Loの４桁目（言語コード）
+   　　?=[J, E, P, U]=[4A, 45, 50, 55]
+   
+   アプリのインストールされるパス
+   　　"nand:/title/<titleID_Hi>/<titleID_Lo>"
+   
+*/
 
 static void RTC_NTP_SYNC(void)
 {
@@ -738,7 +716,6 @@ static BOOL RestoreFromSDCard7(void)
     (void)pre_install_Cleanup_User_Titles( log_fd );
   }
 
-
   if( no_network_flag == TRUE ) {
     miya_log_fprintf(log_fd,"no network flag ON\n");
     goto pre_install_label;
@@ -825,17 +802,16 @@ static BOOL RestoreFromSDCard7(void)
       if( ec_download_ret == ECDOWNLOAD_FAILURE ) {
 	ret_flag = FALSE;
 	miya_log_fprintf(log_fd, "%s failed ECDownload 1\n", __FUNCTION__);
-	goto end_ec_f;
       }
       else if( ec_download_ret == ECDOWNLOAD_DUMMY ) {
 	ret_flag = FALSE;
 	miya_log_fprintf(log_fd, "%s failed ECDownload 2\n", __FUNCTION__);
-	goto end_ec_f;
       }
       // 不要：セーブデータ領域を作成
       // NAM_Init を忘れてた
 
       //      SetupTitlesDataFile((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count);
+
       SetupTitlesDataFile((MY_USER_APP_TID *)title_id_buf_ptr , (u32)title_id_count);
 
     end_ec_f:
@@ -917,6 +893,7 @@ static BOOL RestoreFromSDCard8(void)
 
   if( mydata.num_of_app_save_data  > 0 ) { 
     mprintf("App. save data restore       ");
+    
     if( TRUE == RestoreDirEntryList_System_And_InstallSuccessApp( MyFile_GetSaveDataListFileName() , 
 								  MyFile_GetSaveDataRestoreLogFileName(),
 								  &list_count, &error_count,
@@ -1000,7 +977,7 @@ static void MyThreadProc(void *arg)
 
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       
-      if( miya_debug_level == 1 ) {
+      if( miya_debug_level == 1 || ( my_fs_get_print_debug_flag() == TRUE )) {
 	m_set_palette(tc[0], M_TEXT_COLOR_PINK );
 	mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -1009,7 +986,7 @@ static void MyThreadProc(void *arg)
 	if( FALSE == (function_table[function_counter])() ) {
 	  flag = FALSE;
 	}
-	if( miya_debug_level == 1 ) {
+	if( miya_debug_level == 1 || ( my_fs_get_print_debug_flag() == TRUE )) {
 	  m_set_palette(tc[0], M_TEXT_COLOR_PINK );
 	  mprintf("Free mem size %d bytes\n", OS_GetTotalFreeSize(OS_ARENA_MAIN, hHeap));
 	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );

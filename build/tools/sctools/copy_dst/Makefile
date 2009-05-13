@@ -64,10 +64,10 @@ MAKEROM_ROMROOT  = ../files
 
 TAD_TABLE_TXT	= ../files/tads/tad_table.txt
 
+
 include Makefile.TadIncludes
 
 MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav tads/tad_table.txt $(MAKEROM_TAD_ROMFILES)
-
 
 
 
@@ -77,6 +77,9 @@ COMPONENT_NAME      =   armadillo
 # MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(COMPONENT_NAME)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
 MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
 MAKEROM_ARM7        =   $(MAKEROM_ARM7_BASE).$(TWL_ELF_EXT)
+
+
+LDIRT_CLEAN	=
 
 
 include $(TWLWIFI_ROOT)/build/buildtools/commondefs
@@ -100,6 +103,10 @@ $(TARGET_AUTOBOOT): ./bin/$(TWL_BUILDTYPE)/$(TARGET_BIN)
 
 
 do-build:	$(TARGETS) $(TARGET_AUTOBOOT)
+
+
+$(BINDIR)/$(TARGET_BIN_BASENAME).$(TWL_ELF_EXT): Makefile.TadIncludes $(TAD_TABLE_TXT)
+
 
 #----------------------------------------------------------------------------
 

@@ -273,13 +273,6 @@ void TwlMain(void)
   init_my_thread();
 
 
-  {
-    double d;
-    d = 0.1234567789;
-    mprintf("test %f\n", d);
-  }
-
-
   while( 1 ) {
     Gfx_Render( vram_num_main , vram_num_sub );
     OS_WaitVBlankIntr();

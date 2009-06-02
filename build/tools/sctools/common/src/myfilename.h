@@ -39,6 +39,11 @@
 #define MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG ("title_id_rst.txt" )
 #define MY_FILE_NAME_DOWNLOAD_TITLE_ID_SAVE_LOG ("title_id_sv.txt" )
 
+#define MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_DATA ("title_tk.dat")
+#define MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_LOG ("title_tk.txt" )
+#define MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_RESTORE_LOG ("title_tk_rst.txt" )
+#define MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_SAVE_LOG ("title_id_sv.txt" )
+
 #define MY_FILE_NAME_ORG_DATA ("personal.dat")
 #define MY_FILE_NAME_ORG_LOG ("personal.txt")
 #define MY_FILE_NAME_ORG_RESTORE_LOG ("personal_rst.txt")
@@ -93,6 +98,10 @@ char *MyFile_GetDownloadTitleIDLogFileName(void);
 char *MyFile_GetDownloadTitleIDFileName(void);
 char *MyFile_GetDownloadTitleIDRestoreLogFileName(void);
 char *MyFile_GetDownloadTitleIDSaveLogFileName(void);
+
+char *MyFile_GetDownloadTitleIDTicketOnlyFileName(void);
+char *MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName(void);
+char *MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName(void);
 
 char *MyFile_GetGlobalInformationFileName(void);
 char *MyFile_GetGlobalInformationRestoreFileName(void);

@@ -74,6 +74,10 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
 BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name);
 BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name);
 
+BOOL TitleIDSaveETicketOnly(const char *path, u64 *pData, int count, char *log_file_name );
+BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *log_file_name);
+
+
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );
 
 void Log_File_Close(FSFile *log_fd);

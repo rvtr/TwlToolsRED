@@ -165,7 +165,7 @@ Property
 	#
 	# SDCardAccess: sd card access control [TRUE/FALSE]
 	#
-	SDCardAccess	TRUE
+ 	SDCardAccess	ReadWrite
 
 	#
 	# NANDAccess: NAND access control [TRUE/FALSE]

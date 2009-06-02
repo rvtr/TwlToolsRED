@@ -213,7 +213,7 @@ char *MyFile_GetDownloadTitleIDRestoreLogFileName(void)
 char *MyFile_GetDownloadTitleIDSaveLogFileName(void)
 {
   STD_StrCpy( path_log , path_base );
-  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_RESTORE_LOG );
+  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_SAVE_LOG );
   return path_log;
 }
 
@@ -223,6 +223,28 @@ char *MyFile_GetDownloadTitleIDFileName(void)
   STD_StrCat( path , MY_FILE_NAME_DOWNLOAD_TITLE_ID_DATA );
   return path;
 }
+
+char *MyFile_GetDownloadTitleIDTicketOnlyFileName(void)
+{
+  STD_StrCpy( path , path_base );
+  STD_StrCat( path , MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_DATA );
+  return path;
+}
+
+char *MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_RESTORE_LOG );
+  return path_log;
+}
+
+char *MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName(void)
+{
+  STD_StrCpy( path_log , path_base );
+  STD_StrCat( path_log , MY_FILE_NAME_DOWNLOAD_TITLE_ID_TICKET_SAVE_LOG );
+  return path_log;
+}
+
 
 char *MyFile_GetGlobalInformationFileName(void)
 {

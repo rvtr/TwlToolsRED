@@ -27,6 +27,10 @@
 #include "text.h"
 #include "mprintf.h"
 
+#define size_t my_size_t
+typedef signed long my_size_t;
+
+
 #define	CODE32
 
 
@@ -68,7 +72,7 @@ static void *memcpy(void *dest, const void *src, size_t n)
   unsigned char *ss = (unsigned char *)src;
   
   while(n--) {
-    My_WriteByte( s++,My_ReadByte(ss++));
+    *s++ = *ss++ ;
   }
   return dest;
 }
@@ -78,7 +82,7 @@ static void *memcpy(void *dest, const void *src, size_t n)
 static const char *strchr(const char *s,int c)
 {
   int a;
-  while( (a = (int)My_ReadByte(s)) != NULL ) {
+  while( (a = (int)*s) != NULL ) {
     if(a == c)
       return s;
     s++;
@@ -89,7 +93,7 @@ static const char *strchr(const char *s,int c)
 static size_t strlen(const char *s)
 {
   size_t n=0;
-  while( My_ReadByte(s) != NULL) {
+  while( *s != NULL) {
     n++;
     s++;
   }
@@ -110,7 +114,7 @@ static void *proutPrintf(void *txb, const char *buf, size_t n)
   int i;
   
   for (i = 0; i < n; i++)
-    MIYA_PUTCHAR( txb, My_ReadByte(&(buf[i])));
+    MIYA_PUTCHAR( txb, buf[i]);
   /* return a fake pointer so that it's not NULL */
   return ((void *)txb);
 }
@@ -206,7 +210,7 @@ static void miya_Litob(_Pft *, char);
   if (0 < (n)) { \
 		   int i, j = (n); \
 		     for (; 0 < j; j -= i) { \
-					       i = MAX_PAD < j ? MAX_PAD : j; \
+					       i = MAX_PAD < j ? (int)MAX_PAD : j; \
 						 PUT(s, i); \
 						 } \
 						 }
@@ -270,7 +274,7 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
     
     /* copy any literal text */
 
-    while ( (0 < (c = (int)My_ReadByte(s++)) ) && (c != '%')) {
+    while ( (0 < (c = (int)*s++) ) && (c != '%')) {
     }
     --s;
 #if 1
@@ -291,7 +295,7 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
     /* parse a conversion specifier */
     for (x.flags = 0; (t = strchr(fchar, *s)) != NULL; ++s)
       x.flags |= fbit[t - fchar];
-    if (My_ReadByte(s) == '*') {	/* get width argument */
+    if ( *s == '*') {	/* get width argument */
       x.width = va_arg(ap, int);
       if (x.width < 0) {	/* same as '-' flag */
 	x.width = -x.width;
@@ -302,24 +306,23 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
       for (x.width = 0; ISDIGIT((int)*s); ++s)
 	if (x.width < _WMAX)
 	  x.width = x.width * 10 + *s - '0';
-    if (My_ReadByte(s) != '.')
+    if ( *s != '.')
       x.prec = -1;
-    else if ( My_ReadByte(++s) == '*') {	/* get precision argument */
+    else if ( *++s == '*') {	/* get precision argument */
       x.prec = va_arg(ap, int);
       ++s;
     } else	/* accumulate precision digits */
       for (x.prec = 0; ISDIGIT(*s); ++s)
 	if (x.prec < _WMAX)
 	  x.prec = x.prec * 10 + *s - '0';
-    My_WriteByte(&(x.qual), 
-		 (char)(strchr("hlL", My_ReadByte(s)) ? My_ReadByte(s++) : '\0'));
-    if ((My_ReadByte(&(x.qual)) == 'l') && (My_ReadByte(s) == 'l')) {
-      My_WriteByte(&(x.qual), 'L');	/* the %ll qualifier */
+    x.qual = (char)(strchr("hlL", *s) ? *s++ : '\0');
+    if( (x.qual == 'l') && ( *s == 'l')) {
+      x.qual= 'L';	/* the %ll qualifier */
       s++;
     }
     
     /* do the conversion */
-    _Putfld(&x, &ap, My_ReadByte(s), ac);
+    _Putfld(&x, &ap, *s, ac);
     x.width -= x.n0 + x.nz0 + x.n1 + x.nz1 + x.n2 + x.nz2;
     if (!(x.flags & _FMI))
       PAD(spaces, x.width);
@@ -337,6 +340,104 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
   return 0;
 }
 
+
+#if 1
+static void _Putfld(_Pft *px, va_list *pap, char code, char *ac)
+{   /* convert a field for _Printf */
+
+  px->n0 = px->nz0 = px->n1 = px->nz1 = px->n2 = px->nz2 = 0;
+  switch (code) {   /* switch on conversion specifier */
+  case 'c':
+    ac[px->n0++] = (char)va_arg(*pap, int);
+    break;
+  case 'd':
+  case 'i': /* convert a signed decimal integer */
+    if (px->qual == 'l')
+      px->v.ll = va_arg(*pap, long);
+    else if (px->qual == 'L')
+      px->v.ll = va_arg(*pap, long long);
+    else
+      px->v.ll = va_arg(*pap, int);
+    if ( px->qual == 'h')
+      px->v.ll = (short) px->v.ll;
+    if (px->v.ll < 0)   /* negate safely in miya_Litob */
+      ac[px->n0++] = '-';
+    else if (px->flags & _FPL)
+      ac[px->n0++] = '+';
+    else if (px->flags & _FSP)
+      ac[px->n0++] = ' ';
+    px->s = &ac[px->n0];
+    miya_Litob(px, code);
+    break;
+  case 'o':
+  case 'u':
+  case 'x':
+  case 'X': /* convert unsigned */
+    if (px->qual == 'l')
+      px->v.ll = va_arg(*pap, long);
+    else if (px->qual == 'L')
+      px->v.ll = va_arg(*pap, long long);
+    else
+      px->v.ll = va_arg(*pap, int);
+    if (px->qual == 'h')
+      px->v.ll = (unsigned short) px->v.ll;
+    else if (px->qual == '\0')
+      px->v.ll = (unsigned int) px->v.ll;
+    if (px->flags & _FNO) { /* indicate base with prefix */
+      ac[px->n0++] = '0';
+      if (code == 'x' || code == 'X')
+	ac[px->n0++] = code;
+    }
+    px->s = &ac[px->n0];
+    miya_Litob(px, code);
+    break;
+  case 'e':
+  case 'E':
+  case 'f':
+  case 'g':
+  case 'G': /* convert floating */
+    px->v.ld = px->qual == 'L' ?
+      va_arg(*pap, ldouble) : va_arg(*pap, double);
+    if (LDSIGN(px->v.ld))
+      ac[px->n0++] = '-';
+    else if (px->flags & _FPL)
+      ac[px->n0++] = '+';
+    else if (px->flags & _FSP)
+      ac[px->n0++] = ' ';
+    px->s = &ac[px->n0];
+    miya_Ldtob(px, code);
+    break;
+  case 'n': /* return output count */
+    if (px->qual == 'h')
+      *va_arg(*pap, short *) = (short)(px->nchar);
+    else if (px->qual == 'l')
+      *va_arg(*pap, long *) = px->nchar;
+    else if (px->qual == 'L')
+      *va_arg(*pap, long long *) = px->nchar;
+    else
+      *va_arg(*pap, int *) = px->nchar;
+    break;
+  case 'p': /* convert a pointer, hex long version */
+    px->v.ll = (long) va_arg(*pap, void *);
+    px->s = &ac[px->n0];
+    miya_Litob(px, 'x');
+    break;
+  case 's': /* convert a string */
+    px->s = va_arg(*pap, char *);
+    px->n1 = (int)strlen(px->s);
+    if (0 <= px->prec && px->prec < px->n1)
+      px->n1 = px->prec;
+    break;
+  case '%': /* put a '%' */
+    ac[px->n0++] = '%';
+    break;
+  default:  /* undefined specifier, print it out */
+    ac[px->n0++] = code;
+    break;
+  }
+}
+#else
+
 static void _Putfld(_Pft *px, va_list *pap, char code, char *ac)
 {	/* convert a field for _Printf */
   
@@ -353,14 +454,14 @@ static void _Putfld(_Pft *px, va_list *pap, char code, char *ac)
       px->v.ll = va_arg(*pap, long long);
     else
       px->v.ll = va_arg(*pap, int);
-    if (My_ReadByte(&(px->qual)) == 'h')
+    if (px->qual == 'h')
       px->v.ll = (short) px->v.ll;
     if (px->v.ll < 0)	/* negate safely in miya_Litob */
-      My_WriteByte(&(ac[px->n0++]), '-');
+      ac[px->n0++] = '-';
     else if (px->flags & _FPL)
-      My_WriteByte(&(ac[px->n0++]),'+');
+      ac[px->n0++] = '+';
     else if (px->flags & _FSP)
-      My_WriteByte(&(ac[px->n0++]),' ');
+      ac[px->n0++] = ' ';
     px->s = &ac[px->n0];
     miya_Litob(px, code);
     break;
@@ -431,7 +532,7 @@ static void _Putfld(_Pft *px, va_list *pap, char code, char *ac)
     break;
   }
 }
-
+#endif
 /*****************************************************************/
 
 /* miya_Litob function */
@@ -473,20 +574,21 @@ static void miya_Litob(_Pft *px, char code)
   char *digs = code == 'X' ? udigs : ldigs;
   int base = code == 'o' ? 8 : code != 'x' && code != 'X' ? 10 : 16;
   int i = sizeof(ac);
-  unsigned long long ullval = px->v.ll;
+  unsigned long long ullval = (unsigned long long)(px->v.ll);
   
   if ((code == 'd' || code == 'i') && px->v.ll < 0)
     ullval = -ullval;	/* safe against overflow */
   if (ullval || px->prec)
-    My_WriteByte(&(ac[--i]), My_ReadByte(&(digs[ullval % base])));
-  px->v.ll = ullval / base;
+    ac[--i] = digs[ullval % base];
+  px->v.ll = (long long)(ullval / base);
   while (0 < px->v.ll && 0 < i) {	/* convert digits */
     miya_lldiv_t qr = miya_lldiv(px->v.ll, (long long) base);
     
     px->v.ll = qr.quot;
-    My_WriteByte(&(ac[--i]), My_ReadByte(&(digs[qr.rem])));
+    ac[--i] = digs[qr.rem];
   }
-  px->n1 = sizeof(ac) - i;
+  px->n1 = (int)sizeof(ac) - i;
+
   (void)memcpy(px->s, &ac[i], px->n1);
   if (px->n1 < px->prec)
     px->nz0 = px->prec - px->n1;
@@ -518,6 +620,107 @@ static const ldouble pows[] = {
 
 static short _Ldunscale(short *, ldouble *);
 static void _Genld(_Pft *, char, char *, short, short);
+
+#if 1
+static void miya_Ldtob(_Pft *px, char code)
+{   /* convert long double to text */
+  char ac[32];
+  char *p = ac;
+  ldouble ldval = px->v.ld;
+  short errx, nsig, xexp;
+
+  if (px->prec < 0)
+    px->prec = 6;
+  else if (px->prec == 0 && (code == 'g' || code == 'G'))
+    px->prec = 1;
+  if (0 < (errx = _Ldunscale(&xexp, &px->v.ld))) {
+    /* x == Nan, x == INF */
+    //    (void)memcpy(px->s, errx == _NAN ? "NaN" : "Inf", px->n1 = 3);
+    (void)memcpy(px->s, errx == NAN ? "NaN" : "Inf", px->n1 = 3);
+    return;
+  } else if (0 == errx) /*x == 0 */
+    nsig = 0, xexp = 0;
+  else {    /* 0 < |x|, convert it */
+    {   /* scale ldval to ~~10^(NDIG/2) */
+      int i, n;
+
+      if (ldval < 0.0)
+    ldval = -ldval;
+      if ((xexp = (short)(xexp * 30103L / 100000L - NDIG/2)) < 0) {
+    /* scale up */
+    n = (-xexp + (NDIG/2-1)) & ~(NDIG/2-1), xexp = (short)(-n);
+    for (i = 0; 0 < n; n >>= 1, ++i)
+      if (n & 1)
+        ldval *= pows[i];
+      } else if (0 < xexp) {    /* scale down */
+    ldouble factor = 1.0;
+
+    xexp &= ~(NDIG/2-1);
+    for (n = xexp, i = 0; 0 < n; n >>= 1, ++i)
+      if (n & 1)
+        factor *= pows[i];
+    ldval /= factor;
+      }
+    }
+    {   /* convert significant digits */
+      int gen = px->prec +
+    (code == 'f' ? xexp + 2 + NDIG : 2 + NDIG / 2);
+
+      if (LDBL_DIG + NDIG / 2 < gen)
+    gen = LDBL_DIG + NDIG / 2;
+      for ( *p++ = '0' ; 0 < gen && 0.0 < ldval; p += NDIG) {
+    /* convert NDIG at a time */
+    int j;
+    long lo = (long) ldval;
+
+    if (0 < (gen -= NDIG))
+      ldval = (ldval - (ldouble) lo) * 1e8L;
+    for (p += NDIG, j = NDIG; 0 < lo && 0 <= --j; ) {
+      /* convert NDIG digits */
+      miya_ldiv_t qr;
+
+      qr = miya_ldiv(lo, 10);
+      *--p = (char)(qr.rem + '0'), lo = qr.quot;
+    }
+    while (0 <= --j)
+      *--p = '0';
+      }
+      gen = p - &ac[1];
+      for (p = &ac[1], xexp += NDIG - 1; *p == '0'; ++p)
+    --gen, --xexp;  /* correct xexp */
+
+      /* miya
+     char code
+     int prec
+     short nsig, xexp;
+       */
+      nsig = (short)(px->prec + (code == 'f' ? xexp + 1 :
+             code == 'e' || code == 'E' ? 1 : 0));
+      if (gen < nsig)
+    nsig = (short)gen;
+      if (0 < nsig) {   /* round and strip trailing zeros */
+    /* const char drop; */
+    char drop;
+    int n;
+    drop = (char)(nsig < gen && '5' <= p[nsig] ? '9' : '0');
+
+    for (n = nsig; p[--n] == drop; )
+      --nsig;
+
+    if ( drop == '9') {
+      p[n] = *(&(p[n])+1);
+
+      //  ++p[n];
+    }
+    if (n < 0)
+      --p, ++nsig, ++xexp;
+      }
+    }
+  }
+  _Genld(px, code, p, nsig, xexp);
+}
+
+#else
 
 static void miya_Ldtob(_Pft *px, char code)
 {	/* convert long double to text */
@@ -582,7 +785,7 @@ static void miya_Ldtob(_Pft *px, char code)
 	  My_WriteByte(--p , '0');
       }
       gen = p - &ac[1];
-      for (p = &ac[1], xexp += NDIG - 1; My_ReadByte(p) == '0'; ++p)
+      for (p = &ac[1], xexp += NDIG - 1; *p == '0'; ++p)
 	--gen, --xexp;	/* correct xexp */
 
       /* miya
@@ -595,17 +798,15 @@ static void miya_Ldtob(_Pft *px, char code)
       if (gen < nsig)
 	nsig = (short)gen;
       if (0 < nsig) {	/* round and strip trailing zeros */
-	const char drop;
+	char drop;
 	int n;
-	My_WriteByte((void *)&drop, (char)(nsig < gen && '5' <= My_ReadByte(&(p[nsig])) ? '9' : '0') );
+	drop = (char)(nsig < gen && '5' <= p[nsig] ? '9' : '0');
 	
-	for (n = nsig; My_ReadByte(&(p[--n])) == My_ReadByte(&drop); )
+	for (n = nsig; p[--n] == drop; )
 	  --nsig;
 
-	if (My_ReadByte(&drop) == '9') {
-	  My_WriteByte(&(p[n]), My_ReadByte(&(p[n])+1));
-	  
-	  //  ++p[n];
+	if ( drop == '9') {
+	  ++p[n];
 	}
 	if (n < 0)
 	  --p, ++nsig, ++xexp;
@@ -614,6 +815,7 @@ static void miya_Ldtob(_Pft *px, char code)
   }
   _Genld(px, code, p, nsig, xexp);
 }
+#endif
 
 #if _DLONG	/* 10-byte IEEE format */
 #define _LMASK	0x7fff
@@ -713,7 +915,7 @@ static short _Ldunscale(short *pex, ldouble *px)
 	    NAN : INF);
   } else if (0 < xchar /* || (xchar = _Dnorm(ps)) != 0 */) {
     /* finite, reduce to [1/2, 1) */
-    ps[_D0] = (short)(ps[_D0] & ~_DMASK | _DBIAS << _DOFF);
+    ps[_D0] = (unsigned short)(ps[_D0] & ~_DMASK | _DBIAS << _DOFF);
 #if _LONG_DOUBLE
     *pex = (short)(xchar - _DBIAS);
 #else
@@ -729,6 +931,99 @@ static short _Ldunscale(short *pex, ldouble *px)
 }
 
 #endif
+
+#if 1
+static void _Genld(_Pft *px, char code, char *p, short nsig, short xexp)
+{   /* generate long double text */
+  const char point = '.';
+
+  if (nsig <= 0)
+    nsig = 1, p = "0";
+  if (code == 'f' || (code == 'g' || code == 'G') &&
+      -4 <= xexp && xexp < px->prec) {  /* 'f' format */
+    ++xexp;     /* change to leading digit count */
+    if (code != 'f') {  /* fixup for 'g' */
+      if (!(px->flags & _FNO) && nsig < px->prec)
+    px->prec = nsig;
+      if ((px->prec -= xexp) < 0)
+    px->prec = 0;
+    }
+    if (xexp <= 0) {    /* digits only to right of point */
+      px->s[px->n1++] = '0';
+
+      if (0 < px->prec || px->flags & _FNO)
+	px->s[px->n1++] = point;
+      if (px->prec < -xexp)
+    xexp = (short)(-px->prec);
+      px->nz1 = -xexp;
+      px->prec += xexp;
+      if (px->prec < nsig)
+    nsig = (short)(px->prec);
+      (void)memcpy(&px->s[px->n1], p, px->n2 = nsig);
+      px->nz2 = px->prec - nsig;
+    } else if (nsig < xexp) {   /* zeros before point */
+      (void)memcpy(&px->s[px->n1], p, nsig);
+      px->n1 += nsig;
+      px->nz1 = xexp - nsig;
+      if (0 < px->prec || px->flags & _FNO)
+	px->s[px->n1] = point, ++px->n2;
+      px->nz2 = px->prec;
+    } else {    /* enough digits before point */
+      (void)memcpy(&px->s[px->n1], p, xexp);
+      px->n1 += xexp;
+      nsig -= xexp;
+      if (0 < px->prec || px->flags & _FNO)
+	px->s[px->n1++] = point;
+      if (px->prec < nsig)
+    nsig = (short)(px->prec);
+      (void)memcpy(&px->s[px->n1], p + xexp, nsig);
+      px->n1 += nsig;
+      px->nz1 = px->prec - nsig;
+    }
+  } else {  /* 'e' format */
+    if (code == 'g' || code == 'G') {   /* fixup for 'g' */
+      if (nsig < px->prec)
+    px->prec = nsig;
+      if (--px->prec < 0)
+    px->prec = 0;
+      code = (char)(code == 'g' ? 'e' : 'E');
+    }
+    px->s[px->n1++] = *p++;
+    if (0 < px->prec || px->flags & _FNO)
+      px->s[px->n1++] = point;
+    if (0 < px->prec) { /* put fraction digits */
+      if (px->prec < --nsig)
+    nsig = (short)(px->prec);
+      (void)memcpy(&px->s[px->n1], p, nsig);
+      px->n1 += nsig;
+      px->nz1 = px->prec - nsig;
+    }
+    p = &px->s[px->n1]; /* put exponent */
+    *p++ = code;
+    if (0 <= xexp)
+      *p++ = '+';
+    else {  /* negative exponent */
+      *p++ = '-';
+      xexp = (short)(-xexp);
+    }
+    if (100 <= xexp) {  /* put oversize exponent */
+      if (1000 <= xexp)
+	*p = (char)(xexp / 1000 + '0'), p++, xexp %= 1000;
+      *p = (char)(xexp / 100 + '0'), p++, xexp %= 100;
+    }
+    *p = (char)(xexp / 10 + '0'),p++, xexp %= 10;
+    *p = (char)(xexp + '0'); p++;
+    px->n2 = p - &px->s[px->n1];
+  }
+  if ((px->flags & (_FMI | _FZE)) == _FZE) {    /* pad with leading zeros */
+    int n = px->n0 + px->n1 + px->nz1 + px->n2 + px->nz2;
+
+    if (n < px->width)
+      px->nz0 = px->width - n;
+  }
+}
+
+#else
 
 static void _Genld(_Pft *px, char code, char *p, short nsig, short xexp)
 {	/* generate long double text */
@@ -820,3 +1115,4 @@ static void _Genld(_Pft *px, char code, char *p, short nsig, short xexp)
       px->nz0 = px->width - n;
   }
 }
+#endif

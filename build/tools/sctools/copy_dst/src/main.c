@@ -642,6 +642,8 @@ static BOOL RestoreFromSDCard7(void)
   char game_code_buf[5];
   int is_personalized;
   u64 tid;
+  u64 *eticket_only_id_buf = NULL;
+  int num_of_eticket_only_titles = 0;
 
   title_id_count = 0;
   if( title_id_buf_ptr != NULL ) {
@@ -721,7 +723,6 @@ static BOOL RestoreFromSDCard7(void)
     goto pre_install_label;
   }
 
-
   /*
     EC downloadの後にNAM_ImportをやらないとLoadCertのSEA_Decryptでこける。
     理由はAESエンジンのスロットをNAM_Importでつぶしちゃうから。
@@ -751,7 +752,6 @@ static BOOL RestoreFromSDCard7(void)
       // 必須：タイトル ID の偽装
       SetupShopTitleId(); /* エラーはない */
       miya_log_fprintf(log_fd,"SetupShopTitleId\n");
-
 
       // ？：ユーザ設定がされていないと接続できないので適当に設定
       // SetupUserInfo();
@@ -866,15 +866,27 @@ static BOOL RestoreFromSDCard7(void)
 
  pre_install_label:
 
-  if( mydata.num_of_user_pre_installed_app > 0 ) {
+  if( (mydata.num_of_user_pre_installed_app > 0) ||
+      (mydata.num_of_user_pre_installed_eticket_only > 0) ) {
     /* プリンストール対応 */
     miya_log_fprintf(log_fd,"Import Pre-installed apps.\n");
     mprintf("Import Pre-installed apps..\n");
-    if( FALSE == pre_install_process( log_fd, title_id_buf_ptr, title_id_count ) ) {
+    if( mydata.num_of_user_pre_installed_eticket_only > 0 ) {
+      if( FALSE == TitleIDLoadETicketOnly( MyFile_GetDownloadTitleIDTicketOnlyFileName(),
+					   &eticket_only_id_buf, &num_of_eticket_only_titles,  
+					   MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName()) ) {
+	;
+      }
+    }
+
+    /* pre_install_process関数の中でＥチケットだけのやつもやりたい。 */
+    if( FALSE == pre_install_process( log_fd, title_id_buf_ptr, title_id_count,
+				      eticket_only_id_buf,
+				      mydata.num_of_user_pre_installed_eticket_only ,
+				      development_console_flag ) ) {
       ret_flag = FALSE;
     }
   }
-
 
   hatamotolib_log_end();
 

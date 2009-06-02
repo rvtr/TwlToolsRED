@@ -18,6 +18,7 @@ LD	= gcc
 LDFLAGS	= -Wl,--subsystem,console -mwindows -mno-cygwin
 LDLIBS	= 
 
+RM = rm.exe -f
 
 .SUFFIXES:
 .SUFFIXES: .o .c

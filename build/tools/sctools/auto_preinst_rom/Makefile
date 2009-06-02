@@ -22,16 +22,15 @@ TWL_ARCHGEN		:= LIMITED
 
 SRCDIR			=	../common/src ./src 
 
-SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
-				gfx.c hwi.c mynvram.c my_fs_util.c \
-				hatamotolib.cpp miya_mcu.c error_report.c \
-				sitedefs.c wcm_control.c netconnect.c mywlan.c \
-				mynuc.c nuc_error_msg.c stream.c myfilename.c menu_version.c \
-				ntp.c myimport.c pre_install.c
+SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
+				gfx.c hwi.c my_fs_util.c \
+				error_report.c \
+				myfilename.c menu_version.c \
+				myimport.c pre_install.c
 
-TARGET_BIN		=	copy_dst.srl
-ROM_SPEC		=	copy_dst.rsf
-TARGET_AUTOBOOT		=	./bin/$(TWL_BUILDTYPE)/copy_dst_autoboot.srl
+TARGET_BIN		=	auto_preinst_rom.srl
+ROM_SPEC		=	auto_preinst_rom.rsf
+# TARGET_AUTOBOOT		=	./bin/$(TWL_BUILDTYPE)/auto_preinst_rom.srl
 
 
 ES_DIR			=	$(ROOT)/add-ins/es
@@ -61,26 +60,28 @@ LLIBRARIES		+=	libecx$(TWL_LIBSUFFIX).a   \
 				libna$(TWL_LIBSUFFIX).a    \
 
 
-
 MAKEROM_ROMROOT  = ../files
 
 TAD_TABLE_TXT		= ../files/tads/tad_table.txt
+
 TADDEV_TABLE_TXT	= ../files/taddevs/taddev_table.txt
 
--include MakefileTad.inc
+MAKE_TAD_INCLUDE_FILE		= ../copy_dst/MakefileTad.inc
 
--include MakefileTadDev.inc
+MAKE_TADDEV_INCLUDE_FILE	= ../copy_dst/MakefileTadDev.inc
 
-MAKEROM_ROMFILES = fanfare.32.wav ok.wav ng.wav cursor.wav \
-			tads/tad_table.txt taddevs/taddev_table.txt $(MAKEROM_TAD_ROMFILES) $(MAKEROM_TADDEV_ROMFILES)
+-include $(MAKE_TAD_INCLUDE_FILE)
 
+-include $(MAKE_TADDEV_INCLUDE_FILE)
 
+MAKEROM_ROMFILES = tads/tad_table.txt taddevs/taddev_table.txt $(MAKEROM_TAD_ROMFILES) $(MAKEROM_TADDEV_ROMFILES)
 
 MY_TWL_COMPONENTSDIR	= ../my_armadillo.TWL/bin
+
 COMPONENT_NAME      =   armadillo
 
-# MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(COMPONENT_NAME)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
 MAKEROM_ARM7_BASE   =   $(MY_TWL_COMPONENTSDIR)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)
+
 MAKEROM_ARM7        =   $(MAKEROM_ARM7_BASE).$(TWL_ELF_EXT)
 
 
@@ -100,19 +101,16 @@ MAKEROM			 := $(TWL_TOOLSDIR)/bin/makerom.TWL.secure.exe
 #----------------------------------------------------------------------------
 
 #----------------------------------------------------------------------------
+# $(TARGET_AUTOBOOT): ./bin/$(TWL_BUILDTYPE)/$(TARGET_BIN)
+#		../bin/FakeRomHeader.secure.exe  -c -f $< $@
 
 
-$(TARGET_AUTOBOOT): ./bin/$(TWL_BUILDTYPE)/$(TARGET_BIN)
-		../bin/FakeRomHeader.secure.exe  -c -f $< $@
+# do-build:		$(TARGETS) $(TARGET_AUTOBOOT)
+
+do-build:		$(TARGETS)
 
 
-
-do-build:	$(TARGETS) $(TARGET_AUTOBOOT)
-
-
-$(BINDIR)/$(TARGET_BIN_BASENAME).$(TWL_ELF_EXT): MakefileTad.inc MakefileTadDev.inc $(TAD_TABLE_TXT) $(TADDEV_TABLE_TXT)
-
-
+$(BINDIR)/$(TARGET_BIN_BASENAME).$(TWL_ELF_EXT): $(MAKE_TAD_INCLUDE_FILE) $(MAKE_TADDEV_INCLUDE_FILE) $(TAD_TABLE_TXT) $(TADDEV_TABLE_TXT)
 
 
 #----------------------------------------------------------------------------

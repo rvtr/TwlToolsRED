@@ -2182,11 +2182,8 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
   return ret_flag;
 }
 
-// BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name )
 BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name )
-
 {
-
   FSFile f;
   BOOL bSuccess;
   FSResult res;
@@ -2209,6 +2206,19 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
   }
   miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
 
+
+  if( count < 1 ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
+  if( path == NULL ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
+  if( pData == NULL ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
 
   bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
   if( ! bSuccess ) {
@@ -2296,6 +2306,181 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
   return ret_flag;
 
 }
+
+BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *log_file_name)
+{
+  FSFile f;
+  BOOL bSuccess;
+  //  u32 fileSize;
+  s32 readSize = 0;
+  int id_count= 0;
+  int size;
+  BOOL log_active = FALSE;
+  FSFile *log_fd;
+  FSFile log_fd_real;
+  BOOL ret_flag = TRUE;
+
+  log_fd = &log_fd_real;
+
+  FS_InitFile(&f);
+
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+  
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
+    ret_flag = FALSE;
+    goto function_end;
+  }
+
+  if( sizeof(int) != FS_ReadFile(&f, &id_count, (s32)sizeof(int)) ) {
+    miya_log_fprintf(log_fd, "Failed Read File %s\n",__FUNCTION__);
+    miya_log_fprintf(log_fd, " path=%s\n", path );
+    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
+    ret_flag = FALSE;
+    goto function_end;
+  } 
+
+  *count = id_count;
+  size = (int)sizeof(u64) * id_count;
+
+  *pBuffer = (u64 *)OS_Alloc( (u32)size );
+  if( *pBuffer == NULL ) {
+    ret_flag = FALSE;
+    miya_log_fprintf(log_fd, "%s Failed memory alloc size %d\n",__FUNCTION__, size);
+    goto function_end;
+  }
+  readSize = FS_ReadFile(&f, (void *)*pBuffer, (s32)size );
+  if( readSize != size ) {
+    miya_log_fprintf(log_fd, "Failed Read File: %s request size %d read size %d\n",path, size, readSize);
+    if( readSize != size ) {
+      ret_flag = FALSE;
+      goto function_end;
+    }
+  }
+ function_end:
+
+  bSuccess = FS_CloseFile(&f);
+  if( ! bSuccess ) {
+    miya_log_fprintf(log_fd, "Failed Close File\n");
+    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
+  }
+  
+  if( log_active ) {
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
+  }
+  return ret_flag;
+}
+
+BOOL TitleIDSaveETicketOnly(const char *path, u64 *pData, int count, char *log_file_name )
+{
+  FSFile f;
+  BOOL bSuccess;
+  FSResult res;
+  FSResult fsResult;
+  //  s32 writtenSize;
+  BOOL log_active = FALSE;
+  FSFile *log_fd;
+  FSFile log_fd_real;
+  BOOL ret_flag = TRUE;
+
+  log_fd = &log_fd_real;
+
+  FS_InitFile(&f);
+
+  log_active = Log_File_Open( log_fd, log_file_name );
+  if( !log_active ) {
+    log_fd = NULL;
+  }
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+  if( count < 1 ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
+  if( path == NULL ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
+  if( pData == NULL ) {
+    miya_log_fprintf(log_fd, "%s path=%s count=%d pData=0x%08x\n", __FUNCTION__,path,count, pData );
+    goto function_end;
+  }
+
+  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
+  if( ! bSuccess ) {
+    FS_CreateFileAuto( path, FS_PERMIT_W|FS_PERMIT_R);
+    bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
+    if( ! bSuccess ) {
+      res = FS_GetArchiveResultCode( path );
+      miya_log_fprintf(log_fd, "%s file open error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
+      ret_flag = FALSE;
+      goto function_end;
+    }
+  }
+
+  fsResult = FS_SetFileLength(&f, 0);
+  if( fsResult != FS_RESULT_SUCCESS ) {
+    res = FS_GetArchiveResultCode( path );
+    miya_log_fprintf(log_fd, "%s file length error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(log_fd, " Failed file lenght :%s\n", my_fs_util_get_fs_result_word( res ));
+    ret_flag = FALSE;
+    goto function_end;
+  }
+
+  if( sizeof(int) != FS_WriteFile(&f, &count, (s32)sizeof(int)) ) {
+    res = FS_GetArchiveResultCode( path );
+    miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
+    miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+    ret_flag = FALSE;
+    goto function_end;
+  }
+  else {
+    miya_log_fprintf(log_fd, "num of title id = %d\n", count);
+  }
+
+  if( ( pData != NULL ) && ( count != 0 ) ) {
+    /* 16•¶Žš‚¾‚©‚ç */
+    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+      res = FS_GetArchiveResultCode( path );
+      miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
+      miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+      ret_flag = FALSE;
+      goto function_end;
+    }
+    else {
+      int j;
+      u64 *ptr = pData;
+  
+      if( ptr != NULL && count > 0 )  {
+	for( j = 0 ; j < count ; j++ ) {
+	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j, *ptr);
+	  ptr++;
+	}
+      }
+    }
+  }
+  FS_FlushFile(&f);
+ function_end:
+  bSuccess = FS_CloseFile(&f);
+  if( bSuccess ) {
+      
+  }
+  if( log_active ) {
+    miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+    Log_File_Close(log_fd);
+  }
+  return ret_flag;
+}
+
 
 
 

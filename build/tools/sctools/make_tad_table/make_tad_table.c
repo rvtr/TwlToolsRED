@@ -200,10 +200,12 @@ static void print_gamecode(u32 tid_lo)
 }
 
 
+#if 0
 static write_tad_table_form(FILE *fp, u32 tid_hi, u32 tid_lo, char *filename)
 {
   fprintf(fp, "0x%08x%08x, %d , %d , rom:/tads/%s\n",tid_hi, tid_lo, 0 , 0 , filename);
 }
+#endif
 
 static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out, FILE *fp_mk)
 {
@@ -243,13 +245,13 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   }
 
   if( fp_out ) {
-    fprintf(fp_out, "0x%08x%08x, %d , %d , rom:/tads/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    fprintf(fp_out, "0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
     if( fp_mk ) {
-      fprintf(fp_mk, "\t\ttads/%s \\\n", d_name);
+      fprintf(fp_mk, "\t\t%s \\\n", d_name);
     }
   }
   else {
-    printf("0x%08x%08x, %d , %d , rom:/tads/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    printf("0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
   }
 
 
@@ -273,10 +275,15 @@ int main(int argc, char **argv)
   char *outfile = NULL;
   char *dir_name = NULL;
   char *mkfile = NULL;
+  char *var_name = NULL;
+  char *file_dir = NULL;
+
   BOOL read_file_flag = FALSE;
   BOOL write_file_flag = FALSE;
   BOOL dir_read_flag = FALSE;
   BOOL mk_file_flag = FALSE;
+  BOOL var_name_flag = FALSE;
+  BOOL file_dir_flag = FALSE;
 
   char *prog;
   int badops = 0;
@@ -293,6 +300,7 @@ int main(int argc, char **argv)
   struct dirent *dr;
   struct stat st;
   char *full_path;
+  char rom_file_full_path[256];
 
 
   prog=argv[0];
@@ -306,6 +314,20 @@ int main(int argc, char **argv)
       }
       dir_name = *++argv;
       dir_read_flag = TRUE;
+    }
+    else if (strcmp(*argv,"-var") == 0 && !var_name_flag ) {
+      if (--argc < 1) {
+	goto bad;
+      }
+      var_name = *++argv;
+      var_name_flag = TRUE;
+    }
+    else if (strcmp(*argv,"-fdir") == 0 && !file_dir_flag ) {
+      if (--argc < 1) {
+	goto bad;
+      }
+      file_dir = *++argv;
+      file_dir_flag = TRUE;
     }
     else if (strcmp(*argv,"-o") == 0 && !write_file_flag ) {
       if (--argc < 1) {
@@ -369,9 +391,12 @@ int main(int argc, char **argv)
 	fprintf(stderr, "error: file open %s\n",mkfile);
 	goto end;
       }
-
-      fprintf(fp_mk, "MAKEROM_TAD_ROMFILES = \\\n");
-
+      if( var_name_flag ) {
+	fprintf(fp_mk, "%s = \\\n",var_name);
+      }
+      else {
+	fprintf(fp_mk, "MAKEROM_TAD_ROMFILES = \\\n");
+      }
     }
 
 
@@ -403,7 +428,15 @@ int main(int argc, char **argv)
 	  printf("FILE %s\n",  dr->d_name);
 	}
 	if( st.st_size >= 32 ) { 
-	  read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk );
+	  if( file_dir_flag ) {
+	    strcpy( rom_file_full_path, file_dir);
+	    strcat( rom_file_full_path, "/");
+	    strcat( rom_file_full_path, dr->d_name);
+	    read_file_and_print_titleid( full_path ,rom_file_full_path, fp_out , fp_mk );
+	  }
+	  else {
+	    read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk );
+	  }
 	}
       }
 

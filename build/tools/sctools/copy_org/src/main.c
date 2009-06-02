@@ -97,6 +97,14 @@ static int vram_num_sub = 0;
 static  LCFGTWLHWNormalInfo hwn_info;
 static  LCFGTWLHWSecureInfo hws_info;
 
+#define NAM_TITLE_ID_S 128
+
+static NAMTitleId array_eticket_only_titles[NAM_TITLE_ID_S];
+static NAMTitleId array_app_titles[NAM_TITLE_ID_S];
+static int num_of_eticket_only_titles = 0;
+static int num_of_app_titles = 0;
+static int num_of_all_titles = 0;
+
 #define	MY_STACK_SIZE  (1024*16) /* でかいほうがいい */
 #define	MY_THREAD_PRIO        20
 static OSThread MyThread;
@@ -147,13 +155,93 @@ static void FreeForNAM(void* ptr)
   }
 }
 
+static NAMTitleId pArray[NAM_TITLE_ID_S];
+
+
+static int Check_User_Titles_ETicket_Only(void)
+{
+  s32 i,j;
+  s32 num = 0;
+  int user_title_count = 0;
+  BOOL now_installed_flag;
+  u64 id;
+  char game_code[5];
+  int common_or_personalized_flag;
+
+  //  num = NAM_GetNumTitles();
+  num = NAM_GetNumInstalledTitles();
+  if( num >= 0 ) {
+    if( NAM_OK !=  NAM_GetInstalledTitleList( pArray , NAM_TITLE_ID_S ) ) {
+      OS_TPrintf("error:NAM_GetInstalledTitleList\n");
+      return -1; /* error */
+    }
+    OS_TPrintf("NAND Ticket only titles\n");
+    for( i = 0 ; i < num ; i++ ) {
+      now_installed_flag = FALSE;
+      id = pArray[i];
+      for( j = 0 ; j < num_of_all_titles ; j++ ) {
+	if( id == array_app_titles[ j ] ) {
+	  now_installed_flag = TRUE;
+	}
+      }
+      if( now_installed_flag == TRUE ) {
+      }
+      else {
+	/*
+	  No. 0 0003000f484e4c41
+	  No. 1 0003000f484e4841
+	  No. 2 0003000f484e4341 
+	  No. 3 00030015484e4241 
+	  No. 4 00030017484e4141 launcher
+	               ^
+                       | ここの最下位ビットが１のやつがシステムアプリ
+                       | 
+		       システムアプリはダウンロード対象外
+	*/
+	(void)my_fs_Tid_To_GameCode(id, game_code);
+	
+	if( id & 0x0000000100000000 ) {
+	  /* system app. */
+	  OS_TPrintf(" sys.:%3d:0x%llx %s\n", i, id, game_code);
+	  
+	}
+	else {
+	  /* user app. */
+	  //  OS_TPrintf(" usr.:%3d:0x%llx %s\n", i, id, game_code);
+	  common_or_personalized_flag = 1;
+	  if( FALSE == pre_install_check_download_or_pre_install(id, &common_or_personalized_flag, NULL) ) {
+	    OS_TPrintf(" pre_install_check_download_or_pre_install failed\n");
+	  }
+	  else {
+	    if( common_or_personalized_flag == 1 ) {
+	      OS_TPrintf(" usr.:%3d:0x%llx %s common\n", i, id, game_code);
+	      array_eticket_only_titles[user_title_count] = id;
+	      user_title_count++;
+	    }
+	    else {
+	      OS_TPrintf(" usr.:%3d:0x%llx %s personalized\n", i, id, game_code);
+	    }
+	  }
+
+
+	  
+	}
+      }
+    }
+  }
+  else {
+    OS_TPrintf("error:NAM_GetInstalledTitles\n");
+    return -1;
+  }
+
+  num_of_eticket_only_titles = user_title_count;
+  return user_title_count;
+}
+
+
 
 static int Check_User_Titles(void)
 {
-
-#define NAM_TITLE_ID_S 128
-
-  NAMTitleId pArray[NAM_TITLE_ID_S];
   s32 i;
   s32 num = 0;
   int user_tilte_count = 0;
@@ -161,13 +249,16 @@ static int Check_User_Titles(void)
   char game_code[5];
 
   num = NAM_GetNumTitles();
-  if( num > 0 ) {
-    if( NAM_OK !=  NAM_GetTitleList( pArray , NAM_TITLE_ID_S ) ) {
+  if( num >= 0 ) {
+
+
+    if( NAM_OK !=  NAM_GetTitleList( array_app_titles , NAM_TITLE_ID_S ) ) {
+      OS_TPrintf("error:NAM_GetTitleList\n");
       return -1; /* error */
     }
-    OS_TPrintf("NAND Installed titles\n");
+    OS_TPrintf("NAND Installed titles %d\n",num);
     for( i = 0 ; i < num ; i++ ) {
-      id = pArray[i];
+      id = array_app_titles[i];
 
       /*
 	No. 0 0003000f484e4c41
@@ -194,6 +285,12 @@ static int Check_User_Titles(void)
       }
     }
   }
+  else {
+    OS_TPrintf("error:NAM_GetNumTitles\n");
+    return -1;
+  }
+  num_of_app_titles = user_tilte_count;
+  num_of_all_titles = num;
   return user_tilte_count;
 }
 
@@ -433,6 +530,7 @@ static BOOL SDBackupToSDCard6(void)
   return ret_flag;
 }
 
+
 static BOOL SDBackupToSDCard7(void)
 {
   MY_DIR_ENTRY_LIST *dir_entry_list_head = NULL;
@@ -482,16 +580,31 @@ static BOOL SDBackupToSDCard7(void)
     flag = GetUserAppTitleList( dir_entry_list_head, &pBuffer, &count, 
 				MyFile_GetUserAppTitleListLogFileName()) ;
 
+
     if( TRUE == flag ) {
       ptr = pBuffer;
       mydata.num_of_user_download_app = count;
       mydata.num_of_error_user_download_app = 0;
       mydata.num_of_user_pre_installed_app = 0;
+      mydata.num_of_user_pre_installed_eticket_only = 0;
 
       if( no_sd_clean_flag == TRUE ) {
 	mprintf("\n");
       }
 
+
+      //char *MyFile_GetDownloadTitleIDTicketOnlyFileName(void);
+      //char *MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName(void);
+      //char *MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName(void);
+
+
+      mydata.num_of_user_pre_installed_eticket_only = num_of_eticket_only_titles;
+      if( FALSE == TitleIDSaveETicketOnly( MyFile_GetDownloadTitleIDTicketOnlyFileName(),
+					   array_eticket_only_titles, num_of_eticket_only_titles,  
+					   MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName()) ) {
+	;
+      }
+      
       
       if( ptr != NULL && count != 0 )  {
 	for( j = 0 ; j < count ; j++ ) {
@@ -546,7 +659,7 @@ static BOOL SDBackupToSDCard7(void)
 	  ptr++;
 	}
       }
-      
+
       // PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
       flag =  TitleIDSave( MyFile_GetDownloadTitleIDFileName(), 
 			   pBuffer, count,  MyFile_GetDownloadTitleIDSaveLogFileName());
@@ -962,7 +1075,9 @@ void TwlMain(void)
 
   //  mydata.num_of_user_download_app_by_nam = Check_User_Titles();
   //  mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app_by_nam);
-  mprintf("num of user tiltes = %d\n",Check_User_Titles());
+  /* 順番厳守 */
+  mprintf("user tiltes(installed)   = %d\n", Check_User_Titles());
+  mprintf("user tiltes(ticket only) = %d\n", Check_User_Titles_ETicket_Only());
 
   mprintf("\n");
 

@@ -16,6 +16,7 @@
 #include "pre_install.h"
 
 #define PRE_INSTALL_TABLE_FILE_NAND "rom:/tads/tad_table.txt"
+#define PRE_INSTALL_TABLE_DEV_FILE_NAND "rom:/taddevs/taddev_table.txt"
 #define PRE_INSTALL_TABLE_FILE_SD "sdmc:/tads/tad_table.txt"
 
 static PRE_INSTALL_FILE *pre_install_file_list = NULL;
@@ -73,6 +74,16 @@ BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, FSFile *log_f
       return FALSE;
 
     }
+  }
+  else {
+#if 0
+    miya_log_fprintf(log_fd,"ES_GetTicketViews failed numTickets = 0: %d tid=0x%08x%08x\n", 
+		     rv, (u32)(tid >> 32) , (u32)(tid & 0xffffffff) );
+    return FALSE;
+#endif
+    /* error ??? */
+    *flag = 0;
+    return TRUE;
   }
 
 
@@ -133,20 +144,19 @@ static BOOL pre_install_add_list(u64 tid, u8 region, u8 country_code, char *temp
   return TRUE;
 }
 
-
 char *pre_install_search_tid(u64 tid, FSFile *log_fd)
 {
   PRE_INSTALL_FILE *temp_list;
   
   for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
     if( temp_list->tid == tid ) {
-      miya_log_fprintf(log_fd,"tad file entry tid=0x%08x%08x %s\n", 
+      miya_log_fprintf(log_fd,"\ntad file entry tid=0x%08x%08x\n%s\n", 
 		       (u32)(tid >> 32) , (u32)(tid & 0xffffffff), temp_list->file_name );
 
       return temp_list->file_name;
     }
   }
-  miya_log_fprintf(log_fd,"%s %s:No entry tid 0x%08x%08x\n",__FILE__,__FUNCTION__,
+  miya_log_fprintf(log_fd,"\n%s:No entry\ntid 0x%08x%08x\n",__FUNCTION__,
 		   (u32)(tid >> 32) , (u32)(tid & 0xffffffff));
   return NULL;
   
@@ -163,9 +173,22 @@ BOOL pre_install_discard_list(void)
     OS_Free( temp_list );
     temp_list = temp_list2;
   }
+  pre_install_file_list = NULL;
   return TRUE;
 }
 
+
+void pre_install_print_list(FSFile *log_fd)
+{
+  PRE_INSTALL_FILE *temp_list;
+  u64 tid;
+
+  for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
+    tid = temp_list->tid;
+    miya_log_fprintf(log_fd,"tad file entry tid=0x%08x%08x %s\n", 
+		     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), temp_list->file_name );
+  }
+}
 
 
 
@@ -197,14 +220,9 @@ static int ReadLine(FSFile *f, char *buf, int buf_size)
       *buf = '\0';
       break;
     }
-
-
   }
   return count;
 }
-
-
-
 
 static int my_char_to_hex(char c)
 {
@@ -219,7 +237,6 @@ static int my_char_to_hex(char c)
   } 
   return -1; /* error */
 }
-
 
 BOOL pre_install_load_file(char *path, FSFile *log_fd)
 {
@@ -236,7 +253,6 @@ BOOL pre_install_load_file(char *path, FSFile *log_fd)
   char line_buf[LINE_BUF_SIZE];
   //  PRE_INSTALL_FILE temp_pre_install_file;
   char temp_file_name[FS_FILE_NAME_MAX];
-
 
   u64 temp_tid;
   u8 temp_region;
@@ -358,8 +374,10 @@ BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	    buf_state = 5; /* next state */	    
 	  }
 	  else {
-	    temp_file_name[temp_filename_count] = c;
-	    temp_filename_count++;
+	    if( c != ' ' ) {
+	      temp_file_name[temp_filename_count] = c;
+	      temp_filename_count++;
+	    }
 	  }
 	  break;
 	case 5: /* until line end */
@@ -370,8 +388,6 @@ BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	}
 	buf_counter++;
       }
-
-
     }
     else {
       /* 妙なフォーマットは全部コメント扱い. */
@@ -397,11 +413,23 @@ BOOL pre_install_Cleanup_User_Titles( FSFile *log_fd )
   u64 tid;
   char game_code_buf[5];
 
+#if 1
+  num = NAM_GetNumInstalledTitles();
+#else
   num = NAM_GetNumTitles();
+#endif
+
   if( num > 0 ) {
+#if 1
+    if( NAM_OK !=  NAM_GetInstalledTitleList( pArray , NAM_TITLE_ID_S ) ) {
+      return FALSE;
+    }
+#else
     if( NAM_OK !=  NAM_GetTitleList( pArray , NAM_TITLE_ID_S ) ) {
       return FALSE;
     }
+#endif
+
     miya_log_fprintf(log_fd, "NAND Installed titles\n");
 
     mprintf("Clean-up NAND installed titles\n");
@@ -431,13 +459,13 @@ BOOL pre_install_Cleanup_User_Titles( FSFile *log_fd )
 	miya_log_fprintf(log_fd, " usr.id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
 
 
-	if( NAM_OK != NAM_DeleteTitle( tid ) ) {
+	if( NAM_OK != NAM_DeleteTitleCompletely( tid ) ) {
 	  m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
 	  mprintf("NG.\n");
 	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
 	  miya_log_fprintf(log_fd, "NG.\n");
-	  miya_log_fprintf(log_fd, " Error: NAM_DeleteTitle id = %08X%08X\n", (u32)(tid >> 32), (u32)tid);
+	  miya_log_fprintf(log_fd, " Error: NAM_DeleteTitleCompletely id = %08X%08X\n", (u32)(tid >> 32), (u32)tid);
 	  ret_flag = FALSE;
 	}
 	else {
@@ -453,7 +481,110 @@ BOOL pre_install_Cleanup_User_Titles( FSFile *log_fd )
 }
 
 
-BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count )
+BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int command, BOOL development_version_flag )
+{
+  char *tad_file_name;
+  int i;
+  u64 tid;
+  char game_code_buf[5];
+  BOOL ret_flag;
+
+  if( development_version_flag ) {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd);
+  }
+  else {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+  }
+
+  switch( command ) {
+  case 1:
+    mprintf("Install App.\n");
+    break;
+  case 2:
+    mprintf("Install TicketOnly.\n");
+    break;
+  case 3:
+    mprintf("Uninstall App.(except ticket)\n");
+    break;
+  case 4:
+    mprintf("Uninstall App. with ticket\n");
+    break;
+  default:
+    break;
+  }
+
+  for( i = 0 ; i < tid_count ; i++ ) {
+    ret_flag = TRUE;
+    tid = tid_array[i];
+    (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+    mprintf(" %08X%08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+    miya_log_fprintf(log_fd, " %08X%08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+    if( tid == 0 ) {
+      /* errorか */
+      continue;
+    }
+
+    switch( command ) {
+    case 1:
+      mprintf("IA ");
+      miya_log_fprintf(log_fd, "IA ");
+      tad_file_name = pre_install_search_tid( tid , log_fd);
+      if( tad_file_name ) {
+	ret_flag = myImportTad( tad_file_name , log_fd );
+      }
+
+      break;
+    case 2:
+      mprintf("TO ");
+      miya_log_fprintf(log_fd, "TO ");
+      tad_file_name = pre_install_search_tid( tid , log_fd);
+      if( tad_file_name ) {
+	ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
+      }
+      break;
+    case 3:
+      mprintf("DA ");
+      miya_log_fprintf(log_fd, "DA ");
+      ret_flag = myDeleteTitle( tid, 0 , NULL );
+      break;
+    case 4:
+      mprintf("DC ");
+      miya_log_fprintf(log_fd, "DC ");
+      ret_flag = myDeleteTitle( tid, 1 , NULL );
+      break;
+    default:
+      mprintf("?? ");
+      miya_log_fprintf(log_fd, "?? ");
+      break;
+    }
+
+
+    if( ret_flag == FALSE ) {
+      /* error チケットインストール失敗？ */
+      miya_log_fprintf(log_fd, "NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      
+    }
+    else {
+      miya_log_fprintf(log_fd, "OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+
+  }
+
+  mprintf("Done.\n");
+
+  (void)pre_install_discard_list();
+  return ret_flag;
+
+}
+
+BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count,
+			  u64 *ticket_id_array,  int ticket_id_count, BOOL development_version_flag )
 {
   char *tad_file_name;
   int i;
@@ -467,14 +598,68 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
   (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd);
 #endif
 
-  (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+  if( development_version_flag ) {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd);
+  }
+  else {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+  }
 
+
+  
+  pre_install_print_list(NULL);
+
+
+  /* チケットだけのインストール */
+  for( i = 0 ; i < ticket_id_count ; i++ ) {
+    tid = ticket_id_array[i];
+    (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+    mprintf(" TO %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+    miya_log_fprintf(log_fd, " TO %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+    if( tid == 0 ) {
+      /* errorか */
+      continue;
+    }
+
+    tad_file_name = pre_install_search_tid( tid , log_fd);
+    if( tad_file_name ) {
+      if( FALSE == my_NAM_ImportTadTicketOnly( tad_file_name ) ) {
+	/* error チケットインストール失敗？ */
+	miya_log_fprintf(log_fd, "NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	miya_log_fprintf(log_fd, "error: import tid=0x%08x%08x %s\n", 
+			 (u32)(tid >> 32) , (u32)(tid & 0xffffffff), tad_file_name);
+	ret_flag = FALSE;
+      }
+      else {
+	miya_log_fprintf(log_fd, "OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      }
+    }
+    else {
+      /* error ＲＯＭにファイルがない */
+      miya_log_fprintf(log_fd, "NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      mprintf("No file\n");
+      miya_log_fprintf(log_fd, "error: no file\n"); 
+      ret_flag = FALSE;
+    }
+  }
+
+
+  /* アプリ（common eticket）のインストール */
   for( i = 0 ; i < title_id_count ; i++ ) {
     /* 
        pTitleIds[i].is_personalized = 1 -> common (pre installed)
        pTitleIds[i].is_personalized = 2 -> personalized
     */
-    if( title_id_buf_ptr[i].is_personalized == 1 ) {
+    if( title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */ ) {
       /*
 	0x00030004484E474A "rom:/tads/TWL-KGUJ-v257.tad.out"
 	0x000300044B32444A "rom:/tads/TWL-K2DJ-v0.tad.out"
@@ -482,8 +667,8 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
       */
       tid = title_id_buf_ptr[i].tid;
       (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
-      mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
-      miya_log_fprintf(log_fd, " id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+      mprintf(" AP %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+      miya_log_fprintf(log_fd, " AP %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
 
       tad_file_name = pre_install_search_tid( tid , log_fd);
       if( tad_file_name ) {

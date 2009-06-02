@@ -3,7 +3,7 @@
 
 
 #define MY_DATA_VERSION_MAJOR 1
-#define MY_DATA_VERSION_MINOR 4
+#define MY_DATA_VERSION_MINOR 5
 
 typedef struct {
   u8 version_major;
@@ -20,6 +20,7 @@ typedef struct {
   BOOL shop_record_flag;
   int num_of_user_download_app;
   int num_of_user_pre_installed_app;
+  int num_of_user_pre_installed_eticket_only;
   int num_of_app_save_data;
   int num_of_photo_files;
   int num_of_shared2_files;

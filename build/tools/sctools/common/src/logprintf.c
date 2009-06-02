@@ -11,10 +11,9 @@
 #define __std(ref) ref
 // #define __std(ref) ::std::ref
 
-#include <twl.h>
-#include "text.h"
-#include "mprintf.h"
-#include "logprintf.h"
+#define size_t my_size_t
+
+typedef signed long my_size_t;
 
 #define	__fourbytealign(n)	((((unsigned long) (n)) + 3U) & ~3U)
 #define __va_start(parm)	((__std(va_list)) ((char*) ((unsigned long)(&parm) & ~3U) + __fourbytealign(sizeof(parm))))
@@ -153,15 +152,7 @@ static void miya_Litob(_Pft *, char);
 #endif
 
 #define ISDIGIT(c)  ((c >= '0') && (c <= '9'))
-#define MAX_PAD (sizeof(spaces) - 1)
-#define PAD(s, n) \
-  if (0 < (n)) { \
-           int i, j = (n); \
-             for (; 0 < j; j -= i) { \
-                           i = MAX_PAD < j ? MAX_PAD : j; \
-                         PUT(s, i); \
-                         } \
-                         }
+
 #if 0 // miyamoto
 #define PUT(s, n) \
   if( len > n ) {\
@@ -186,9 +177,21 @@ static void miya_Litob(_Pft *, char);
    } \
   } \
   else { \
-    return (x.nchar); \
+    return (x.nchar);			\
   }
 #endif
+
+
+
+#define MAX_PAD (sizeof(spaces) - 1)
+#define PAD(s, n) \
+  if (0 < (n)) { \
+    int i, j = (n);	     \
+             for (; 0 < j; j -= i) { \
+	       i = MAX_PAD < j ? (int)MAX_PAD : j;	\
+	       PUT(s, i);		\
+                         } \
+                         }
 
 static char spaces[] = "                                ";
 static char zeroes[] = "00000000000000000000000000000000";
@@ -243,7 +246,7 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
     }
     --s;
 #if 1
-    PUT(fmt, s - fmt);
+    PUT(fmt, (s - fmt));
 #else
     if (0 < (s-fmt)) {
       if ((arg = (*pfn)(arg, fmt, s-fmt)) != NULL)
@@ -258,7 +261,7 @@ static int _Printf(void *(*pfn)(void *, const char *, size_t),
 
 #endif
     if (c == '\0')
-      return (x.nchar);
+      return (int)(x.nchar);
     fmt = ++s;
 
     /* parse a conversion specifier */
@@ -391,7 +394,7 @@ static void _Putfld(_Pft *px, va_list *pap, char code, char *ac)
     break;
   case 's': /* convert a string */
     px->s = va_arg(*pap, char *);
-    px->n1 = strlen(px->s);
+    px->n1 = (int)strlen(px->s);
     if (0 <= px->prec && px->prec < px->n1)
       px->n1 = px->prec;
     break;
@@ -445,20 +448,20 @@ static void miya_Litob(_Pft *px, char code)
   char *digs = code == 'X' ? udigs : ldigs;
   int base = code == 'o' ? 8 : code != 'x' && code != 'X' ? 10 : 16;
   int i = sizeof(ac);
-  unsigned long long ullval = px->v.ll;
+  unsigned long long ullval = (unsigned long long)(px->v.ll);
 
   if ((code == 'd' || code == 'i') && px->v.ll < 0)
     ullval = -ullval;   /* safe against overflow */
   if (ullval || px->prec)
     ac[--i] = digs[ullval % base];
-  px->v.ll = ullval / base;
+  px->v.ll = (long long)(ullval / base);
   while (0 < px->v.ll && 0 < i) {   /* convert digits */
     miya_lldiv_t qr = miya_lldiv(px->v.ll, (long long) base);
 
     px->v.ll = qr.quot;
     ac[--i] = digs[qr.rem];
   }
-  px->n1 = sizeof(ac) - i;
+  px->n1 = (int)sizeof(ac) - i;
   (void)my_memcpy(px->s, &ac[i], px->n1);
   if (px->n1 < px->prec)
     px->nz0 = px->prec - px->n1;
@@ -686,7 +689,7 @@ static short _Ldunscale(short *pex, ldouble *px)
         _NAN : INF);
   } else if (0 < xchar /* || (xchar = _Dnorm(ps)) != 0 */) {
     /* finite, reduce to [1/2, 1) */
-    ps[_D0] = (short)(ps[_D0] & ~_DMASK | _DBIAS << _DOFF);
+    ps[_D0] = (unsigned short)(ps[_D0] & ~_DMASK | _DBIAS << _DOFF);
 #if _LONG_DOUBLE
     *pex = (short)(xchar - _DBIAS);
 #else

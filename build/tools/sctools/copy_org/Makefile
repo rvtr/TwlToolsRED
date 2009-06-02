@@ -37,6 +37,8 @@ ES_LATEST		=	$(shell ls -d $(ES_DIR)/es-sdk-*|sort|tail -n 1)
 ES_ROOT			=	$(ES_LATEST)
 
 LINCLUDES           = 	$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include ../common/src \
+			$(TWLSDK_ROOT)/build/libraries/nam/ARM9.TWL/include \
+			$(TWLSDK_ROOT)/build/libraries/ese/common/include \
 			$(ES_ROOT)/twl/include	$(ES_ROOT)/common/lib/ec/include
 
 LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib/$(TWL_BUILDTYPE)

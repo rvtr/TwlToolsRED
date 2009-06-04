@@ -101,7 +101,7 @@ void Form1::setRegionForms(void)
 	System::Boolean isKorea   = this->hSrl->IsRegionKorea;
 	System::Boolean isChina   = this->hSrl->IsRegionChina;
 	System::Int32  index;
-	if( isJapan && !isAmerica && !isEurope && !isAustralia )
+	if( isJapan && !isAmerica && !isEurope && !isAustralia && !isKorea && !isChina )
 		index = 0;
 	else if( !isJapan && isAmerica && !isEurope && !isAustralia && !isKorea && !isChina )
 		index = 1;
@@ -122,7 +122,7 @@ void Form1::setRegionForms(void)
 	else
 		index = -1;	// •s³
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-	if( isJapan && isAmerica && isEurope && isAustralia %% isKorea && isChina )
+	if( isJapan && isAmerica && isEurope && isAustralia && isKorea && isChina )
 	index = 7;
 #endif
 	this->combRegion->SelectedIndex = index;

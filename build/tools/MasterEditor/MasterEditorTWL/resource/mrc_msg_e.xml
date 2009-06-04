@@ -1,5 +1,117 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
+
+<!-- 英訳依頼 ここから (ver.1.6 追加メッセージ) -->
+
+	<!-- Clone Boot -->
+	<NandHybridBefore51PR>
+		<name>NANDアプリのHYBRID条件</name>
+		<sentence>TwlSDK5.1PRよりも前のバージョンをご使用の場合、HYBRID版NANDアプリを作成するためには、弊社窓口への確認が必要です。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandHybridBefore51PR>
+
+	<!-- Access Control -->
+	<PhotoTclAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoTclAccessUser>
+	<SDAccessPriv>
+		<name>アクセスコントロール情報</name>
+		<sentence>SDカードへのアクセス権の設定が不十分です。RSFファイルのSDCardAccessプロパティに"None"、"Read"、"Write"、"ReadWrite"のいずれかを指定する必要があります。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessPriv>
+
+	<!-- For Korea -->
+	<KoreaFlagNegated>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国であるにもかかわらず、RSFファイルでForKoreaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagNegated>
+	<KoreaFlagAsserted>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国でないにもかかわらず、RSFファイルでForKoreaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagAsserted>
+	<KoreaBannerCharSet>
+		<name>韓国版バナー</name>
+		<sentence>韓国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</KoreaBannerCharSet>
+
+	<!-- For China -->
+	<ChinaFlagNegated>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、RSFファイルでForChinaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagNegated>
+	<ChinaFlagAsserted>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、RSFファイルでForChinaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagAsserted>
+	<OSInitChinaUnused>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、OS_InitChina関数が使用されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUnused>
+	<OSInitChinaUsed>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、OS_InitChina関数が使用されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUsed>
+	<ChinaBannerCharSet>
+		<name>中国版バナー</name>
+		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ChinaBannerCharSet>
+
+	<!-- For DS Station -->
+	<DSStationTmpJump>
+		<name>tmpジャンプ</name>
+		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</DSStationTmpJump>
+
+	<DSStationRomSize>
+		<name>ROMサイズ</name>
+		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationRomSize>
+
+	<DSStationLib>
+		<name>店頭試遊版ライブラリ</name>
+		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationLib>
+
+	<!-- For Nintendo Zone -->
+	<DSStationTmpJump>
+		<name>tmpジャンプ</name>
+		<sentence>データ配信用(Nintendo Zone用)のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</DSStationTmpJump>
+
+	<DSStationRomSize>
+		<name>ROMサイズ</name>
+		<sentence>データ配信用(Nintendo Zone用)のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationRomSize>
+
+	<!-- SDK Version -->
+	<SDKVersionExModuleTwlOld>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlOld>
+	<SDKVersionExModuleNtrOld>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrOld>
+
+<!-- 英訳依頼 ここまで -->
+
 	<!-- NTR Compatible Area -->
 	<TitleNameAscii>
 		<name>Game Title</name>
@@ -272,11 +384,6 @@
 		<sentence>Write access to the Photo Database is not permitted.</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoWriteAccessUser>
-	<PhotoTclAccessUser><!-- 未翻訳 -->
-		<name>アクセスコントロール情報</name>
-		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
-		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
-	</PhotoTclAccessUser>
 	<PhotoJpegSignAccessUser>
 		<name>Access Control Information</name>
 		<sentence>JPEG signatures (JpegSign) are not enabled, even though write access to the Photo Database has been specified.</sentence>

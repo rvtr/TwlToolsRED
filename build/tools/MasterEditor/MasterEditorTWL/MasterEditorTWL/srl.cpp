@@ -586,6 +586,16 @@ void RCSrl::setRatingRomHeader( u32 region )
 		}
 		this->pRomHeader->s.parental_control_rating_info[ ogn ] = rating;
 	}
+//#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
+//	int ogn;
+//	for( ogn=0; ogn < OS_TWL_PCTL_OGN_MAX; ogn++ )
+//	{
+//		if( ognlist->IndexOf(ogn) < 0 )
+//		{
+//			this->pRomHeader->s.parental_control_rating_info[ ogn ] = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
+//		}
+//	}
+//#endif
 }
 
 // -------------------------------------------------------------------

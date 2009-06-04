@@ -319,7 +319,6 @@ System::Collections::Generic::List<int>^ MasterEditorTWL::getOgnListInRegion( u3
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 		case METWL_MASK_REGION_ALL:
-
 			list->Add( OS_TWL_PCTL_OGN_CERO );
 			list->Add( OS_TWL_PCTL_OGN_ESRB );
 			list->Add( OS_TWL_PCTL_OGN_USK );

@@ -214,6 +214,18 @@ void Form1::loadAppendInit(void)
 			u32 relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdk/relstep" ) );
 			u32 sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
 			this->hSrl->hMrcExternalCheckItems->SDKVer = sdkver;
+
+			major   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticTWL/major" ) );
+			minor   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticTWL/minor" ) );
+			relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticTWL/relstep" ) );
+			sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
+			this->hSrl->hMrcExternalCheckItems->SDKVerNotStaticTWL = sdkver;
+
+			major   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticNTR/major" ) );
+			minor   = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticNTR/minor" ) );
+			relstep = System::UInt32::Parse( MasterEditorTWL::getXPathText( root, "/init/sdkNotStaticNTR/relstep" ) );
+			sdkver  = (major << 24) | (minor << 16) | (relstep & 0xFFFF);
+			this->hSrl->hMrcExternalCheckItems->SDKVerNotStaticNTR = sdkver;
 		}
 		catch ( System::Exception ^ex )
 		{

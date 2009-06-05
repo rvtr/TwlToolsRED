@@ -336,6 +336,8 @@ namespace MasterEditorTWL
 	public:
 		property System::Boolean  IsAppendCheck;						// 追加チェックをするかどうか(すべての項目が追加チェックとは限らない)
 		property System::UInt32   SDKVer;								// SDKのバージョン
+		property System::UInt32   SDKVerNotStaticTWL;					// SDKのバージョン(TWL常駐モジュール以外)
+		property System::UInt32   SDKVerNotStaticNTR;					// SDKのバージョン(NTR常駐モジュール以外)
 		property System::Boolean  IsPermitNormalJump;					// ノーマルジャンプがアクセス許可されているか
 		property cli::array<System::Boolean> ^hIsPermitShared2Array;	// Shared2ファイルアクセスが許可されているか
 		property cli::array<System::UInt32>  ^hShared2SizeArray;		// Shared2ファイルサイズ
@@ -345,6 +347,8 @@ namespace MasterEditorTWL
 		{
 			this->IsAppendCheck         = false;
 			this->SDKVer                = 0;
+			this->SDKVerNotStaticTWL    = 0;
+			this->SDKVerNotStaticNTR    = 0;
 			this->IsPermitNormalJump    = false;
 			this->hIsPermitShared2Array = gcnew cli::array<System::Boolean>(METWL_NUMOF_SHARED2FILES);
 			this->hShared2SizeArray     = gcnew cli::array<System::UInt32>(METWL_NUMOF_SHARED2FILES);

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<middleware-name-list>
+	<version>1.6</version>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>libASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS (パナソニック)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>ASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS (パナソニック)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>ASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS (パナソニック)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>libASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS (パナソニック)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Actimagine</publisher>
+		<code>VX</code>
+		<note-j>VX MiddleWare for NINTENDO DS (Actimagine)</note-j>
+		<note-e>VX MiddleWare for NINTENDO DS (Actimagine)</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>DWC</code>
+		<note-j>TWL-DWC (任天堂)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>WiFi</code>
+		<note-j>TWL-WiFi (任天堂)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>libHWR_FULL</code>
+		<note-j>手書き認識ライブラリ (松下)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>libHWR_FULL</code>
+		<note-j>手書き認識ライブラリ (松下)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>DLTLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ日本語版 (Zi Corporation)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>SCRLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ英語版 (Zi Corporation)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>MCRLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ英語版 (Zi Corporation)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>JUSTSYSTEM</publisher>
+		<code>ATOK</code>
+		<note-j>DS用ATOKライブラリ (ジャストシステム)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Abiosso</publisher>
+		<code>VoiceChat</code>
+		<note-j>VoiceChatライブラリ for NINTENDO DS (Abiosso)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>SHARP</publisher>
+		<code>SHTTS</code>
+		<note-j>SHARP音声合成ライブラリ</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>ACCESS</publisher>
+		<code>NFC</code>
+		<note-j>NetFront ブラウザコンポーネント HTTP/HTTPSプロトコル</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>ACCESS</publisher>
+		<code>NFB</code>
+		<note-j>NetFront ブラウザコンポーネント</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>TMC</publisher>
+		<code>MP3Decoder_</code>
+		<note-j>MP3コーデックライブラリ (テクノマセマティカル)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Actimagine</publisher>
+		<code>Mobiclip</code>
+		<note-j>Mobiclip Middleware for NINTENDO DS (Actimagine)</note-j>
+		<note-e>Mobiclip Middleware for NINTENDO DS (Actimagine)</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>OKI</publisher>
+		<code>FSE</code>
+		<note-j>TWL用 顔認識ライブラリ (沖電気)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>TOSHIBA</publisher>
+		<code>SPConv</code>
+		<note-j>スピーチコンバータ for DS (東芝)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>M4A</code>
+		<note-j>MPEG4Systems Demux ライブラリ (CEVA+SHARP+任天堂)</note-j>
+		<note-e></note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>AAC-LC</code>
+		<note-j>AAC-LC Decoder ライブラリ (CEVA+SHARP+任天堂)</note-j>
+		<note-e></note-e>
+	</middleware>
+</middleware-name-list>

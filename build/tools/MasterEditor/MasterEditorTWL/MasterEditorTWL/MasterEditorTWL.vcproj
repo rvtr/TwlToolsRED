@@ -388,6 +388,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\middleware_name_list.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>

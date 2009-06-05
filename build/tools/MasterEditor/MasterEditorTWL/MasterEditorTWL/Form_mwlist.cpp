@@ -58,6 +58,16 @@ System::Void Form1::makeMiddlewareListXml(System::Xml::XmlDocument^ doc)
 			System::Xml::XmlElement ^mid = doc->CreateElement( "middleware" );
 			MasterEditorTWL::appendXmlTag( doc, mid, "publisher", lic->Publisher );
 			MasterEditorTWL::appendXmlTag( doc, mid, "name", lic->Name );
+			System::String ^note = "";
+			if( this->isJapanese() )
+			{
+				note = this->hMiddlewareNameList->search(lic->Publisher, lic->Name, true );
+			}
+			else
+			{
+				note = this->hMiddlewareNameList->search(lic->Publisher, lic->Name, false );
+			}
+			MasterEditorTWL::appendXmlTag( doc, mid, "note", note );
 			midlist->AppendChild( mid );
 		}
 	}

@@ -10,6 +10,7 @@
 #include "FormError.h"
 #include "Form1_const.h"
 #include "message_bank.h"
+#include "middleware_name_list.h"
 
 namespace MasterEditorTWL {
 
@@ -64,6 +65,9 @@ namespace MasterEditorTWL {
 
 		// エラーメッセージ
 		RCMessageBank ^hMsg;
+
+		// ミドルウェア名称リスト
+		RCMiddlewareNameList ^hMiddlewareNameList;
 
 	/////////////////////////////////////////////
 	// VC自動追加フィールド
@@ -4233,7 +4237,7 @@ private: System::Windows::Forms::ComboBox^  combGRB;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "a" );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
 		}
 
 		// SRLに登録されないROM仕様のフォーム入力を
@@ -4377,6 +4381,11 @@ private: System::Windows::Forms::ComboBox^  combGRB;
 		System::String^ getMrcMessageFileE(void)
 		{
 			return (this->getResDir() + "mrc_msg_e.xml");
+		}
+		// ミドルウェア名称リストファイル
+		System::String^ getMiddlewareNameListFile(void)
+		{
+			return (this->getResDir() + "middleware_name_list.xml");
 		}
 
 	private:

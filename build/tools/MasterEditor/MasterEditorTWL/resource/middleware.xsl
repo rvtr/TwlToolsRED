@@ -19,7 +19,7 @@
 			  font-weight: bold;
 			}
 			hr {
-			  width: 700px;
+			  width: 1000px;
 			  margin-left: 0;
 			}
 			tr {
@@ -34,7 +34,10 @@
 			  width: 200px;
 			}
 			th.name {
-			  width: 500px;
+			  width: 400px;
+			}
+			th.note {
+			  width: 400px;
 			}
 	        td {
 	          font-weight: normal;
@@ -75,6 +78,7 @@
 		<tr>
 			<th class="publisher">Publisher</th>
 			<th class="name">Middleware Name</th>
+			<th class="note">Note</th>
 		</tr>
 
 		<xsl:apply-templates />
@@ -86,6 +90,7 @@
 	<tr>
 		<td class="publisher"><xsl:value-of select="publisher" /></td>
 		<td class="name"><xsl:value-of select="name" /></td>
+		<td class="note"><xsl:value-of select="note" /></td>
 	</tr>
 </xsl:template>
 

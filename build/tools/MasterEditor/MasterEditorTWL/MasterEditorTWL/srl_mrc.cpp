@@ -888,6 +888,8 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 {
 	// SDKバージョン
 	System::Boolean isOld  = false;
+	System::Boolean isOldExTWL = false;
+	System::Boolean isOldExNTR = false;
 	System::Boolean isPR   = false;
 	System::Boolean isRC   = false;
 	for each( RCSDKVersion ^sdk in this->hSDKList )
@@ -901,10 +903,33 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 				isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVer );
 			}
 		}
+		else	// 常駐モジュール以外
+		{
+			if( this->hMrcExternalCheckItems->IsAppendCheck )
+			{
+				u32 major = sdk->Code >> 24;
+				if( major >= 5 )	// TWLSDK
+				{
+					isOldExTWL = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticTWL );
+				}
+				else				// NTRSDK
+				{
+					isOldExNTR = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticNTR );
+				}
+			}
+		}
 	}
 	if( isOld )
 	{
 		this->hWarnList->Add( this->makeMrcError("SDKVersionOld") );
+	}
+	if( isOldExTWL )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleTwlOld") );
+	}
+	if( isOldExNTR )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleNtrOld") );
 	}
 	if( isPR )
 	{
@@ -925,19 +950,7 @@ void RCSrl::mrcBanner(FILE *fp)
 	u8 mapChina[ 0x10000 ];
 	u8 mapKorea[ 0x10000 ];
 	int i;
-/*
-	// 本体設定だけはガイドライン無視
-	if( memcmp( this->pRomHeader->s.game_code, "HNB", 3 ) == 0 )
-	{
-		//this->hWarnList->Add( gcnew RCMrcError( 
-		//	"バナーファイル", METWL_ERRLIST_NORANGE, METWL_ERRLIST_NORANGE,
-		//	"本体設定アプリに限ってはバナーの文字コードチェックをスキップします。",
-		//	"Banner File",
-		//	"Only a machine setting app., a charactor code check of the banner file is skip.",
-		//	false, true ) );
-		return;
-	}
-*/
+
 	// バナーオフセットにエラーがあるときには調べない
 	if( this->pRomHeader->s.banner_offset == 0 )
 	{
@@ -978,6 +991,9 @@ void RCSrl::mrcBanner(FILE *fp)
 		this->hErrorList->Add( this->makeMrcError("BannerRead") );
 	}
 
+	// バナーバージョン
+	u8 banner_version = banner[0];
+
 	// バナーの各文字がマップに登録されているかチェック
 	System::Boolean bResultWorldwide = true;
 	System::Boolean bResultChina     = true;
@@ -990,7 +1006,7 @@ void RCSrl::mrcBanner(FILE *fp)
 		code = (code << 8) + banner[i];
 
 		// 中国のフォント箇所
-		if( (0x840 <= i) && (i < 0x940) )
+		if( (0x840 <= i) && (i < 0x940) && (banner_version >= 2) )	// バナーバージョンが1のときは中国版バナーは読み込まれない
 		{
 			if( (mapWorldwide[ code ] == 0) && (mapChina[ code ] == 0) )	// ワールドワイド版が使われててもOK
 			{
@@ -998,7 +1014,7 @@ void RCSrl::mrcBanner(FILE *fp)
 			}
 		}
 		// 韓国のフォント箇所
-		else if( (0x940 <= i) && (i < 0xA40) )
+		else if( (0x940 <= i) && (i < 0xA40) && (banner_version >= 3) )
 		{
 			if( (mapWorldwide[ code ] == 0) && (mapKorea[ code ] == 0) )
 			{
@@ -1016,10 +1032,10 @@ void RCSrl::mrcBanner(FILE *fp)
 	}
 	if( !bResultWorldwide )
 	{
-		if( memcmp( this->pRomHeader->s.game_code, "HNB", 3 ) != 0 )	// 本体設定は特別に許される
-		{
+		//if( memcmp( this->pRomHeader->s.game_code, "HNB", 3 ) != 0 )	// 本体設定は特別に許される
+		//{
 			this->hErrorList->Add( this->makeMrcError("BannerChar") );
-		}
+		//}
 	}
 	if( !bResultChina )
 	{

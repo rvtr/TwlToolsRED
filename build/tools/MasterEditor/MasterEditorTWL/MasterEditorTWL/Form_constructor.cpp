@@ -41,6 +41,7 @@ void Form1::construct(void)
 	this->IsReadOnly    = false;
 	this->SizeGboxExFlags   = this->gboxExFlags->Size;
 	this->hMsg = gcnew RCMessageBank( this->getGuiMessageFileJ(), this->getGuiMessageFileE() );
+	this->hMiddlewareNameList = gcnew RCMiddlewareNameList( this->getMiddlewareNameListFile() );
 
 	// バージョン情報を表示
 	//this->labAssemblyVersion->Text = System::Windows::Forms::Application::ProductVersion;

@@ -6,16 +6,17 @@
  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
  xmlns:html="http://www.w3.org/TR/REC-html40">
  <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <LastAuthor>nishikawa_takeshi</LastAuthor>
   <LastPrinted>2009-02-26T07:18:44Z</LastPrinted>
   <Created>2004-08-25T05:17:34Z</Created>
-  <LastSaved>2008-09-08T09:49:23Z</LastSaved>
+  <LastSaved>2009-06-09T02:20:49Z</LastSaved>
   <Version>11.9999</Version>
  </DocumentProperties>
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
   <WindowHeight>14625</WindowHeight>
   <WindowWidth>19335</WindowWidth>
-  <WindowTopX>2760</WindowTopX>
-  <WindowTopY>60</WindowTopY>
+  <WindowTopX>750</WindowTopX>
+  <WindowTopY>-45</WindowTopY>
   <AcceptLabelsInFormulas/>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
@@ -64,6 +65,17 @@
    <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
+  </Style>
+  <Style ss:ID="m20740758">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="2"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="9"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
   </Style>
   <Style ss:ID="m20753128">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
@@ -422,74 +434,6 @@
     <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
    </Borders>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="m20740576">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-   <NumberFormat ss:Format="@"/>
-  </Style>
-  <Style ss:ID="m20740586">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="m20740596">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="m20740606">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="9"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="m20740616">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="9"/>
-   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
-  </Style>
-  <Style ss:ID="m20740626">
-   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
-   <Borders>
-    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
-    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="2"/>
-    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
-    <Border ss:Position="DiagonalLeft" ss:LineStyle="Continuous" ss:Weight="1"/>
-   </Borders>
-   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="9"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
   </Style>
   <Style ss:ID="m20740384">
@@ -2009,6 +1953,17 @@
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
    <NumberFormat ss:Format="@"/>
   </Style>
+  <Style ss:ID="s40">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
   <Style ss:ID="s42">
    <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
    <Borders>
@@ -2182,6 +2137,28 @@
    <Alignment ss:Vertical="Center"/>
    <Borders/>
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s233">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s237">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="9"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
   </Style>
   <Style ss:ID="s258">
@@ -2448,6 +2425,17 @@
    <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
    <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
   </Style>
+  <Style ss:ID="s432">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Dash" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern"/>
+   <Interior ss:Color="#FFFFFF" ss:Pattern="Solid"/>
+  </Style>
  </Styles>
  <Names>
   <NamedRange ss:Name="AccessOther" ss:RefersTo="=マスターROM提出確認書!R35C18"/>
@@ -2468,7 +2456,7 @@
   <NamedRange ss:Name="IsCodec" ss:RefersTo="=マスターROM提出確認書!R30C28"/>
   <NamedRange ss:Name="IsEULA" ss:RefersTo="=マスターROM提出確認書!R29C93"/>
   <NamedRange ss:Name="IsGameCardOn" ss:RefersTo="=Sheet2!R7C86"/>
-  <NamedRange ss:Name="IsNAND" ss:RefersTo="=マスターROM提出確認書!R34C39"/>
+  <NamedRange ss:Name="IsNAND" ss:RefersTo="=マスターROM提出確認書!R34C58"/>
   <NamedRange ss:Name="IsNormalJump" ss:RefersTo="=Sheet2!R5C86"/>
   <NamedRange ss:Name="IsPhotoEx" ss:RefersTo="=マスターROM提出確認書!R31C61"/>
   <NamedRange ss:Name="IsSD" ss:RefersTo="=マスターROM提出確認書!R34C18"/>
@@ -2492,7 +2480,7 @@
   <NamedRange ss:Name="NTSC2" ss:RefersTo="=マスターROM提出確認書!R16C80"/>
   <NamedRange ss:Name="Person1" ss:RefersTo="=マスターROM提出確認書!R10C20"/>
   <NamedRange ss:Name="Person2" ss:RefersTo="=マスターROM提出確認書!R15C20"/>
-  <NamedRange ss:Name="PhotoAccess" ss:RefersTo="=マスターROM提出確認書!R34C66"/>
+  <NamedRange ss:Name="PhotoAccess" ss:RefersTo="=マスターROM提出確認書!R34C89"/>
   <NamedRange ss:Name="Platform" ss:RefersTo="=マスターROM提出確認書!R23C86"/>
   <NamedRange ss:Name="PrivateSize" ss:RefersTo="=マスターROM提出確認書!R28C86"/>
   <NamedRange ss:Name="ProductCode1" ss:RefersTo="=マスターROM提出確認書!R4C26"/>
@@ -2517,6 +2505,7 @@
   <NamedRange ss:Name="ReleaseYear" ss:RefersTo="=マスターROM提出確認書!R19C20"/>
   <NamedRange ss:Name="RomSize" ss:RefersTo="=マスターROM提出確認書!R24C53"/>
   <NamedRange ss:Name="RomVersion" ss:RefersTo="=マスターROM提出確認書!R23C20"/>
+  <NamedRange ss:Name="SDAccessRight" ss:RefersTo="=マスターROM提出確認書!R34C24"/>
   <NamedRange ss:Name="SDK" ss:RefersTo="=マスターROM提出確認書!R45C13"/>
   <NamedRange ss:Name="Shared2Size0" ss:RefersTo="=Sheet2!R9C9"/>
   <NamedRange ss:Name="Shared2Size1" ss:RefersTo="=Sheet2!R9C25"/>
@@ -2563,7 +2552,7 @@
       ss:Type="String">ニンテンドーDSiマスターROM提出確認書</Data></Cell>
     <Cell ss:MergeAcross="23" ss:StyleID="s25"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">ショシキゴウ</PhoneticText><Data
-      ss:Type="String">書式 2009-03号</Data></Cell>
+      ss:Type="String">書式 2009-06号</Data></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="18">
@@ -3672,17 +3661,18 @@
     <Cell ss:StyleID="s22"/>
     <Cell ss:StyleID="s22"/>
     <Cell ss:MergeAcross="14" ss:StyleID="m20740566"><Data ss:Type="String">SDカード</Data></Cell>
-    <Cell ss:MergeAcross="5" ss:StyleID="m20740576"><Data ss:Type="String">TagIsSD</Data><NamedCell
+    <Cell ss:MergeAcross="5" ss:StyleID="s40"><Data ss:Type="String">TagIsSD</Data><NamedCell
       ss:Name="IsSD"/></Cell>
-    <Cell ss:MergeAcross="14" ss:StyleID="m20740586"><Data ss:Type="String">NANDフラッシュ</Data></Cell>
-    <Cell ss:MergeAcross="5" ss:StyleID="m20740596"><Data ss:Type="String">TagIsNAND</Data><NamedCell
+    <Cell ss:MergeAcross="11" ss:StyleID="s432"><Data ss:Type="String">TagSDAccessRight</Data><NamedCell
+      ss:Name="SDAccessRight"/></Cell>
+    <Cell ss:MergeAcross="21" ss:StyleID="s233"><Data ss:Type="String">NANDフラッシュ</Data></Cell>
+    <Cell ss:MergeAcross="10" ss:StyleID="s237"><Data ss:Type="String">TagIsNAND</Data><NamedCell
       ss:Name="IsNAND"/></Cell>
-    <Cell ss:MergeAcross="20" ss:StyleID="m20740606"><PhoneticText
+    <Cell ss:MergeAcross="19" ss:StyleID="s237"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">シャシン</PhoneticText><Data
-      ss:Type="String">写真データベース(photo:)</Data></Cell>
-    <Cell ss:MergeAcross="12" ss:StyleID="m20740616"><Data ss:Type="String">TagPhotoAccess</Data><NamedCell
+      ss:Type="String">写真データベース</Data></Cell>
+    <Cell ss:MergeAcross="11" ss:StyleID="m20740758"><Data ss:Type="String">TagPhotoAccess</Data><NamedCell
       ss:Name="PhotoAccess"/></Cell>
-    <Cell ss:MergeAcross="21" ss:StyleID="m20740626"/>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="17.0625">
@@ -12104,7 +12094,7 @@
       ss:Type="String">ニンテンドーDSiマスターROM提出確認書 追加情報</Data></Cell>
     <Cell ss:MergeAcross="23" ss:StyleID="s25"><PhoneticText
       xmlns="urn:schemas-microsoft-com:office:excel">ショシキゴウ</PhoneticText><Data
-      ss:Type="String">書式 2009-03号</Data></Cell>
+      ss:Type="String">書式 2009-06号</Data></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:StyleID="s301">

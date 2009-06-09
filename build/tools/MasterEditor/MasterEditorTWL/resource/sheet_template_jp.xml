@@ -14,8 +14,8 @@
  <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
   <WindowHeight>14625</WindowHeight>
   <WindowWidth>19335</WindowWidth>
-  <WindowTopX>1260</WindowTopX>
-  <WindowTopY>195</WindowTopY>
+  <WindowTopX>2760</WindowTopX>
+  <WindowTopY>60</WindowTopY>
   <AcceptLabelsInFormulas/>
   <ProtectStructure>False</ProtectStructure>
   <ProtectWindows>False</ProtectWindows>
@@ -2457,9 +2457,11 @@
   <NamedRange ss:Name="Caption" ss:RefersTo="=マスターROM提出確認書!R49C3"/>
   <NamedRange ss:Name="Company1" ss:RefersTo="=マスターROM提出確認書!R8C20"/>
   <NamedRange ss:Name="Company2" ss:RefersTo="=マスターROM提出確認書!R13C20"/>
+  <NamedRange ss:Name="ContactFax1" ss:RefersTo="=マスターROM提出確認書!R10C69"/>
+  <NamedRange ss:Name="ContactFax2" ss:RefersTo="=マスターROM提出確認書!R15C69"/>
+  <NamedRange ss:Name="ContactTel1" ss:RefersTo="=マスターROM提出確認書!R9C69"/>
+  <NamedRange ss:Name="ContactTel2" ss:RefersTo="=マスターROM提出確認書!R14C69"/>
   <NamedRange ss:Name="CRC" ss:RefersTo="=マスターROM提出確認書!R21C53"/>
-  <NamedRange ss:Name="Fax1" ss:RefersTo="=マスターROM提出確認書!R10C69"/>
-  <NamedRange ss:Name="Fax2" ss:RefersTo="=マスターROM提出確認書!R15C69"/>
   <NamedRange ss:Name="Furigana1" ss:RefersTo="=マスターROM提出確認書!R9C20"/>
   <NamedRange ss:Name="Furigana2" ss:RefersTo="=マスターROM提出確認書!R14C20"/>
   <NamedRange ss:Name="GameCode" ss:RefersTo="=マスターROM提出確認書!R21C86"/>
@@ -2528,8 +2530,6 @@
   <NamedRange ss:Name="SubmitVersion" ss:RefersTo="=マスターROM提出確認書!R23C53"/>
   <NamedRange ss:Name="SubmitWay" ss:RefersTo="=マスターROM提出確認書!R18C69"/>
   <NamedRange ss:Name="SubmitYear" ss:RefersTo="=マスターROM提出確認書!R18C20"/>
-  <NamedRange ss:Name="Tel1" ss:RefersTo="=マスターROM提出確認書!R9C69"/>
-  <NamedRange ss:Name="Tel2" ss:RefersTo="=マスターROM提出確認書!R14C69"/>
   <NamedRange ss:Name="TitleIDHi" ss:RefersTo="=マスターROM提出確認書!R25C20"/>
   <NamedRange ss:Name="TitleIDLo" ss:RefersTo="=マスターROM提出確認書!R25C53"/>
   <NamedRange ss:Name="TitleName0" ss:RefersTo="=マスターROM提出確認書!R22C53"/>
@@ -2852,7 +2852,7 @@
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20738126"><Data ss:Type="String">TEL</Data></Cell>
     <Cell ss:MergeAcross="31" ss:StyleID="m20738248"><Data ss:Type="String">TagTel1</Data><NamedCell
-      ss:Name="Tel1"/></Cell>
+      ss:Name="ContactTel1"/></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="17.0625">
@@ -2866,7 +2866,7 @@
     <Cell ss:Index="64" ss:MergeAcross="4" ss:StyleID="m20738278"><Data
       ss:Type="String">FAX</Data></Cell>
     <Cell ss:MergeAcross="31" ss:StyleID="m20738288"><Data ss:Type="String">TagFax1</Data><NamedCell
-      ss:Name="Fax1"/></Cell>
+      ss:Name="ContactFax1"/></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="17.0625">
@@ -3006,7 +3006,7 @@
       ss:Type="String">印</Data></Cell>
     <Cell ss:MergeAcross="4" ss:StyleID="m20738602"><Data ss:Type="String">TEL</Data></Cell>
     <Cell ss:MergeAcross="31" ss:StyleID="m20738612"><Data ss:Type="String">TagTel2</Data><NamedCell
-      ss:Name="Tel2"/></Cell>
+      ss:Name="ContactTel2"/></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="17.0625">
@@ -3020,7 +3020,7 @@
     <Cell ss:Index="64" ss:MergeAcross="4" ss:StyleID="m20738642"><Data
       ss:Type="String">FAX</Data></Cell>
     <Cell ss:MergeAcross="31" ss:StyleID="m20738704"><Data ss:Type="String">TagFax2</Data><NamedCell
-      ss:Name="Fax2"/></Cell>
+      ss:Name="ContactFax2"/></Cell>
     <Cell ss:StyleID="s22"/>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="17.0625">
@@ -3850,7 +3850,7 @@
     <Cell ss:MergeAcross="9" ss:StyleID="m20752824"><Data ss:Type="String">AGCB(OFLC)</Data></Cell>
     <Cell ss:MergeAcross="38" ss:StyleID="m20752834"><Data ss:Type="String">TagRatingOFLC</Data><NamedCell
       ss:Name="RatingOFLC"/></Cell>
-    <Cell ss:MergeAcross="9" ss:StyleID="m20752844"><Data ss:Type="String">GRG</Data></Cell>
+    <Cell ss:MergeAcross="9" ss:StyleID="m20752844"><Data ss:Type="String">GRB</Data></Cell>
     <Cell ss:MergeAcross="38" ss:StyleID="m20752854"><Data ss:Type="String">TagRatingGRB</Data><NamedCell
       ss:Name="RatingGRB"/></Cell>
     <Cell ss:StyleID="s22"/>

@@ -701,6 +701,8 @@ private: System::Windows::Forms::TextBox^  tboxPhotoAccess;
 private: System::Windows::Forms::RadioButton^  rSubmitInternet;
 private: System::Windows::Forms::Label^  labGRB;
 private: System::Windows::Forms::ComboBox^  combGRB;
+private: System::Windows::Forms::Label^  labSDAccessRight;
+private: System::Windows::Forms::TextBox^  tboxSDAccessRight;
 
 
 
@@ -1012,6 +1014,8 @@ private: System::Windows::Forms::ComboBox^  combGRB;
 			this->cboxIsNormalJump = (gcnew System::Windows::Forms::CheckBox());
 			this->cboxIsTmpJump = (gcnew System::Windows::Forms::CheckBox());
 			this->gboxAccess = (gcnew System::Windows::Forms::GroupBox());
+			this->labSDAccessRight = (gcnew System::Windows::Forms::Label());
+			this->tboxSDAccessRight = (gcnew System::Windows::Forms::TextBox());
 			this->tboxPhotoAccess = (gcnew System::Windows::Forms::TextBox());
 			this->labPhotoAccess = (gcnew System::Windows::Forms::Label());
 			this->labAccessOther = (gcnew System::Windows::Forms::Label());
@@ -2673,6 +2677,8 @@ private: System::Windows::Forms::ComboBox^  combGRB;
 			this->gboxAccess->AccessibleName = nullptr;
 			resources->ApplyResources(this->gboxAccess, L"gboxAccess");
 			this->gboxAccess->BackgroundImage = nullptr;
+			this->gboxAccess->Controls->Add(this->labSDAccessRight);
+			this->gboxAccess->Controls->Add(this->tboxSDAccessRight);
 			this->gboxAccess->Controls->Add(this->tboxPhotoAccess);
 			this->gboxAccess->Controls->Add(this->labPhotoAccess);
 			this->gboxAccess->Controls->Add(this->labAccessOther);
@@ -2682,6 +2688,24 @@ private: System::Windows::Forms::ComboBox^  combGRB;
 			this->gboxAccess->Font = nullptr;
 			this->gboxAccess->Name = L"gboxAccess";
 			this->gboxAccess->TabStop = false;
+			// 
+			// labSDAccessRight
+			// 
+			this->labSDAccessRight->AccessibleDescription = nullptr;
+			this->labSDAccessRight->AccessibleName = nullptr;
+			resources->ApplyResources(this->labSDAccessRight, L"labSDAccessRight");
+			this->labSDAccessRight->Font = nullptr;
+			this->labSDAccessRight->Name = L"labSDAccessRight";
+			// 
+			// tboxSDAccessRight
+			// 
+			this->tboxSDAccessRight->AccessibleDescription = nullptr;
+			this->tboxSDAccessRight->AccessibleName = nullptr;
+			resources->ApplyResources(this->tboxSDAccessRight, L"tboxSDAccessRight");
+			this->tboxSDAccessRight->BackgroundImage = nullptr;
+			this->tboxSDAccessRight->Font = nullptr;
+			this->tboxSDAccessRight->Name = L"tboxSDAccessRight";
+			this->tboxSDAccessRight->ReadOnly = true;
 			// 
 			// tboxPhotoAccess
 			// 

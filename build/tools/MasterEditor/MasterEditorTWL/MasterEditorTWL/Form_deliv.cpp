@@ -177,12 +177,6 @@ void Form1::setDeliverableProperties(void)
 	{
 		this->hDeliv->hCaption = this->tboxCaption->Text;
 	}
-	// 備考欄に特殊な設定を追記
-	tmp = this->tboxCaptionEx->Text->Replace( " ", "" );
-	if( !(this->tboxCaptionEx->Text->Equals("")) && !(tmp->Equals("")) )
-	{
-		this->hDeliv->hCaption += ("(" + this->tboxCaptionEx->Text + ")");
-	}
 
 	// 特殊なアプリ種別
 	this->hDeliv->hAppTypeOther = this->tboxAppTypeOther->Text;

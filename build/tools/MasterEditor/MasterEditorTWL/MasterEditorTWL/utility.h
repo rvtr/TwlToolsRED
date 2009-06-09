@@ -178,10 +178,11 @@ namespace MasterEditorTWL
 	//
 	// @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
 	// @arg [in] 判定基準のSDKバージョン(設定ファイルに記述されるもの)
+	// @arg [in] Relstepの判定をPR/RCのときも判定するか(falseのときRelease版のみ)
 	//
 	// @ret 判定対象が基準よりも旧バージョンのとき(認められないとき) true 
 	//
-	System::Boolean IsOldSDKVersion( u32 target, u32 criterion );
+	System::Boolean IsOldSDKVersion( u32 target, u32 criterion, System::Boolean isRelstepPrRc );
 
 	//
 	// SDKバージョンがPR版かどうか調べる

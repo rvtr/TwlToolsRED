@@ -285,6 +285,19 @@ ECSrlResult RCSrl::setRomInfo(void)
 		= (this->pRomHeader->s.access_control.common_client_key_for_debugger_sysmenu != 0)?true:false;
 	this->IsPhotoWrite      = (this->pRomHeader->s.access_control.photo_access_write != 0)?true:false;
 	this->IsPhotoRead       = (this->pRomHeader->s.access_control.photo_access_read  != 0)?true:false;
+	this->IsSDWrite         = (this->pRomHeader->s.access_control.sdmc_access_write  != 0)?true:false;
+	this->IsSDRead          = (this->pRomHeader->s.access_control.sdmc_access_read   != 0)?true:false;
+
+	// 5.2 RELEASE以降のときSDアクセス権を調べる必要あり
+	u32 sdkver = 0;
+	for each ( RCSDKVersion ^sdk in this->hSDKList )
+	{
+		if( sdk->IsStatic )
+		{
+			sdkver = sdk->Code;
+		}
+	}
+	this->IsCheckSDAccessRight = !MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDKVER_SDACCESSRIGHT, true);	// PR/RC版でもエラーを出す
 
 	// SCFG がロックされるか
 	if( (this->pRomHeader->s.arm7_scfg_ext >> 31) != 0 )

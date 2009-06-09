@@ -50,6 +50,19 @@ namespace MasterEditorTWL
 		{
 			System::UInt32 get(){ return (this->code); }
 		}
+	//public:
+	//	property System::Byte MajorVersion
+	//	{
+	//		System::Byte get(){ return ((System::Byte)(0xff & (this->code >> 24))); }
+	//	}
+	//	property System::Byte MinorVersion
+	//	{
+	//		System::Byte get(){ return ((System::Byte)(0xff & (this->code >> 16))); }
+	//	}
+	//	property System::UInt16 Relstep
+	//	{
+	//		System::UInt16 get(){ return ((System::UInt16)(0xffff & this->code)); }
+	//	}
 	}; //RCSDKVersion
 
 	// -------------------------------------------------------------------

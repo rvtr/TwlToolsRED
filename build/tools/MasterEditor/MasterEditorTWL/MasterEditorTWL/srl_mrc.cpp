@@ -628,10 +628,6 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("NandAccessUser") );
 		}
-		if( this->pRomHeader->s.access_control.sd_card_access != 0 )
-		{
-			this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
-		}
 		if( this->pRomHeader->s.access_control.game_card_on != 0 )
 		{
 			this->hErrorList->Add( this->makeMrcError("GameCardNormalAccessUser") );
@@ -647,6 +643,38 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0 )
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
+		}
+
+		// SDアクセスは 5.2RELEASE で特定のアプリには許可される
+		if( !this->IsMediaNand )
+		{
+			// カードアプリはSDアクセス禁止
+			if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+			{
+				this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+			}
+		}
+		else
+		{
+			// 5.2 RELEASEかどうかで判定がかわる
+			if( this->IsCheckSDAccessRight )
+			{
+				// 5.2 RELEASE以降はアクセス権さえ設定されていればエラーを出さない
+				if( (this->pRomHeader->s.access_control.sd_card_access != 0) &&		// SDカードアクセスが有効になっているのに
+					(this->pRomHeader->s.access_control.sdmc_access_write == 0) &&	// アクセス権のフラグが下りている
+					(this->pRomHeader->s.access_control.sdmc_access_read  == 0 ) )
+				{
+					this->hErrorList->Add( this->makeMrcError("SDAccessPriv") );
+				}
+			}
+			else
+			{
+				// 5.2 RELEASE以前は原則SDアクセス禁止
+				if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+				{
+					this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+				}
+			}
 		}
 
 		if( !this->IsMediaNand )
@@ -711,7 +739,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "Common Client Key for the debugger system menu") );
 		}
 
-		u32 okbits = 0x80001FFF;
+		u32 okbits = 0x80007FFF;
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{
@@ -900,7 +928,7 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 			isRC  = MasterEditorTWL::IsSDKVersionRC( sdk->Code );
 			if( this->hMrcExternalCheckItems->IsAppendCheck )
 			{
-				isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVer );
+				isOld = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVer, false );
 			}
 		}
 		else	// 常駐モジュール以外
@@ -910,11 +938,11 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 				u32 major = sdk->Code >> 24;
 				if( major >= 5 )	// TWLSDK
 				{
-					isOldExTWL = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticTWL );
+					isOldExTWL = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticTWL, false );
 				}
 				else				// NTRSDK
 				{
-					isOldExNTR = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticNTR );
+					isOldExNTR = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticNTR, false );
 				}
 			}
 		}

@@ -133,6 +133,37 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 		}
 	}
 
+	// 備考欄に特殊な設定を追記
+	System::String ^capEx = "";
+	if( hSrl->HasDSDLPlaySign )
+	{
+		if( english )
+			capEx += " [DS clone-boot is supported.]";
+		else
+			capEx += " [DSクローンブート対応です.]";
+	}
+	if( hSrl->IsSCFGAccess )
+	{
+		if( english )
+			capEx += " [The SCFC register can be accessed.]";
+		else
+			capEx += " [SCFGレジスタアクセス可能になっています.]";
+	}
+	if( hSrl->IsSD )
+	{
+		if( english )
+			capEx += " [The SD Card can be accessed.]";
+		else
+			capEx += " [SDカードへアクセス可能になっています.]";
+	}
+	if( hSrl->IsNormalJump )
+	{
+		if( english )
+			capEx += " [The normal jump is set.]";
+		else
+			capEx += " [ノーマルジャンプが設定されています.]";
+	}
+
 	// 書類テンプレートの各タグを入力情報に置き換え
 	System::Xml::XmlNodeList ^list;
 	list = root->GetElementsByTagName( "Data" );
@@ -414,6 +445,24 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 				else
 					node->FirstChild->Value = gcnew System::String("None");
 			}
+			if( node->FirstChild->Value->Equals( "TagSDAccessRight" ) )
+			{
+				if( hSrl->IsCheckSDAccessRight )
+				{
+					if( hSrl->IsSDRead && hSrl->IsSDWrite )
+						node->FirstChild->Value = gcnew System::String("Read/Write");
+					else if( hSrl->IsSDRead )
+						node->FirstChild->Value = gcnew System::String("Read Only");
+					else if( hSrl->IsSDWrite )
+						node->FirstChild->Value = gcnew System::String("Write Only");
+					else
+						node->FirstChild->Value = gcnew System::String("None");
+				}
+				else	// アクセス権が定義されるまでのバージョンでは空白にしておく
+				{
+					node->FirstChild->Value = gcnew System::String("");
+				}
+			}
 
 			// 会社情報
 			if( node->FirstChild->Value->Equals( "TagCompany1" ) )
@@ -476,7 +525,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			// 備考
 			if( node->FirstChild->Value->Equals( "TagCaption" ) )
 			{
-				node->FirstChild->Value = this->hCaption;
+				node->FirstChild->Value = this->hCaption + capEx;
 			}
 
 			// リージョン

@@ -83,6 +83,29 @@ void Form1::setSrlForms(void)
 		this->tboxIsCodec->Text = gcnew System::String( "DS" );
 	}
 	this->cboxIsSD->Checked   = this->hSrl->IsSD;
+	if( this->hSrl->IsCheckSDAccessRight )
+	{
+		System::String ^sdright = "";
+		if( this->hSrl->IsSDRead && this->hSrl->IsSDWrite )
+		{
+			sdright = "Read/Write";
+		}
+		else if( this->hSrl->IsSDRead )
+		{
+			sdright = "Read";
+		}
+		else if( this->hSrl->IsSDWrite )
+		{
+			sdright = "Write";
+		}
+		else
+		{
+			sdright = "None";
+		}
+		this->tboxSDAccessRight->Text = sdright;
+	}
+
+
 	this->cboxIsNAND->Checked = this->hSrl->IsNAND;
 	if( this->hSrl->IsGameCardNitro )
 	{

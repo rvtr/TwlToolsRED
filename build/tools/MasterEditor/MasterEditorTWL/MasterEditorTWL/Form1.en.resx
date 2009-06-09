@@ -449,10 +449,10 @@
     <value>Enable Sub-Banner File</value>
   </data>
   <data name="cboxIsNormalJump.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 16</value>
+    <value>172, 16</value>
   </data>
   <data name="cboxIsNormalJump.Text" xml:space="preserve">
-    <value>Enable Normal Jump</value>
+    <value>Permit Normal Jump Landing</value>
   </data>
   <data name="cboxIsTmpJump.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 16</value>
@@ -641,7 +641,7 @@
     <value>Other</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Market and Rating (***)</value>
+    <value>Market and Rating ***</value>
   </data>
   <data name="gboxOtherSpec.Text" xml:space="preserve">
     <value>Other ROM Specifications</value>
@@ -660,6 +660,18 @@
   </data>
   <data name="gboxParental.Text" xml:space="preserve">
     <value>Market and Rating Information</value>
+  </data>
+  <data name="combGRB.Items" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="combGRB.Items1" xml:space="preserve">
+    <value>12-year+</value>
+  </data>
+  <data name="combGRB.Items2" xml:space="preserve">
+    <value>15-year+</value>
+  </data>
+  <data name="combGRB.Items3" xml:space="preserve">
+    <value>Teenager restricted</value>
   </data>
   <data name="cboxIsUnnecessaryRating.Size" type="System.Drawing.Size, System.Drawing">
     <value>195, 16</value>

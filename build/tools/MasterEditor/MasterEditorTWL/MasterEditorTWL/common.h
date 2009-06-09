@@ -22,3 +22,6 @@
 #define   METWL_NUMOF_SHARED2FILES		6
 #define   METWL_SEG3_CRC                0x0254
 #define   METWL_TAD_TMP_FILENAME        "tmp.srl"		// TAD読み込みの際に split_tad で一時的に作成するファイル名
+
+// 判定基準
+#define   METWL_SDKVER_SDACCESSRIGHT	((5 << 24)|(2 << 16)|30000)		// SDアクセス権の判定が必要なSDKバージョン (5.2 RELEASE)

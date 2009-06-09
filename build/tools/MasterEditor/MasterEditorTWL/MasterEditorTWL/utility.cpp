@@ -653,10 +653,11 @@ System::String^ MasterEditorTWL::analyzeSDKVersion( System::UInt32 code )
 //
 // @arg [in] 判定対象のSDKバージョン(SRLに含まれるもの)
 // @arg [in] 判定基準のSDKバージョン(設定ファイルに記述されるもの)
+// @arg [in] Relstepの判定をPR/RCのときも判定するか(falseのときRelease版のみ)
 //
 // @ret 判定対象が基準よりも旧バージョンのとき(認められないとき) true 
 // ----------------------------------------------------------------------
-System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion )
+System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion, System::Boolean isRelstepPrRc )
 {
 	// SDKバージョンからメジャーバージョン/マイナーバージョン/relstepを抽出
 	System::Byte   majorTar   = (System::Byte)(0xff & (target >> 24));
@@ -681,7 +682,11 @@ System::Boolean MasterEditorTWL::IsOldSDKVersion( u32 target, u32 criterion )
 	// メジャーもマイナーも一致するときrelstepを判定
 	if( (majorTar == majorCri) && (minorTar == minorCri) && (relstepTar < relstepCri) )
 	{
-		if( !MasterEditorTWL::IsSDKVersionPR(relstepTar) && !MasterEditorTWL::IsSDKVersionRC(relstepTar) )
+		if( isRelstepPrRc )
+		{
+			return true;	// PR/RC/Releaseのとき
+		}
+		else if( !MasterEditorTWL::IsSDKVersionPR(relstepTar) && !MasterEditorTWL::IsSDKVersionRC(relstepTar) )
 		{
 			return true;	// Release版のときのみ
 		}

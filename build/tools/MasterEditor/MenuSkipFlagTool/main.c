@@ -260,7 +260,7 @@ static BOOL iEnableFlag( SContext *pContext )
     }
 
     // TWLとNTRとで分岐
-    if( (rh.s.platform_code == 0) && (rh.s.enable_signature != 0) )
+    if( (rh.s.platform_code == 0) && (rh.s.enable_signature == 0) )    // enable_signature が立っている特殊なアプリを含む (PictoChatなど)
     {
         printf( "Platform(TWL/NTR): 0x%02X (NTR)\n", rh.s.platform_code );
 
@@ -280,7 +280,7 @@ static BOOL iEnableFlag( SContext *pContext )
         rh.s.header_crc16 = CalcCRC16( CRC16_INIT_VALUE, (u8*)&rh, CALC_CRC16_SIZE );
         printf( "Header CRC       : 0x%04X -> 0x%04X\n", curr_crc, rh.s.header_crc16 );
     }
-    else    // enable_signature が入っている特殊なアプリを含む (PictoChatなど)
+    else
     {
         printf( "Platform(TWL/NTR): 0x%02X (%s)\n", 
                     rh.s.platform_code, (rh.s.platform_code == PLATFORM_CODE_TWL_HYBLID)?"TWL Hybrid":"TWL Limited" );

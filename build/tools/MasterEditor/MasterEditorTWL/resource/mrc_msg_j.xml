@@ -396,7 +396,7 @@
 	</JpegSignAccessUserCard>
 	<JpegSignAccessUserNand>
 		<name>アクセスコントロール情報</name>
-		<sentence>写真データベースへのライトアクセスもしくはSDカードへのアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
+		<sentence>写真データベースへのライトアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserNand>
 	<JpegSignAccessSystem>

@@ -657,7 +657,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		else
 		{
 			// 5.2 RELEASEかどうかで判定がかわる
-			if( this->IsCheckSDAccessRight )
+			if( this->IsSDK52Release )
 			{
 				// 5.2 RELEASE以降はアクセス権さえ設定されていればエラーを出さない
 				if( (this->pRomHeader->s.access_control.sd_card_access != 0) &&		// SDカードアクセスが有効になっているのに
@@ -702,18 +702,11 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			{
 				this->hErrorList->Add( this->makeMrcError("PhotoJpegSignAccessUser") );
 			}
-			// photoやSDへライトしないくせにJpeg署名が有効なとき
+			// photoへライトしないくせにJpeg署名が有効なとき
 			if( (this->pRomHeader->s.access_control.photo_access_write == 0) &&
-				(this->pRomHeader->s.access_control.sd_card_access == 0) &&
 				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser != 0) )
 			{
 				this->hErrorList->Add( this->makeMrcError("JpegSignAccessUserNand") );
-			}
-			// Jpeg署名を有効にせずにSDにアクセスする場合には確認のメッセージを出しておく
-			if( (this->pRomHeader->s.access_control.sd_card_access != 0) &&
-				(this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForUser == 0) )
-			{
-				this->hWarnList->Add( this->makeMrcError("SDJpegSignAccessUser") );
 			}
 			// photoアクセスするのにTCLライブラリを使用していないとき
 			if( (this->pRomHeader->s.access_control.photo_access_read  != 0) ||

@@ -297,7 +297,7 @@ ECSrlResult RCSrl::setRomInfo(void)
 			sdkver = sdk->Code;
 		}
 	}
-	this->IsCheckSDAccessRight = !MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDKVER_SDACCESSRIGHT, true);	// PR/RC版でもエラーを出す
+	this->IsSDK52Release = !MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDK52_RELEASE, true);	// PR/RC版でもエラーを出す
 
 	// SCFG がロックされるか
 	if( (this->pRomHeader->s.arm7_scfg_ext >> 31) != 0 )

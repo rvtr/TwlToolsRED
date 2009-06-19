@@ -95,7 +95,7 @@ namespace MasterEditorTWL
 		property System::Boolean IsPhotoRead;
 		property System::Boolean IsSDWrite;				// SDカードアクセス権 : フラグとは別に用意された(5.2 RELEASE)
 		property System::Boolean IsSDRead;
-		property System::Boolean IsCheckSDAccessRight;	// SDアクセス権を調べる必要があるか : 5.2 RELEASE 以降のとき調べる必要あり
+		property System::Boolean IsSDK52Release;	// SDアクセス権を調べる必要があるか : 5.2 RELEASE 以降のとき調べる必要あり
 
 		// Shared2ファイルサイズ Read Only
 		property cli::array<System::UInt32> ^hShared2SizeArray;

@@ -447,7 +447,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagSDAccessRight" ) )
 			{
-				if( hSrl->IsCheckSDAccessRight )
+				if( hSrl->IsSD && hSrl->IsSDK52Release )
 				{
 					if( hSrl->IsSDRead && hSrl->IsSDWrite )
 						node->FirstChild->Value = gcnew System::String("Read/Write");

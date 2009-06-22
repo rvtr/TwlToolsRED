@@ -441,12 +441,13 @@ div.document {
 <ul class="simple">
 <li>目次<ul>
 <li><a class="reference internal" href="#id1">TWLメニュースキップフラグ立てツールとは?</a></li>
-<li><a class="reference internal" href="#id2">対応タイトル</a></li>
-<li><a class="reference internal" href="#id3">動作</a></li>
-<li><a class="reference internal" href="#id6">実行方法</a></li>
-<li><a class="reference internal" href="#id7">プログラムの返り値</a></li>
-<li><a class="reference internal" href="#id8">オプション</a></li>
-<li><a class="reference internal" href="#id9">変更履歴</a></li>
+<li><a class="reference internal" href="#id2">パッケージ内容</a></li>
+<li><a class="reference internal" href="#id3">対応タイトル</a></li>
+<li><a class="reference internal" href="#id4">動作</a></li>
+<li><a class="reference internal" href="#id7">実行方法</a></li>
+<li><a class="reference internal" href="#id10">プログラムの返り値</a></li>
+<li><a class="reference internal" href="#id11">オプション</a></li>
+<li><a class="reference internal" href="#id14">変更履歴</a></li>
 </ul>
 </li>
 </ul>
@@ -454,11 +455,17 @@ div.document {
 <h1>TWLメニュースキップフラグ立てツールとは?</h1>
 <p>TWL試遊台タイトルでは、
 「健康と安全について」の画面およびDSiメニューをスキップする必要があります。</p>
-<p>本ツールは、入力されたROMに対して、
-上記の画面およびメニューをスキップするためのフラグを立て、
-別ファイルに出力します。</p>
+<p>本ツールは、入力されたROMデータに対して、
+上記をスキップするためのフラグを立て、別ファイルに出力します。</p>
 </div>
 <div class="section" id="id2">
+<h1>パッケージ内容</h1>
+<ul class="simple">
+<li>MenuSkipFlagTool.exe : フラグ立てツール</li>
+<li>MenuSkipFlagTool_Checker.exe : MenuSkipFlagTool.exe の検査ツール</li>
+</ul>
+</div>
+<div class="section" id="id3">
 <h1>対応タイトル</h1>
 <ul class="simple">
 <li>TWLタイトル<ul>
@@ -468,9 +475,9 @@ div.document {
 <li>NITROタイトル</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h1>動作</h1>
 <div class="section" id="id4">
+<h1>動作</h1>
+<div class="section" id="id5">
 <h2>概要</h2>
 <ul class="simple">
 <li>入力<ul>
@@ -489,28 +496,47 @@ div.document {
 </li>
 </ul>
 </div>
-<div class="section" id="id5">
+<div class="section" id="id6">
 <h2>フローチャート</h2>
 <img alt="tool_flowchart.gif" src="tool_flowchart.gif" />
 </div>
 </div>
-<div class="section" id="id6">
+<div class="section" id="id7">
 <h1>実行方法</h1>
+<div class="section" id="id8">
+<h2>フラグ立て処理の実行</h2>
 <p>WindowsXP付属のコマンドプロンプト、もしくはcygwinから実行してください。</p>
 <blockquote>
 <ul class="simple">
 <li>MenuSkipFlagTool.exe  (入力SRLファイル名)  (出力SRLファイル名)  (1もしくは0)</li>
 </ul>
 </blockquote>
-<p>ここで、1を指定した場合、フラグを立てる処理をします。
+<p>1を指定した場合、フラグを立てる処理をします。
 0を指定した場合には、何もデータを加工せずに、入力SRLファイルを
 出力SRLファイルにコピーするだけの処理をします。</p>
 <p>プログラムの途中で、エラーがあった場合、処理を中断します。
 このとき、作成途中であった、出力SRLファイルは削除されます。</p>
 </div>
-<div class="section" id="id7">
+<div class="section" id="id9">
+<h2>フラグ立て処理の検査</h2>
+<p>MenuSkipFlagTool.exe の処理が正しいかどうかを同梱の MenuSkipFlagTool_Checker.exe を用いて
+チェックすることができます。</p>
+<p>MenuSkipFlagTool_Checker.exe は、MenuSkipFlagTool.exe において、
+フラグが立てられたかどうか(もしくは、立てられていないかどうか)、および、余分なデータが書き換えられていないかをチェックします。</p>
+<blockquote>
+<ul class="simple">
+<li>MenuSkipFlagTool_Checker.exe  (フラグ立て処理前のSRLファイル名)  (フラグ立て処理後のSRLファイル名)  (1もしくは0)</li>
+</ul>
+</blockquote>
+<p>(注意)
+MenuSkipFlagTool_Checker.exe のコマンドライン引数には、 <strong>MenuSkipFlagTool.exe と同じもの</strong> を指定してください。</p>
+</div>
+</div>
+<div class="section" id="id10">
 <h1>プログラムの返り値</h1>
-<p>コマンドラインからプログラムを実行したとき、
+<div class="section" id="menuskipflagtool-exe">
+<h2>MenuSkipFlagTool.exe</h2>
+<p>コマンドラインから MenuSkipFlagTool.exe を実行したとき、
 プログラムの終了後、以下の返り値が設定されます。</p>
 <blockquote>
 <ul class="simple">
@@ -518,30 +544,64 @@ div.document {
 <li>エラーが発生した場合 : -1 が設定されます。</li>
 </ul>
 </blockquote>
-<p>返り値は、Windowsコマンドプロンプトの場合、%ERRORLEVEL%環境変数に格納されますので、
+<p>返り値は、Windowsコマンドプロンプトの場合、
+%ERRORLEVEL%環境変数に格納されますので、
 バッチファイルなどの分岐に利用することができます。</p>
 <p>また、cygwinのシェルを使用した場合には、返り値の格納先は、
 %ERRORLEVEL%環境変数ではなく、シェル変数 $? となります。
-ただし、cygwinシェルの場合、返り値 -1 は 255 となります。</p>
+ただし、cygwinシェルの場合、先述の返り値 -1 は 255 となります。</p>
 </div>
-<div class="section" id="id8">
+<div class="section" id="menuskipflagtool-checker-exe">
+<h2>MenuSkipFlagTool_Checker.exe</h2>
+<p>一方、MenuSkipFlagTool_Checker.exe では、以下の返り値が設定されます。</p>
+<blockquote>
+<ul class="simple">
+<li>処理が正常であると判断した場合 : 0 が設定されます。</li>
+<li>異常を発見した場合 : -1 が設定されます。</li>
+</ul>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id11">
 <h1>オプション</h1>
-<p>コンソール画面上での操作の場合、オプションによって出力を変えることができます。
-スクリプトなどに組み込む場合にご利用ください。</p>
-<ol class="arabic simple">
+<div class="section" id="id12">
+<h2>MenuSkipFlagTool.exe</h2>
+<p>実行の際に、以下のオプションを指定することができます。</p>
+<ul class="simple">
+<li>-d オプション</li>
+</ul>
+<p>通常、1が指定されているとき、メニュースキップフラグを立てる処理が実行されますが、
+-d オプションを指定した場合、フラグを下ろす処理となります。
+フラグがすでに下りている場合、何もしません。</p>
+<ul class="simple">
 <li>-f オプション</li>
-</ol>
+</ul>
 <p>通常、出力ファイルがすでに存在する場合、上書き確認を行いますが、-fオプションを指定した場合、
 上書き確認をせずに、強制的に上書きします。</p>
-<ol class="arabic simple" start="2">
+<ul class="simple">
 <li>-h オプション</li>
-</ol>
+</ul>
 <p>使用方法を表示して終了します。</p>
 </div>
-<div class="section" id="id9">
+<div class="section" id="id13">
+<h2>MenuSkipFlagTool_Checker.exe</h2>
+<ul class="simple">
+<li>-d オプション</li>
+</ul>
+<p>通常、1が指定されているとき、メニュースキップフラグが立てられたかどうかが検査されますが、
+-d オプションを指定した場合、フラグが下ろされたかどうかが検査されます。
+MenuSkipFlagTool.exe において -d オプションを指定した場合に、
+MenuSkipFlatTool_Checker.exe においても -d オプションをご指定ください。</p>
+<ul class="simple">
+<li>-h オプション</li>
+</ul>
+<p>使用方法を表示して終了します。</p>
+</div>
+</div>
+<div class="section" id="id14">
 <h1>変更履歴</h1>
 <ul>
-<li><p class="first">ver.1.0 (2009/06/19)</p>
+<li><p class="first">ver.1.0 (2009/06/22)</p>
 <p>初版</p>
 </li>
 </ul>

@@ -325,7 +325,7 @@ if "%platform%"=="TWL" (
 		set input_srl=%output_rating_srl%
 	)
 )
-echo input_srl: %input_srl%
+rem echo input_srl: %input_srl%
 
 echo.
 echo *** マスタリングツールを実行します。***

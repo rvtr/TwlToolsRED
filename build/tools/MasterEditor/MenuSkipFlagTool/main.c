@@ -106,7 +106,9 @@ int main(int argc, char *argv[])
     BOOL            bResult = TRUE;
     BOOL            bForceOverwrite = FALSE;
     BOOL            bEnableFlag = FALSE;        // フラグを立てるかどうか
-
+    ROM_Header      rh;
+    u16             h_crc = 0;
+    
     printf( "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" );
     printf( "         ManuSkipFlagTool [%s-%s]\n", SDK_REVISION, IPL_REVISION );
     printf( "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" );
@@ -198,6 +200,22 @@ int main(int argc, char *argv[])
     if( !(context.ifp) || !(context.ofp) )
     {
         printf( "\n*** Error: Failed to open the file. ***\n" );
+        bResult = FALSE;
+        goto FINALIZE;
+    }
+    
+    // SRLかどうかのチェック
+    fseek( context.ifp, 0, SEEK_SET );
+    if( sizeof(ROM_Header) != fread( &rh, 1, sizeof(ROM_Header), context.ifp ) )
+    {
+        printf( "\n*** Error: Failed to read the ROM Header. ***\n" );
+        bResult = FALSE;
+        goto FINALIZE;
+    }
+    h_crc = CalcCRC16( CRC16_INIT_VALUE, (u8*)&rh, CALC_CRC16_SIZE );   // ヘッダCRCがおかしいとき不正ROMとみなす
+    if( h_crc != rh.s.header_crc16 )
+    {
+        printf( "\n*** Error: Invalid header CRC. ***\n" );
         bResult = FALSE;
         goto FINALIZE;
     }

@@ -45,6 +45,7 @@ set comparing_tool=%tooldir%comparing.TWL.exe
 set maketad_tool=%tooldir%maketad.exe
 set splittad_tool=%tooldir%split_tad_console.exe
 set analyzer_tool=%tooldir%SrlAnalyzer.TWL.exe
+set rating_allfree_tool=%tooldir%RatingAllFreeTool.exe
 set caution_pro=%tooldir%caution_properties.txt
 set this_bat=%~dpnx0
 
@@ -68,11 +69,15 @@ if not exist "%maketad_tool%" (
 	goto end
 )
 if not exist "%splittad_tool%" (
-	echo comparing tool "%splittad_tool%" is not found.
+	echo split tad tool "%splittad_tool%" is not found.
 	goto end
 )
 if not exist "%analyzer_tool%" (
-	echo comparing tool "%analyzer_tool%" is not found.
+	echo srl analyzer tool "%analyzer_tool%" is not found.
+	goto end
+)
+if not exist "%rating_allfree_tool%" (
+	echo rating all free tool "%rating_allfree_tool%" is not found.
 	goto end
 )
 
@@ -98,6 +103,7 @@ set output_tad_short=%~n1.master.tad
 set output_cls_dir_short=for_cls\
 set output_tmp_srl_short=%~n1.srl
 set output_srl_sdboot_short=%~n1.sdboot.srl
+set output_rating_srl_short=%~n1.rating.srl
 
 set output_dir=%~d1%~p1%~n1.master.out\
 if %light_mode%=="YES" (
@@ -111,6 +117,7 @@ set output_tad=%output_dir%%output_tad_short%
 set output_cls_dir=%output_dir%%output_cls_dir_short%
 set output_tmp_srl=%output_dir%%output_tmp_srl_short%
 set output_srl_sdboot=%output_dir%%output_srl_sdboot_short%
+set output_rating_srl=%output_dir%%output_rating_srl_short%
 set output_readme=%output_dir%Readme.txt
 set output_log=%output_dir%log.txt
 
@@ -269,6 +276,9 @@ for /F "delims=" %%a in ('"%tmpprog%"') do set media=%%a
 set tmpprog="%analyzer_tool%" "%input_srl%" -t
 for /F "delims=" %%a in ('"%tmpprog%"') do set tadversion=%%a
 
+set tmpprog="%analyzer_tool%" "%input_srl%" -c
+for /F "delims=" %%a in ('"%tmpprog%"') do set forchina=%%a
+
 rem 入力ファイルの情報を Readme に出力
 echo ------------------------------------------>>"%output_readme%"
 echo 入力ファイル>>"%output_readme%"
@@ -296,6 +306,26 @@ if "%platform%"=="NTR" (
 	set mastering_option=-i "%mastering_ini%" -p "%output_pro%" %ntrj_option%
 )
 rem echo %mastering_option%
+
+rem プラットフォームがTWLで中国向けのときレーティングをすべてFREEにする
+if "%platform%"=="TWL" (
+	if "%forchina%"=="YES" (
+		echo.
+		echo.
+		echo ****************************************************************
+		echo *                                                              *
+		echo *                                                              *
+		echo * 中国向けとみなしレーティングをすべてFREEにします。           *
+		echo *                                                              *
+		echo *                                                              *
+		echo ****************************************************************
+		echo.
+		echo.
+		"%rating_allfree_tool%" "%input_srl%" "%output_rating_srl%"
+		set input_srl=%output_rating_srl%
+	)
+)
+echo input_srl: %input_srl%
 
 echo.
 echo *** マスタリングツールを実行します。***

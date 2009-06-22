@@ -442,12 +442,13 @@ div.document {
 <li>目次<ul>
 <li><a class="reference internal" href="#id1">TWLメニュースキップフラグ立てツールとは?</a></li>
 <li><a class="reference internal" href="#id2">パッケージ内容</a></li>
+<li><a class="reference internal" href="#id4">使用上の注意</a></li>
 <li><a class="reference internal" href="#id3">対応タイトル</a></li>
-<li><a class="reference internal" href="#id4">動作</a></li>
-<li><a class="reference internal" href="#id7">実行方法</a></li>
-<li><a class="reference internal" href="#id10">プログラムの返り値</a></li>
-<li><a class="reference internal" href="#id11">オプション</a></li>
-<li><a class="reference internal" href="#id14">変更履歴</a></li>
+<li><a class="reference internal" href="#id5">動作</a></li>
+<li><a class="reference internal" href="#id8">実行方法</a></li>
+<li><a class="reference internal" href="#id11">プログラムの返り値</a></li>
+<li><a class="reference internal" href="#id12">オプション</a></li>
+<li><a class="reference internal" href="#id15">変更履歴</a></li>
 </ul>
 </li>
 </ul>
@@ -476,8 +477,16 @@ div.document {
 </ul>
 </div>
 <div class="section" id="id4">
-<h1>動作</h1>
+<h1>使用上の注意</h1>
+<p>本ツールは、一般開発者が行なうことができないROM設定を可能にするツールです。</p>
+<p>「健康と安全について」の画面をスキップするタイトルがユーザに渡るのは好ましくなく、
+さらに、DSiメニューをスキップする方法が知られることが思わぬセキュリティホールにつながる可能性もあるため、
+本ツールの部外への配布をしないように注意してください。
+部外に配布する必要が生じた場合には、開発技術部にご確認ください。</p>
+</div>
 <div class="section" id="id5">
+<h1>動作</h1>
+<div class="section" id="id6">
 <h2>概要</h2>
 <ul class="simple">
 <li>入力<ul>
@@ -496,14 +505,14 @@ div.document {
 </li>
 </ul>
 </div>
-<div class="section" id="id6">
+<div class="section" id="id7">
 <h2>フローチャート</h2>
 <img alt="tool_flowchart.gif" src="tool_flowchart.gif" />
 </div>
 </div>
-<div class="section" id="id7">
-<h1>実行方法</h1>
 <div class="section" id="id8">
+<h1>実行方法</h1>
+<div class="section" id="id9">
 <h2>フラグ立て処理の実行</h2>
 <p>WindowsXP付属のコマンドプロンプト、もしくはcygwinから実行してください。</p>
 <blockquote>
@@ -517,7 +526,7 @@ div.document {
 <p>プログラムの途中で、エラーがあった場合、処理を中断します。
 このとき、作成途中であった、出力SRLファイルは削除されます。</p>
 </div>
-<div class="section" id="id9">
+<div class="section" id="id10">
 <h2>フラグ立て処理の検査</h2>
 <p>MenuSkipFlagTool.exe の処理が正しいかどうかを同梱の MenuSkipFlagTool_Checker.exe を用いて
 チェックすることができます。</p>
@@ -532,7 +541,7 @@ div.document {
 MenuSkipFlagTool_Checker.exe のコマンドライン引数には、 <strong>MenuSkipFlagTool.exe と同じもの</strong> を指定してください。</p>
 </div>
 </div>
-<div class="section" id="id10">
+<div class="section" id="id11">
 <h1>プログラムの返り値</h1>
 <div class="section" id="menuskipflagtool-exe">
 <h2>MenuSkipFlagTool.exe</h2>
@@ -562,9 +571,9 @@ MenuSkipFlagTool_Checker.exe のコマンドライン引数には、 <strong>Men
 </blockquote>
 </div>
 </div>
-<div class="section" id="id11">
-<h1>オプション</h1>
 <div class="section" id="id12">
+<h1>オプション</h1>
+<div class="section" id="id13">
 <h2>MenuSkipFlagTool.exe</h2>
 <p>実行の際に、以下のオプションを指定することができます。</p>
 <ul class="simple">
@@ -583,7 +592,7 @@ MenuSkipFlagTool_Checker.exe のコマンドライン引数には、 <strong>Men
 </ul>
 <p>使用方法を表示して終了します。</p>
 </div>
-<div class="section" id="id13">
+<div class="section" id="id14">
 <h2>MenuSkipFlagTool_Checker.exe</h2>
 <ul class="simple">
 <li>-d オプション</li>
@@ -598,7 +607,7 @@ MenuSkipFlatTool_Checker.exe においても -d オプションをご指定く�
 <p>使用方法を表示して終了します。</p>
 </div>
 </div>
-<div class="section" id="id14">
+<div class="section" id="id15">
 <h1>変更履歴</h1>
 <ul>
 <li><p class="first">ver.1.0 (2009/06/22)</p>

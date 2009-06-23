@@ -79,6 +79,19 @@ ECSrlResult RCSrl::readFromFile( System::String ^srlfile )
 	}
 #endif //#ifdef METWL_WHETHER_SIGN_DECRYPT
 
+#ifdef METWL_WHETHER_PLATFORM_CHECK
+	// プラットフォームのチェック
+	if( ((tmprh.s.platform_code != PLATFORM_CODE_NTR) && (tmprh.s.enable_signature != 0)) ||	// PictoChat/DS-download-play のみこれに該当
+		(tmprh.s.platform_code != PLATFORM_CODE_TWL_HYBLID) ||
+		(tmprh.s.platform_code != PLATFORM_CODE_TWL_LIMITED) )
+	{
+	}
+	else
+	{
+		return ECSrlResult::ERROR_PLATFORM;
+	}
+#endif
+
 	// 署名チェックを通ってからフィールドのROMヘッダにコピー
 	// (そうしないと不正SRLを読み込んだときにROMヘッダが上書きされてしまう)
 	memcpy( this->pRomHeader, &tmprh, sizeof(ROM_Header) );

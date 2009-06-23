@@ -232,16 +232,6 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 {
 	// ROMヘッダのチェック (NTR互換領域)
 
-#ifdef METWL_WHETHER_PLATFORM_CHECK
-	// プラットフォームのチェック
-	if( (this->pRomHeader->s.platform_code != PLATFORM_CODE_TWL_HYBLID) && 
-		(this->pRomHeader->s.platform_code != PLATFORM_CODE_TWL_LIMITED) &&
-		(this->pRomHeader->s.enable_signature == 0) )
-	{
-		return ECSrlResult::ERROR_PLATFORM;
-	}
-#endif
-
 	// NANDアプリがHYBRIDとなるのはクローンブートのときのみ
 	if( this->IsMediaNand )
 	{

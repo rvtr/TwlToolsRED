@@ -276,7 +276,7 @@ for /F "delims=" %%a in ('"%tmpprog%"') do set media=%%a
 set tmpprog="%analyzer_tool%" "%input_srl%" -t
 for /F "delims=" %%a in ('"%tmpprog%"') do set tadversion=%%a
 
-set tmpprog="%analyzer_tool%" "%input_srl%" -c
+set tmpprog="%analyzer_tool%" "%input_srl%" -C
 for /F "delims=" %%a in ('"%tmpprog%"') do set forchina=%%a
 
 rem 入力ファイルの情報を Readme に出力
@@ -321,6 +321,13 @@ if "%platform%"=="TWL" (
 		echo ****************************************************************
 		echo.
 		echo.
+		echo [注意] 中国向けとみなしレーティングをすべてFREEにしました。>>"%output_log%"
+		echo.>>"%output_readme%"
+		echo ------------------------------------------>>"%output_readme%"
+		echo 注意>>"%output_readme%"
+		echo ------------------------------------------>>"%output_readme%"
+		echo 中国向けとみなし、強制的にすべてのレーティング値をFREEに設定しました。>>"%output_readme%"
+		echo.>>"%output_readme%"
 		"%rating_allfree_tool%" "%input_srl%" "%output_rating_srl%"
 		set input_srl=%output_rating_srl%
 	)

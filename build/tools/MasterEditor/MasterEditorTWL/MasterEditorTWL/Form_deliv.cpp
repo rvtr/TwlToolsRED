@@ -244,7 +244,7 @@ void Form1::setDeliverableProperties(void)
 System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms::ComboBox ^box )
 {
 	System::String ^str;
-	if( this->cboxIsUnnecessaryRating->Checked )
+	if( this->cboxIsUnnecessaryRating->Checked )	// レーティング表示不要が選択されているとき
 	{
 		if( box->FlatStyle == System::Windows::Forms::FlatStyle::Standard )
 		{

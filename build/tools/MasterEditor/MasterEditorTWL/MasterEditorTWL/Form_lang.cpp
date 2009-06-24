@@ -359,6 +359,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->cboxIsNormalJump, L"cboxIsNormalJump");
 	resources->ApplyResources(this->cboxIsTmpJump, L"cboxIsTmpJump");
 	resources->ApplyResources(this->gboxAccess, L"gboxAccess");
+	resources->ApplyResources(this->labSDAccessRight, L"labSDAccessRight");
 	resources->ApplyResources(this->labPhotoAccess, L"labPhotoAccess");
 	resources->ApplyResources(this->labAccessOther, L"labAccessOther");
 	resources->ApplyResources(this->tboxAccessOther, L"tboxAccessOther");

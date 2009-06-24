@@ -13,6 +13,9 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
+// ======================================================
+// XMLの一要素を作成
+// ======================================================
 static System::Xml::XmlElement^ CreateErrorListElement(System::Xml::XmlDocument ^doc, RCMrcError ^err, int errtype, 
 													   System::String ^tagname, System::Boolean isJapanese)
 {
@@ -25,7 +28,9 @@ static System::Xml::XmlElement^ CreateErrorListElement(System::Xml::XmlDocument 
 	return tag;
 }
 
+// ======================================================
 // XML形式でリストを作成
+// ======================================================
 System::Void Form1::makeErrorListXml(System::Xml::XmlDocument ^doc, System::Boolean isCurrent)
 {
 	System::Xml::XmlElement ^root = doc->CreateElement( "twl-master-editor" );
@@ -34,20 +39,7 @@ System::Void Form1::makeErrorListXml(System::Xml::XmlDocument ^doc, System::Bool
 	doc->AppendChild( root );
 
 	// ゲーム情報
-	System::Xml::XmlElement ^game = doc->CreateElement( "game" );
-	root->AppendChild( game );
-	if( System::String::IsNullOrEmpty( this->tboxProductName->Text ) )
-	{
-		MasterEditorTWL::appendXmlTag( doc, game, "product-name", this->tboxTitleName->Text );	// 製品名が未入力のときはソフトタイトルで代用
-	}
-	else
-	{
-		MasterEditorTWL::appendXmlTag( doc, game, "product-name", this->tboxProductName->Text );
-	}
-	MasterEditorTWL::appendXmlTag( doc, game, "title-name",   this->tboxTitleName->Text );
-	MasterEditorTWL::appendXmlTag( doc, game, "game-code",    this->tboxGameCode->Text );
-	MasterEditorTWL::appendXmlTag( doc, game, "rom-version",  this->tboxRemasterVer->Text );
-	MasterEditorTWL::appendXmlTag( doc, game, "submit-version", System::Decimal::ToByte(this->numSubmitVersion->Value).ToString("X") );
+	root->AppendChild( this->makeGameInfoXmlElement(doc) );
 
 	// エラーリスト
 	System::Xml::XmlElement ^errorlist = doc->CreateElement( "error-list" );
@@ -134,6 +126,9 @@ System::Void Form1::makeErrorListXml(System::Xml::XmlDocument ^doc, System::Bool
 	}
 } //System::Void Form1::makeErrorListXml
 
+// ======================================================
+// HTML形式でファイルを出力
+// ======================================================
 System::Void Form1::makeErrorListHtml(System::String ^filepath, System::Boolean isCurrent)
 {
 	System::String ^tmpxml = gcnew System::String( this->getXmlToHtmlTmpFile() );

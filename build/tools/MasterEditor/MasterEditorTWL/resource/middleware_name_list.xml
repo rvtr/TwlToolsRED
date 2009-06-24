@@ -68,22 +68,22 @@
 	<middleware>
 		<publisher>Zi Corporation</publisher>
 		<code>DLTLIB</code>
-		<note-j>Handwriting Recognition Library Japanese</note-j>
-		<note-e></note-e>
+		<note-j>Decuma手書文字認識ライブラリ日本語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library Japanese</note-e>
 	</middleware>
 
 	<middleware>
 		<publisher>Zi Corporation</publisher>
 		<code>SCRLIB</code>
-		<note-j>Handwriting Recognition Library</note-j>
-		<note-e></note-e>
+		<note-j>Decuma手書文字認識ライブラリ英語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library</note-e>
 	</middleware>
 
 	<middleware>
 		<publisher>Zi Corporation</publisher>
 		<code>MCRLIB</code>
-		<note-j>Handwriting Recognition Library</note-j>
-		<note-e></note-e>
+		<note-j>Decuma手書文字認識ライブラリ英語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library</note-e>
 	</middleware>
 
 	<middleware>

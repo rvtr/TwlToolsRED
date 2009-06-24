@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Form_rominfolist.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Form_srl.cpp"
 				>
 			</File>

@@ -749,40 +749,49 @@
     <value>ROM提出情報</value>
   </data>
   <data name="stripItemOpenRom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 22</value>
+    <value>403, 22</value>
   </data>
   <data name="stripItemOpenRom.Text" xml:space="preserve">
     <value>ROMデータを開く</value>
   </data>
   <data name="stripItemSepFile1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>396, 6</value>
+    <value>400, 6</value>
   </data>
   <data name="stripItemSaveTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 22</value>
+    <value>403, 22</value>
   </data>
   <data name="stripItemSaveTemp.Text" xml:space="preserve">
     <value>提出情報を一時保存する</value>
   </data>
   <data name="stripItemLoadTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 22</value>
+    <value>403, 22</value>
   </data>
   <data name="stripItemLoadTemp.Text" xml:space="preserve">
     <value>一時保存した提出情報を開く</value>
   </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 6</value>
+  </data>
+  <data name="stripItemRomInfoList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>403, 22</value>
+  </data>
+  <data name="stripItemRomInfoList.Text" xml:space="preserve">
+    <value>ROM情報をHTMLファイルに出力する</value>
+  </data>
   <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>396, 6</value>
+    <value>400, 6</value>
   </data>
   <data name="stripItemErrorListRead.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 22</value>
+    <value>403, 22</value>
   </data>
   <data name="stripItemErrorListRead.Text" xml:space="preserve">
-    <value>エラー情報をHTMLファイルに出力する(ROMデータ読み込み時の情報)</value>
+    <value>エラー情報をHTMLファイルに出力する (ROMデータ読み込み時の情報)</value>
   </data>
   <data name="stripItemErrorListCurrent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>399, 22</value>
+    <value>403, 22</value>
   </data>
   <data name="stripItemErrorListCurrent.Text" xml:space="preserve">
-    <value>エラー情報をHTMLファイルに出力する(現在の入力を反映した情報)</value>
+    <value>エラー情報をHTMLファイルに出力する (現在の入力を反映した情報)</value>
   </data>
   <data name="stripFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>51, 20</value>
@@ -791,31 +800,31 @@
     <value>ファイル</value>
   </data>
   <data name="stripItemSheet.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 22</value>
+    <value>284, 22</value>
   </data>
   <data name="stripItemSheet.Text" xml:space="preserve">
     <value>提出データ一式を作成する</value>
   </data>
   <data name="stripItemSepMaster1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>277, 6</value>
+    <value>281, 6</value>
   </data>
   <data name="stripItemMasterRom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 22</value>
+    <value>284, 22</value>
   </data>
   <data name="stripItemMasterRom.Text" xml:space="preserve">
     <value>マスターROMのみを作成する</value>
   </data>
   <data name="stripItemMiddlewareXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 22</value>
+    <value>284, 22</value>
   </data>
   <data name="stripItemMiddlewareXml.Text" xml:space="preserve">
-    <value>ミドルウェアリストのみを作成する(XML形式)</value>
+    <value>ミドルウェアリストのみを作成する (XML形式)</value>
   </data>
   <data name="stripItemMiddlewareHtml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>280, 22</value>
+    <value>284, 22</value>
   </data>
   <data name="stripItemMiddlewareHtml.Text" xml:space="preserve">
-    <value>ミドルウェアリストのみを作成する(HTML形式)</value>
+    <value>ミドルウェアリストのみを作成する (HTML形式)</value>
   </data>
   <data name="stripMaster.Size" type="System.Drawing.Size, System.Drawing">
     <value>53, 20</value>

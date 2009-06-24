@@ -317,6 +317,30 @@ namespace MasterEditorTWL
 		{
 			System::Boolean get(){ return this->isAffectRom; }
 		}
+		property System::String ^Name
+		{
+			System::String^ get(){ return System::String::Copy(this->hName); }
+		}
+		property System::String ^NameE
+		{
+			System::String^ get(){ return System::String::Copy(this->hNameE); }
+		}
+		property System::String ^Msg
+		{
+			System::String^ get(){ return System::String::Copy(this->hMsg); }
+		}
+		property System::String ^MsgE
+		{
+			System::String^ get(){ return System::String::Copy(this->hMsgE); }
+		}
+		property System::UInt32 Begin
+		{
+			System::UInt32 get(){ return this->begin; }
+		}
+		property System::UInt32 End
+		{
+			System::UInt32 get(){ return this->end; }
+		}
 	public:
 		// gridView‚Ì•\Ž¦Œ`Ž®‚É‚ ‚í‚¹‚é
 		cli::array<System::Object^>^ getAll( System::Boolean isJapanese )

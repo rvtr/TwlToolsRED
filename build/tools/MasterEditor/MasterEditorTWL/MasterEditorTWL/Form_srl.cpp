@@ -349,10 +349,9 @@ void Form1::setSrlFormsTextBox()
 System::Boolean Form1::checkSrlForms(void)
 {
 	// リージョン
-	if( this->checkComboBoxIndex( this->combRegion, "LabelRegion", true ) == false )
-		return false;
+	this->checkRegionForms();
 
-	// リージョンを決める
+	// レーティングのチェックをするためにリージョンを決める
 	System::Boolean bJapan     = false;
 	System::Boolean bAmerica   = false;
 	System::Boolean bEurope    = false;
@@ -385,14 +384,9 @@ System::Boolean Form1::checkSrlForms(void)
 			bEurope    = true;
 			bAustralia = true;
 		break;
-		case 7:
-			bKorea = true;
-		break;
-		case 8:
-		break;
 
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-		case 9:
+		case 7:
 			bJapan = true;
 			bAmerica = true;
 			bEurope = true;

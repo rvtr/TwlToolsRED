@@ -576,6 +576,15 @@ void RCSrl::setRatingRomHeader( u32 region )
 	// 「レーティング表示不要」フラグを立てる
 	this->pRomHeader->s.unnecessary_rating_display = (this->IsUnnecessaryRating == true)?1:0;
 
+	// 中国リージョンおよびオールリージョンのとき予約領域もすべて「全年齢」(0x80)で埋めておく
+	if( this->IsRegionChina )	// オールリージョンのときも中国ビットは立つ
+	{
+		for( j=0; j < PARENTAL_CONTROL_INFO_SIZE; j++ )
+		{
+			this->pRomHeader->s.parental_control_rating_info[j] = OS_TWL_PCTL_OGNINFO_ENABLE_MASK;
+		}
+	}
+
 	// リージョンに含まれる団体のみを設定
 	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
 	if( !ognlist )
@@ -612,16 +621,6 @@ void RCSrl::setRatingRomHeader( u32 region )
 		}
 		this->pRomHeader->s.parental_control_rating_info[ ogn ] = rating;
 	}
-//#if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
-//	int ogn;
-//	for( ogn=0; ogn < OS_TWL_PCTL_OGN_MAX; ogn++ )
-//	{
-//		if( ognlist->IndexOf(ogn) < 0 )
-//		{
-//			this->pRomHeader->s.parental_control_rating_info[ ogn ] = OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0;
-//		}
-//	}
-//#endif
 }
 
 // -------------------------------------------------------------------

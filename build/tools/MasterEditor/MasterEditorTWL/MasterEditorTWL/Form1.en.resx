@@ -298,12 +298,6 @@
   <data name="combRegion.Items6" xml:space="preserve">
     <value>USA, Europe, and Australia</value>
   </data>
-  <data name="combRegion.Items7" xml:space="preserve">
-    <value>Korea only</value>
-  </data>
-  <data name="combRegion.Items8" xml:space="preserve">
-    <value>China only</value>
-  </data>
   <data name="cboxIsInputPerson2.Size" type="System.Drawing.Size, System.Drawing">
     <value>157, 16</value>
   </data>

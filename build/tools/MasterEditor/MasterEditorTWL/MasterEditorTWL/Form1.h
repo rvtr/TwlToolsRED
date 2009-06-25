@@ -1631,10 +1631,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  stripItemRomInfoList;
 			this->combRegion->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->combRegion->Font = nullptr;
 			this->combRegion->FormattingEnabled = true;
-			this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(9) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
+			this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
 				resources->GetString(L"combRegion.Items2"), resources->GetString(L"combRegion.Items3"), resources->GetString(L"combRegion.Items4"), 
-				resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6"), resources->GetString(L"combRegion.Items7"), 
-				resources->GetString(L"combRegion.Items8")});
+				resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6")});
 			this->combRegion->Name = L"combRegion";
 			this->combRegion->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::combRegion_SelectedIndexChanged);
 			// 
@@ -4546,6 +4545,9 @@ private: System::Windows::Forms::ToolStripMenuItem^  stripItemRomInfoList;
 
 		// SRL情報をフォームに反映させる
 		void setRegionForms(void);
+
+		// フォーム入力が正しいか書き込み前チェック
+		void checkRegionForms(void);
 
 	private:
 		// ---------------------------------------------------------------------

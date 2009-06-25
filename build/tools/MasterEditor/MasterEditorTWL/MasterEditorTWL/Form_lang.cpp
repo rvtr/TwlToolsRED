@@ -215,10 +215,9 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->combRegion, L"combRegion");
 	int indexRegion = this->combRegion->SelectedIndex;
 	this->combRegion->Items->Clear();
-	this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(9) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
+	this->combRegion->Items->AddRange(gcnew cli::array< System::Object^  >(7) {resources->GetString(L"combRegion.Items"), resources->GetString(L"combRegion.Items1"), 
 		resources->GetString(L"combRegion.Items2"), resources->GetString(L"combRegion.Items3"), resources->GetString(L"combRegion.Items4"), 
-		resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6"), resources->GetString(L"combRegion.Items7"), 
-		resources->GetString(L"combRegion.Items8")});
+		resources->GetString(L"combRegion.Items5"), resources->GetString(L"combRegion.Items6")});
 #if defined(METWL_VER_APPTYPE_SYSTEM) || defined(METWL_VER_APPTYPE_SECURE) || defined(METWL_VER_APPTYPE_LAUNCHER)
 	if( langname->Equals( "ja" ) )
 	{
@@ -230,6 +229,18 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	}
 #endif
 	this->combRegion->SelectedIndex = indexRegion;
+	// 中韓のときの特別対応
+	if( this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown )
+	{
+		if( this->hSrl->IsRegionChina )		// このパスになるとき必ずSRLは読み込まれている
+		{
+			this->combRegion->Text = (langname == "ja")?"中国のみ":"China only";
+		}
+		else
+		{
+			this->combRegion->Text = (langname == "ja")?"韓国のみ":"Korea only";
+		}
+	}
 
 	// Region が変わったときのイベントが勝手に呼ばれて index が -1 にされるので Region 変更後に index を設定
 	this->combCERO->SelectedIndex = indexCERO;

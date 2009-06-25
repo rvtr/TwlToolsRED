@@ -213,16 +213,28 @@ void Form1::setDeliverableProperties(void)
 	//}
 
 	// SRL情報を文字列で登録
-	if( this->combRegion->SelectedIndex < 0 )
+
+	// リージョン
+	if( this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown )
 	{
-		if( this->isJapanese() == true )
-			this->hDeliv->hRegion = gcnew System::String("不明");
-		else
-			this->hDeliv->hRegion = gcnew System::String("Undefined");
+		// 中韓のときはリストで選択不可のテキストがコンボボックスに書かれているのでそれを登録
+		this->hDeliv->hRegion = this->combRegion->Text;
 	}
 	else
 	{
-		this->hDeliv->hRegion = dynamic_cast<System::String^>(this->combRegion->SelectedItem);
+		// WorldWide のときはリストで選択可能な文字列を登録
+		if( this->combRegion->SelectedIndex < 0 )
+		{
+			if( this->isJapanese() == true )
+				this->hDeliv->hRegion = gcnew System::String("不明");
+			else
+				this->hDeliv->hRegion = gcnew System::String("Undefined");
+		}
+		else
+		{
+			// リストで選択されているテキストを登録
+			this->hDeliv->hRegion = dynamic_cast<System::String^>(this->combRegion->SelectedItem);
+		}
 	}
 	this->hDeliv->hCERO = this->setDeliverableRatingOgnProperties( this->combCERO );
 	this->hDeliv->hESRB = this->setDeliverableRatingOgnProperties( this->combESRB );
@@ -246,7 +258,7 @@ System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms
 	System::String ^str;
 	if( this->cboxIsUnnecessaryRating->Checked )	// レーティング表示不要が選択されているとき
 	{
-		if( box->FlatStyle == System::Windows::Forms::FlatStyle::Standard )
+		if( box->FlatStyle == System::Windows::Forms::FlatStyle::Standard )	// リージョンに含まれているときの判定
 		{
 			str = System::String::Copy( box->Text );	// テキスト入力可になっているので取得できるはず
 		}
@@ -269,7 +281,7 @@ System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms
 		}
 		else
 		{
-			str = dynamic_cast<System::String^>(box->SelectedItem);
+			str = dynamic_cast<System::String^>(box->SelectedItem);	// リストで選択されているテキストを代入
 		}
 	}
 	return str;

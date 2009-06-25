@@ -392,7 +392,7 @@ bool RCSrl::setRegionInfo( u32 region )
 	this->IsRegionChina     = ((region & METWL_MASK_REGION_CHINA)     != 0)?true:false;
 
 	// リージョンに含まれる団体がなかったらリージョンは不正
-	if( MasterEditorTWL::getOgnListInRegion( region ) == nullptr )
+	if( (MasterEditorTWL::getOgnListInRegion( region ) == nullptr) && (region != METWL_MASK_REGION_CHINA) )	// 中国は例外
 	{
 		this->hParentalErrorList->Add( this->makeMrcError("IllegalRegion") );
 		return false;
@@ -409,17 +409,18 @@ bool RCSrl::setRegionInfo( u32 region )
 // ----------------------------------------------------------------------
 void RCSrl::setUnnecessaryRatingInfo( u32 region )
 {
-	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
-	if( ognlist == nullptr )	// リストがnullptrなら不正
-	{
-		return;
-	}
-
 	// ROMヘッダのフラグを調べる
 	this->IsUnnecessaryRating = (this->pRomHeader->s.unnecessary_rating_display != 0)?true:false;
 	if( !this->IsUnnecessaryRating )
 	{
 		return;		// 不要でないならこれ以降のチェックは必要ない(レーティング情報の取得に移る)
+	}
+
+	// リージョンに含まれるレーティング団体を取得
+	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
+	if( ognlist == nullptr )
+	{
+		return;
 	}
 
 	// リージョンに含まれる団体のレーティング情報に余計なデータが登録されていないかチェック
@@ -577,6 +578,7 @@ void RCSrl::setRatingRomHeader( u32 region )
 	this->pRomHeader->s.unnecessary_rating_display = (this->IsUnnecessaryRating == true)?1:0;
 
 	// 中国リージョンおよびオールリージョンのとき予約領域もすべて「全年齢」(0x80)で埋めておく
+	// 「レーティング表示不要」かどうかにかかわらず埋める
 	if( this->IsRegionChina )	// オールリージョンのときも中国ビットは立つ
 	{
 		for( j=0; j < PARENTAL_CONTROL_INFO_SIZE; j++ )

@@ -225,10 +225,7 @@ void Form1::setDeliverableProperties(void)
 		// WorldWide のときはリストで選択可能な文字列を登録
 		if( this->combRegion->SelectedIndex < 0 )
 		{
-			if( this->isJapanese() == true )
-				this->hDeliv->hRegion = gcnew System::String("不明");
-			else
-				this->hDeliv->hRegion = gcnew System::String("Undefined");
+			this->hDeliv->hRegion = this->isJapanese()?METWL_STRING_UNDEFINED_REGION_J:METWL_STRING_UNDEFINED_REGION_E;	// 起こり得ない
 		}
 		else
 		{
@@ -256,32 +253,49 @@ void Form1::setDeliverableProperties(void)
 System::String^ Form1::setDeliverableRatingOgnProperties( System::Windows::Forms::ComboBox ^box )
 {
 	System::String ^str;
+
+	// 中国リージョン特別対応
+	if( (this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown) // コンボボックスが中韓リージョン用になっているとき
+		&& this->hSrl->IsRegionChina )	// SRLが読み込まれていることは保証される
+	{
+		if( this->cboxIsUnnecessaryRating->Checked )
+		{
+			// レーティング表示不要が選択されているときには団体が中国リージョンに含まれていなくても「レーティング表示不要」となる
+			str = this->isJapanese()?METWL_STRING_UNNECESSARY_RATING_J:METWL_STRING_UNNECESSARY_RATING_E;
+		}
+		else
+		{
+			// 中国リージョンに含まれていなくても「全年齢」
+			str = this->isJapanese()?METWL_STRING_CHINA_RATING_FREE_J:METWL_STRING_CHINA_RATING_FREE_E;
+		}
+		return str;
+	}
+
+	// リージョンに含まれる団体のみレーティングが設定される それ以外は「不可」となる
 	if( this->cboxIsUnnecessaryRating->Checked )	// レーティング表示不要が選択されているとき
 	{
 		if( box->FlatStyle == System::Windows::Forms::FlatStyle::Standard )	// リージョンに含まれているときの判定
 		{
-			str = System::String::Copy( box->Text );	// テキスト入力可になっているので取得できるはず
+			// リージョンに含まれている団体のみ「レーティング表示不要」とする
+			str = this->isJapanese()?METWL_STRING_UNNECESSARY_RATING_J:METWL_STRING_UNNECESSARY_RATING_E;
 		}
-		else	// リージョンに含まれていない(コンボボックスが表示されていない)ときには不可とする
+		else
 		{
-			if( this->isJapanese() == true )
-				str = gcnew System::String("不可");
-			else
-				str = gcnew System::String("Undefined");
+			// リージョンに含まれていない(コンボボックスが表示されていない)ときには「不可」とする
+			str = this->isJapanese()?METWL_STRING_UNDEFINED_RATING_J:METWL_STRING_UNDEFINED_RATING_E;
 		}
 	}
 	else
 	{
 		if( box->SelectedIndex < 0 )
 		{
-			if( this->isJapanese() == true )
-				str = gcnew System::String("不可");
-			else
-				str = gcnew System::String("Undefined");
+			// リージョンに含まれていない(コンボボックスが表示されていない)ときには「不可」とする
+			str = this->isJapanese()?METWL_STRING_UNDEFINED_RATING_J:METWL_STRING_UNDEFINED_RATING_E;
 		}
 		else
 		{
-			str = dynamic_cast<System::String^>(box->SelectedItem);	// リストで選択されているテキストを代入
+			// リージョンに含まれている団体にはリストで選択されているテキストを代入
+			str = dynamic_cast<System::String^>(box->SelectedItem);
 		}
 	}
 	return str;

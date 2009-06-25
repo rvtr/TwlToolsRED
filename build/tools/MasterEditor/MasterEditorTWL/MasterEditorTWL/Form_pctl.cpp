@@ -115,14 +115,14 @@ void Form1::setRegionForms(void)
 	{
 		this->combRegion->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDown;	// 自由にテキストを入力できる
 		this->combRegion->SelectedIndex = -1;	// 設定の順序に注意: テキストの設定よりも前に入れておかないとテキスト入力が反映されないことがある
-		this->combRegion->Text = this->isJapanese()?"中国のみ":"China only";
+		this->combRegion->Text = this->isJapanese()?METWL_STRING_CHINA_REGION_J:METWL_STRING_CHINA_REGION_E;
 		this->combRegion->Enabled = false;	// 編集不可
 	}
 	else if( !isJapan && !isAmerica && !isEurope && !isAustralia && isKorea && !isChina )	// 韓国
 	{
 		this->combRegion->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDown;
 		this->combRegion->SelectedIndex = -1;
-		this->combRegion->Text = this->isJapanese()?"韓国のみ":"Korea only";
+		this->combRegion->Text = this->isJapanese()?METWL_STRING_KOREA_REGION_J:METWL_STRING_KOREA_REGION_E;
 		this->combRegion->Enabled = false;
 	}
 	else	// WorldWide
@@ -469,15 +469,7 @@ void Form1::unnecessaryRating( System::Windows::Forms::ComboBox ^comb )
 {
 	comb->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDown;	// 自由なテキストを表示可能にする
 	comb->SelectedIndex = -1;	// 何も選択されていないとみなす
-	System::String ^msg;
-	if( this->isJapanese() )
-	{
-		msg = gcnew System::String( "レーティング表示不要(全年齢)" );
-	}
-	else
-	{
-		msg = gcnew System::String( "Rating Not Required (All ages)" );
-	}
+	System::String ^msg = this->isJapanese()?METWL_STRING_UNNECESSARY_RATING_J:METWL_STRING_UNNECESSARY_RATING_E;
 	comb->Text = msg;
 	comb->Enabled = false;		// 編集不可能にする
 }

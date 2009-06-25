@@ -4540,13 +4540,13 @@ private: System::Windows::Forms::ToolStripMenuItem^  stripItemRomInfoList;
 		// リージョン設定は複雑なので別に切り出す
 		// ---------------------------------------------------------------------
 		
-		// フォーム入力をSRLに反映させる
+		// GUIのコンボボックスからROMヘッダのリージョンコードを決定する
 		void setRegionSrlPropaties(void);
 
-		// SRL情報をフォームに反映させる
+		// ROMヘッダのリージョンコードからGUIのコンボボックスの値を決定する
 		void setRegionForms(void);
 
-		// フォーム入力が正しいか書き込み前チェック
+		// リージョンのフォームに問題がないかをチェックする
 		void checkRegionForms(void);
 
 	private:
@@ -4554,39 +4554,40 @@ private: System::Windows::Forms::ToolStripMenuItem^  stripItemRomInfoList;
 		// レーティング設定は複雑なので別に切り出す
 		// ---------------------------------------------------------------------
 
-		// フォーム入力をSRLに反映させる
+		// ROMヘッダのレーティング情報からGUIのコンボボックスを設定する
 		void setRatingSrlProperties(void);
 
-		// SRL情報をフォームに反映させる
+		// GUIのコンボボックスの選択をROMヘッダに反映させる
 		void setRatingForms(void);
 
-		// リージョン情報からペアレンタルコントロールの編集可能団体をマスクする
+		// GUIで表示するレーティング団体をリージョンによって変える
 		void maskRatingForms(void);
 
-		// フォーム入力が正しいか書き込み前チェック
+		// GUIのレーティング設定に問題がないかチェックする
 		void checkRatingForms( System::Boolean inRegion, 
 							   System::Windows::Forms::ComboBox ^comb, System::String ^ogn );
 
-		// クリアする
+		// レーティングのコンボボックスをクリアする
 		void clearRating( System::Windows::Forms::ComboBox ^comb );
 
-		// 編集できるようにする
+		// レーティングのコンボボックスを編集可能な状態にする
 		void enableRating( System::Windows::Forms::ComboBox ^comb, 
 						   System::Windows::Forms::Label    ^lab1, 
 						   System::Windows::Forms::Label    ^lab2 );
 
-		// 編集できなくする
+		// レーティングのコンボボックスを編集不可状態にする
 		void disableRating( System::Windows::Forms::ComboBox ^comb, 
 						    System::Windows::Forms::Label    ^lab1, 
 						    System::Windows::Forms::Label    ^lab2 );
 
-		// 全団体を「レーティング表示不要」の設定/解除をする
+		// 「レーティング表示不要」が選択されたかどうかでコンボボックスの内容を変える
+		// ROM読み込み時および「レーティング表示不要」チェックボックスに変化があったときに呼び出される
 		void changeUnnecessaryRatingForms( System::Boolean bInitial );
 
-		// 「レーティング表示不要」と表示して編集できなくする
+		// レーティングのコンボボックスに「レーティング表示不要」と表示し編集不可状態にする
 		void unnecessaryRating( System::Windows::Forms::ComboBox ^comb );
 
-		// 「レーティング表示不要」表示を消して通常の設定に戻す
+		// レーティングのコンボボックスの「レーティング表示不要」の表示をクリアし編集可能状態にする
 		void necessaryRating( System::Windows::Forms::ComboBox ^comb, System::Boolean bInitial );
 
 		// ----------------------------------------------

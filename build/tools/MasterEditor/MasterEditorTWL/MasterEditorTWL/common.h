@@ -23,3 +23,17 @@
 #define   METWL_SEG3_CRC                0x0254
 #define   METWL_TAD_TMP_FILENAME        "tmp.srl"		// TAD読み込みの際に split_tad で一時的に作成するファイル名
 #define   METWL_SDK52_RELEASE			((5 << 24)|(2 << 16)|30000)		// SDアクセス権の判定が必要なSDKバージョン (5.2 RELEASE)
+
+// 特別にGUI表示/提出確認書に記述する文字列
+#define	  METWL_STRING_UNNECESSARY_RATING_J		("レーティング表示不要(全年齢)")
+#define	  METWL_STRING_UNNECESSARY_RATING_E		("Rating Not Required (All ages)")
+#define   METWL_STRING_UNDEFINED_RATING_J		("不可")
+#define   METWL_STRING_UNDEFINED_RATING_E		("Undefined")
+#define   METWL_STRING_UNDEFINED_REGION_J		("不明")		// 起こり得ない
+#define   METWL_STRING_UNDEFINED_REGION_E		("Undefined")
+#define   METWL_STRING_CHINA_RATING_FREE_J		("全年齢(中国版対応)")
+#define   METWL_STRING_CHINA_RATING_FREE_E		("All ages (China version support)")
+#define   METWL_STRING_CHINA_REGION_J			("中国のみ")
+#define   METWL_STRING_CHINA_REGION_E			("China only")
+#define   METWL_STRING_KOREA_REGION_J			("韓国のみ")
+#define   METWL_STRING_KOREA_REGION_E			("Korea only")

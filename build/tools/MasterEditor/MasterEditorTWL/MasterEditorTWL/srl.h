@@ -95,7 +95,8 @@ namespace MasterEditorTWL
 		property System::Boolean IsPhotoRead;
 		property System::Boolean IsSDWrite;				// SDカードアクセス権 : フラグとは別に用意された(5.2 RELEASE)
 		property System::Boolean IsSDRead;
-		property System::Boolean IsSDK52Release;	// SDアクセス権を調べる必要があるか : 5.2 RELEASE 以降のとき調べる必要あり
+		property System::Boolean IsOldSDK52Release;	// SDアクセス権を調べる必要があるか : 5.2 RELEASE 以降のとき調べる必要あり
+		property System::Boolean IsOldSDK51PR;		// HYBRID-NANDアプリを禁止する必要があるか : 5.1 PR 以前のとき調べる必要あり
 
 		// Shared2ファイルサイズ Read Only
 		property cli::array<System::UInt32> ^hShared2SizeArray;
@@ -107,6 +108,10 @@ namespace MasterEditorTWL
 		property System::Boolean IsRegionAustralia;
 		property System::Boolean IsRegionKorea;
 		property System::Boolean IsRegionChina;
+
+		// 中韓設定フラグ Read Only
+		property System::Boolean IsForChina;
+		property System::Boolean IsForKorea;
 
 		// SDKバージョンと使用ライブラリのリスト
 		property System::Collections::Generic::List<RCSDKVersion^> ^hSDKList;
@@ -181,6 +186,7 @@ namespace MasterEditorTWL
 		void mrcReservedArea( FILE *fp );
 		void mrcShared2( FILE *fp );
 		void mrcSDKVersion( FILE *fp );
+		void mrcChinaKorea(void);
 
 		// MRCメッセージを追加
 		RCMrcError^ makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args );

@@ -23,6 +23,7 @@
 #define   METWL_SEG3_CRC                0x0254
 #define   METWL_TAD_TMP_FILENAME        "tmp.srl"		// TAD読み込みの際に split_tad で一時的に作成するファイル名
 #define   METWL_SDK52_RELEASE			((5 << 24)|(2 << 16)|30000)		// SDアクセス権の判定が必要なSDKバージョン (5.2 RELEASE)
+#define   METWL_SDK51_PR				((5 << 24)|(1 << 16)|10000)		// クローンブート対応をしたSDKバージョン (5.1 PR)
 
 // 特別にGUI表示/提出確認書に記述する文字列
 #define	  METWL_STRING_UNNECESSARY_RATING_J		("レーティング表示不要(全年齢)")

@@ -83,7 +83,7 @@ void Form1::setSrlForms(void)
 		this->tboxIsCodec->Text = gcnew System::String( "DS" );
 	}
 	this->cboxIsSD->Checked   = this->hSrl->IsSD;
-	if( this->hSrl->IsSD && this->hSrl->IsSDK52Release )
+	if( this->hSrl->IsSD && !this->hSrl->IsOldSDK52Release )
 	{
 		System::String ^sdright = "";
 		if( this->hSrl->IsSDRead && this->hSrl->IsSDWrite )

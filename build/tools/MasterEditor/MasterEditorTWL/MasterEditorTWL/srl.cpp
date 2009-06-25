@@ -301,6 +301,10 @@ ECSrlResult RCSrl::setRomInfo(void)
 	this->IsSDWrite         = (this->pRomHeader->s.access_control.sdmc_access_write  != 0)?true:false;
 	this->IsSDRead          = (this->pRomHeader->s.access_control.sdmc_access_read   != 0)?true:false;
 
+	// 中韓設定フラグ
+	this->IsForChina = (this->pRomHeader->s.for_china != 0)?true:false;
+	this->IsForKorea = (this->pRomHeader->s.for_korea != 0)?true:false;
+
 	// 5.2 RELEASE以降のときSDアクセス権を調べる必要あり
 	u32 sdkver = 0;
 	for each ( RCSDKVersion ^sdk in this->hSDKList )
@@ -310,7 +314,8 @@ ECSrlResult RCSrl::setRomInfo(void)
 			sdkver = sdk->Code;
 		}
 	}
-	this->IsSDK52Release = !MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDK52_RELEASE, true);	// PR/RC版でもエラーを出す
+	this->IsOldSDK52Release = MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDK52_RELEASE, true);	// PR/RC版でもエラーを出す
+	this->IsOldSDK51PR      = MasterEditorTWL::IsOldSDKVersion(sdkver, METWL_SDK51_PR, true);
 
 	// SCFG がロックされるか
 	if( (this->pRomHeader->s.arm7_scfg_ext >> 31) != 0 )

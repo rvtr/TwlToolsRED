@@ -159,7 +159,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 	if( hSrl->IsNormalJump )
 	{
 		if( english )
-			capEx += " [The normal jump is set.]";
+			capEx += " [The normal jump is comfigured.]";
 		else
 			capEx += " [ノーマルジャンプが設定されています.]";
 	}
@@ -447,7 +447,7 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			}
 			if( node->FirstChild->Value->Equals( "TagSDAccessRight" ) )
 			{
-				if( hSrl->IsSD && hSrl->IsSDK52Release )
+				if( hSrl->IsSD && !hSrl->IsOldSDK52Release )
 				{
 					if( hSrl->IsSDRead && hSrl->IsSDWrite )
 						node->FirstChild->Value = gcnew System::String("Read/Write");

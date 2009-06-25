@@ -245,6 +245,15 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
+	// SDK5.1PRよりも前のバージョンではクローンブート非対応なのでNAND-HYBRIDを禁止する
+	if( this->IsMediaNand )
+	{
+		if( this->IsOldSDK51PR && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID) )
+		{
+			this->hWarnList->Add( this->makeMrcError("NandHybridBefore51PR") );
+		}
+	}
+
 	// 旧開発用暗号フラグとクローンブートの組み合わせはマスタリングで矛盾が生じる
 	if( this->IsOldDevEncrypt && this->HasDSDLPlaySign )
 	{
@@ -344,13 +353,13 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		{
 			this->hErrorList->Add( this->makeMrcError("ExtraRegion") );
 		}
-		if( this->IsAppUser )
+		if( !this->IsMediaNand && this->IsNormalJump )
 		{
-			if( (this->pRomHeader->s.permit_landing_normal_jump != 0) && 
-				!this->hMrcExternalCheckItems->IsPermitNormalJump )			// 設定ファイルでアクセス許可されていないときにチェック
-			{
-				this->hErrorList->Add( this->makeMrcError("NormalJump") );
-			}
+			this->hErrorList->Add( this->makeMrcError("NormalJumpCard") );
+		}
+		if( this->IsNormalJump && this->IsTmpJump )
+		{
+			this->hErrorList->Add( this->makeMrcError("NormalJumpAndTmpJump") );
 		}
 	}
 
@@ -449,6 +458,9 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 			this->hErrorList->Add( this->makeMrcError("DebugBuild") );
 		}
 	}
+
+	// 中韓版チェック
+	this->mrcChinaKorea();
 
 	// 追加チェック
 	this->mrcSDKVersion(fp);
@@ -549,7 +561,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		this->hErrorList->Add( this->makeMrcError("CardAccess") );
 	}
 
-	if( !this->IsAppUser )
+	if( this->IsAppUser )
 	{
 		if( this->pRomHeader->s.access_control.common_client_key != 0 )
 		{
@@ -647,7 +659,15 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		else
 		{
 			// 5.2 RELEASEかどうかで判定がかわる
-			if( this->IsSDK52Release )
+			if( this->IsOldSDK52Release )
+			{
+				// 5.2 RELEASE以前は原則SDアクセス禁止
+				if( this->pRomHeader->s.access_control.sd_card_access != 0 )
+				{
+					this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+				}
+			}
+			else
 			{
 				// 5.2 RELEASE以降はアクセス権さえ設定されていればエラーを出さない
 				if( (this->pRomHeader->s.access_control.sd_card_access != 0) &&		// SDカードアクセスが有効になっているのに
@@ -655,14 +675,6 @@ void RCSrl::mrcAccessControl(FILE *fp)
 					(this->pRomHeader->s.access_control.sdmc_access_read  == 0 ) )
 				{
 					this->hErrorList->Add( this->makeMrcError("SDAccessPriv") );
-				}
-			}
-			else
-			{
-				// 5.2 RELEASE以前は原則SDアクセス禁止
-				if( this->pRomHeader->s.access_control.sd_card_access != 0 )
-				{
-					this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
 				}
 			}
 		}
@@ -728,7 +740,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("AccessDefault") );
 		}
-	}
+	} //else
 } //RCSrl::mrcAccessControl()
 
 // -------------------------------------------------------------------
@@ -1058,3 +1070,74 @@ void RCSrl::mrcBanner(FILE *fp)
 	}
 	delete []banner;
 } //RCSrl::mrcBanner()
+
+// -------------------------------------------------------------------
+// 中韓版のチェック
+// -------------------------------------------------------------------
+void RCSrl::mrcChinaKorea(void)
+{
+	// オールリージョンはチェック不要
+	if( this->IsRegionJapan && this->IsRegionAmerica && this->IsRegionEurope && this->IsRegionAustralia &&
+		this->IsRegionChina && this->IsRegionKorea )
+	{
+		return;
+	}
+
+	// ユーザアプリのときの中国版のチェック
+	if( this->IsAppUser )
+	{
+		// OS_InitChina が使用されているかを調べる
+		bool use = false;
+		for each(RCLicense ^lic in this->hLicenseList)
+		{
+			if( (lic->Publisher == "NINTENDO") && (lic->Name == "FORCHINA") )
+			{
+				use = true;
+			}
+		}
+
+		// 「中国リージョン」&&「for_chinaがTRUE」と「OS_InitChina使用」のすべてが成り立っているときのみ中国版として認める
+		if( this->IsRegionChina && !this->IsForChina )
+		{
+			this->hErrorList->Add( this->makeMrcError("ChinaFlagNegated") );
+		}
+		if( !this->IsRegionChina && this->IsForChina )
+		{
+			this->hErrorList->Add( this->makeMrcError("ChinaFlagAsserted") );
+		}
+		if( this->IsRegionChina && !use )
+		{
+			this->hErrorList->Add( this->makeMrcError("OSInitChinaUnused") );
+		}
+		if( !this->IsRegionChina && use )
+		{
+			this->hErrorList->Add( this->makeMrcError("OSInitChinaUsed") );
+		}
+	}
+	else	// システムアプリのとき
+	{
+		// 「中国リージョン」「for_chinaがTRUE」が成り立っているときのみ中国版として認める
+		// OS_InitChina の使用は必須ではない
+		if( this->IsRegionChina && !this->IsForChina )
+		{
+			this->hErrorList->Add( this->makeMrcError("ChinaFlagNegated") );
+		}
+		if( !this->IsRegionChina && this->IsForChina )
+		{
+			this->hErrorList->Add( this->makeMrcError("ChinaFlagAsserted") );
+		}
+	}
+
+	// 韓国版のチェック
+	{
+		// 「韓国リージョン」「for_koreaがTRUE」が成り立っているときのみ韓国版として認める
+		if( this->IsRegionKorea && !this->IsForKorea )
+		{
+			this->hErrorList->Add( this->makeMrcError("KoreaFlagNegated") );
+		}
+		if( !this->IsRegionKorea && this->IsForKorea )
+		{
+			this->hErrorList->Add( this->makeMrcError("KoreaFlagAsserted") );
+		}
+	}
+}

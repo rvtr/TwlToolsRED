@@ -518,20 +518,26 @@ CLS 処理時に properties ファイル を特別に書き換える必要があ
 <p>ROMチェック機能に、以下のチェック項目を追加する。</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="13%" />
-<col width="87%" />
+<col width="20%" />
+<col width="80%" />
 </colgroup>
-<tbody valign="top">
-<tr><td>チェック項目</td>
-<td>詳細</td>
+<thead valign="bottom">
+<tr><th class="head">チェック項目</th>
+<th class="head">詳細</th>
 </tr>
-<tr><td>中国版設定</td>
-<td>「リージョンコードがChina only」、「for_chinaビットが立っている」、「OS_InitChinaを使用」のいずれかが
-欠けている場合にエラーを出す。(すべて欠けているときには中国版でないとみなしOKにする。)</td>
+</thead>
+<tbody valign="top">
+<tr><td>中国版設定(ユーザアプリ)</td>
+<td>「リージョンコードがChina only」、「for_chinaビットが立っている」、「OS_InitChinaを使用」が
+すべて成立しているときのみ中国版として正常とみなす。</td>
+</tr>
+<tr><td>中国版設定(システムアプリ)</td>
+<td>「リージョンコードがChina only」、「for_chinaビットが立っている」が
+両方とも成立しているときのみ中国版として正常とみなす。</td>
 </tr>
 <tr><td>韓国版設定</td>
-<td>「リージョンコードがKorea only」、「for_koreaビットが立っている」のいずれかが
-欠けている場合にエラーを出す。(すべて欠けているときには韓国版でないとみなしOKにする。)</td>
+<td>「リージョンコードがKorea only」、「for_koreaビットが立っている」が
+両方とも成立しているときのみ中国版として正常とみなす。</td>
 </tr>
 <tr><td>中国版バナー文字</td>
 <td>バナー領域の中国版バナーの領域の文字コードが使用可能かどうかをチェックし、使用不可な文字があればエラー。</td>

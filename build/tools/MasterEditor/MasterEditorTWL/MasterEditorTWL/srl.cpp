@@ -379,6 +379,23 @@ ECSrlResult RCSrl::setRomInfo(void)
 		{
 			this->setRatingInfo( region );			// リージョンに含まれる団体のレーティング情報を取得
 		}
+
+		// 中国版に限り全団体のレーティングが全年齢でなければならない
+		if( region == METWL_MASK_REGION_CHINA )
+		{
+			bool all_free = true;
+			for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
+			{
+				if( this->pRomHeader->s.parental_control_rating_info[i] != (OS_TWL_PCTL_OGNINFO_ENABLE_MASK | 0) )
+				{
+					all_free = false;
+				}
+			}
+			if( !all_free )
+			{
+				this->hParentalWarnList->Add( this->makeMrcError("ChinaAllRatingFree") );
+			}
+		}
 	}
 
 	return ECSrlResult::NOERROR;

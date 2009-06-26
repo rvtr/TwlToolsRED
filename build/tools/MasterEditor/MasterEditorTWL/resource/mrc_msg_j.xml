@@ -65,6 +65,11 @@
 		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ChinaBannerCharSet>
+	<ChinaAllRatingFree>
+		<name>レーティング(中国版対応)</name>
+		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</ChinaAllRatingFree>
 
 	<!-- For DS Station -->
 	<DSStationTmpJump>

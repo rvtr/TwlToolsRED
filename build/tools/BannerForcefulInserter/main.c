@@ -219,15 +219,7 @@ int main(int argc, char *argv[])
         goto FINALIZE;
     }
     
-    // ファイルコピー
-    if( !CopyFile( context.ofp, context.ifp ) )
-    {
-        printf( "\n*** Error: Failed to copy the file. ***\n" );
-        bResult = FALSE;
-        goto FINALIZE;
-    }
-    
-    // フラグ立てが指定されていないときはコピーだけしてそのまま終了
+    // 本体
     bResult = iMain( &context );
 
 // 終了処理
@@ -258,14 +250,14 @@ FINALIZE:
  フラグ立て本体
 
  *---------------------------------------------------------------------------*/
-
+#define  CARD_PAGE_SIZE  (0x200)
 static BOOL iMain( SContext *pContext )
 {
     ROM_Header rh;
     int        banner_size;
     u8        *banner_buf;
-    u8        *tmp;
     u16        curr_crc;
+    u32        append_banner_offset;
     
     // ROMヘッダをリード
     fseek( pContext->ifp, 0, SEEK_SET );
@@ -290,6 +282,40 @@ static BOOL iMain( SContext *pContext )
     }
     printf("InitialCode      : %c%c%c%c\n", rh.s.game_code[0], rh.s.game_code[1], rh.s.game_code[2], rh.s.game_code[3]);
     
+    // バナー用のページをファイルの末尾に追加する
+    {
+        int filesize, pagenum, i;
+        fseek(pContext->ifp, 0, SEEK_END);
+        filesize = ftell(pContext->ifp);
+        pagenum = filesize / CARD_PAGE_SIZE;
+        if( filesize % CARD_PAGE_SIZE )         // 中途半端なサイズのときページを埋めてそのあとにページを追加したい
+        {
+            pagenum++;
+        }
+        pagenum++;      // バナー用のページ
+        
+
+        // ページ数だけファイルを0クリア
+        for(i=0; i < pagenum; i++ )
+        {
+            u8 page[CARD_PAGE_SIZE];
+            memset( page, 0, CARD_PAGE_SIZE );
+            if( CARD_PAGE_SIZE != fwrite( page, 1, CARD_PAGE_SIZE, pContext->ofp ) )
+            {
+                printf( "\n*** Error! failed to write the file in file extending. ***\n" );
+                return FALSE;
+            }
+        }
+        append_banner_offset = (pagenum-1)*CARD_PAGE_SIZE;    // バナーを入れる場所
+    }
+
+    // ファイルコピー
+    if( !CopyFile( pContext->ofp, pContext->ifp ) )
+    {
+        printf( "\n*** Error: Failed to copy the file. ***\n" );
+        return FALSE;
+    }
+
     // バナーを読み込む
     fseek(pContext->banner_fp, 0, SEEK_END);
     banner_size = ftell(pContext->banner_fp);
@@ -307,11 +333,18 @@ static BOOL iMain( SContext *pContext )
         return FALSE;
     }
 
-    // バナーをホワイトリストハッシュ以降の0x3C0からの領域に入れる(最大で0xDFFまでなので署名よりも前の領域に収まる)
-    tmp = (u8*)&rh;
-    memcpy( &tmp[0x3C0], banner_buf, banner_size );
-    rh.s.banner_offset = 0x3C0;     // オフセットを上書き
+    // バナーを末尾のページに入れる
+    fseek(pContext->ofp, append_banner_offset, SEEK_SET);
+    if( banner_size != fwrite( banner_buf, 1, banner_size, pContext->ofp ) )
+    {
+        printf( "\n*** Error! failed to write the file in banner writing. ***\n" );
+        return FALSE;
+    }
+    rh.s.banner_offset = append_banner_offset;
     free(banner_buf);
+    
+    printf("Banner Offset    : 0x%08X\n", (unsigned int)append_banner_offset);
+    printf("Banner Size      : 0x%08X\n", banner_size);
 
     // ヘッダCRC計算
     curr_crc = rh.s.header_crc16;

@@ -345,7 +345,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 	}
 
-	// ノーマルジャンプ
+	// アプリジャンプ
 	{
 		u8 okbits = 0x01 | 0x02 | 0x40 | 0x80;
 		u8 *p = (u8*)&(this->pRomHeader->s);
@@ -356,6 +356,10 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		if( !this->IsMediaNand && this->IsNormalJump )
 		{
 			this->hErrorList->Add( this->makeMrcError("NormalJumpCard") );
+		}
+		if( !this->IsMediaNand && this->IsTmpJump )
+		{
+			this->hErrorList->Add( this->makeMrcError("TmpJumpCard") );
 		}
 		if( this->IsNormalJump && this->IsTmpJump )
 		{

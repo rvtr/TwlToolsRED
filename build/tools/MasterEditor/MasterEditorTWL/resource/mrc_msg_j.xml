@@ -121,6 +121,11 @@
 		<sentence>ゲームカード向けのソフトではノーマルアプリジャンプは許可されていません。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</NormalJumpCard>
+	<TmpJumpCard>
+		<name>アプリジャンプ</name>
+		<sentence>ゲームカード向けのソフトではtmpアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</TmpJumpCard>
 	<NormalJumpAndTmpJump>
 		<name>アプリジャンプ</name>
 		<sentence>ノーマルアプリジャンプとtmpジャンプを同時に設定することはできません。</sentence>

@@ -81,7 +81,7 @@ if not exist "%input_rom%" (
 rem o—ÍƒpƒX
 set output_banner_srl_short=%~n1.banner.srl
 
-set output_dir=%~d1%~p1%~n1.master.out\
+set output_dir=%~d1%~p1%~n1.banner.out\
 if %light_mode%=="YES" (
 	set output_dir=%~d1%~p1%\
 )

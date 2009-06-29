@@ -282,21 +282,32 @@ static BOOL iMain( SContext *pContext )
     }
     printf("InitialCode      : %c%c%c%c\n", rh.s.game_code[0], rh.s.game_code[1], rh.s.game_code[2], rh.s.game_code[3]);
     
+    // バナーサイズを計算
+    fseek(pContext->banner_fp, 0, SEEK_END);
+    banner_size = ftell(pContext->banner_fp);
+
     // バナー用のページをファイルの末尾に追加する
     {
-        int filesize, pagenum, i;
+        int filesize, ifp_pages, banner_pages, i;
+
+        // 入力ファイルの格納に必要なページ数を計算
         fseek(pContext->ifp, 0, SEEK_END);
         filesize = ftell(pContext->ifp);
-        pagenum = filesize / CARD_PAGE_SIZE;
+        ifp_pages = filesize / CARD_PAGE_SIZE;
         if( filesize % CARD_PAGE_SIZE )         // 中途半端なサイズのときページを埋めてそのあとにページを追加したい
         {
-            pagenum++;
+            ifp_pages++;
         }
-        pagenum++;      // バナー用のページ
-        
+
+        // バナーの格納に必要なページ数を計算
+        banner_pages = banner_size / CARD_PAGE_SIZE;
+        if( banner_size / CARD_PAGE_SIZE )
+        {
+            banner_pages++;
+        }
 
         // ページ数だけファイルを0クリア
-        for(i=0; i < pagenum; i++ )
+        for(i=0; i < (ifp_pages+banner_pages); i++ )
         {
             u8 page[CARD_PAGE_SIZE];
             memset( page, 0, CARD_PAGE_SIZE );
@@ -306,7 +317,7 @@ static BOOL iMain( SContext *pContext )
                 return FALSE;
             }
         }
-        append_banner_offset = (pagenum-1)*CARD_PAGE_SIZE;    // バナーを入れる場所
+        append_banner_offset = ifp_pages*CARD_PAGE_SIZE;    // バナーを入れる場所
     }
 
     // ファイルコピー
@@ -317,8 +328,6 @@ static BOOL iMain( SContext *pContext )
     }
 
     // バナーを読み込む
-    fseek(pContext->banner_fp, 0, SEEK_END);
-    banner_size = ftell(pContext->banner_fp);
     banner_buf = (u8*)malloc(banner_size);
     if( !banner_buf )
     {

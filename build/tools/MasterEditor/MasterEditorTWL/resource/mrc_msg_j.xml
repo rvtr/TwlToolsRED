@@ -73,35 +73,41 @@
 
 	<!-- For DS Station -->
 	<DSStationTmpJump>
-		<name>tmpジャンプ</name>
+		<name>店頭試遊版対応</name>
 		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</DSStationTmpJump>
 
 	<DSStationRomSize>
-		<name>ROMサイズ</name>
+		<name>店頭試遊版対応</name>
 		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSStationRomSize>
 
 	<DSStationLib>
-		<name>店頭試遊版ライブラリ</name>
+		<name>店頭試遊版対応</name>
 		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSStationLib>
 
 	<!-- For Nintendo Zone -->
-	<DSStationTmpJump>
-		<name>tmpジャンプ</name>
+	<ZoneTmpJump>
+		<name>ダウンロードサービス対応</name>
 		<sentence>データ配信用(Nintendo Zone用)のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
-	</DSStationTmpJump>
+	</ZoneTmpJump>
 
-	<DSStationRomSize>
-		<name>ROMサイズ</name>
+	<ZoneHybrid>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneHybrid>
+
+	<ZoneRomSize>
+		<name>ダウンロードサービス対応</name>
 		<sentence>データ配信用(Nintendo Zone用)のROMサイズは2.5MByte以下でなければなりません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSStationRomSize>
+	</ZoneRomSize>
 
 	<!-- SDK Version -->
 	<SDKVersionExModuleTwlOld>

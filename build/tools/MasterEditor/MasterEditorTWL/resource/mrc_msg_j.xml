@@ -93,7 +93,7 @@
 	<!-- For Nintendo Zone -->
 	<ZoneTmpJump>
 		<name>ダウンロードサービス対応</name>
-		<sentence>データ配信用(Nintendo Zone用)のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</ZoneTmpJump>
 
@@ -105,7 +105,7 @@
 
 	<ZoneRomSize>
 		<name>ダウンロードサービス対応</name>
-		<sentence>データ配信用(Nintendo Zone用)のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ZoneRomSize>
 
@@ -377,6 +377,16 @@
 		<sentence>SDカードへのアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDAccessUser>
+	<SDReadAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDReadAccessUser>
+	<SDWriteAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDWriteAccessUser>
 	<SDAccessSystem>
 		<name>アクセスコントロール情報</name>
 		<sentence>SDカードへアクセス可能になっています。</sentence>
@@ -402,6 +412,16 @@
 		<sentence>ゲームカードNTR互換領域へアクセス可能になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</GameCardNTRAccessSystem>
+	<GameCardReadAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardReadAccessUser>
+	<GameCardWriteAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardWriteAccessUser>
 	<PhotoReadAccessUser>
 		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのリードアクセスは許可されていません。</sentence>

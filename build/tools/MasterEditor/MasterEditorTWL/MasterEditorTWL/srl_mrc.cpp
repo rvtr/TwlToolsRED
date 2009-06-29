@@ -609,27 +609,27 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		}
 		if( this->pRomHeader->s.access_control.photo_access_read != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database(Read)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database (Read)") );
 		}
 		if( this->pRomHeader->s.access_control.photo_access_write != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database(Write)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database (Write)") );
 		}
 		if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card(Read)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card (Read)") );
 		}
 		if( this->pRomHeader->s.access_control.sdmc_access_write != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card(Write)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card (Write)") );
 		}
 		if( this->pRomHeader->s.access_control.backup_access_read != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Card Backup(Read)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Game Card (Read)") );
 		}
 		if( this->pRomHeader->s.access_control.backup_access_write != 0 )
 		{
-			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Card Backup(Write)") );
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Game Card (Write)") );
 		}
 
 		// その他のビット
@@ -674,6 +674,14 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "HW AES Slot A for the SSL client certification") );
 		}
+		if( this->pRomHeader->s.access_control.backup_access_read != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("GameCardReadAccessUser") );
+		}
+		if( this->pRomHeader->s.access_control.backup_access_write != 0 )
+		{
+			this->hErrorList->Add( this->makeMrcError("GameCardWriteAccessUser") );
+		}
 
 		// SDアクセスは 5.2RELEASE で特定のアプリには許可される
 		if( !this->IsMediaNand )
@@ -682,6 +690,14 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 			{
 				this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+			}
+			if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+			{
+				this->hErrorList->Add( this->makeMrcError("SDReadAccessUser") );
+			}
+			if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+			{
+				this->hErrorList->Add( this->makeMrcError("SDWriteAccessUser") );
 			}
 		}
 		else
@@ -693,6 +709,14 @@ void RCSrl::mrcAccessControl(FILE *fp)
 				if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 				{
 					this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+				}
+				if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+				{
+					this->hErrorList->Add( this->makeMrcError("SDReadAccessUser") );
+				}
+				if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+				{
+					this->hErrorList->Add( this->makeMrcError("SDWriteAccessUser") );
 				}
 			}
 			else
@@ -738,22 +762,23 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			{
 				this->hErrorList->Add( this->makeMrcError("JpegSignAccessUserNand") );
 			}
-			// photoアクセスするのにTCLライブラリを使用していないとき
-			if( (this->pRomHeader->s.access_control.photo_access_read  != 0) ||
-				(this->pRomHeader->s.access_control.photo_access_write != 0) )
+		}
+
+		// photoアクセスするのにTCLライブラリを使用していないとき
+		if( (this->pRomHeader->s.access_control.photo_access_read  != 0) ||
+			(this->pRomHeader->s.access_control.photo_access_write != 0) )
+		{
+			System::Boolean useTcl = false;
+			for each( RCLicense ^lic in this->hLicenseList )
 			{
-				System::Boolean useTcl = false;
-				for each( RCLicense ^lic in this->hLicenseList )
+				if( lic->Publisher->StartsWith("NINTENDO") && lic->Name->StartsWith("TCL") )
 				{
-					if( lic->Publisher->StartsWith("NINTENDO") && lic->Name->StartsWith("TCL") )
-					{
-						useTcl = true;
-					}
+					useTcl = true;
 				}
-				if( !useTcl )
-				{
-					this->hErrorList->Add( this->makeMrcError("PhotoTclAccessUser") );
-				}
+			}
+			if( !useTcl )
+			{
+				this->hErrorList->Add( this->makeMrcError("PhotoTclAccessUser") );
 			}
 		}
 

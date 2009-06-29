@@ -561,7 +561,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		this->hErrorList->Add( this->makeMrcError("CardAccess") );
 	}
 
-	if( this->IsAppUser )
+	if( !this->IsAppUser )	// システムアプリ
 	{
 		if( this->pRomHeader->s.access_control.common_client_key != 0 )
 		{
@@ -603,9 +603,33 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		{
 			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Common Client Key for the debugger system menu") );
 		}
+		if( this->pRomHeader->s.access_control.photo_access_read != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database(Read)") );
+		}
+		if( this->pRomHeader->s.access_control.photo_access_write != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Photo Database(Write)") );
+		}
+		if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card(Read)") );
+		}
+		if( this->pRomHeader->s.access_control.sdmc_access_write != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "SD Card(Write)") );
+		}
+		if( this->pRomHeader->s.access_control.backup_access_read != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Card Backup(Read)") );
+		}
+		if( this->pRomHeader->s.access_control.backup_access_write != 0 )
+		{
+			this->hWarnList->Add( this->makeMrcError("IllegalAccessSystem", "Card Backup(Write)") );
+		}
 
 		// その他のビット
-		u32 okbits = 0x80001FFF;
+		u32 okbits = 0x8001FFFF;
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{
@@ -677,7 +701,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 					this->hErrorList->Add( this->makeMrcError("SDAccessPriv") );
 				}
 			}
-		}
+		} //else
 
 		if( !this->IsMediaNand )
 		{

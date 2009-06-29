@@ -12,12 +12,12 @@
 
 	<!-- Access Control -->
 	<PhotoTclAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoTclAccessUser>
 	<SDAccessPriv>
-		<name>アクセスコントロール情報</name>
+		<name>SDカードアクセス</name>
 		<sentence>SDカードへのアクセス権の設定が不十分です。RSFファイルのSDCardAccessプロパティに"None"、"Read"、"Write"、"ReadWrite"のいずれかを指定する必要があります。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDAccessPriv>
@@ -362,7 +362,7 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</NandAccessUser>
 	<SDAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>SDカードアクセス</name>
 		<sentence>SDカードへのアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDAccessUser>
@@ -392,17 +392,17 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</GameCardNTRAccessSystem>
 	<PhotoReadAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのリードアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoReadAccessUser>
 	<PhotoWriteAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのライトアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoWriteAccessUser>
 	<PhotoJpegSignAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJPEG署名(JpegSign)が有効になっていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoJpegSignAccessUser>
@@ -412,7 +412,7 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserCard>
 	<JpegSignAccessUserNand>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのライトアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserNand>

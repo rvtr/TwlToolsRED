@@ -17,16 +17,18 @@
 #----------------------------------------------------------------------------
 
 TARGET_PLATFORM := TWL
+TWL_NANDAPP		:= TRUE
+TWL_ARCHGEN		:= LIMITED
 
 SUBDIRS		= 	../common/banner \
 				$(ROOT)/build/demos/gx/UnitTours/DEMOLib
 
-TARGET_BIN	= regular_card.srl
+TARGET_BIN	= regular_sys.tad
 #INCDIR		= ../common/include
 SRCDIR		= ../common/src
 SRCS		= main.c
 
-ROM_SPEC	=	./ROM-TS.rsf
+ROM_SPEC	=	./ROM-TS_nand.rsf
 
 #----------------------------------------------------------------------------
 
@@ -38,7 +40,10 @@ include	$(TWLSDK_ROOT)/build/buildtools/commondefs.gx.demolib
 #INSTALL_DIR	= $(TWL_IPL_RED_ROOT)/debugsoft/CardRomHeaderChecker
 #INSTALL_TARGETS	= $(BINDIR)/$(TARGET_BIN)
 #endif
+MAKEROM				=	$(TWL_TOOLSDIR)/bin/makerom.TWL.sys.exe
+MAKETAD_OPTION		=	-s
 
+#TWL_LIBS_EX		+=	libtcl$(TWL_LIBSUFFIX).a
 
 do-build:	$(TARGETS)
 

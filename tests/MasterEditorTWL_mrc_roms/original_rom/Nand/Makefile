@@ -23,7 +23,7 @@ TWL_ARCHGEN		:= LIMITED
 SUBDIRS		= 	../common/banner \
 				$(ROOT)/build/demos/gx/UnitTours/DEMOLib
 
-TARGET_BIN	= CardRomHeaderChecker.tad
+TARGET_BIN	= regular_nand.tad
 #INCDIR		= ../common/include
 SRCDIR		= ../common/src
 SRCS		= main.c

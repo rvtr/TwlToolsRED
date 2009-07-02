@@ -400,9 +400,12 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->stripItemSepFile1, L"stripItemSepFile1");
 	resources->ApplyResources(this->stripItemSaveTemp, L"stripItemSaveTemp");
 	resources->ApplyResources(this->stripItemLoadTemp, L"stripItemLoadTemp");
+	resources->ApplyResources(this->exportToolStripMenuItem, L"exportToolStripMenuItem");
 	resources->ApplyResources(this->stripItemRomInfoList, L"stripItemRomInfoList");
 	resources->ApplyResources(this->stripItemErrorListRead, L"stripItemErrorListRead");
 	resources->ApplyResources(this->stripItemErrorListCurrent, L"stripItemErrorListCurrent");
+	resources->ApplyResources(this->stripItemRomInfoAndErrorListRead, L"stripItemRomInfoAndErrorListRead");
+	resources->ApplyResources(this->stripItemRomInfoAndErrorListCurrent, L"stripItemRomInfoAndErrorListCurrent");
 	resources->ApplyResources(this->stripMaster, L"stripMaster");
 	resources->ApplyResources(this->stripItemSheet, L"stripItemSheet");
 	resources->ApplyResources(this->stripItemSepMaster1, L"stripItemSepMaster1");

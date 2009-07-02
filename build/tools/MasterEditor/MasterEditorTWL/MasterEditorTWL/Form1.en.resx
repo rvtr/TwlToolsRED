@@ -496,8 +496,20 @@
   <data name="gboxProd.Text" xml:space="preserve">
     <value>ROM Submission Information</value>
   </data>
+  <data name="stripItemOpenRom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
+  <data name="stripItemSepFile1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>242, 6</value>
+  </data>
+  <data name="stripItemSaveTemp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
+  </data>
   <data name="stripItemSaveTemp.Text" xml:space="preserve">
     <value>Save submission data to temp file</value>
+  </data>
+  <data name="stripItemLoadTemp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>245, 22</value>
   </data>
   <data name="stripItemLoadTemp.Text" xml:space="preserve">
     <value>Load saved submission data</value>

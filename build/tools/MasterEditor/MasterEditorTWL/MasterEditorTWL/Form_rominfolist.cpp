@@ -54,7 +54,7 @@ static System::Xml::XmlElement^ CreateSDKVersionListElement(System::Xml::XmlDocu
 // ======================================================
 // XML形式でリストを作成
 // ======================================================
-void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc)
+void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean withError, System::Boolean isCurrent)
 {
 	System::Xml::XmlElement ^root = doc->CreateElement( "twl-master-editor" );
 	System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
@@ -174,7 +174,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc)
 	root->AppendChild(section);
 
 	//
-	// SDKバージョンは独立
+	// SDKバージョンは独立した表
 	//
 	section = doc->CreateElement("sdk-version-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"SDKバージョン":"SDK Version" );
@@ -189,18 +189,37 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc)
 	root->AppendChild(section);
 
 	//
-	// ミドルウェアリストも独立
+	// ミドルウェアリストも独立した表
 	//
 	section = doc->CreateElement("middleware-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"使用ライブラリ":"Libraries" );
 	section->AppendChild( this->makeMiddlewareListXmlElement(doc) );
 	root->AppendChild(section);
+
+	//
+	// エラー情報も独立した表
+	//
+	if( withError )
+	{
+		section = doc->CreateElement("error-info");
+		MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"エラー":"Error" );
+		section->AppendChild( this->makeErrorListXmlElement(doc, isCurrent) );
+		section->AppendChild( this->makeErrorListCaptionXmlElement(doc) );
+		root->AppendChild(section);
+
+		section = doc->CreateElement("warning-info");
+		MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"警告":"Warning" );
+		section->AppendChild( this->makeWarningListXmlElement(doc, isCurrent) );
+		section->AppendChild( this->makeErrorListCaptionXmlElement(doc) );
+		root->AppendChild(section);
+	}
+
 } //Form1::makeRomInfoListXml
 
 // ======================================================
 // HTML形式でファイルを出力
 // ======================================================
-void Form1::makeRomInfoListHtml(System::String ^filepath)
+void Form1::makeRomInfoListHtml(System::String ^filepath, System::Boolean withError, System::Boolean isCurrent)
 {
 	System::String ^tmpxml = gcnew System::String( this->getXmlToHtmlTmpFile() );
 	try
@@ -208,7 +227,7 @@ void Form1::makeRomInfoListHtml(System::String ^filepath)
 		// TMPファイルにXML版作成
 		System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
 		doc->AppendChild( doc->CreateXmlDeclaration("1.0","UTF-8",nullptr) );
-		this->makeRomInfoListXml( doc );
+		this->makeRomInfoListXml( doc, withError, isCurrent );
 		doc->Save( tmpxml );
 		// XML=>HTML変換
 		System::Xml::Xsl::XslCompiledTransform ^xslt = gcnew System::Xml::Xsl::XslCompiledTransform;

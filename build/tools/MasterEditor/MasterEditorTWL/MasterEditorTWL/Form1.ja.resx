@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="gboxSrl.Text" xml:space="preserve">
+    <value>ROMデータ情報</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="labPlatform.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 12</value>
@@ -168,9 +171,6 @@
   </data>
   <data name="labRemasterVer.Text" xml:space="preserve">
     <value>リマスターバージョン</value>
-  </data>
-  <data name="gboxSrl.Text" xml:space="preserve">
-    <value>ROMデータ情報</value>
   </data>
   <data name="labBackup.Location" type="System.Drawing.Point, System.Drawing">
     <value>20, 20</value>
@@ -382,6 +382,9 @@
   <data name="cboxIsInputPerson2.Text" xml:space="preserve">
     <value>担当者2を入力する(任意)</value>
   </data>
+  <data name="gboxPerson2.Text" xml:space="preserve">
+    <value>担当者2</value>
+  </data>
   <data name="labArbit4.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 12</value>
   </data>
@@ -418,8 +421,8 @@
   <data name="labCompany2.Text" xml:space="preserve">
     <value>貴社名</value>
   </data>
-  <data name="gboxPerson2.Text" xml:space="preserve">
-    <value>担当者2</value>
+  <data name="gboxPerson1.Text" xml:space="preserve">
+    <value>担当者1</value>
   </data>
   <data name="labArbit2.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 12</value>
@@ -457,8 +460,8 @@
   <data name="labCompany1.Text" xml:space="preserve">
     <value>貴社名</value>
   </data>
-  <data name="gboxPerson1.Text" xml:space="preserve">
-    <value>担当者1</value>
+  <data name="gboxUsage.Text" xml:space="preserve">
+    <value>目的</value>
   </data>
   <data name="rUsageOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 16</value>
@@ -484,8 +487,8 @@
   <data name="rUsageSale.Text" xml:space="preserve">
     <value>一般販売用</value>
   </data>
-  <data name="gboxUsage.Text" xml:space="preserve">
-    <value>目的</value>
+  <data name="gboxSubmitWay.Text" xml:space="preserve">
+    <value>提出方法</value>
   </data>
   <data name="rSubmitHand.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 16</value>
@@ -498,9 +501,6 @@
   </data>
   <data name="rSubmitPost.Text" xml:space="preserve">
     <value>郵送</value>
-  </data>
-  <data name="gboxSubmitWay.Text" xml:space="preserve">
-    <value>提出方法</value>
   </data>
   <data name="labSubmiteDate.Location" type="System.Drawing.Point, System.Drawing">
     <value>31, 143</value>
@@ -583,14 +583,14 @@
   <data name="labProductCodeForeign.Text" xml:space="preserve">
     <value>製品コード</value>
   </data>
+  <data name="gboxShared2Size.Text" xml:space="preserve">
+    <value>Shared2ファイルサイズ</value>
+  </data>
   <data name="cboxIsShared2.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 16</value>
   </data>
   <data name="cboxIsShared2.Text" xml:space="preserve">
     <value>Shared2ファイル使用</value>
-  </data>
-  <data name="gboxShared2Size.Text" xml:space="preserve">
-    <value>Shared2ファイルサイズ</value>
   </data>
   <data name="labLib.Size" type="System.Drawing.Size, System.Drawing">
     <value>70, 12</value>
@@ -603,6 +603,9 @@
   </data>
   <data name="labSDK.Text" xml:space="preserve">
     <value>SDKバージョン</value>
+  </data>
+  <data name="gboxTWLExInfo.Text" xml:space="preserve">
+    <value>TWL拡張情報</value>
   </data>
   <data name="labIsCodec.Size" type="System.Drawing.Size, System.Drawing">
     <value>72, 12</value>
@@ -618,9 +621,6 @@
   </data>
   <data name="labKeyTableRomOffset.Text" xml:space="preserve">
     <value>TWL専用領域ROMオフセット</value>
-  </data>
-  <data name="gboxTWLExInfo.Text" xml:space="preserve">
-    <value>TWL拡張情報</value>
   </data>
   <data name="labNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
     <value>266, 147</value>
@@ -661,6 +661,9 @@
   <data name="cboxIsTmpJump.Text" xml:space="preserve">
     <value>tmpジャンプ許可</value>
   </data>
+  <data name="gboxAccess.Text" xml:space="preserve">
+    <value>アクセスコントロール情報</value>
+  </data>
   <data name="labSDAccessRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 12</value>
   </data>
@@ -687,9 +690,6 @@
   </data>
   <data name="cboxIsSD.Text" xml:space="preserve">
     <value>SDカード</value>
-  </data>
-  <data name="gboxAccess.Text" xml:space="preserve">
-    <value>アクセスコントロール情報</value>
   </data>
   <data name="labIsGameCardOn2.Location" type="System.Drawing.Point, System.Drawing">
     <value>294, 328</value>
@@ -742,56 +742,38 @@
   <data name="gboxProd.Text" xml:space="preserve">
     <value>ROM提出情報</value>
   </data>
-  <data name="stripItemOpenRom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemOpenRom.Text" xml:space="preserve">
-    <value>ROMデータを開く</value>
-  </data>
-  <data name="stripItemSepFile1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 6</value>
-  </data>
-  <data name="stripItemSaveTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemSaveTemp.Text" xml:space="preserve">
-    <value>提出情報を一時保存する</value>
-  </data>
-  <data name="stripItemLoadTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemLoadTemp.Text" xml:space="preserve">
-    <value>一時保存した提出情報を開く</value>
-  </data>
-  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 6</value>
-  </data>
-  <data name="stripItemRomInfoList.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemRomInfoList.Text" xml:space="preserve">
-    <value>ROM情報をHTMLファイルに出力する</value>
-  </data>
-  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 6</value>
-  </data>
-  <data name="stripItemErrorListRead.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemErrorListRead.Text" xml:space="preserve">
-    <value>エラー情報をHTMLファイルに出力する (ROMデータ読み込み時の情報)</value>
-  </data>
-  <data name="stripItemErrorListCurrent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>403, 22</value>
-  </data>
-  <data name="stripItemErrorListCurrent.Text" xml:space="preserve">
-    <value>エラー情報をHTMLファイルに出力する (現在の入力を反映した情報)</value>
-  </data>
   <data name="stripFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>51, 20</value>
   </data>
   <data name="stripFile.Text" xml:space="preserve">
     <value>ファイル</value>
+  </data>
+  <data name="stripItemOpenRom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 22</value>
+  </data>
+  <data name="stripItemOpenRom.Text" xml:space="preserve">
+    <value>ROMデータを開く</value>
+  </data>
+  <data name="stripItemSepFile1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>208, 6</value>
+  </data>
+  <data name="stripItemSaveTemp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 22</value>
+  </data>
+  <data name="stripItemSaveTemp.Text" xml:space="preserve">
+    <value>提出情報を一時保存する</value>
+  </data>
+  <data name="stripItemLoadTemp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 22</value>
+  </data>
+  <data name="stripItemLoadTemp.Text" xml:space="preserve">
+    <value>一時保存した提出情報を開く</value>
+  </data>
+  <data name="stripMaster.Size" type="System.Drawing.Size, System.Drawing">
+    <value>77, 20</value>
+  </data>
+  <data name="stripMaster.Text" xml:space="preserve">
+    <value>マスター作成</value>
   </data>
   <data name="stripItemSheet.Size" type="System.Drawing.Size, System.Drawing">
     <value>284, 22</value>
@@ -820,17 +802,65 @@
   <data name="stripItemMiddlewareHtml.Text" xml:space="preserve">
     <value>ミドルウェアリストのみを作成する (HTML形式)</value>
   </data>
-  <data name="stripMaster.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 20</value>
+  <data name="exportToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 20</value>
   </data>
-  <data name="stripMaster.Text" xml:space="preserve">
-    <value>マスター</value>
+  <data name="exportToolStripMenuItem.Text" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="stripItemRomInfoList.Size" type="System.Drawing.Size, System.Drawing">
+    <value>501, 22</value>
+  </data>
+  <data name="stripItemRomInfoList.Text" xml:space="preserve">
+    <value>ROM情報をHTMLファイルに出力する</value>
+  </data>
+  <data name="toolStripSeparator2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>498, 6</value>
+  </data>
+  <data name="stripItemErrorListRead.Size" type="System.Drawing.Size, System.Drawing">
+    <value>501, 22</value>
+  </data>
+  <data name="stripItemErrorListRead.Text" xml:space="preserve">
+    <value>エラー情報をHTMLファイルに出力する (ROMデータ読み込み時の情報)</value>
+  </data>
+  <data name="stripItemErrorListCurrent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>501, 22</value>
+  </data>
+  <data name="stripItemErrorListCurrent.Text" xml:space="preserve">
+    <value>エラー情報をHTMLファイルに出力する (現在の入力を反映した情報)</value>
+  </data>
+  <data name="toolStripSeparator1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>498, 6</value>
+  </data>
+  <data name="stripItemRomInfoAndErrorListRead.Size" type="System.Drawing.Size, System.Drawing">
+    <value>501, 22</value>
+  </data>
+  <data name="stripItemRomInfoAndErrorListRead.Text" xml:space="preserve">
+    <value>ROM情報とエラー情報を合わせてHTMLファイルに出力する (ROMデータ読み込み時の情報)</value>
+  </data>
+  <data name="stripItemRomInfoAndErrorListCurrent.Size" type="System.Drawing.Size, System.Drawing">
+    <value>501, 22</value>
+  </data>
+  <data name="stripItemRomInfoAndErrorListCurrent.Text" xml:space="preserve">
+    <value>ROM情報とエラー情報を合わせてHTMLファイルに出力する (現在の入力を反映した情報)</value>
+  </data>
+  <data name="exportBothROMInfoAndErrorInfoToHTMLFileToolStripMenuItem.Size" type="System.Drawing.Size, System.Drawing">
+    <value>467, 22</value>
+  </data>
+  <data name="exportBothROMInfoAndErrorInfoToHTMLFileToolStripMenuItem.Text" xml:space="preserve">
+    <value>ROM情報とエラー情報を合わせてHTMLファイルに出力する (ROMデータ読み込み時)</value>
+  </data>
+  <data name="tabRomInfo.Text" xml:space="preserve">
+    <value>ROM基本情報</value>
   </data>
   <data name="tboxGuideRomInfo.Text" xml:space="preserve">
     <value>このタブの情報は編集不可です。データに誤りがある場合にはROMデータ作成時の設定を見直してください。</value>
   </data>
-  <data name="tabRomInfo.Text" xml:space="preserve">
-    <value>ROM基本情報</value>
+  <data name="tabTWLInfo.Text" xml:space="preserve">
+    <value>TWL拡張情報</value>
+  </data>
+  <data name="gboxLaunch.Text" xml:space="preserve">
+    <value>DSiメニュー上での起動制限</value>
   </data>
   <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>173, 12</value>
@@ -838,20 +868,20 @@
   <data name="labConnectIcon.Text" xml:space="preserve">
     <value>DSiメニュー上での通信アイコン表示</value>
   </data>
-  <data name="gboxLaunch.Text" xml:space="preserve">
-    <value>DSiメニュー上での起動制限</value>
-  </data>
   <data name="tboxGuideTWLInfo.Text" xml:space="preserve">
     <value>このタブの情報は編集不可です。データに誤りがある場合にはROMデータ作成時の設定を見直してください。</value>
   </data>
   <data name="gboxExFlags.Text" xml:space="preserve">
     <value>TWL拡張諸フラグ</value>
   </data>
-  <data name="tabTWLInfo.Text" xml:space="preserve">
-    <value>TWL拡張情報</value>
+  <data name="tabNandSizeInfo.Text" xml:space="preserve">
+    <value>DSiウェア情報</value>
   </data>
   <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
     <value>このタブの情報はDSiウェア(NANDアプリ)による本体NANDメモリ領域の使用量を確認する場合に必要です。&lt;newline&gt;アプリがゲームカード向けの場合にはNANDメモリ使用量の確認は必要ありません。</value>
+  </data>
+  <data name="gboxNandSize.Text" xml:space="preserve">
+    <value>DSiウェアによる本体NANDメモリの使用量</value>
   </data>
   <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>154, 23</value>
@@ -913,11 +943,11 @@
   <data name="labTmdSize.Text" xml:space="preserve">
     <value>その他ファイルサイズ</value>
   </data>
-  <data name="gboxNandSize.Text" xml:space="preserve">
-    <value>DSiウェアによる本体NANDメモリの使用量</value>
+  <data name="tabRomEditInfo.Text" xml:space="preserve">
+    <value>リージョンとレーティング(編集可)</value>
   </data>
-  <data name="tabNandSizeInfo.Text" xml:space="preserve">
-    <value>DSiウェア情報</value>
+  <data name="gboxOtherSpec.Text" xml:space="preserve">
+    <value>その他ROM仕様</value>
   </data>
   <data name="cboxIsUGC.Size" type="System.Drawing.Size, System.Drawing">
     <value>210, 16</value>
@@ -931,14 +961,14 @@
   <data name="cboxIsPhotoEx.Text" xml:space="preserve">
     <value>写真交換対応</value>
   </data>
-  <data name="gboxOtherSpec.Text" xml:space="preserve">
-    <value>その他ROM仕様</value>
-  </data>
   <data name="butSetBack.Text" xml:space="preserve">
     <value>読み込み時の設定に戻す</value>
   </data>
   <data name="tboxGuideRomEditInfo.Text" xml:space="preserve">
     <value>このタブの各項目への入力は提出確認書およびマスターROMの作成のために必要です。&lt;newline&gt;これらの情報はマスターROMの作成時にROM内登録データとして登録されます(「その他ROM仕様」を除く)。</value>
+  </data>
+  <data name="gboxParental.Text" xml:space="preserve">
+    <value>リージョンとレーティング情報</value>
   </data>
   <data name="combGRB.Items" xml:space="preserve">
     <value>全体利用可</value>
@@ -961,17 +991,17 @@
   <data name="cboxIsUnnecessaryRating.Text" xml:space="preserve">
     <value>レーティング表示不要 (ツール類のみ選択可)</value>
   </data>
-  <data name="gboxParental.Text" xml:space="preserve">
-    <value>リージョンとレーティング情報</value>
-  </data>
-  <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>リージョンとレーティング(編集可)</value>
+  <data name="tabSubmitInfo.Text" xml:space="preserve">
+    <value>提出情報(要入力)</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
     <value>(100文字以内)</value>
   </data>
   <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
     <value>このタブの情報は提出確認書の作成に必要です。入力してください。</value>
+  </data>
+  <data name="gboxForeign.Text" xml:space="preserve">
+    <value>海外版</value>
   </data>
   <data name="labProductNameLimitForeign.Text" xml:space="preserve">
     <value>(100文字以内)</value>
@@ -982,20 +1012,20 @@
   <data name="labMultiForeign2.Text" xml:space="preserve">
     <value>(複数ある場合のみ)</value>
   </data>
-  <data name="gboxForeign.Text" xml:space="preserve">
-    <value>海外版</value>
-  </data>
-  <data name="tabSubmitInfo.Text" xml:space="preserve">
-    <value>提出情報(要入力)</value>
+  <data name="tabCompanyInfo.Text" xml:space="preserve">
+    <value>会社情報(要入力)</value>
   </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>このタブの情報は提出確認書の作成に必要です。入力してください。</value>
   </data>
-  <data name="tabCompanyInfo.Text" xml:space="preserve">
-    <value>会社情報(要入力)</value>
+  <data name="tabErrorInfo.Text" xml:space="preserve">
+    <value>エラー情報</value>
   </data>
   <data name="tboxGuideErrorInfo.Text" xml:space="preserve">
     <value>このタブには読み込んだROMデータの問題点と本プログラムでの入力ミスが列挙されます。&lt;newline&gt;赤文字の項目は、本プログラムで修正不可です。ROMデータ作成時の設定をご確認ください。&lt;newline&gt;青文字の項目は、ROMデータの問題点のうち、本プログラムで修正できるものです。&lt;newline&gt;黒文字の項目は、提出情報と会社情報の入力ミスおよび入力漏れです。</value>
+  </data>
+  <data name="gboxErrorTiming.Text" xml:space="preserve">
+    <value>いつの情報を表示するか</value>
   </data>
   <data name="rErrorCurrent.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 16</value>
@@ -1008,9 +1038,6 @@
   </data>
   <data name="rErrorReading.Text" xml:space="preserve">
     <value>ROMデータ読み込み時</value>
-  </data>
-  <data name="gboxErrorTiming.Text" xml:space="preserve">
-    <value>いつの情報を表示するか</value>
   </data>
   <data name="labWarn.Size" type="System.Drawing.Size, System.Drawing">
     <value>339, 12</value>
@@ -1047,9 +1074,6 @@
   </data>
   <data name="colErrorCause.HeaderText" xml:space="preserve">
     <value>要因</value>
-  </data>
-  <data name="tabErrorInfo.Text" xml:space="preserve">
-    <value>エラー情報</value>
   </data>
   <data name="labFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 12</value>

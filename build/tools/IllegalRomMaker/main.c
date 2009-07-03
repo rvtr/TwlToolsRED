@@ -60,7 +60,10 @@ typedef struct _SContext
     // 引数
     u32  byteAddr;      // 不正挿入バイトアドレス
     u32  bitAddr;       // 不正挿入ビットアドレス(オプション)
-    u8   assignValue;   // 代入値(オプション)
+    u32  assignValue;   // 代入値(オプション)
+
+    // 不正値を入れる箇所を何バイトとして扱うか
+    u32  targetSize;
 }
 SContext;
 
@@ -102,6 +105,8 @@ void usage()
     printf( "-d bitAddr : desable the specific bit. [0-7]\n" );
     printf( "-c         : clear the byte.\n" );
     printf( "-a value   : assign the value into the byte. [00-FF]\n" );
+    printf( "-2         : treat the target as 2 byte.\n" );
+    printf( "-4         : treat the target as 4 byte.\n" );
     printf( "-h         : print help only.\n" );
     printf( "-f         : force to overwrite a output_file.\n" );
 	printf( "-----------------------------------------------------------------------------\n" );
@@ -126,8 +131,11 @@ int main(int argc, char *argv[])
     // context の初期化
     memset( &context, 0, sizeof(SContext) );
 
+    // デフォルトでは不正値を入れる箇所を1バイトとして扱う
+    context.targetSize = 1;
+
     // オプション
-    while( (opt = getopt(argc, argv, "e:d:ca:hf")) >= 0 )
+    while( (opt = getopt(argc, argv, "e:d:ca:24hf")) >= 0 )
     {
         switch( opt )
         {
@@ -148,6 +156,14 @@ int main(int argc, char *argv[])
             case 'a':
                 context.isByteAssign = TRUE;
                 context.assignValue = strtol(optarg, &errptr, 16);
+            break;
+
+            case '2':
+                context.targetSize = 2;
+            break;
+
+            case '4':
+                context.targetSize = 4;
             break;
 
             case 'h':
@@ -263,12 +279,12 @@ FINALIZE:
 
 static BOOL iMain( SContext *pContext )
 {
-    u8         byte;
+    u32         target = 0;     // 1,2,4バイトのいずれかを書き換えるので最大の4バイトにしておく
     
     // 指定されたバイトをリード
     printf("Byte Address     : 0x%X\n", (unsigned int)pContext->byteAddr);
     fseek( pContext->ifp, pContext->byteAddr, SEEK_SET );
-    if( 1 != fread( &byte, 1, 1, pContext->ifp ) )
+    if( pContext->targetSize != fread( &target, 1, pContext->targetSize, pContext->ifp ) )
     {
         printf( "\n*** Error: Failed to read the byte from input_file. ***\n" );
         return FALSE;
@@ -276,33 +292,33 @@ static BOOL iMain( SContext *pContext )
 
     if( pContext->isBitEnable )
     {
-        u8 mask = 1 << pContext->bitAddr;
-        u8 oldbyte = byte;
-        byte |= mask;
-        printf("Enable bit %d     : 0x%02X -> 0x%02X\n", (int)pContext->bitAddr, oldbyte, byte);
+        u32 mask = 1 << pContext->bitAddr;
+        u32 old  = target;
+        target |= mask;
+        printf("Enable bit %2d    : 0x%08X -> 0x%08X\n", (int)pContext->bitAddr, (unsigned int)old, (unsigned int)target);
     }
     if( pContext->isBitDisable )
     {
-        u8 mask = 1 << pContext->bitAddr;
-        u8 oldbyte = byte;
-        byte &= ~mask;
-        printf("Disable bit %d    : 0x%02X -> 0x%02X\n", (int)pContext->bitAddr, oldbyte, byte);
+        u32 mask = 1 << pContext->bitAddr;
+        u32 old  = target;
+        target &= ~mask;
+        printf("Enable bit %2d    : 0x%08X -> 0x%08X\n", (int)pContext->bitAddr, (unsigned int)old, (unsigned int)target);
     }
     if( pContext->isByteClear )
     {
-        u8 oldbyte = byte;
-        byte = 0;
-        printf("Clear byte       : 0x%02X -> 0x%02X\n", oldbyte, byte);
+        u32 old  = target;
+        target = 0;
+        printf("Clear byte       : 0x%08X -> 0x%08X\n", (unsigned int)old, (unsigned int)target);
     }
     if( pContext->isByteAssign )
     {
-        printf("Assign           : 0x%02X -> 0x%02X\n", byte, pContext->assignValue);
-        byte = pContext->assignValue;
+        printf("Assign           : 0x%08X -> 0x%08X\n", (unsigned int)target, (unsigned int)pContext->assignValue);
+        target = pContext->assignValue;
     }
 
     // 変更したバイトを出力ファイルに書き出す
     fseek( pContext->ofp, pContext->byteAddr, SEEK_SET );
-    if( 1 != fwrite( &byte, 1, 1, pContext->ofp ) )
+    if( pContext->targetSize != fwrite( &target, 1, pContext->targetSize, pContext->ofp ) )
     {
         printf( "\n*** Error: Failed to write the byte to output_fie. ***\n" );
         return FALSE;

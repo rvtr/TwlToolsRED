@@ -50,6 +50,9 @@ typedef struct _SContext
     // 入出力ファイル
     FILE *ifp;
     FILE *ofp;
+
+    // モード
+    BOOL isClear;   // クリアモード
 }
 SContext;
 
@@ -86,6 +89,7 @@ void usage()
     printf( "  input_file  : a ROM data file.\n" );
     printf( "  output_file : a destination file.\n" );
     printf( "\nOption:\n" );
+    printf( "-c    : clear all rating(0x00).\n" );
     printf( "-h    : print help only.\n" );
     printf( "-f    : force to overwrite a output_file.\n" );
 	printf( "-----------------------------------------------------------------------------\n" );
@@ -110,7 +114,7 @@ int main(int argc, char *argv[])
     memset( &context, 0, sizeof(SContext) );
 
     // オプション
-    while( (opt = getopt(argc, argv, "hf")) >= 0 )
+    while( (opt = getopt(argc, argv, "hfc")) >= 0 )
     {
         switch( opt )
         {
@@ -121,6 +125,10 @@ int main(int argc, char *argv[])
 
             case 'f':
                 bForceOverwrite = TRUE;
+            break;
+
+            case 'c':
+                context.isClear = TRUE;
             break;
 
             default:            // オプション引数が指定されていないときにも実行される
@@ -294,7 +302,7 @@ static BOOL iMain( SContext *pContext )
         printf("--------+------+------+------+------+------+------+------+------+\n");
         for( i=0; i < PARENTAL_CONTROL_INFO_SIZE; i++ )
         {
-            rh.s.parental_control_rating_info[i] = 0x80;
+            rh.s.parental_control_rating_info[i] = (pContext->isClear)?0x00:0x80;
             if( (i%8) == 7 )
             {
                 int j;

@@ -52,15 +52,18 @@ typedef struct _SContext
     FILE *ofp;
     
     // オプション
-    BOOL isBitEnable;   // ビット上げモード
-    BOOL isBitDisable;  // ビット下げモード
-    BOOL isByteClear;   // バイトクリアモード
-    BOOL isByteAssign;  // バイト代入モード
+    BOOL isBitEnable;       // ビット上げモード
+    BOOL isBitDisable;      // ビット下げモード
+    BOOL isByteClear;       // バイトクリアモード
+    BOOL isByteAssign;      // バイト代入モード
+    BOOL isMultiBitEnable;  // 複数ビット上げモード
+    BOOL isMultiBitDisable; // 複数ビット下げモード
     
     // 引数
     u32  byteAddr;      // 不正挿入バイトアドレス
     u32  bitAddr;       // 不正挿入ビットアドレス(オプション)
     u32  assignValue;   // 代入値(オプション)
+    u32  bitMask;
 
     // 不正値を入れる箇所を何バイトとして扱うか
     u32  targetSize;
@@ -101,10 +104,12 @@ void usage()
     printf( "  output_file : a destination file.\n" );
     printf( "  ByteAddr    : an address of Byte which will be insert an illegal data. [00000000-FFFFFFFF]\n" );
     printf( "\nOption:\n" );
-    printf( "-e bitAddr : enable the specific bit. [0-7]\n" );
-    printf( "-d bitAddr : desable the specific bit. [0-7]\n" );
+    printf( "-e bitAddr : enable the specific bit. [0-7/15/31]\n" );
+    printf( "-d bitAddr : desable the specific bit. [0-7/15/31]\n" );
     printf( "-c         : clear the byte.\n" );
-    printf( "-a value   : assign the value into the byte. [00-FF]\n" );
+    printf( "-a value   : assign the value into the byte. [00-FF/FFFF/FFFFFFFF]\n" );
+    printf( "-E bitMask : enable multipul bits. [00-FF/FFFF/FFFFFFFF]\n" );
+    printf( "-D bitMask : diasble multipul bits. [00-FF/FFFF/FFFFFFFF]\n" );
     printf( "-2         : treat the target as 2 byte.\n" );
     printf( "-4         : treat the target as 4 byte.\n" );
     printf( "-h         : print help only.\n" );
@@ -125,7 +130,7 @@ int main(int argc, char *argv[])
     BOOL            bForceOverwrite = FALSE;
     
     printf( "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" );
-    printf( "         ManuSkipFlagTool [%s-%s]\n", SDK_REVISION, IPL_REVISION );
+    printf( "         IllegalRomMaker [%s-%s]\n", SDK_REVISION, IPL_REVISION );
     printf( "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n" );
 
     // context の初期化
@@ -135,7 +140,7 @@ int main(int argc, char *argv[])
     context.targetSize = 1;
 
     // オプション
-    while( (opt = getopt(argc, argv, "e:d:ca:24hf")) >= 0 )
+    while( (opt = getopt(argc, argv, "e:d:ca:E:D:24hf")) >= 0 )
     {
         switch( opt )
         {
@@ -156,6 +161,16 @@ int main(int argc, char *argv[])
             case 'a':
                 context.isByteAssign = TRUE;
                 context.assignValue = strtol(optarg, &errptr, 16);
+            break;
+
+            case 'E':
+                context.isMultiBitEnable = TRUE;
+                context.bitMask = strtol(optarg, &errptr, 16);
+            break;
+
+            case 'D':
+                context.isMultiBitDisable = TRUE;
+                context.bitMask = strtol(optarg, &errptr, 16);
             break;
 
             case '2':
@@ -302,7 +317,19 @@ static BOOL iMain( SContext *pContext )
         u32 mask = 1 << pContext->bitAddr;
         u32 old  = target;
         target &= ~mask;
-        printf("Enable bit %2d    : 0x%08X -> 0x%08X\n", (int)pContext->bitAddr, (unsigned int)old, (unsigned int)target);
+        printf("Disable bit %2d   : 0x%08X -> 0x%08X\n", (int)pContext->bitAddr, (unsigned int)old, (unsigned int)target);
+    }
+    if( pContext->isMultiBitEnable )
+    {
+        u32 old = target;
+        target |= pContext->bitMask;
+        printf("Enable bits      : 0x%08X -> 0x%08X\n", (unsigned int)old, (unsigned int)target);
+    }
+    if( pContext->isMultiBitDisable )
+    {
+        u32 old = target;
+        target &= ~pContext->bitMask;
+        printf("Disable bits     : 0x%08X -> 0x%08X\n", (unsigned int)old, (unsigned int)target);
     }
     if( pContext->isByteClear )
     {

@@ -56,6 +56,10 @@ System::String^ getRegionString(System::UInt32 region)
 	{
 		str += "Korea ";
 	}
+	if( region & METWL_MASK_REGION_CHINA )
+	{
+		str += "China ";
+	}
 	str = str->TrimEnd( ' ' );
 	str = str->Replace( ' ', ',' );
 	return str;

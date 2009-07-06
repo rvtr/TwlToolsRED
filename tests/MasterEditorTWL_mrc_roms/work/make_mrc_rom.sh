@@ -2,11 +2,13 @@
 
 maker="./IllegalRomMaker.exe"
 faker="./FakeRomHeader.user.exe"
+rating_free_tool="./RatingAllFreeTool.exe"
 
 usr_card="./regular_card.srl"
 usr_nand="./regular_nand.nand.srl"
 sys_nand="./regular_sys.nand.srl"
 
+tcl_card="./tcl_card.srl"
 tcl_nand="./tcl_nand.nand.srl"
 china_nand="./china_nand.nand.srl"
 
@@ -19,6 +21,7 @@ outdir="../illegal_roms"
 #outdir="./out"
 
 tmp_srl="./tmp.srl"
+tmp2_srl="./tmp2.srl"
 
 
 #
@@ -148,7 +151,7 @@ $maker $usr_nand $outdir/access_nand_usr31.srl 1B4 -4 -e 31 -f
 $maker $sys_nand $outdir/access_nand_sys0.srl 1B4 -4 -e 0 -f
 $maker $sys_nand $outdir/access_nand_sys1.srl 1B4 -4 -e 1 -f
 $maker $sys_nand $outdir/access_nand_sys2.srl 1B4 -4 -e 2 -f
-$maker $sys_nand $outdir/access_nand_sys4.srl 1B4 -4 -e 4 -f
+$maker $sys_nand $outdir/access_nand_sys3.srl 1B4 -4 -e 3 -f
 $maker $sys_nand $outdir/access_nand_sys5.srl 1B4 -4 -e 5 -f
 $maker $sys_nand $outdir/access_nand_sys7.srl 1B4 -4 -e 7 -f
 $maker $sys_nand $outdir/access_nand_sys8.srl 1B4 -4 -e 8 -f
@@ -174,6 +177,16 @@ $maker $usr_nand_52rel $outdir/sd_access_nand2.srl 1B4 -4 -E 00000008 -f
 $maker $usr_nand_53pr  $outdir/sd_access_nand3.srl 1B4 -4 -E 00004008 -f
 $maker $usr_nand_52rel $outdir/sd_access_nand4.srl 1B4 -4 -E 00006008 -f
 cp $usr_nand_52rc  $outdir/sd_access_nand5.srl -f
+
+#
+# Photo Access
+#
+
+$maker $usr_card $outdir/photo_access_card1.srl 1B4 -4 -e 11 -f
+$maker $tcl_card $outdir/photo_access_card2.srl 1B4 -4 -e 12 -f
+$maker $usr_nand $outdir/photo_access_nand1.srl 1B4 -4 -e 12 -f
+$maker $tcl_nand $tmp_srl 1B4 -4 -e 11 -f
+$maker $tmp_srl $outdir/photo_access_nand2.srl 1B4 -4 -e 10 -f
 
 #
 # Shared2
@@ -255,12 +268,18 @@ $maker $usr_nand $outdir/rating_nand6.srl 2F0 -a C0 -f
 # China
 #
 
-cp $china_nand $outdir/china_nand_usr1.srl -f
-$maker $usr_nand $outdir/china_nand_usr2.srl 1B0 -4 -a 00000010 -f
-$maker $usr_nand $outdir/china_nand_usr3.srl 1D -e 7 -f
-$maker $china_nand $outdir/china_nand_usr4.srl 1B0 -4 -a 00000001 -f
+$rating_free_tool $china_nand $outdir/china_nand_usr1.srl -f
+$maker $usr_nand $tmp_srl 1B0 -4 -a 00000010 -f
+$rating_free_tool $tmp_srl $outdir/china_nand_usr2.srl -f
+$maker $usr_nand $tmp_srl 1D -e 7 -f
+$rating_free_tool $tmp_srl $outdir/china_nand_usr3.srl -f
+$maker $china_nand $tmp_srl 1B0 -4 -a 00000001 -f
+$maker $tmp_srl $tmp2_srl 1D -d 7 -f
+$rating_free_tool $tmp2_srl $outdir/china_nand_usr4.srl -f
+$rating_free_tool $china_nand $outdir/china_nand_usr5.srl -c -f
 $maker $sys_nand $tmp_srl 1B0 -4 -a 00000010 -f
-$maker $tmp_srl $outdir/china_nand_sys1.srl 1D -e 7 -f
+$maker $tmp_srl $tmp2_srl 1D -e 7 -f
+$rating_free_tool $tmp2_srl $outdir/china_nand_sys1.srl -f
 
 #
 # Korea
@@ -269,7 +288,7 @@ $maker $tmp_srl $outdir/china_nand_sys1.srl 1D -e 7 -f
 $maker $usr_nand $tmp_srl 1B0 -4 -a 00000020 -f
 $maker $tmp_srl $outdir/korea_nand_usr1.srl 1D -e 6 -f
 $maker $usr_nand $outdir/korea_nand_usr2.srl 1B0 -4 -a 00000020 -f
-$maker $usr_nand $outdir/korea_nand_usr2.srl 1D -e 6 -f
+$maker $usr_nand $outdir/korea_nand_usr3.srl 1D -e 6 -f
 
 #
 # Reserved area
@@ -286,7 +305,7 @@ $maker $usr_nand $outdir/reserved_nand08.srl BF -a 01 -f
 $maker $usr_nand $outdir/reserved_nand09.srl 240 -a 01 -f
 $maker $usr_nand $outdir/reserved_nand10.srl 2EF -a 01 -f
 $maker $usr_nand $outdir/reserved_nand11.srl 378 -a 01 -f
-$maker $usr_nand $outdir/reserved_nand12.srl 39F-a 01 -f
+$maker $usr_nand $outdir/reserved_nand12.srl 39F -a 01 -f
 $maker $usr_nand $outdir/reserved_nand13.srl 3B4 -a 01 -f
 $maker $usr_nand $outdir/reserved_nand14.srl F7F -a 01 -f
 $maker $usr_nand $outdir/reserved_nand15.srl 1BC -a 01 -f

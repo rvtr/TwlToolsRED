@@ -83,7 +83,8 @@ void Form1::setSrlForms(void)
 		this->tboxIsCodec->Text = gcnew System::String( "DS" );
 	}
 	this->cboxIsSD->Checked   = this->hSrl->IsSD;
-	if( this->hSrl->IsSD && !this->hSrl->IsOldSDK52Release )
+	this->tboxSDAccessRight->Text = "";				// 2回連続してROMを読み込むときのために初期化しておく
+	if( this->hSrl->IsSD && !this->hSrl->IsOldSDK52Release )	// SDアクセスしない場合には空白
 	{
 		System::String ^sdright = "";
 		if( this->hSrl->IsSDRead && this->hSrl->IsSDWrite )

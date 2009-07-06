@@ -43,6 +43,15 @@
 	          font-weight: normal;
 	          font-size: 12px;
 	        }
+			td.publisher {
+			  width: 200px;
+			}
+			td.name {
+			  width: 400px;
+			}
+			td.note {
+			  width: 400px;
+			}
 		</style>
 	</head>
 

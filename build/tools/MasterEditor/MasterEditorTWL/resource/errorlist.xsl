@@ -60,6 +60,18 @@
 	          font-weight: normal;
 	          font-size: 12px;
 	        }
+			td.errname {
+			  width: 200px;
+			}
+			td.errtype {
+			  width: 100px;
+			}
+			td.errrange {
+			  width: 100px;
+			}
+			td.errmsg {
+			  width: 600px;
+			}
 		</style>
 	</head>
 

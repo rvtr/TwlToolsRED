@@ -787,7 +787,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			this->hErrorList->Add( this->makeMrcError("IllegalAccessUser", "Common Client Key for the debugger system menu") );
 		}
 
-		u32 okbits = 0x80007FFF;
+		u32 okbits = 0x8001FFFF;
 		u32 *p = (u32*)&(this->pRomHeader->s);
 		if( p[ 0x1b4 / 4 ] & ~okbits )
 		{

@@ -15,7 +15,7 @@ usr_card_52rel="./regular_card_52rel.srl"
 usr_nand_52rel="./regular_nand_52rel.srl"
 usr_nand_53pr="./regular_nand_53pr.srl"
 
-outdir="../illegal_rom"
+outdir="../illegal_roms"
 #outdir="./out"
 
 tmp_srl="./tmp.srl"

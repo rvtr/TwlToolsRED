@@ -88,14 +88,14 @@ System::String^ getOgnString(int ogn)
 	{
 		str = "BBFC";
 	}
-	else if( ogn == OS_TWL_PCTL_OGN_OFLC )
+	else if( ogn == OS_TWL_PCTL_OGN_AGCB )
 	{
 		str = "OFLC";
 	}
-	//else if( ogn == OS_TWL_PCTL_OGN_GRB )
-	//{
-	//	str = "GRB";
-	//}
+	else if( ogn == OS_TWL_PCTL_OGN_GRB )
+	{
+		str = "GRB";
+	}
 	else
 	{
 		str = "rsv.";

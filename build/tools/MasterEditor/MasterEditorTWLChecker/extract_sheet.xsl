@@ -42,6 +42,9 @@
 	<xsl:if test="$tag='RatingOFLC'">
 		<RatingOFLC><xsl:value-of select="ss:Data" /></RatingOFLC>
 	</xsl:if>
+	<xsl:if test="$tag='RatingGRB'">
+		<RatingGRB><xsl:value-of select="ss:Data" /></RatingGRB>
+	</xsl:if>
 	<xsl:if test="$tag='IsUnnecessaryRating'">
 		<IsUnnecessaryRating><xsl:value-of select="ss:Data" /></IsUnnecessaryRating>
 	</xsl:if>

@@ -2,36 +2,35 @@
 <MasterEditorTWL>
   <Lang>E</Lang>
   <Form>
-    <MasterEditorVersion>1.4</MasterEditorVersion>
+    <MasterEditorVersion>1.5</MasterEditorVersion>
     <ProductName>Sample Game Name</ProductName>
     <ProductCode1>P</ProductCode1>
-    <ProductCode2>KGUE</ProductCode2>
-    <ProductNameForeign>Sample Game Name Foreign</ProductNameForeign>
+    <ProductCode2>KGUJ</ProductCode2>
+    <ProductNameForeign>Sample Game Name F</ProductNameForeign>
     <ProductCode1Foreign>P</ProductCode1Foreign>
-    <ProductCode2Foreign1>KGUJ</ProductCode2Foreign1>
+    <ProductCode2Foreign1>KGUE</ProductCode2Foreign1>
     <ProductCode2Foreign2>KGUP</ProductCode2Foreign2>
     <ProductCode2Foreign3>KGUU</ProductCode2Foreign3>
     <SubmitVersion>0</SubmitVersion>
-    <Backup>4</Backup>
+    <Backup>6</Backup>
     <ReleaseForeign>Y</ReleaseForeign>
-    <Remarks>Sample.</Remarks>
-    <SubmitWay>Mail</SubmitWay>
+    <SubmitWay>Hand</SubmitWay>
     <Purpose>Sale</Purpose>
-    <ReleaseDate>4/30/2009 2:33:14 AM</ReleaseDate>
-    <SubmitDate>3/1/2009 2:33:14 AM</SubmitDate>
+    <ReleaseDate>2009/07/07 17:48:12</ReleaseDate>
+    <SubmitDate>2009/07/07 17:48:12</SubmitDate>
     <Company1>Nintendo Co., Ltd.</Company1>
-    <Depart1>Research and Engineering Division</Depart1>
-    <Name1>Ninten Tarou</Name1>
+    <Depart1>Research and Engineering Development Division</Depart1>
+    <Name1>Ninten Taro</Name1>
     <Tel1>075-662-9600</Tel1>
     <Fax1>075-662-9624</Fax1>
     <Mail1>taro@nintendo.co.jp</Mail1>
     <InputPerson2>Y</InputPerson2>
     <Company2>Nintendo Co., Ltd.</Company2>
-    <Depart2>Research and Engineering Division</Depart2>
-    <Name2>Ninten Jirou</Name2>
-    <Tel2>075-662-9600</Tel2>
-    <Fax2>075-662-9624</Fax2>
-    <Mail2>jiro@nintendo.co.jp</Mail2>
+    <Depart2>Research and Engineering Development Division</Depart2>
+    <Name2>Ninten Jiro</Name2>
+    <Tel2>075-662-9601</Tel2>
+    <Fax2>075-662-9625</Fax2>
+    <Mail2>jiro@nintendo.cojp</Mail2>
     <Region>-1</Region>
     <IsUnnecessaryRating>N</IsUnnecessaryRating>
     <RatingCERO>-1</RatingCERO>

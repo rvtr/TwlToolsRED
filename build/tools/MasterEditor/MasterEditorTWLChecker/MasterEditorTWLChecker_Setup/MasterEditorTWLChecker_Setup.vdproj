@@ -21,8 +21,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_23D661038CC340DB978CA06E7CF3FDB2"
-        "OwnerKey" = "8:_BB9A329F818C487FB9D0B3B29F1F2E7B"
+        "MsmKey" = "8:_34EA55872D6949BEA7E6F4F06AC826CB"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -81,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_931070F5869145DC8665EC3053982651"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -99,6 +105,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BA25FBAD5B0A42A3B5FE62BA57A70CF5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BA809E7E1FA04C08A958B981071B26E8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -111,13 +123,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_BB9A329F818C487FB9D0B3B29F1F2E7B"
-        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
+        "MsmKey" = "8:_CA2D37D0D1D9498183292FE6A4A78C18"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_CA2D37D0D1D9498183292FE6A4A78C18"
+        "MsmKey" = "8:_CBC5F74D4356485BAFE9E02B1F8CC088"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -143,12 +155,6 @@
         {
         "MsmKey" = "8:_F8DA46C7E2424049B36FFB2BD2C74C9B"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -260,6 +266,26 @@
             {
             "SourcePath" = "8:..\\ERROR.SRL"
             "TargetName" = "8:ERROR.SRL"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_34EA55872D6949BEA7E6F4F06AC826CB"
+            {
+            "SourcePath" = "8:..\\CHINA_NAND.SRL"
+            "TargetName" = "8:CHINA_NAND.SRL"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
@@ -456,6 +482,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_931070F5869145DC8665EC3053982651"
+            {
+            "SourcePath" = "8:..\\checker_korea.bat"
+            "TargetName" = "8:checker_korea.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF355D0BAC1B44C887BA1BC20BB062FD"
             {
             "SourcePath" = "8:..\\TMP_E.XML"
@@ -482,6 +528,26 @@
             "TargetName" = "8:チェック手順書.doc"
             "Tag" = "8:"
             "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA25FBAD5B0A42A3B5FE62BA57A70CF5"
+            {
+            "SourcePath" = "8:..\\checker_china.bat"
+            "TargetName" = "8:checker_china.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -540,6 +606,26 @@
             {
             "SourcePath" = "8:..\\CARD.SRL"
             "TargetName" = "8:CARD.SRL"
+            "Tag" = "8:"
+            "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CBC5F74D4356485BAFE9E02B1F8CC088"
+            {
+            "SourcePath" = "8:..\\KOREA_NAND.SRL"
+            "TargetName" = "8:KOREA_NAND.SRL"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
             "Condition" = "8:"
@@ -1252,40 +1338,12 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_23D661038CC340DB978CA06E7CF3FDB2"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_debugcrt_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BB9A329F818C487FB9D0B3B29F1F2E7B"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_DebugCRT_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_97CE56BC91094FBFB083E119975EE3CE"
             {
-            "SourcePath" = "8:..\\Debug\\MasterEditorTWLChecker.exe"
+            "SourcePath" = "8:..\\Release\\MasterEditorTWLChecker.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"

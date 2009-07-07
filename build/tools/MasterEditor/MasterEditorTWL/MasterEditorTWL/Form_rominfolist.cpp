@@ -56,6 +56,15 @@ static System::Xml::XmlElement^ CreateSDKVersionListElement(System::Xml::XmlDocu
 // ======================================================
 void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean withError, System::Boolean isCurrent)
 {
+	if( withError )
+	{
+		// エラー情報を最新に更新
+		this->hErrorList->Clear();
+		this->hWarnList->Clear();
+		this->checkSrlForms();
+		this->checkDeliverableForms();
+	}
+
 	System::Xml::XmlElement ^root = doc->CreateElement( "twl-master-editor" );
 	System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 	root->SetAttribute( "version", this->getVersion() );
@@ -129,11 +138,11 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labMedia->Text, this->tboxMedia->Text, nullptr) );
 		if( this->hSrl->IsNAND )	// カードアプリでは不要な情報
 		{
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labSrlSize->Text, this->tboxSrlSize->Text, nullptr) );
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labPublicSize->Text, this->tboxPublicSize->Text, nullptr) );
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labPrivateSize->Text, this->tboxPrivateSize->Text, nullptr) );
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labSubBannerSize->Text, this->tboxSubBannerSize->Text, nullptr) );
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labTmdSize->Text, this->tboxTmdSize->Text, nullptr) );
+			tag->AppendChild( CreateRomInfoListElement(doc, this->labSrlSize->Text, this->tboxSrlSizeFS->Text, nullptr) );
+			tag->AppendChild( CreateRomInfoListElement(doc, this->labPublicSize->Text, this->tboxPublicSizeFS->Text, nullptr) );
+			tag->AppendChild( CreateRomInfoListElement(doc, this->labPrivateSize->Text, this->tboxPrivateSizeFS->Text, nullptr) );
+			tag->AppendChild( CreateRomInfoListElement(doc, this->labSubBannerSize->Text, this->tboxSubBannerSizeFS->Text, nullptr) );
+			tag->AppendChild( CreateRomInfoListElement(doc, this->labTmdSize->Text, this->tboxTmdSizeFS->Text, nullptr) );
 			tag->AppendChild( CreateRomInfoListElement(doc, this->labSumSize->Text + " " + this->labSumSize2->Text,
 														this->tboxSumSize->Text + " (" + this->tboxSumSizeMB->Text + ")", nullptr) );
 		}
@@ -148,8 +157,26 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 
 		// リージョン
-		tag->AppendChild( CreateRomInfoListElement(doc, this->labRegion->Text, 
-							dynamic_cast<System::String^>(this->combRegion->SelectedItem), nullptr) );
+		System::String ^region = "";
+		if( this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown )
+		{
+			// 中韓のときはリストで選択不可のテキストがコンボボックスに書かれているのでそれを登録
+			region = this->combRegion->Text;
+		}
+		else
+		{
+			// WorldWide のときはリストで選択可能な文字列を登録
+			if( this->combRegion->SelectedIndex < 0 )
+			{
+				region = this->isJapanese()?METWL_STRING_UNDEFINED_REGION_J:METWL_STRING_UNDEFINED_REGION_E;	// 起こり得ない
+			}
+			else
+			{
+				// リストで選択されているテキストを登録
+				region = dynamic_cast<System::String^>(this->combRegion->SelectedItem);
+			}
+		}
+		tag->AppendChild( CreateRomInfoListElement(doc, this->labRegion->Text, region, nullptr) );
 		section->AppendChild(tag);
 
 		// レーティング

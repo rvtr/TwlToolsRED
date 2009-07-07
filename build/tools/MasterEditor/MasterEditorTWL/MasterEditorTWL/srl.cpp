@@ -442,6 +442,11 @@ void RCSrl::setUnnecessaryRatingInfo( u32 region )
 	System::Collections::Generic::List<int> ^ognlist = MasterEditorTWL::getOgnListInRegion( region );
 	if( ognlist == nullptr )
 	{
+		// 中国のときレーティング団体は存在しないがレーティング表示不要の選択は可能なので警告しておく
+		if( this->IsUnnecessaryRating )
+		{
+			this->hParentalWarnList->Add( this->makeMrcError("UnnecessaryRatingSetting") );
+		}
 		return;
 	}
 

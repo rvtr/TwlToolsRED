@@ -452,9 +452,9 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 					if( hSrl->IsSDRead && hSrl->IsSDWrite )
 						node->FirstChild->Value = gcnew System::String("Read/Write");
 					else if( hSrl->IsSDRead )
-						node->FirstChild->Value = gcnew System::String("Read Only");
+						node->FirstChild->Value = gcnew System::String("Read");
 					else if( hSrl->IsSDWrite )
-						node->FirstChild->Value = gcnew System::String("Write Only");
+						node->FirstChild->Value = gcnew System::String("Write");
 					else
 						node->FirstChild->Value = gcnew System::String("None");
 				}

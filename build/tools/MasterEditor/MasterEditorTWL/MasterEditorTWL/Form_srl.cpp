@@ -402,6 +402,13 @@ System::Boolean Form1::checkSrlForms(void)
 		break;
 	}
 
+	// 韓国は選択できないので特殊な条件となる
+	if( (this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown) 
+		&& this->hSrl->IsRegionKorea )
+	{
+		bKorea = true;
+	}
+
 	// ペアレンタルコントロール
 	if( this->cboxIsUnnecessaryRating->Checked )
 	{

@@ -55,11 +55,11 @@ void Form1::changeFormInput( System::String ^langname )
 		this->labArbit2->Visible     = true;
 		this->labArbit4->Visible     = true;
 
-		// 日本ではInternet提出を認めない
+		// 日本ではInternet提出を認めないので表示を消す
 		if( this->rSubmitInternet->Checked )
 		{
-			this->rSubmitInternet->Checked = false;		// 表示を消したときに選択されている項目がない状況を防ぐ
-			this->rSubmitPost->Checked     = true;
+			this->rSubmitInternet->Checked = false;		// Internetが選択されているときに表示を消すとどれも選択されていない状況になるので
+			this->rSubmitPost->Checked     = true;		// 必ずどれか1つが選択されているようにしておく
 		}
 		this->rSubmitInternet->Enabled = false;
 		this->rSubmitInternet->Visible = false;
@@ -480,6 +480,12 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	{
 		this->setSrlFormsTextBox();
 	}
+
+	// 中国用特別メッセージ
+	// デフォルトでVisible=falseなのでリソースを読み込みなおすと表示されていてもVisible=falseに初期化されてしまう
+	bool visible = this->tboxWarningChinaRating->Visible;
+	resources->ApplyResources(this->tboxWarningChinaRating, L"tboxWarningChinaRating");
+	this->tboxWarningChinaRating->Visible = visible;
 
 	// バックアップメモリのテキストボックス
 	this->combBackup_SelectedIndexChanged( nullptr, nullptr );

@@ -231,9 +231,12 @@ void Form1::maskRatingForms(void)
 	this->enableRating( this->combGRB, this->labGRB, nullptr );
 
 	// 中韓リージョンは設定不可なので特別処理
+	this->tboxWarningChinaRating->Visible = false;
 	if( (this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown) // コンボボックスが中韓リージョン用になっているとき
 		&& this->hSrl->IsRegionChina )	// SRLが読み込まれていることは保証される
 	{
+		this->tboxWarningChinaRating->Visible = true;	// 中国用の特別メッセージを表示する
+
 		// 中国にレーティング団体なし
 		this->disableRating( this->combCERO, this->labCERO, nullptr );
 		this->disableRating( this->combESRB,  this->labESRB, nullptr );

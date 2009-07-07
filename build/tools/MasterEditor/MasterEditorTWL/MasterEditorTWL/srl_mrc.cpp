@@ -968,6 +968,10 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 	System::Boolean isOldExNTR = false;
 	System::Boolean isPR   = false;
 	System::Boolean isRC   = false;
+	System::Boolean isPRExTWL = false;
+	System::Boolean isRCExTWL = false;
+	System::Boolean isPRExNTR = false;
+	System::Boolean isRCExNTR = false;
 	for each( RCSDKVersion ^sdk in this->hSDKList )
 	{
 		if( sdk->IsStatic )
@@ -986,10 +990,14 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 				u32 major = sdk->Code >> 24;
 				if( major >= 5 )	// TWLSDK
 				{
+					isPRExTWL  = MasterEditorTWL::IsSDKVersionPR( sdk->Code );
+					isRCExTWL  = MasterEditorTWL::IsSDKVersionRC( sdk->Code );
 					isOldExTWL = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticTWL, false );
 				}
 				else				// NTRSDK
 				{
+					isPRExNTR  = MasterEditorTWL::IsSDKVersionPR( sdk->Code );
+					isRCExNTR  = MasterEditorTWL::IsSDKVersionRC( sdk->Code );
 					isOldExNTR = MasterEditorTWL::IsOldSDKVersion( sdk->Code, this->hMrcExternalCheckItems->SDKVerNotStaticNTR, false );
 				}
 			}
@@ -999,14 +1007,6 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 	{
 		this->hWarnList->Add( this->makeMrcError("SDKVersionOld") );
 	}
-	if( isOldExTWL )
-	{
-		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleTwlOld") );
-	}
-	if( isOldExNTR )
-	{
-		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleNtrOld") );
-	}
 	if( isPR )
 	{
 		this->hWarnList->Add( this->makeMrcError("SDKVersionPR") );
@@ -1015,7 +1015,31 @@ void RCSrl::mrcSDKVersion(FILE *fp)
 	{
 		this->hWarnList->Add( this->makeMrcError("SDKVersionRC") );
 	}
-}
+	if( isOldExTWL )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleTwlOld") );
+	}
+	if( isPRExTWL )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleTwlPR") );
+	}
+	if( isRCExTWL )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleTwlRC") );
+	}
+	if( isOldExNTR )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleNtrOld") );
+	}
+	if( isPRExNTR )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleNtrPR") );
+	}
+	if( isRCExNTR )
+	{
+		this->hWarnList->Add( this->makeMrcError("SDKVersionExModuleNtrRC") );
+	}
+} //RCSrl::mrcSDKVersion
 
 // -------------------------------------------------------------------
 // バナー文字のチェック

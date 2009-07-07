@@ -12,6 +12,7 @@ tcl_card="./tcl_card.srl"
 tcl_nand="./tcl_nand.nand.srl"
 china_nand="./china_nand.nand.srl"
 
+usr_nand_50rel="./regular_nand_50rel.srl"
 usr_nand_52rc="./regular_nand_52rc.srl"
 usr_card_52rel="./regular_card_52rel.srl"
 usr_nand_52rel="./regular_nand_52rel.srl"
@@ -172,11 +173,12 @@ $maker $sys_nand $outdir/access_nand_sys31.srl 1B4 -4 -e 31 -f
 #
 
 $maker $usr_card_52rel $outdir/sd_access_card1.srl 1B4 -4 -E 00006008 -f
-$maker $usr_nand_52rc  $outdir/sd_access_nand1.srl 1B4 -4 -E 00000008 -f
-$maker $usr_nand_52rel $outdir/sd_access_nand2.srl 1B4 -4 -E 00000008 -f
-$maker $usr_nand_53pr  $outdir/sd_access_nand3.srl 1B4 -4 -E 00004008 -f
-$maker $usr_nand_52rel $outdir/sd_access_nand4.srl 1B4 -4 -E 00006008 -f
-cp $usr_nand_52rc  $outdir/sd_access_nand5.srl -f
+$maker $usr_nand_50rel $outdir/sd_access_nand1.srl 1B4 -4 -E 00000008 -f
+$maker $usr_nand_52rc  $outdir/sd_access_nand2.srl 1B4 -4 -E 00006008 -f
+$maker $usr_nand_52rel $outdir/sd_access_nand3.srl 1B4 -4 -E 00000008 -f
+$maker $usr_nand_53pr  $outdir/sd_access_nand4.srl 1B4 -4 -E 00004008 -f
+$maker $usr_nand_52rel $outdir/sd_access_nand5.srl 1B4 -4 -E 00006008 -f
+cp $usr_nand_52rc  $outdir/sd_access_nand6.srl -f
 
 #
 # Photo Access

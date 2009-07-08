@@ -202,6 +202,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\banner_char_china.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\banner_char_korea.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\banner_char_worldwide.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\crc_whole.cpp"
 				>
 			</File>
@@ -215,6 +227,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form_deliv.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form_errorlist.cpp"
 				>
 			</File>
 			<File
@@ -235,6 +251,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form_pctl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\Form_rominfolist.cpp"
 				>
 			</File>
 			<File
@@ -312,6 +332,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\banner_char.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\common.h"
 				>
 			</File>
@@ -364,6 +388,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\message_bank.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\MasterEditorTWL\MasterEditorTWL\middleware_name_list.h"
 				>
 			</File>
 			<File

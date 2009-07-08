@@ -77,6 +77,16 @@
 <E_MWList_Default>ミドルウェアリストの作成に失敗しました。</E_MWList_Default>
 <MWList_Success>ミドルウェアリストの作成に成功しました。</MWList_Success>
 
+<!-- Export Error List -->
+<E_ErrList_Empty>ROMデータファイルが読み込まれていません。</E_ErrList_Empty>
+<E_ErrList_Default>エラーリストの作成に失敗しました。</E_ErrList_Default>
+<ErrList_Success>エラーリストの作成に成功しました。</ErrList_Success>
+
+<!-- ROM Info List -->
+<E_RomInfoList_Empty>ROMデータファイルが読み込まれていません。</E_RomInfoList_Empty>
+<E_RomInfoList_Default>ROM情報リストの作成に失敗しました。</E_RomInfoList_Default>
+<RomInfoList_Success>ROM情報リストの作成に成功しました。</RomInfoList_Success>
+
 <!-- Save Temp File -->
 <E_SaveTemp>一時情報の保存に失敗しました。</E_SaveTemp>
 

@@ -1,5 +1,165 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
+
+<!-- 英訳依頼 ここから (ver.1.6 追加メッセージ) -->
+
+	<!-- Clone Boot -->
+	<NandHybridBefore51PR>
+		<name>NANDアプリのHYBRID条件</name>
+		<sentence>TwlSDK5.1PRよりも前のバージョンをご使用の場合、HYBRID版NANDアプリを作成するためには、弊社窓口への確認が必要です。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandHybridBefore51PR>
+
+	<!-- Access Control -->
+	<PhotoTclAccessUser>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoTclAccessUser>
+	<SDAccessPriv>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのアクセス権の設定が不十分です。RSFファイルのSDCardAccessプロパティに"None"、"Read"、"Write"、"ReadWrite"のいずれかを指定する必要があります。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessPriv>
+
+	<!-- For Korea -->
+	<KoreaFlagNegated>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国であるにもかかわらず、RSFファイルでForKoreaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagNegated>
+	<KoreaFlagAsserted>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国でないにもかかわらず、RSFファイルでForKoreaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagAsserted>
+	<KoreaBannerCharSet>
+		<name>韓国版バナー</name>
+		<sentence>韓国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</KoreaBannerCharSet>
+
+	<!-- For China -->
+	<ChinaFlagNegated>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、RSFファイルでForChinaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagNegated>
+	<ChinaFlagAsserted>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、RSFファイルでForChinaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagAsserted>
+	<OSInitChinaUnused>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、OS_InitChina関数が使用されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUnused>
+	<OSInitChinaUsed>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、OS_InitChina関数が使用されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUsed>
+	<ChinaBannerCharSet>
+		<name>中国版バナー</name>
+		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ChinaBannerCharSet>
+	<ChinaAllRatingFree>
+		<name>レーティング(中国版対応)</name>
+		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</ChinaAllRatingFree>
+
+	<!-- For DS Station -->
+	<DSStationTmpJump>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</DSStationTmpJump>
+
+	<DSStationRomSize>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationRomSize>
+
+	<DSStationLib>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationLib>
+
+	<!-- For Nintendo Zone -->
+	<ZoneTmpJump>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ZoneTmpJump>
+
+	<ZoneHybrid>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneHybrid>
+
+	<ZoneRomSize>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneRomSize>
+
+	<!-- SDK Version -->
+	<SDKVersionExModuleTwlOld>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlOld>
+	<SDKVersionExModuleTwlPR>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>PR版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlPR>
+	<SDKVersionExModuleTwlRC>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>RC版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlRC>
+	<SDKVersionExModuleNtrOld>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrOld>
+	<SDKVersionExModuleNtrPR>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>PR版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrPR>
+	<SDKVersionExModuleNtrRC>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>RC版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrRC>
+
+	<!-- Application Jump -->
+	<NormalJumpCard>
+		<name>アプリジャンプ</name>
+		<sentence>ゲームカード向けのソフトではノーマルアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJumpCard>
+	<TmpJumpCard>
+		<name>アプリジャンプ</name>
+		<sentence>ゲームカード向けのソフトではtmpアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</TmpJumpCard>
+	<NormalJumpAndTmpJump>
+		<name>アプリジャンプ</name>
+		<sentence>ノーマルアプリジャンプとtmpジャンプを同時に設定することはできません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJumpAndTmpJump>
+
+<!-- 英訳依頼 ここまで -->
+
 	<!-- NTR Compatible Area -->
 	<TitleNameAscii>
 		<name>ソフトタイトル</name>
@@ -233,10 +393,20 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</NandAccessUser>
 	<SDAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>SDカードアクセス</name>
 		<sentence>SDカードへのアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</SDAccessUser>
+	<SDReadAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDReadAccessUser>
+	<SDWriteAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDWriteAccessUser>
 	<SDAccessSystem>
 		<name>アクセスコントロール情報</name>
 		<sentence>SDカードへアクセス可能になっています。</sentence>
@@ -262,18 +432,28 @@
 		<sentence>ゲームカードNTR互換領域へアクセス可能になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</GameCardNTRAccessSystem>
-	<PhotoReadAccessUser>
+	<GameCardReadAccessUser>
 		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardReadAccessUser>
+	<GameCardWriteAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardWriteAccessUser>
+	<PhotoReadAccessUser>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのリードアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoReadAccessUser>
 	<PhotoWriteAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのライトアクセスは許可されていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoWriteAccessUser>
 	<PhotoJpegSignAccessUser>
-		<name>アクセスコントロール情報</name>
+		<name>写真データベースアクセス</name>
 		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJPEG署名(JpegSign)が有効になっていません。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</PhotoJpegSignAccessUser>
@@ -283,8 +463,8 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserCard>
 	<JpegSignAccessUserNand>
-		<name>アクセスコントロール情報</name>
-		<sentence>写真データベースへのライトアクセスもしくはSDカードへのアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへのライトアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</JpegSignAccessUserNand>
 	<JpegSignAccessSystem>

@@ -77,6 +77,16 @@ Exception:{0}
 <E_MWList_Default>Failed to create the middleware list.</E_MWList_Default>
 <MWList_Success>Succeeded in creating middleware list.</MWList_Success>
 
+<!-- Export Error List -->
+<E_ErrList_Empty>ROM data file has not been read.</E_ErrList_Empty>
+<E_ErrList_Default>Failed to create the error list.</E_ErrList_Default>
+<ErrList_Success>Succeeded in creating error list.</ErrList_Success>
+
+<!-- ROM Info List -->
+<E_RomInfoList_Empty>ROM data file has not been read.</E_RomInfoList_Empty>
+<E_RomInfoList_Default>Failed to create the ROM info list.</E_RomInfoList_Default>
+<RomInfoList_Success>Succeeded in creating ROM info list.</RomInfoList_Success>
+
 <!-- Save Temp File -->
 <E_SaveTemp>Failed to save temporary information.</E_SaveTemp>
 

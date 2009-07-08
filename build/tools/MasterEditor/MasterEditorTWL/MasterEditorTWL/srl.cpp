@@ -81,10 +81,11 @@ ECSrlResult RCSrl::readFromFile( System::String ^srlfile )
 
 #ifdef METWL_WHETHER_PLATFORM_CHECK
 	// プラットフォームのチェック
-	if( ((tmprh.s.platform_code != PLATFORM_CODE_NTR) && (tmprh.s.enable_signature != 0)) ||	// PictoChat/DS-download-play のみこれに該当
-		(tmprh.s.platform_code != PLATFORM_CODE_TWL_HYBLID) ||
-		(tmprh.s.platform_code != PLATFORM_CODE_TWL_LIMITED) )
+	if( ((tmprh.s.platform_code == PLATFORM_CODE_NTR) && (tmprh.s.enable_signature != 0)) ||	// PictoChat/DS-download-play のみこれに該当
+		(tmprh.s.platform_code == PLATFORM_CODE_TWL_HYBLID) ||
+		(tmprh.s.platform_code == PLATFORM_CODE_TWL_LIMITED) )
 	{
+		// OK
 	}
 	else
 	{

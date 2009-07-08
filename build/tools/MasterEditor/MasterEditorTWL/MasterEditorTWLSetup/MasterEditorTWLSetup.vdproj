@@ -57,6 +57,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_69FDEF4B9A5E47BF87030D77CA500CF1"
+        "OwnerKey" = "8:_7746D2D347F0423FB46FA2300F6158A4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6EC739CA561443E48045379A268C1657"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -81,12 +87,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9A4C98C9607A4CEEB1387CAE0B84B00E"
-        "OwnerKey" = "8:_E883EFC68893406382842EBF3914550F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_A3417E9C9F294832AE49B5BDAF95E373"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -105,8 +105,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E883EFC68893406382842EBF3914550F"
-        "OwnerKey" = "8:_7746D2D347F0423FB46FA2300F6158A4"
+        "MsmKey" = "8:_EE72447B1EAC4E24A028D3AA3060EF26"
+        "OwnerKey" = "8:_69FDEF4B9A5E47BF87030D77CA500CF1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -402,7 +402,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.21616, Culture=en, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.31697, Culture=en, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -468,7 +468,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.21616, Culture=ja, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.31697, Culture=ja, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -631,7 +631,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MasterEditorTWL"
         "ProductCode" = "8:{B12B5AFF-26D1-47B5-85B6-1E2A7B5106F5}"
-        "PackageCode" = "8:{BC941A8A-6492-45BA-B175-8CCAAAD451B5}"
+        "PackageCode" = "8:{81911C57-DB7E-405D-9943-298C27E682F9}"
         "UpgradeCode" = "8:{CE22C209-7AE1-4F58-8F6B-6D044BA2A118}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1160,11 +1160,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_9A4C98C9607A4CEEB1387CAE0B84B00E"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_69FDEF4B9A5E47BF87030D77CA500CF1"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -1174,11 +1174,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_E883EFC68893406382842EBF3914550F"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_EE72447B1EAC4E24A028D3AA3060EF26"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }

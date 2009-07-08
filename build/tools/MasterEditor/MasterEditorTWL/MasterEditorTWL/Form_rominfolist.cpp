@@ -47,7 +47,7 @@ static System::Xml::XmlElement^ CreateSDKVersionListElement(System::Xml::XmlDocu
 {
 	System::Xml::XmlElement ^tag = doc->CreateElement("sdk-version");
 	MasterEditorTWL::appendXmlTag( doc, tag, "version",  version );
-	MasterEditorTWL::appendXmlTag( doc, tag, "is-static", (isStatic)?"Resident module":"" );
+	MasterEditorTWL::appendXmlTag( doc, tag, "is-static", (isStatic)?"Main SDK":"" );
 	return tag;
 }
 

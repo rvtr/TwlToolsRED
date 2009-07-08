@@ -236,11 +236,11 @@ $maker $usr_nand $outdir/icon_nand1.srl 1BF -E 18 -f
 $maker $usr_nand $outdir/titleid_lo_nand1.srl 230 -a 5A -f
 $faker $sys_nand $outdir/apptype_nand1.srl -f
 $maker $sys_nand $tmp_srl 238 -4 -a 01000000 -f
-$maker $tmp_srl $outdir/nand_size_nand1.srl 23C -4 -a 01000000 -f
+$maker $tmp_srl $outdir/nand_size_nand_sys1.srl 23C -4 -a 01000000 -f
 $maker $sys_nand $tmp_srl 238 -4 -a 00800000 -f
-$maker $tmp_srl $outdir/nand_size_nand2.srl 23C -4 -a 00800000 -f
+$maker $tmp_srl $outdir/nand_size_nand_sys2.srl 23C -4 -a 00800000 -f
 $maker $usr_nand $tmp_srl 238 -4 -a 00800000 -f
-$maker $tmp_srl $outdir/nand_size_nand3.srl 23C -4 -a 00800000 -f
+$maker $tmp_srl $outdir/nand_size_nand_usr1.srl 23C -4 -a 00800000 -f
 $maker $usr_card $outdir/seg3crc_card1.srl 3FFF -a 01 -f
 $maker $usr_card $outdir/aes_card1.srl 1C -d 1 -f
 $maker $usr_card $outdir/aes_card2.srl 224 -4 -a 00000000 -f

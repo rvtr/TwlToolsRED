@@ -15,8 +15,8 @@ rem 引数チェック
 set usage=USAGE: %~nx0 INPUT_FILE...
 if ""%1"" == """" (
 	echo %usage%
-	echo 使用方法が間違っています。
-	echo SRLもしくはXMLをドラッグアンドドロップしてください。
+	echo Illegal usage.
+	echo Drag and drop the SRL/XML.
 	echo.
 	goto end
 )
@@ -32,14 +32,14 @@ set input_file=%~dpnx1
 
 rem 処理本体
 echo.
-echo %~nx1をチェックします。
+echo check %~nx1
 echo.
 fc /B "%org_file%" "%input_file%"
 
 if not %ERRORLEVEL% == 0 (
-	echo 異なるファイルです。
+	echo *** Different files. ***
 ) else (
-	echo 相違はありません。
+	echo No difference.
 )
 
 rem 入力ファイルが残っているならbeginに戻る
@@ -49,5 +49,5 @@ if ""%1"" neq """" goto begin
 rem 終了 (キー入力待ち)
 :end
 echo.
-echo すべてのチェックが終了しました。
+echo All check end.
 pause

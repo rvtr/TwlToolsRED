@@ -244,7 +244,7 @@ Rating
 #	PEGI_PRT	FREE
 #	PEGI_BBFC	FREE
 #	OFLC		FREE
-#	GRB			FREE
+	GRB			FREE
 
 	#
 	# Unnecessary rating: [TRUE/FALSE]

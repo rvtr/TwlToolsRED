@@ -269,7 +269,7 @@
 	<table cellspacing="0">
 		<tr>
 			<th class="version">Version</th>
-			<th class="is-static">Area</th>
+			<th class="is-static">Type</th>
 			<th class="type">Note</th>
 		</tr>
 

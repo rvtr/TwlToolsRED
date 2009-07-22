@@ -10,9 +10,9 @@
 #  not be disclosed to third parties or copied or duplicated in any form,
 #  in whole or in part, without the prior written consent of Nintendo.
 #
-#  $Date:: 2008-05-08#$
-#  $Rev: 5904 $
-#  $Author: yosizaki $
+#  $Date:: 2009-06-09#$
+#  $Rev: 10716 $
+#  $Author: okajima_manabu $
 #---------------------------------------------------------------------------
 MEMORY
 {
@@ -266,6 +266,12 @@ SECTIONS
 			<FOREACH.LTDAUTOLOAD.LIBRARIES=.wram>
 			<LTDAUTOLOAD.LIBRARY=.wram:t>
 			<END.LTDAUTOLOAD.LIBRARIES>
+			<FOREACH.LTDAUTOLOAD.OBJECTS=.main>
+			<LTDAUTOLOAD.OBJECT=.main:t>
+			<END.LTDAUTOLOAD.OBJECTS>
+			<FOREACH.LTDAUTOLOAD.LIBRARIES=.main>
+			<LTDAUTOLOAD.LIBRARY=.main:t>
+			<END.LTDAUTOLOAD.LIBRARIES>
 			<FOREACH.LTDAUTOLOAD.OBJECTS=.ltdwram>
 			<LTDAUTOLOAD.OBJECT=.ltdwram:t>
 			<END.LTDAUTOLOAD.OBJECTS>
@@ -325,6 +331,12 @@ SECTIONS
 			<END.LTDAUTOLOAD.OBJECTS>
 			<FOREACH.LTDAUTOLOAD.LIBRARIES=.wram>
 			<LTDAUTOLOAD.LIBRARY=.wram.bss:t>
+			<END.LTDAUTOLOAD.LIBRARIES>
+			<FOREACH.LTDAUTOLOAD.OBJECTS=.main>
+			<LTDAUTOLOAD.OBJECT=.main.bss:t>
+			<END.LTDAUTOLOAD.OBJECTS>
+			<FOREACH.LTDAUTOLOAD.LIBRARIES=.main>
+			<LTDAUTOLOAD.LIBRARY=.main.bss:t>
 			<END.LTDAUTOLOAD.LIBRARIES>
 			<FOREACH.LTDAUTOLOAD.OBJECTS=.ltdwram>
 			<LTDAUTOLOAD.OBJECT=.ltdwram.bss:t>

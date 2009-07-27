@@ -7,6 +7,10 @@
 
 #include "ecdl.h"
 
+#include <NitroWiFi/nhttp.h>
+#include <NitroWiFi/nssl.h>
+#include <NitroWiFi/ncfg.h>
+
 #include        "font.h"
 #include        "text.h"
 #include        "mprintf.h"
@@ -21,16 +25,27 @@
 #include        "myfilename.h"
 
 #include        "pre_install.h"
+#include        "hatamotolib.h"
+#include        "mywlan.h"
+#include        "netconnect.h"
+#include        "sitedefs.h"
+#include        "wcm_control.h"
+
+
 
 #define THREAD_COMMAND_INSTALL_APP           1
 #define THREAD_COMMAND_INSTALL_TICKET        2
 #define THREAD_COMMAND_DELETE_APP_CONTENT    3
 #define THREAD_COMMAND_DELETE_APP_COMPLETELY 4
+#define THREAD_COMMAND_DELETE_DEVKP          5
+#define THREAD_COMMAND_DOWNLOAD_APP          6
 
 
 static void init_my_thread(void);
 static BOOL start_my_thread(u32 command);
 
+static FSEventHook  sSDHook;
+static BOOL sd_card_flag = FALSE;
 
 static BOOL development_console_flag = FALSE;
 
@@ -57,26 +72,58 @@ static int eticket_only_id_count = 0;
 static void fill_command(void)
 {
   if( development_console_flag == FALSE ) {
+    /* 量産機用 */
     /*
       0x00030004484e474a, 0 , 0 , rom:/tads/TWL-HNGJ-v256.tad,
       0x000300044b32444a, 0 , 0 , rom:/tads/TWL-K2DJ-v0.tad,
       0x000300044b47554a, 0 , 0 , rom:/tads/TWL-KGUJ-v257.tad,
+
+      0x00030004434f5041, 0 , 0 , sdmc:/sdtads/en_CooperationA.tad,
+      0x0003001548485741, 0 , 0 , sdmc:/sdtads/en_HHWA.Release.tad,
+      0x0003000548504341, 0 , 0 , sdmc:/sdtads/en_HPCA.Release.tad,
+
     */
+#if 0
+    /* ROMのやつ */
     eticket_only_id_buf[0] =  0x00030004484e474a;
     eticket_only_id_buf[1] =  0x000300044b32444a;
     eticket_only_id_buf[2] =  0x000300044b47554a;
+#else
+    /* SDのやつ */
+    eticket_only_id_buf[0] =  0x00030004434f5041;
+    eticket_only_id_buf[1] =  0x0003001548485741;
+    eticket_only_id_buf[2] =  0x0003000548504341;
+#endif
     eticket_only_id_count = 3;
   }
   else {
+    /* 開発機用 */
     /*
+      ROM
       0x0003000434424e41, 0 , 0 , rom:/tads_dev/backupSample.tad,
       0x00030004344a4541, 0 , 0 , rom:/tads_dev/encodeSD.tad,
       0x0003000434534e41, 0 , 0 , rom:/tads_dev/nandAppSample.tad,
+
+      SD
+      0x0003000434424e41, 0 , 0 , sdmc:/sdtaddevs/en_backupSample.tad,
+      0x0003000444534943, 0 , 0 , sdmc:/sdtaddevs/en_chavitt.tad,
+      0x00030004344a4541, 0 , 0 , sdmc:/sdtaddevs/en_encodeSD.tad,
+      0x0003000434534e41, 0 , 0 , sdmc:/sdtaddevs/en_nandAppSample.tad,
     */
-    eticket_only_id_buf[2] =  0x0003000434424e41;
+
+#if 1
+    /* ROMのやつ */
+    eticket_only_id_buf[0] =  0x0003000434424e41;
     eticket_only_id_buf[1] =  0x00030004344a4541;
-    eticket_only_id_buf[0] =  0x0003000434534e41;
+    eticket_only_id_buf[2] =  0x0003000434534e41;
     eticket_only_id_count = 3;
+#else
+    /* SDのやつ */
+    eticket_only_id_buf[0] =  0x0003000434424e41;
+    eticket_only_id_buf[1] =  0x0003000434534e41;
+    eticket_only_id_count = 2;
+#endif
+
   }
 }
 
@@ -110,6 +157,110 @@ static void FreeForNAM(void* ptr)
     OS_RestoreInterrupts(old);
   }
 }
+
+
+static void SDEvents(void *userdata, FSEvent event, void *arg)
+{
+  (void)userdata;
+  (void)arg;
+  if (event == FS_EVENT_MEDIA_REMOVED) {
+    sd_card_flag = FALSE;
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("SD card:removed!\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+  else if (event == FS_EVENT_MEDIA_INSERTED) {
+    sd_card_flag = TRUE;
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf("SD card:inserted!\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+}
+
+
+static BOOL LoadWlanConfig(void)
+{
+  u8 buf[256];
+  int len;
+  int i;  /* ユーザーデータ書き込みモード */
+  if( TRUE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
+    OS_TPrintf("SSID = %s\n", GetWlanSSID()); 
+    OS_TPrintf("MODE = ");
+#if 0
+    mfprintf(tc[3],"SSID = %s\n", GetWlanSSID()); 
+    mfprintf(tc[3],"MODE = ");
+#endif
+    switch( GetWlanMode() ) {
+    case WCM_WEPMODE_NONE:
+      OS_TPrintf("NONE\n");
+      //      mfprintf(tc[3],"NONE\n");
+      break;
+    case WM_WEPMODE_40BIT:
+      OS_TPrintf("WEP40\n");
+      //      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WM_WEPMODE_104BIT:
+      OS_TPrintf("WEP104\n");
+      //      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WM_WEPMODE_128BIT:
+      OS_TPrintf("WEP128\n");
+      //      mfprintf(tc[3],"WEP128\n");
+      break;
+    case WCM_WEPMODE_WPA_TKIP:
+      OS_TPrintf("WPA-TKIP\n");
+      //      mfprintf(tc[3],"WPA-TKIP\n");
+      break;
+    case WCM_WEPMODE_WPA2_TKIP:
+      OS_TPrintf("WPA2-TKIP\n");
+      //      mfprintf(tc[3],"WPA2-TKIP\n");
+      break;
+    case WCM_WEPMODE_WPA_AES:
+      OS_TPrintf("WPA-AES\n");
+      //      mfprintf(tc[3],"WPA-AES\n");
+      break;
+    case WCM_WEPMODE_WPA2_AES :
+      OS_TPrintf("WPA2-AES\n");
+      //      mfprintf(tc[3],"WPA2-AES\n");
+      break;
+    defalut:
+      OS_TPrintf("Unknow mode..\n");
+      //      mfprintf(tc[3],"Unknow mode..\n");
+      break;
+    }
+
+    if( TRUE == GetKeyModeStr() ) {
+      OS_TPrintf("KEY STR = %s\n", GetWlanKEYSTR());
+      //      mfprintf(tc[3],"KEY STR = %s\n", GetWlanKEYSTR());
+    }
+    else {
+      len = GetWlanKEYBIN(buf);
+      if( len ) {
+	OS_TPrintf("KEY BIN = 0x");
+	//	mfprintf(tc[3],"KEY BIN = 0x");
+	for( i = 0 ; i < len ; i++ ) {
+	  OS_TPrintf("%02X",buf[i]);
+	  //	  mfprintf(tc[3],"%02X",buf[i]);
+	}
+	OS_TPrintf("\n");
+	//	mfprintf(tc[3],"\n");
+      }
+    }
+    //    mfprintf(tc[3],"\n");
+
+    if( TRUE == GetDhcpMODE() ) {
+      //      mfprintf(tc[3],"DHCP client\n");
+    }
+  }
+  else {
+    OS_TPrintf("Invalid wlan cfg file\n");
+    //    mfprintf(tc[3],"Invalid wlan cfg file\n");
+    mprintf("Invalid wlan cfg file\n");
+    return FALSE;
+  }
+  return TRUE;
+}
+
 
 void TwlMain(void)
 {
@@ -252,6 +403,8 @@ void TwlMain(void)
 
   OS_GetMacAddress( macAddress );
 
+OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
+
   mydata.shop_record_flag = FALSE;
   es_error_code = ES_GetDeviceId(&mydata.deviceId);
   if( es_error_code == ES_ERR_OK ) {
@@ -265,10 +418,26 @@ void TwlMain(void)
   else {
     OS_TPrintf("es_error_code = %d\n", es_error_code );
   }
-
+OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
   // NAM の初期化
   NAM_Init(&AllocForNAM, &FreeForNAM);
 
+
+  if( FALSE == SDCardValidation() ) {
+    sd_card_flag = FALSE;
+    m_set_palette(tc[0], 0x1);	/* red  */
+    mprintf("No SD card\n");
+  }
+  else {
+    sd_card_flag = TRUE;
+  }
+  m_set_palette(tc[0], 0xF);	/* white */
+
+
+  FS_RegisterEventHook("sdmc", &sSDHook, SDEvents, NULL);
+
+
+  // OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
 
   init_my_thread();
 
@@ -309,6 +478,15 @@ void TwlMain(void)
       fill_command();
       (void)start_my_thread(THREAD_COMMAND_DELETE_APP_COMPLETELY);
     }
+    else if ( keyData & PAD_BUTTON_START ) {
+      if( sd_card_flag == TRUE ) {
+	(void)start_my_thread(THREAD_COMMAND_DELETE_DEVKP);
+      }
+    }
+    else if ( keyData & PAD_BUTTON_SELECT ) {
+      (void)start_my_thread(THREAD_COMMAND_DOWNLOAD_APP);
+    }
+
 
 
     mfprintf(tc[1], "\fAuto Pre-install Tool");
@@ -401,6 +579,9 @@ void TwlMain(void)
     mfprintf(tc[1], "X -> Delete App. content\n");
     mfprintf(tc[1], "Y -> Delete App. completely\n");
 
+    mfprintf(tc[1], "START  -> Delete /sys/dev.kp\n");
+    mfprintf(tc[1], "SELECT -> Download App.\n");
+
     if( pushed_power_button == TRUE ) {
       OS_TPrintf("%s Power button pressed!\n",__FUNCTION__);
       PM_ReadyToExit();
@@ -414,6 +595,161 @@ void TwlMain(void)
 }
 
 
+
+static MY_USER_APP_TID title_id_buf_ptr[] = {
+  {0x000300044b47554a, 2, FALSE },
+  {0x000300044b32444a, 2, FALSE },
+  {0x00030004484e474a, 2, FALSE },
+  {0x00030004346b6941, 2, FALSE },
+  {0x00030004346b6a41, 2, FALSE },
+  {0x00030004346b6b41, 2, FALSE },
+  {0x00030004346b6c41, 2, FALSE },
+  {0x0003000434656241, 2, FALSE },
+  {0x0003000434657541, 2, FALSE },
+  {0x0003000430484141, 2, FALSE },
+  {0x0003000430484941, 2, FALSE },
+  {0x000300044b58374a, 2, FALSE },
+  {0x000300044b53394a, 2, FALSE }
+};
+
+static int title_id_count = sizeof(title_id_buf_ptr)/sizeof(MY_USER_APP_TID);
+
+#ifdef HATAMOTO_LIB
+static void ec_download_func(void)
+{
+  int i;
+  ECError rv;
+  BOOL ret_flag = TRUE;
+  int ec_download_ret;
+  char game_code_buf[5];
+  int is_personalized;
+  u64 tid;
+
+
+  mprintf("-wireless AP conf. load      ");
+  if( TRUE == LoadWlanConfig() ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    
+    SetupShopTitleId(); /* エラーはない */
+    
+    // ？：ユーザ設定がされていないと接続できないので適当に設定
+    // SetupUserInfo();
+    // 必須：バージョンデータのマウント
+    if( FALSE == SetupVerData() ) {
+      mprintf("%s failed SetupVerData\n", __FUNCTION__);
+      ret_flag = FALSE;
+      goto end_log_e;
+    }
+    
+    // 必須：ネットワークへの接続
+    if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
+      mprintf("%s failed NcStart\n", __FUNCTION__);
+      ret_flag = FALSE;
+      goto end_log_e;
+    }
+
+    /******** ネットワークにつないだ *************/
+    // 必須：HTTP と SSL の初期化
+    mprintf("-setup NSSL & NHTTP\n");
+    SetupNSSL();
+    if( FALSE == SetupNHTTP() ) {
+      ret_flag = FALSE;
+      mprintf(" %s failed SetupNHTTP\n", __FUNCTION__);
+      goto end_nhttp;
+    }
+
+      /******** NHTTP & NSSLにつないだ *************/
+      // 必須：EC の初期化
+    mprintf("-setup EC\n");
+    if( FALSE == SetupEC() ) {
+      ret_flag = FALSE;
+      mprintf(" %s failed SetupEC\n", __FUNCTION__);
+      goto end_ec;
+    }
+
+    // 必須：デバイス証明書の発行
+    if( FALSE == KPSClient() ) {
+      ret_flag = FALSE;
+      mprintf("%s failed KPSClient\n", __FUNCTION__);
+      goto end_ec_f;
+    }
+
+
+
+    for( i = 0; i < title_id_count ; i++ ) {
+      tid = title_id_buf_ptr[i].tid;
+      is_personalized = title_id_buf_ptr[i].is_personalized = 2;
+      (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+      mprintf(" id %08X %08X [%s] %c\n", (u32)(tid >> 32), (u32)tid, game_code_buf, 
+	      (is_personalized == 1)? 'P':'D');
+    }
+
+
+
+    ec_download_ret = ECDownload_Auto((MY_USER_APP_TID *)title_id_buf_ptr , (u32)title_id_count);
+
+    if( ec_download_ret == ECDOWNLOAD_FAILURE ) {
+      ret_flag = FALSE;
+      mprintf("%s failed ECDownload 1\n", __FUNCTION__);
+    }
+    else if( ec_download_ret == ECDOWNLOAD_DUMMY ) {
+      ret_flag = FALSE;
+      mprintf("%s failed ECDownload 2\n", __FUNCTION__);
+    }
+    // 不要：セーブデータ領域を作成
+    // NAM_Init を忘れてた
+
+    //      SetupTitlesDataFile((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count);
+
+    SetupTitlesDataFile((MY_USER_APP_TID *)title_id_buf_ptr , (u32)title_id_count);
+
+  end_ec_f:
+    // cleanup
+    // EC の終了処理
+    mprintf("-ec shutdown..               ");
+    rv = EC_Shutdown();
+    if( rv != EC_ERROR_OK ) {
+      ret_flag = FALSE;
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      mprintf("%s failed EC_Shutdown\n", __FUNCTION__);
+    }
+    else {
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+      mprintf("OK.\n");
+    }
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  end_ec:
+    // ネットワークからの切断
+    mprintf("-LINK DOWN....");
+    NHTTP_Cleanup();
+  end_nhttp:
+    NSSL_Finish();
+  end_nssl:
+    NcFinish();
+  end_nc:
+    //miya_log_fprintf(log_fd,"NSSL_Finish() return = %d\n", NSSL_Finish());
+    
+    TerminateWcmControl();
+    
+    mprintf("done.\n");
+    // EC が自分の Title ID のディレクトリを作成してしまうため、削除する
+    DeleteECDirectory();
+  end_log_e:
+    ;
+  }
+  else {
+    /* mprintf("-Wireless AP conf. loading.. "); */
+    ret_flag = FALSE;
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+  }
+  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+}
+#endif /* HATAMOTO_LIB */
 
 #define	MY_STACK_SIZE  (1024*128) /* でかいほうがいい */
 //#define	MY_THREAD_PRIO        20
@@ -461,6 +797,39 @@ static void MyThreadProc(void *arg)
       flag = pre_install_command(NULL, eticket_only_id_buf, eticket_only_id_count, 
 				 4, development_console_flag );
       break;
+
+    case THREAD_COMMAND_DELETE_DEVKP:
+#if 0
+      {
+	char *src_path = "nand:/sys/dev.kp";
+	char *dst_path = "sdmc:/dev.kp";
+	FSFile f;
+	FS_InitFile(&f);
+	if( FALSE == FS_OpenFileEx(&f, src_path, FS_FILEMODE_R) ) {
+	  if( FALSE == FS_OpenFileEx(&f, dst_path, FS_FILEMODE_R) ) {
+	    mprintf("no dev.kp file in NAND & SD\n");
+	  }
+	  else {
+	    FS_CloseFile(&f);
+	    (void)CopyFile(src_path, dst_path, NULL );
+	    mprintf("copy dev.kp from SD to NAND\n");
+	  }
+	}
+	else {
+	  FS_CloseFile(&f);
+	  (void)CopyFile(dst_path, src_path, NULL );
+	  FS_DeleteFile( src_path );
+	  mprintf("move dev.kp from NAND to SD\n");
+	}
+      }
+#endif
+      break;
+    case THREAD_COMMAND_DOWNLOAD_APP:
+#ifdef HATAMOTO_LIB
+      ec_download_func();
+#endif
+      break;
+
     default:
       flag = FALSE;
       mprintf("%s unknown command!\n",__FUNCTION__);

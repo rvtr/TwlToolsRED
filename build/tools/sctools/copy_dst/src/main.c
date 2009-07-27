@@ -1611,6 +1611,7 @@ void TwlMain(void)
 
   Gfx_Set_BG1_line_Color(1, 2, (u16)M_TEXT_COLOR_ORANGE);
 
+
   while( 1 ) {
     Gfx_Render( vram_num_main , vram_num_sub );
     OS_WaitVBlankIntr();
@@ -1664,22 +1665,7 @@ void TwlMain(void)
 		MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
 
-#if 1
 		start_my_thread( THREAD_COMMAND_WIFI_FUNCTION );
-#else
-		if( TRUE == RestoreFromSDCard3() ) {
-		  if( TRUE == stream_play_is_end() ) {
-		    stream_play1(); /* ok.aiff */
-		  }
-		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
-		}
-		else {
-		  if( TRUE == stream_play_is_end() ) {
-		    stream_play2();	/* ng.aiff */
-		  }
-		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
-		}
-#endif
 	      }
 	      else if( user_and_wifi_config_data_trans_flag == TRUE ) {
 		/* ユーザー設定と無線設定のみリストアする */
@@ -1689,22 +1675,8 @@ void TwlMain(void)
 		MydataLoadDecrypt_message_flag = TRUE;
 		MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
-#if 1
+
 		start_my_thread( THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION );
-#else
-		if( (TRUE == RestoreFromSDCard4()) && (TRUE == RestoreFromSDCard3() ) ) {
-		  if( TRUE == stream_play_is_end() ) {
-		    stream_play1(); /* ok.aiff */
-		  }
-		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKGREEN);
-		}
-		else {
-		  if( TRUE == stream_play_is_end() ) {
-		    stream_play2();	/* ng.aiff */
-		  }
-		  Gfx_Set_BG1_Color((u16)M_TEXT_COLOR_DARKRED);
-		}
-#endif
 	      }
 	      else {
 		mprintf("Personal data. restore       ");

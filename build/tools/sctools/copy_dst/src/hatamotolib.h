@@ -13,6 +13,7 @@ extern "C" {
 
 // int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds);
 int ECDownload(MY_USER_APP_TID * pTitleIds, u32 numTitleIds);
+int ECDownload_Auto(MY_USER_APP_TID *pTitleIds, u32 numTitleIds);
 
 BOOL KPSClient();
   // BOOL WaitEC(ECOpId opId);

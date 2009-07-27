@@ -855,6 +855,9 @@ static BOOL DownloadTitles(MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
   return ret_flag;
 }
 
+
+
+
 //int ECDownload(const NAMTitleId* pTitleIds, u32 numTitleIds)
 int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
 {
@@ -911,6 +914,7 @@ int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
     miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
     return ECDOWNLOAD_FAILURE;
   }
+
   else if( (status != 'P') && (status != 'T') ) {
     m_set_palette(tc[0], M_TEXT_COLOR_RED );
     mprintf("NG.\n");
@@ -999,6 +1003,315 @@ int ECDownload(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
   mprintf("-download titles\n");
 
   if( FALSE == DownloadTitles(pTitleIds, numTitleIds) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  
+  //#define ECDOWNLOAD_DUMMY       0
+  //#define ECDOWNLOAD_SUCCESS     1
+  //#define ECDOWNLOAD_NO_REGISTER 2
+  //#define ECDOWNLOAD_FAILURE     3
+
+  return ECDOWNLOAD_SUCCESS;
+}
+
+
+static BOOL DownloadTitles_Auto(MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
+{
+  s32 progress;
+  NAMTitleId tid;
+  BOOL ret_flag = TRUE;
+  //  ECDL_LOG("download");
+  char game_code_buf[5];
+
+  for( u32 i = 0; i < numTitleIds; i++ ) {
+    //      tid = pTitleIds[i];
+    if( pTitleIds[i].is_personalized == 1 ) {
+      /* 
+	 personalized ticketのときは何もしない、というかプリンストールもの 
+	 pTitleIds[i].is_personalized = 1 -> common 
+	 pTitleIds[i].is_personalized = 2 -> personalized
+      */
+    }
+    else {
+      tid = pTitleIds[i].tid;
+
+      /*
+
+typedef struct {
+    char       amount  [EC_AMOUNT_BUF_SIZE];
+    char       currency[EC_CURRENCY_BUF_SIZE];
+
+} ECMoney;
+
+typedef ECMoney ECPrice;
+
+typedef struct
+{
+    //  The id should be set to empty string
+    //  (i.e., id[0] = 0;) to use the default
+    //  account for the device.  When id[0] == 0,
+    //  the device accountId and deviceToken are used.
+
+    char id[EC_ACCOUNT_ID_BUF_SIZE];
+    char password[EC_ACCOUNT_PW_BUF_SIZE];
+
+} ECAccountPayment;
+
+typedef struct {
+    u32    code;      // limit algorithm
+      u32    limit;     // and limit 
+    u32    consumed;
+    s32    hasConsumption;
+
+} ECTitleLimit;
+
+        function getTitleLimits()
+        {
+            // Examples of using ECTitleLimit and ECTitleLimits
+            
+            // /**********
+
+            var limits = new ECTitleLimits ();
+            limits.set(0, "TR", 60*60*24*31);  // 31 days
+            limits.set(1, "LR", 10);           // 10 launches           
+            limits.set("1", "LR", "10");       // 10 launches           
+            
+            limits.set(8, "TR", 60*60*24*31);   // invalid index
+            showLimits (limits);
+                
+            // or
+            
+            var limits2 = new ECTitleLimits ();
+            setTitleLimits (limits2);  // passes obj by reference
+            showLimits (limits2);
+            
+            // or
+            
+            var limits3 = getTitleLimits2()
+            showLimits (limits3);
+            
+            // or
+            var no_limits = new ECTitleLimits ();  // default is PR
+           
+            return no_limits;
+        }
+
+
+	{
+	var downloadContent = true;
+	var itemId = "109792";  // lab7
+	var amount = "0";
+	var currency = "POINTS"
+	var price = new ECPrice (amount, currency);
+	var payment = new ECAccountPayment(); // buy with points
+                
+	var limits = getTitleLimits();
+        
+	var purchaseInfo = null;
+	var taxes       = null;
+	var discount    = null;
+        
+	var progress = ec.purchaseTitle (titleId, itemId,
+                                                 price, payment,
+                                                 limits,
+                                                 downloadContent, // optional
+                                                 taxes,           // optional
+                                                 purchaseInfo,    // optional
+                                                 discount);       // optional
+
+
+s32  EC_PurchaseTitleEx (ESTitleId          titleId,
+                         s32                itemId,
+                         ECPrice            price,
+                         const ECPayment   *payment,
+                         const ESLpEntry   *limits,
+                         u32                nLimits,
+                         s32                downloadContent,
+                         const char*        taxes,
+                         const char*        purchaseInfo,
+                         const char*        discount);
+
+      s32  EC_PurchaseTitle (ESTitleId          titleId,
+			     s32                itemId,
+			     s32                points,
+			     const ESLpEntry   *limits,
+			     u32                nLimits);
+      */
+
+      progress = EC_DownloadTitle(tid, EC_DT_UPDATE_REQUIRED_CONTENTS);
+      //      mprintf("-check registration..        ");
+      (void)my_fs_Tid_To_GameCode((u64)tid, game_code_buf);
+      game_code_buf[4] = '\0';
+      mprintf("  downloading.. [%s]       ", game_code_buf);
+      if( FALSE == WaitEC_with_NG_print(progress) ) {
+	/* EC_ERROR_NET_CONTENTはずす？エラーにせずにバックアップだけ復活してやるか？ */ 
+	miya_log_fprintf(log_fd, " %s download NG.\n",game_code_buf);
+	ret_flag = FALSE;
+      }
+      else {
+	pTitleIds[i].install_success_flag = TRUE;
+
+	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	mprintf("OK.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	miya_log_fprintf(log_fd, " %s download OK.\n",game_code_buf);
+      }
+    }
+  }
+  return ret_flag;
+}
+
+
+int ECDownload_Auto(MY_USER_APP_TID *pTitleIds, u32 numTitleIds)
+{
+  char challenge[EC_CHALLENGE_BUF_SIZE];
+  char status;
+  //  BOOL ret_flag;
+
+  STD_MemSet((void *)challenge,(int)0, EC_CHALLENGE_BUF_SIZE);
+
+  /*********************************/
+  mprintf("-check registration..        ");
+  miya_log_fprintf(log_fd, "-check registration...");
+
+  if( FALSE == CheckRegistration( &status ) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+
+  // U  unregistered
+  // R  registered
+  // P  pending
+  // T  transfered
+  if( status == '\0' ) {
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+    mprintf(" my error.\n");
+    miya_log_fprintf(log_fd, " my error.\n");
+    return ECDOWNLOAD_FAILURE;
+  }
+  else if( status == 'U') {
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf(" acount not transfered yet.\n");
+    //    mprintf("   OR, acount already cleared\n\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    miya_log_fprintf(log_fd, " acount not transfered yet.\n");
+    //    miya_log_fprintf(log_fd, "  OR acount already cleared by user.\n");
+    // 「ご利用記録の削除」をした場合、ここでエラーになる。
+    // ここでＯＫにする？
+    return ECDOWNLOAD_FAILURE;
+    //    return ECDOWNLOAD_NO_REGISTER;
+  }
+  else if( status == 'R') {
+    /* auto_pre_install のときだけ外す？ */
+    /* miya 2009/06/09 */
+    goto ok_label;
+
+    miya_log_fprintf(log_fd, "NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf(" already registered.\n please delete acount.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    miya_log_fprintf(log_fd, " already registered. please delete acount.\n");
+    return ECDOWNLOAD_FAILURE;
+  }
+
+  else if( (status != 'P') && (status != 'T') ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("NG.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+    mprintf(" invalid registration status '%c'\n", status );
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    miya_log_fprintf(log_fd, " invalid registration status '%c'\n", status );
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+  ok_label:
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+#if 0 /* miya 2009/06/09 */
+  /*********************************/
+  miya_log_fprintf(log_fd, "-get challenge1..");
+  mprintf("-get challenge1              ");
+  if( FALSE == GetChallenge(challenge) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  /*********************************/
+  miya_log_fprintf(log_fd, "-transfer.. ");
+  mprintf("-transfer                    ");
+  if( FALSE == Transfer(challenge) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+#endif
+
+  /*********************************/
+  miya_log_fprintf(log_fd, "-get challenge.. ");
+  mprintf("-get challenge2              ");
+  if( FALSE == GetChallenge(challenge) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  /*********************************/
+  miya_log_fprintf(log_fd, "-sync registration..");
+  mprintf("-sync registration           ");
+  if( FALSE == SyncRegistration(challenge) ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  /*********************************/
+  miya_log_fprintf(log_fd, "-sync tickets..");
+  mprintf("-sync tickets                ");
+  if( FALSE == SyncTickets() ) {
+    return ECDOWNLOAD_FAILURE;
+  }
+  else {
+    miya_log_fprintf(log_fd, "OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+    mprintf("OK.\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+  }
+
+  /*********************************/
+  // ここでアプリをダウンロードしている
+  miya_log_fprintf(log_fd, "-download titles\n");
+  mprintf("-download titles\n");
+
+  if( FALSE == DownloadTitles_Auto(pTitleIds, numTitleIds) ) {
     return ECDOWNLOAD_FAILURE;
   }
   

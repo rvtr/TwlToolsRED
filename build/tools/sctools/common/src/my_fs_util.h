@@ -21,6 +21,7 @@ extern "C" {
 typedef struct {
   u64 tid;
   int is_personalized;
+  int version;
   BOOL install_success_flag;
 } MY_USER_APP_TID;
 

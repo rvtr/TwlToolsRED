@@ -2822,7 +2822,9 @@ BOOL CleanSDCardFiles(char *log_file_name)
     }
     else if( STD_StrCmp(direntry.longname, "nup_log.txt") == 0 ) {
     }
-    else if( STD_StrCmp(direntry.longname, "tads") == 0 ) {
+    else if( STD_StrCmp(direntry.longname, "sdtads") == 0 ) {
+    }
+    else if( STD_StrCmp(direntry.longname, "sdtaddevs") == 0 ) {
     }
     else if( direntry.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
     }

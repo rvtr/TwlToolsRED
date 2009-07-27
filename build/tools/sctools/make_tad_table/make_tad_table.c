@@ -1,12 +1,6 @@
 /* 
-   gcc -mwindows -Wl,--subsystem,console -mno-cygwin -o titleidchecker titleidchecker.c
-
-   titleidchecker TWL-HNGJ-v256.tad.out
-   titleidchecker nandAppSample.tad
-
-
-   Makefile.TadIncludesÇ‡çÏÇÈÅB
-
+ [ROMóp] make_tad_table.exe -dir . -o table_file.txt -var MAKEROM_TAD_ROMFILES -fdir tads -mk Makefile.inc
+ [SDóp] make_tad_table.exe -dir . -o table_file.txt -fdir tads_sd
 */
 
 #include <stdio.h>

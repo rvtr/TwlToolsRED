@@ -27,7 +27,9 @@ SRCS			=	main.c mfiler.c key.c font.c text.c mprintf.c logprintf.c \
 				hatamotolib.cpp miya_mcu.c error_report.c \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
 				mynuc.c nuc_error_msg.c stream.c myfilename.c menu_version.c \
-				ntp.c myimport.c pre_install.c
+				ntp.c myimport.c pre_install.c \
+				my_rsa_sign.c my_aes.c my_sign.c 
+
 
 TARGET_BIN		=	copy_dst.srl
 ROM_SPEC		=	copy_dst.rsf

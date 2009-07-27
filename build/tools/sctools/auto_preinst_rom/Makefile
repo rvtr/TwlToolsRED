@@ -20,13 +20,18 @@ SUBDIRS			 = ./banner ../files/tads ../files/taddevs
 TARGET_PLATFORM		:= TWL
 TWL_ARCHGEN		:= LIMITED
 
-SRCDIR			=	../common/src ./src 
+SRCDIR			=	./src ../common/src
 
 SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
-				gfx.c hwi.c my_fs_util.c \
-				error_report.c \
+				gfx.c hwi.c mynvram.c my_fs_util.c \
+				miya_mcu.c error_report.c \
 				myfilename.c menu_version.c \
-				myimport.c pre_install.c
+				sitedefs.c wcm_control.c netconnect.c mywlan.c \
+				myimport.c pre_install.c \
+				my_rsa_sign.c my_aes.c my_sign.c 
+
+# hatamotolib.cpp 
+
 
 TARGET_BIN		=	auto_preinst_rom.srl
 ROM_SPEC		=	auto_preinst_rom.rsf
@@ -37,7 +42,8 @@ ES_DIR			=	$(ROOT)/add-ins/es
 ES_LATEST		=	$(shell ls -d $(ES_DIR)/es-sdk-*|sort|tail -n 1)
 ES_ROOT			=	$(ES_LATEST)
 
-LINCLUDES           = 	$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include ../common/src \
+LINCLUDES           = 	../common/src ../copy_dst/src \
+			$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/nam/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/ese/common/include \
 			$(ES_ROOT)/twl/include	$(ES_ROOT)/common/lib/ec/include

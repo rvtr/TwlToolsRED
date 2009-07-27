@@ -39,6 +39,9 @@ typedef struct {
   MY_SIGN_HEADER header;
   u8 *block_buf_in;
   u8 *block_buf_out;
+  BOOL now_cache;
+  void *cache_msfile;
+  int cache_block_no;
 } MY_SIGN_File;
 
 BOOL my_sign_FS_OpenFile(MY_SIGN_File *msfile, char *path);

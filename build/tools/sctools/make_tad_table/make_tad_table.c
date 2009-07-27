@@ -1,6 +1,6 @@
 /* 
  [ROM用] make_tad_table.exe -dir . -o table_file.txt -var MAKEROM_TAD_ROMFILES -fdir tads -mk Makefile.inc
- [SD用] make_tad_table.exe -dir . -o table_file.txt -fdir tads_sd
+ [SD用] make_tad_table.exe -sd -dir . -o table_file.txt -fdir sdtads
 */
 
 #include <stdio.h>
@@ -201,7 +201,7 @@ static write_tad_table_form(FILE *fp, u32 tid_hi, u32 tid_lo, char *filename)
 }
 #endif
 
-static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out, FILE *fp_mk)
+static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out, FILE *fp_mk, BOOL is_sd )
 {
   FILE *fp_in = NULL;
   TAD_INFO tad_info;
@@ -214,7 +214,8 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
     fprintf(stderr, "error: file open %s\n",path);
     goto end_file;
   }
-    
+
+  /* TADファイルかどうかチェック */
   if( FALSE == read_tad_info(fp_in, &tad_info) ) {
     //    fprintf(stderr, "error:%s %d\n",__FUNCTION__,__LINE__);
     goto end_file;
@@ -239,13 +240,23 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   }
 
   if( fp_out ) {
-    fprintf(fp_out, "0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    if( is_sd == FALSE ) {
+      fprintf(fp_out, "0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    }
+    else {
+      fprintf(fp_out, "0x%08x%08x, %d , %d , sdmc:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    }
     if( fp_mk ) {
       fprintf(fp_mk, "\t\t%s \\\n", d_name);
     }
   }
   else {
-    printf("0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    if( is_sd == FALSE ) {
+      printf("0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    }
+    else {
+      printf("0x%08x%08x, %d , %d , sdmc:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+    }
   }
 
 
@@ -278,6 +289,7 @@ int main(int argc, char **argv)
   BOOL mk_file_flag = FALSE;
   BOOL var_name_flag = FALSE;
   BOOL file_dir_flag = FALSE;
+  BOOL sd_flag = FALSE;
 
   char *prog;
   int badops = 0;
@@ -340,6 +352,9 @@ int main(int argc, char **argv)
     else if (strcmp(*argv,"-d") == 0 ) {
       debug_print_flag = TRUE;
     }
+    else if (strcmp(*argv,"-sd") == 0 ) {
+      sd_flag = TRUE;
+    }
     else if ( !read_file_flag ) {
       infile = *argv;
       read_file_flag = TRUE;
@@ -395,7 +410,7 @@ int main(int argc, char **argv)
 
 
     
-
+    /* ディレクトリ中のTADファイルをリストにして表示する。 */
     while( (dr = readdir(dir)) != NULL ) {
       if (!strcmp(dr->d_name, ".") || !strcmp(dr->d_name, "..")) {
 	continue;
@@ -425,11 +440,14 @@ int main(int argc, char **argv)
 	  if( file_dir_flag ) {
 	    strcpy( rom_file_full_path, file_dir);
 	    strcat( rom_file_full_path, "/");
+	    if( sd_flag == TRUE ) {
+	      strcat( rom_file_full_path, "en_");
+	    }
 	    strcat( rom_file_full_path, dr->d_name);
-	    read_file_and_print_titleid( full_path ,rom_file_full_path, fp_out , fp_mk );
+	    read_file_and_print_titleid( full_path ,rom_file_full_path, fp_out , fp_mk , sd_flag);
 	  }
 	  else {
-	    read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk );
+	    read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk , sd_flag);
 	  }
 	}
       }

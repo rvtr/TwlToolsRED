@@ -475,6 +475,9 @@ static BOOL pre_install_load_sd_file(char *path, FSFile *log_fd)
   int temp_filename_count;
   char c;
 
+
+  OS_TPrintf("%s %d path=%s\n", __FUNCTION__,__LINE__,path);
+
   my_sign_FS_InitFile(&file);
 
   bSuccess = my_sign_FS_OpenFile(&file, path);

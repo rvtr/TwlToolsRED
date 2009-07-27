@@ -74,6 +74,16 @@ typedef unsigned long long u64;
 static FILE *fp_key = NULL;
 static int rsaSize;
 
+static u8 my_sign_aes_key[AES_KEY_BYTE_LEN] = {
+  0x02,0xB6,0x01,0xD8,0x01,0x80,0x01,0x77,0xB4,0x01,0xCB,0x01,0xBD,0x5F,0x18,0x0F,
+  0xF6,0x39,0x9C,0xC6,0x90,0xAC,0xC1,0x0D,0x03,0x74,0x6E,0x8D,0xD1,0xBA,0x37,0x46
+};
+
+static u8 my_sign_aes_iv[AES_BLOCK_SIZE] = {
+  0xC3,0x85,0x93,0xFE,0xA8,0x2D,0xBF,0xFB,0xED,0x42,0xE0,0x42,0xFD,0x17,0x04,0xB0
+};
+
+
 static int my_sign_make(MY_SIGN_SIGNATURE *encrypted_sign, u8 *buf, int buf_size)
 {
   MY_SIGN_SIGNATURE temp_sign;
@@ -331,13 +341,22 @@ int main(int ac, char *argv[])
 
 
       /* AESキーのセット */
+#if 1
+      for( i = 0 ; i < AES_KEY_BYTE_LEN ; i++ ) {
+	aes_key_buf[i] = my_sign_aes_key[i];
+      }
+      for( i = 0 ; i < AES_BLOCK_SIZE ; i++ ) {
+	aes_iv[i] = my_sign_aes_iv[i];
+      }
+#else
       for( i = 0 ; i < AES_KEY_BYTE_LEN ; i++ ) {
 	aes_key_buf[i] = (u8)i;
       }
-      AES_set_encrypt_key(aes_key_buf, AES_KEY_BIT_LEN, &aes_key);
       for( i = 0 ; i < AES_BLOCK_SIZE ; i++ ) {
 	aes_iv[i] = (u8)i;
       }
+#endif
+      AES_set_encrypt_key(aes_key_buf, AES_KEY_BIT_LEN, &aes_key);
 
       memset(block_buf_out, 0 , MY_SIGN_BLOCK_SIZE);
       for( i = 0 ; i < (MY_SIGN_BLOCK_SIZE / AES_BLOCK_SIZE) ; i++ ) {

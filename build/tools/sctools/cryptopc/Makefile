@@ -2,8 +2,8 @@ PACKAGE	= cryptopc
 
 OPENSSL_DIR = c:/OpenSSL/openssl-1.0.0-beta2
 
-# SRCS	= main.c
-SRCS	= m.c
+SRCS	= main.c
+# SRCS	= m.c
 
 HEADS	= my_sign.h
 

@@ -8,6 +8,16 @@
 #define AES_KEY_BIT_LEN 256
 #define AES_KEY_BYTE_LEN (AES_KEY_BIT_LEN/8)
 
+static u8 my_sign_aes_key[AES_KEY_BYTE_LEN] = {
+  0x02,0xB6,0x01,0xD8,0x01,0x80,0x01,0x77,0xB4,0x01,0xCB,0x01,0xBD,0x5F,0x18,0x0F,
+  0xF6,0x39,0x9C,0xC6,0x90,0xAC,0xC1,0x0D,0x03,0x74,0x6E,0x8D,0xD1,0xBA,0x37,0x46
+};
+
+static u8 my_sign_aes_iv[AES_BLOCK_SIZE] = {
+  0xC3,0x85,0x93,0xFE,0xA8,0x2D,0xBF,0xFB,0xED,0x42,0xE0,0x42,0xFD,0x17,0x04,0xB0
+};
+
+
 
 static BOOL my_sign_check(MY_SIGN_SIGNATURE *encrypted_sign, u8 *buf, int buf_size)
 {
@@ -112,9 +122,6 @@ BOOL my_sign_FS_OpenFile(MY_SIGN_File *msfile, char *path)
   if( msfile == NULL ) {
     return FALSE;
   }
-
-  //  OS_TPrintf("hash offset = %d\n",offsetof(MY_SIGN_SIGNATURE, hash));
-  
 
   RsaTestInit();
 
@@ -229,31 +236,12 @@ int my_sign_FS_ReadFile(MY_SIGN_File *msfile, u8 *buf, int buf_size)
   u8 *user_buf_ptr;
   int num = 0;
   int readlen;
+  int temp_size;
+  BOOL cache_valid_flag;
 
   if( msfile->open_flag != TRUE ) {
     return -1; /* error */
   }
-
-  //  msfile->pos = 0;  /* original file pos */
-  // MY_SIGN_BLOCK_SIZE
-  /*  
-      typedef struct {
-      u32 magic_code;
-      u32 org_file_size;
-      u32 num_of_block;
-      u32 file_offset_L2_sign_table;
-      u32 file_offset_data_block;
-      u32 dummy[3];
-      MY_SIGN_SIGNATURE L2_sign;
-      } MY_SIGN_HEADER;
-  */
-
-  //  header.file_offset_data_block;
-
-
-  //  OS_TPrintf("%s %d\n",__FUNCTION__, __LINE__);
-
-  
 
   user_buf_size = buf_size;
   user_buf_ptr = buf;
@@ -262,79 +250,97 @@ int my_sign_FS_ReadFile(MY_SIGN_File *msfile, u8 *buf, int buf_size)
     return 0;
   }
 
+  while( user_buf_size > 0 ) {
+    block_no = msfile->pos / MY_SIGN_BLOCK_SIZE;
+    block_buf_out_pos  = msfile->pos % MY_SIGN_BLOCK_SIZE;
 
- loop_0:
-
-  block_no = msfile->pos / MY_SIGN_BLOCK_SIZE;
-  block_buf_out_pos  = msfile->pos % MY_SIGN_BLOCK_SIZE;
-
-  if( block_no >= (int)msfile->header.num_of_block ) {
-    return -1;
-  }
-  
-
-  //  OS_TPrintf("%s %d pos = %d block_no = %d\n",__FUNCTION__, __LINE__,msfile->pos, block_no);
-
-
-  enc_file_pos = (int)msfile->header.file_offset_data_block + block_no * MY_SIGN_BLOCK_SIZE;
-  if( FALSE == FS_SeekFile(&(msfile->f), enc_file_pos , FS_SEEK_SET) ) {
-    return -1;
-  }
-
-
-  readlen = FS_ReadFile(&(msfile->f), msfile->block_buf_in, MY_SIGN_BLOCK_SIZE);
-  if( readlen != MY_SIGN_BLOCK_SIZE ) {
-    OS_TPrintf("%s %d Failed read File readlen=%d\n",__FUNCTION__, __LINE__, readlen);
-    return -1;
-  }
-
-
-
-
-  L2_sign_table_temp = msfile->L2_sign_table + block_no;
-    
-  /*  データブロックの署名チェック */
-  if( FALSE == my_sign_check( L2_sign_table_temp, msfile->block_buf_in, MY_SIGN_BLOCK_SIZE) ) {
-    OS_TPrintf("Data Hash check Error!\n");
-    return -1;
-  }
-
-  /* AESキーのセット */
-  for( i = 0 ; i < AES_KEY_BYTE_LEN ; i++ ) {
-    aes_key_buf[i] = (u8)i;
-  }
-  AES_set_decrypt_key(aes_key_buf, AES_KEY_BIT_LEN, &aes_key);
-  
-  for( i = 0 ; i < AES_BLOCK_SIZE ; i++ ) {
-    aes_iv[i] = (u8)i;
-  }
-  
-  memset(msfile->block_buf_out, 0 , MY_SIGN_BLOCK_SIZE);
-  
-  /* AES復号化 */
-  for( i = 0 ; i < (MY_SIGN_BLOCK_SIZE / AES_BLOCK_SIZE) ; i++ ) {
-    AES_cbc_encrypt( &(msfile->block_buf_in[AES_BLOCK_SIZE*i]), &(msfile->block_buf_out[AES_BLOCK_SIZE*i]), 
-		     AES_BLOCK_SIZE, &aes_key, aes_iv, AES_DECRYPT );
-    
-  }
-  
-  //  block_no
-  while( user_buf_size ) {
-    if( msfile->pos >= (int)msfile->header.org_file_size ) { 
-      goto end;
-    }
-    if( block_buf_out_pos >= MY_SIGN_BLOCK_SIZE ) {
+    if( block_no >= (int)msfile->header.num_of_block ) {
+      OS_TPrintf("%s %d pos = %d block_no = %d\n",__FUNCTION__, __LINE__,msfile->pos, block_no);
       break;
     }
-    *user_buf_ptr++ = msfile->block_buf_out[block_buf_out_pos];
-    block_buf_out_pos++;
-    msfile->pos++;
-    user_buf_size--;
-    num++;
+  
+    //  OS_TPrintf("%s %d pos = %d block_no = %d\n",__FUNCTION__, __LINE__,msfile->pos, block_no);
+
+    enc_file_pos = (int)msfile->header.file_offset_data_block + block_no * MY_SIGN_BLOCK_SIZE;
+
+    cache_valid_flag = FALSE;
+    if( msfile->now_cache == TRUE ) {
+      if( msfile->cache_msfile == (void *)msfile ) {
+	if( msfile->cache_block_no == block_no ) {
+	  cache_valid_flag = TRUE;
+	}
+      }
+    }
+
+    if( cache_valid_flag == FALSE ) {
+      if( FALSE == FS_SeekFile(&(msfile->f), enc_file_pos , FS_SEEK_SET) ) {
+	OS_TPrintf("%s %d Failed seek File pos=%d\n",__FUNCTION__, __LINE__, enc_file_pos );
+	return -1;
+      }
+      
+      readlen = FS_ReadFile(&(msfile->f), msfile->block_buf_in, MY_SIGN_BLOCK_SIZE);
+      if( readlen != MY_SIGN_BLOCK_SIZE ) {
+	OS_TPrintf("%s %d Failed read File readlen=%d\n",__FUNCTION__, __LINE__, readlen);
+	return -1;
+      }
+      
+      L2_sign_table_temp = msfile->L2_sign_table + block_no;
+      
+      /*  データブロックの署名チェック */
+      if( FALSE == my_sign_check( L2_sign_table_temp, msfile->block_buf_in, MY_SIGN_BLOCK_SIZE) ) {
+	OS_TPrintf("Data Hash check Error!\n");
+	return -1;
+      }
+
+      /* AESキーのセット */
+#if 1
+      for( i = 0 ; i < AES_KEY_BYTE_LEN ; i++ ) {
+	aes_key_buf[i] = my_sign_aes_key[i];
+      }
+      for( i = 0 ; i < AES_BLOCK_SIZE ; i++ ) {
+	aes_iv[i] = my_sign_aes_iv[i];
+      }
+#else
+      for( i = 0 ; i < AES_KEY_BYTE_LEN ; i++ ) {
+	aes_key_buf[i] = (u8)i;
+      }
+      for( i = 0 ; i < AES_BLOCK_SIZE ; i++ ) {
+	aes_iv[i] = (u8)i;
+      }
+#endif
+      AES_set_decrypt_key(aes_key_buf, AES_KEY_BIT_LEN, &aes_key);
+      
+      memset(msfile->block_buf_out, 0 , MY_SIGN_BLOCK_SIZE);
+      
+      /* AES復号化 */
+      for( i = 0 ; i < (MY_SIGN_BLOCK_SIZE / AES_BLOCK_SIZE) ; i++ ) {
+	AES_cbc_encrypt( &(msfile->block_buf_in[AES_BLOCK_SIZE*i]), &(msfile->block_buf_out[AES_BLOCK_SIZE*i]), 
+			 AES_BLOCK_SIZE, &aes_key, aes_iv, AES_DECRYPT );
+	
+      }
+      msfile->now_cache = TRUE;
+      msfile->cache_msfile = (void *)msfile;
+      msfile->cache_block_no = block_no;
+      //      OS_TPrintf("%s %d cache change\n",__FUNCTION__, __LINE__);
+    }
+      
+    temp_size = (MY_SIGN_BLOCK_SIZE - block_buf_out_pos);
+    if( (msfile->pos + temp_size) >= (int)msfile->header.org_file_size ) { 
+      temp_size = (int)msfile->header.org_file_size - msfile->pos;
+    }
+    if( temp_size > user_buf_size ) {
+      temp_size = user_buf_size;
+    }
+
+    memcpy(user_buf_ptr, &(msfile->block_buf_out[block_buf_out_pos]), (u32)temp_size );
+    user_buf_ptr += temp_size;
+    block_buf_out_pos += temp_size;
+    msfile->pos += temp_size;
+    user_buf_size -= temp_size;
+    num += temp_size;
+
   }
-  if( user_buf_size > 0 ) {
-    goto loop_0;
-  }
+  //  OS_TPrintf("%s %d num=%d\n",__FUNCTION__, __LINE__,num);
  end:
   return num;
 }

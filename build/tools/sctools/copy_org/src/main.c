@@ -221,6 +221,7 @@ static int Check_User_Titles_ETicket_Only(void)
 	      OS_TPrintf(" usr.:%3d:0x%llx %s common\n", i, id, game_code);
 	      array_eticket_only_titles[user_title_count] = id;
 #if 0
+	      /* ¸”s‚·‚é‚ÉŒˆ‚Ü‚Á‚Ä‚éANAM_ReadTitleInfo‚ª¸”s‚·‚é‚Ì‚ÅB */
 	      if( TRUE == pre_install_get_version(id, &version) ) {
 		array_eticket_only_titles_version[user_title_count] = (int)version;
 	      }

@@ -48,7 +48,7 @@ static BOOL my_sign_check(MY_SIGN_SIGNATURE *encrypted_sign, u8 *buf, int buf_si
   //  OS_TPrintf("decrypt outlen = %d\n",outlen);
 
   if( outlen < MY_SIGN_HASH_SIZE ) {
-    OS_TPrintf("line=%d RSA Decrypt error! outlen=%d\n",__LINE__,outlen);
+    OS_TPrintf("%s %d:RSA Decrypt error! outlen=%d\n",__FUNCTION__, __LINE__,outlen);
     return FALSE;
   }    
   

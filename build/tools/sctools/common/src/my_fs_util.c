@@ -2029,81 +2029,6 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
 }
 
 
-#if 0
-BOOL MydataLoad(const char *path, void *pBuffer, int size, FSFile *log_fd)
-{
-  FSFile f;
-  BOOL bSuccess;
-  //  u32 fileSize;
-  s32 readSize = 0;
-  
-  FS_InitFile(&f);
-  
-  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_R);
-  if( ! bSuccess ) {
-    miya_log_fprintf(log_fd, "Failed Open File %s\n",__FUNCTION__);
-    miya_log_fprintf(log_fd, " path=%s\n", path );
-    miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
-    return FALSE;
-  }
-  readSize = FS_ReadFile(&f, pBuffer, (s32)size);
-  if( readSize != size ) {
-    miya_log_fprintf(log_fd, "Failed Read File: %s\n",path);
-  }
-  bSuccess = FS_CloseFile(&f);
-  if( ! bSuccess ) {
-    miya_log_fprintf(log_fd, "Failed Close File\n");
-    miya_log_fprintf(log_fd, " %s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path)));
-  }
-  
-  return TRUE;
-}
-#endif
-
-#if 0
-BOOL MydataSave(const char *path, void *pData, int size, FSFile *log_fd)
-{
-
-  FSFile f;
-  //  BOOL flag;
-  BOOL bSuccess;
-  FSResult res;
-  FSResult fsResult;
-  s32 writtenSize;
-
-  FS_InitFile(&f);
-
-  bSuccess = FS_OpenFileEx(&f, path, FS_FILEMODE_W);
-  if( ! bSuccess ) {
-    FS_CreateFileAuto( path, FS_PERMIT_W|FS_PERMIT_R);
-    bSuccess = FS_OpenFileEx(&f, path , FS_FILEMODE_W );
-    if( ! bSuccess ) {
-      res = FS_GetArchiveResultCode( path );
-      miya_log_fprintf(NULL, "%s file open error %s\n", __FUNCTION__,path );
-      miya_log_fprintf(NULL, " Failed open file:%s\n", my_fs_util_get_fs_result_word( res ));
-      return FALSE;
-    }
-  }
-
-  fsResult = FS_SetFileLength(&f, 0);
-  if( fsResult != FS_RESULT_SUCCESS ) {
-  }
-
-  writtenSize = FS_WriteFile(&f, pData, (s32)size);
-  if( writtenSize != size ) {
-    return FALSE;
-  }
-
-  FS_FlushFile(&f);
-  bSuccess = FS_CloseFile(&f);
-  if( bSuccess ) {
-      
-  }
-  return TRUE;
-}
-#endif
-
-//BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name)
 BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
@@ -2265,7 +2190,6 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
 
   if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16•¶Žš‚¾‚©‚ç */
-    //    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
     if( (count*sizeof(MY_USER_APP_TID)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_APP_TID)) )) {
       res = FS_GetArchiveResultCode( path );
       miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
@@ -2275,7 +2199,6 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
     }
     else {
       int j;
-      // u64 *ptr = pData;
       MY_USER_APP_TID *ptr = pData;
   
       if( ptr != NULL && count > 0 )  {
@@ -2307,7 +2230,7 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
 
 }
 
-BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *log_file_name)
+BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -2348,9 +2271,9 @@ BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *l
   } 
 
   *count = id_count;
-  size = (int)sizeof(u64) * id_count;
+  size = (int)sizeof(MY_USER_ETICKET_TID) * id_count;
 
-  *pBuffer = (u64 *)OS_Alloc( (u32)size );
+  *pBuffer = (MY_USER_ETICKET_TID *)OS_Alloc( (u32)size );
   if( *pBuffer == NULL ) {
     ret_flag = FALSE;
     miya_log_fprintf(log_fd, "%s Failed memory alloc size %d\n",__FUNCTION__, size);
@@ -2379,7 +2302,7 @@ BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *l
   return ret_flag;
 }
 
-BOOL TitleIDSaveETicketOnly(const char *path, u64 *pData, int count, char *log_file_name )
+BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name )
 {
   FSFile f;
   BOOL bSuccess;
@@ -2449,20 +2372,20 @@ BOOL TitleIDSaveETicketOnly(const char *path, u64 *pData, int count, char *log_f
 
   if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16•¶Žš‚¾‚©‚ç */
-    if( (count*sizeof(u64)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(u64)) )) {
+    if( (count*sizeof(MY_USER_ETICKET_TID)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_ETICKET_TID)) )) {
       res = FS_GetArchiveResultCode( path );
       miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
-      miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
+      miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word(res));
       ret_flag = FALSE;
       goto function_end;
     }
     else {
       int j;
-      u64 *ptr = pData;
+      MY_USER_ETICKET_TID *ptr = pData;
   
       if( ptr != NULL && count > 0 )  {
 	for( j = 0 ; j < count ; j++ ) {
-	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j, *ptr);
+	  miya_log_fprintf(log_fd,"No. %d 0x%016llx\n",j, ptr->tid);
 	  ptr++;
 	}
       }
@@ -3310,89 +3233,5 @@ int copy_r( MY_DIR_ENTRY_LIST **headp, const char *path_dst, const char *path_sr
     Log_File_Close(log_fd);
   }
   return ret_value;
-}
-
-
-void write_debug_data(void)
-{
-  // CopyFile( dst <= src );
-  CopyFile("sdmc:/m00.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m01.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m02.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m03.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m04.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m05.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m06.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m07.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m08.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m09.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m10.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m11.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m12.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m13.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m14.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m15.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m16.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m17.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m18.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m19.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m20.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m22.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m23.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m24.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m25.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m26.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m27.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m28.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m29.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m30.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m31.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m32.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m33.sav" , "nand:/sys/log/sysmenu.log", NULL);
-  CopyFile("sdmc:/m34.sav" , "nand:/sys/log/sysmenu.log", NULL);
-
-  /*
-    PrintDirEntryListBackword-----Start
-    src name = nand:/title
-    dst name = sdmc:/miya_find_title_save
-    src name = nand:/title/0003000f
-    dst name = sdmc:/miya_find_title_save/0003000f
-    src name = nand:/title/0003000f/484e4341
-    dst name = sdmc:/miya_find_title_save/0003000f/484e4341
-    src name = nand:/title/0003000f/484e4341/data
-    dst name = sdmc:/miya_find_title_save/0003000f/484e4341/data
---    src name = nand:/title/0003000f/484e4341/data/private.sav
-    dst name = sdmc:/miya_find_title_save/0003000f/484e4341/data/private.sav
-    src name = nand:/title/00030017
-    dst name = sdmc:/miya_find_title_save/00030017
-    src name = nand:/title/00030017/484e4141
-    dst name = sdmc:/miya_find_title_save/00030017/484e4141
-    src name = nand:/title/00030017/484e4141/data
-    dst name = sdmc:/miya_find_title_save/00030017/484e4141/data
---    src name = nand:/title/00030017/484e4141/data/public.sav
-    dst name = sdmc:/miya_find_title_save/00030017/484e4141/data/public.sav
-    PrintDirEntryListBackward-----End
-  */
-
-#if 0
-
-nand:/title/0003000f
-nand:/title/0003000f/484e4341
-nand:/title/0003000f/484e4341/content
-nand:/title/0003000f/484e4841
-nand:/title/0003000f/484e4841/data
-nand:/title/0003000f/484e4841/content
-nand:/title/0003000f/484e4c41
-nand:/title/0003000f/484e4c41/data
-
-nand:/title/00030015
-nand:/title/00030015/484e4241
-nand:/title/00030015/484e4241/data
-nand:/title/00030015/484e4241/content
-  CopyFile("nand:/title/00030017/
-  CopyFile("nand:/ticket/public.sav" , "nand:/sys/log/sysmenu.log");
-  CopyFile("nand:/ticket/00030015
-  CopyFile("nand:/ticket/00030015/miya.sav" , "nand:/sys/log/sysmenu.log");
-#endif
 }
 

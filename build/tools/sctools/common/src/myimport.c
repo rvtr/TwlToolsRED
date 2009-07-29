@@ -56,6 +56,11 @@ typedef struct NAMTadInfo
 NAMTadInfo;
 
 
+c:/twlsdk/add-ins/es/es-sdk-20090216/twl/include/estypes.h
+
+typedef u8   ESVersion;            // 8-bit data structure version
+typedef u16  ESTitleVersion;       // 16-bit title version
+typedef ESTitleId ESSysVersion;    // 64-bit system software version
 
 
 */

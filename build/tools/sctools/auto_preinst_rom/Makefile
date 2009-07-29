@@ -30,6 +30,10 @@ SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
 				myimport.c pre_install.c \
 				my_rsa_sign.c my_aes.c my_sign.c 
 
+# my_rsa.c 
+
+
+
 # hatamotolib.cpp 
 
 
@@ -42,11 +46,89 @@ ES_DIR			=	$(ROOT)/add-ins/es
 ES_LATEST		=	$(shell ls -d $(ES_DIR)/es-sdk-*|sort|tail -n 1)
 ES_ROOT			=	$(ES_LATEST)
 
+
+BSAFE_DIR	 = $(TWLSDK_ROOT)/build/libraries/crypto/common/mes
+
+
 LINCLUDES           = 	../common/src ../copy_dst/src \
 			$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/nam/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/ese/common/include \
+			           $(BSAFE_DIR)/src                 \
+                                   $(BSAFE_DIR)/include/r_com       \
+                                   $(BSAFE_DIR)/include             \
+                                   $(BSAFE_DIR)/bn                  \
+                                   $(BSAFE_DIR)/bio                 \
+                                   $(BSAFE_DIR)/pubkey/pk           \
+                                   $(BSAFE_DIR)/pubkey/rsa          \
+                                   $(BSAFE_DIR)/pubkey/pk_op        \
+                                   $(BSAFE_DIR)/pubkey/pk_data      \
+                                   $(BSAFE_DIR)/ber                 \
+                                   $(BSAFE_DIR)/berobj              \
+                                   $(BSAFE_DIR)/buffer              \
+                                   $(BSAFE_DIR)/data/eitems         \
+                                   $(BSAFE_DIR)/data/flag           \
+                                   $(BSAFE_DIR)/data/lhash          \
+                                   $(BSAFE_DIR)/data/op             \
+                                   $(BSAFE_DIR)/data/reslist        \
+                                   $(BSAFE_DIR)/data/stack          \
+                                   $(BSAFE_DIR)/data/strtbl         \
+                                   $(BSAFE_DIR)/err                 \
+                                   $(BSAFE_DIR)/evp                 \
+                                   $(BSAFE_DIR)/library             \
+                                   $(BSAFE_DIR)/objects             \
+                                   $(BSAFE_DIR)/os/cpuid            \
+                                   $(BSAFE_DIR)/os/lock             \
+                                   $(BSAFE_DIR)/os/memory           \
+                                   $(BSAFE_DIR)/os/perf             \
+                                   $(BSAFE_DIR)/os/rand             \
+                                   $(BSAFE_DIR)/os/surr             \
+                                   $(BSAFE_DIR)/digest/sha          \
+                                   $(BSAFE_DIR)/random			\
+	                          $(BSAFE_DIR)/cipher/aes		\
+	                          $(BSAFE_DIR)/module/crypto            \
+	                          $(BSAFE_DIR)/module/crypto/nat_meth   \
+	                          $(BSAFE_DIR)/key			\
 			$(ES_ROOT)/twl/include	$(ES_ROOT)/common/lib/ec/include
+
+
+
+
+
+
+
+MACRO_FLAGS              += \
+                              -DOPT_32_BIT                    \
+			      -DRCOM_LEAN                     \
+			      -DR_LIBRARY_BUILD               \
+			      -DFLAT_INC                      \
+                              -DNO_SOCK                       \
+			      -DNO_SPLIT                      \
+			      -DNO_FP_API                     \
+			      -DNO_R_DIAG                     \
+			      -DNO_STDIO_H                    \
+			      -DNO_STDLIB_H                   \
+                              -DNO_PK_TO_OP_FUNCS             \
+			      -DNO_PKCS8                      \
+			      -DNO_CRYPTO                     \
+			      -DNO_CERT                       \
+			      -DNO_HDW                        \
+			      -DNO_TIME_H                     \
+                              -DNO_SHA224                     \
+			      -DNO_SHA256                     \
+			      -DNO_SHA384                     \
+			      -DNO_SHA512                     \
+			      -DNO_FP_API                     \
+			      -DNO_BIO                        \
+#			      -DBN_LIBRARY_SMALL              \
+#                             -DNO_RSA -DNO_SHA1              \
+#                             -DNO_R_LOCK                     \
+
+MACRO_FLAGS              += -DSMALL_CODE_SIZE
+MACRO_FLAGS              += -DOPT_BN_ASM
+MACRO_FLAGS              += -DOPT_SHA1_ASM -DOPT_SHA1_ARM
+# MACRO_FLAGS              += -include subst_external_symbols.h
+
 
 LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE) ../wifilib/$(TWL_BUILDTYPE)
 # LLIBRARY_DIRS	+=	$(ES_ROOT)/twl/lib/$(TWL_BUILDTYPE)

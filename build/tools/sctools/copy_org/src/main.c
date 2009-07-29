@@ -99,10 +99,10 @@ static  LCFGTWLHWSecureInfo hws_info;
 
 #define NAM_TITLE_ID_S 128
 
-static NAMTitleId array_eticket_only_titles[NAM_TITLE_ID_S];
-// static int array_eticket_only_titles_version[NAM_TITLE_ID_S];
+
+
+static MY_USER_ETICKET_TID array_eticket_only_titles[NAM_TITLE_ID_S];
 static NAMTitleId array_app_titles[NAM_TITLE_ID_S];
-// static int array_app_titles_version[NAM_TITLE_ID_S];
 
 static int num_of_eticket_only_titles = 0;
 static int num_of_app_titles = 0;
@@ -171,6 +171,8 @@ static int Check_User_Titles_ETicket_Only(void)
   char game_code[5];
   int common_or_personalized_flag;
   //  u16 version = 0;
+  u8 es_version;
+  u16 ticket_version;
 
   //  num = NAM_GetNumTitles();
   num = NAM_GetNumInstalledTitles();
@@ -213,22 +215,15 @@ static int Check_User_Titles_ETicket_Only(void)
 	  /* user app. */
 	  //  OS_TPrintf(" usr.:%3d:0x%llx %s\n", i, id, game_code);
 	  common_or_personalized_flag = 1;
-	  if( FALSE == pre_install_check_download_or_pre_install(id, &common_or_personalized_flag, NULL) ) {
+	  if( FALSE == pre_install_check_download_or_pre_install(id, &common_or_personalized_flag, &es_version, &ticket_version, NULL) ) {
 	    OS_TPrintf(" pre_install_check_download_or_pre_install failed\n");
 	  }
 	  else {
 	    if( common_or_personalized_flag == 1 ) {
 	      OS_TPrintf(" usr.:%3d:0x%llx %s common\n", i, id, game_code);
-	      array_eticket_only_titles[user_title_count] = id;
-#if 0
-	      /* 失敗するに決まってる、NAM_ReadTitleInfoが失敗するので。 */
-	      if( TRUE == pre_install_get_version(id, &version) ) {
-		array_eticket_only_titles_version[user_title_count] = (int)version;
-	      }
-	      else {
-		array_eticket_only_titles_version[user_title_count] = -1;
-	      }
-#endif
+	      array_eticket_only_titles[user_title_count].tid = id;
+	      array_eticket_only_titles[user_title_count].es_version = (int)es_version;
+	      array_eticket_only_titles[user_title_count].ticket_version = (int)ticket_version;
 	      user_title_count++;
 	    }
 	    else {
@@ -565,6 +560,8 @@ static BOOL SDBackupToSDCard7(void)
   BOOL flag = TRUE;
   int common_or_presonalized_flag;
   u16 version;
+  u8 es_version;
+  u16 ticket_version;
 
   /* タイトルリストの生成 */
   /* 
@@ -628,17 +625,16 @@ static BOOL SDBackupToSDCard7(void)
       
       if( ptr != NULL && count != 0 )  {
 	for( j = 0 ; j < count ; j++ ) {
-	  //	  OS_TPrintf("No. %d 0x%016llx\n",j, *ptr);
-	  //	  mfprintf(tc[2],"No. %d 0x%016llx\n",j,*ptr);
 	  OS_TPrintf("No. %d 0x%016llx",j, ptr->tid);
-	  mfprintf(tc[2],"No. %d 0x%016llx",j,ptr->tid);
+	  //	  mfprintf(tc[2],"No. %d 0x%08x%08x",j, (ptr->tid) >> 32, (ptr->tid & 0xffffffff));
+	  mfprintf(tc[2],"No. %d 0x%016llx",j, ptr->tid);
 
 	  if( no_sd_clean_flag == TRUE ) {
-	    mprintf("No. %d 0x%016llx",j,ptr->tid);
+	    //	    mprintf("No. %d 0x%08x%08x",j, (ptr->tid) >> 32, (ptr->tid & 0xffffffff));
+	    mprintf("No. %d 0x%016llx",j, ptr->tid);
 	  }
 
-	  if( TRUE == pre_install_check_download_or_pre_install(ptr->tid, &common_or_presonalized_flag, NULL) ) {
-
+	  if( TRUE == pre_install_check_download_or_pre_install(ptr->tid, &common_or_presonalized_flag, &es_version, &ticket_version, NULL) ) {
 	    if( TRUE == pre_install_get_version(ptr->tid, &version) ) {
 	      ptr->version = (int)version;
 	    }

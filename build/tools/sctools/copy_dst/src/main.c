@@ -642,7 +642,7 @@ static BOOL RestoreFromSDCard7(void)
   char game_code_buf[5];
   int is_personalized;
   u64 tid;
-  u64 *eticket_only_id_buf = NULL;
+  MY_USER_ETICKET_TID *eticket_only_id_buf = NULL;
   int num_of_eticket_only_titles = 0;
 
   title_id_count = 0;
@@ -885,6 +885,10 @@ static BOOL RestoreFromSDCard7(void)
 				      mydata.num_of_user_pre_installed_eticket_only ,
 				      development_console_flag ) ) {
       ret_flag = FALSE;
+    }
+
+    if( eticket_only_id_buf ) {
+      OS_Free(eticket_only_id_buf );
     }
   }
 

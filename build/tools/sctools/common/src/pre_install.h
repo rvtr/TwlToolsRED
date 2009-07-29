@@ -17,9 +17,9 @@ extern "C" {
 
 BOOL pre_install_Cleanup_User_Titles( FSFile *log_fd );
 BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int tile_id_count,
-			  u64 *ticket_id_array,  int ticket_id_count ,BOOL development_version_flag );
+			  MY_USER_ETICKET_TID *ticket_id_array,  int ticket_id_count ,BOOL development_version_flag );
 
-BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, FSFile *log_fd);
+BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, u8 *es_ver, u16 *ticket_ver, FSFile *log_fd);
 BOOL pre_install_get_version(u64 tid, u16 *version);
 
 BOOL pre_install_debug(FSFile *log_fd, BOOL development_version_flag );

@@ -25,6 +25,12 @@ typedef struct {
   BOOL install_success_flag;
 } MY_USER_APP_TID;
 
+typedef struct {
+  u64 tid;
+  int es_version;
+  int ticket_version;
+} MY_USER_ETICKET_TID;
+
 
 
 BOOL my_fs_Tid_To_GameCode(u64 tid, char *gcode);
@@ -75,8 +81,8 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
 BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name);
 BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name);
 
-BOOL TitleIDSaveETicketOnly(const char *path, u64 *pData, int count, char *log_file_name );
-BOOL TitleIDLoadETicketOnly(const char *path, u64 **pBuffer, int *count, char *log_file_name);
+BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name );
+BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name);
 
 
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );

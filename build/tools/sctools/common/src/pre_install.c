@@ -24,6 +24,7 @@
 static PRE_INSTALL_FILE *pre_install_file_list = NULL;
 
 
+
 #if 1
 //char *pre_install_search_tid(u64 tid, FSFile *log_fd);
 static BOOL pre_install_discard_list(void);
@@ -40,8 +41,10 @@ BOOL pre_install_get_version(u64 tid, u16 *version)
     if (tid == titleInfoTmp.titleId) {
       if( version != NULL ) {
 	*version = titleInfoTmp.version;
+#if 0
 	OS_TPrintf( "tid=0x%08x%08x version = %d\n",
 		    (u32)(titleInfoTmp.titleId >> 32), (u32)(titleInfoTmp.titleId & 0xffffffff), titleInfoTmp.version);
+#endif
 	return TRUE;
       }
     }
@@ -50,13 +53,38 @@ BOOL pre_install_get_version(u64 tid, u16 *version)
 }
 
 
-BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, FSFile *log_fd)
+BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, u8 *es_ver, u16 *ticket_ver, FSFile *log_fd)
 {
+
+#if 0
+typedef u64  ESTitleId;            /* 64-bit title identity */
+typedef u64  ESTicketId;           /* 64-bit ticket id */
+typedef u8   ESVersion;            /* 8-bit data structure version */
+typedef u16  ESTitleVersion;       /* 16-bit title version */
+typedef ESTitleId ESSysVersion;    /* 64-bit system software version */
+
+typedef struct {
+    ESVersion        version;            /* eTicket data structure version */
+    ESTicketId       ticketId;           /* eTicket ID */
+    ESId             deviceId;           /* device ID */
+    ESTitleId        titleId;            /* title ID */
+    ESSysAccessMask  sysAccessMask;      /* 16 bit cidx mask */
+    u16              ticketVersion;      /* 16 bit ticket version */
+    u32              accessTitleId;      /* 32 bit title id for access control*/
+    u32              accessTitleMask;    /* 32 bit title id mask */
+    u8               licenseType;        /* for infrastructure use */
+    ESTicketReserved reserved;           /* 48 bytes reserved info */
+    u8               audit;              /* for infrastructure use */
+    ESCidxMask       cidxMask;           /* 512 bits of cidx mask */
+    ESLpEntry        limits[ES_MAX_LIMIT_TYPE];  /* limit algorithm and limit */
+} ESTicketView;
+#endif
+
   ESError rv;
   ESTicketView *ticketViews;  
   u32 numTickets;
   u32 i;
-  
+
   if( flag == NULL ) {
     return FALSE;
   }
@@ -109,11 +137,15 @@ BOOL pre_install_check_download_or_pre_install(u64 tid, int *flag, FSFile *log_f
       /* common */
       *flag = 1;
       /* １個でもcommonがあればcommon扱い！？ */
+      *es_ver = ticketViews[i].version;
+      *ticket_ver = ticketViews[i].ticketVersion;
       break;
     }  
     else {
       /* personalized */
       *flag = 2;
+      *es_ver = ticketViews[i].version;
+      *ticket_ver = ticketViews[i].ticketVersion;
     }
   }
 
@@ -836,7 +868,7 @@ BOOL pre_install_debug(FSFile *log_fd, BOOL development_version_flag )
 }
 
 BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count,
-			  u64 *ticket_id_array,  int ticket_id_count, BOOL development_version_flag )
+			  MY_USER_ETICKET_TID *ticket_id_array,  int ticket_id_count, BOOL development_version_flag )
 {
   char *tad_file_name;
   int i;
@@ -860,7 +892,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
 
   /* チケットだけのインストール */
   for( i = 0 ; i < ticket_id_count ; i++ ) {
-    tid = ticket_id_array[i];
+    tid = ticket_id_array[i].tid;
     (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
     mprintf(" TO %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
     miya_log_fprintf(log_fd, " TO %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);

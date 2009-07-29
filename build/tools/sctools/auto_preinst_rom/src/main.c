@@ -487,10 +487,7 @@ OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
       (void)start_my_thread(THREAD_COMMAND_DOWNLOAD_APP);
     }
 
-
-
-    mfprintf(tc[1], "\fAuto Pre-install Tool");
-
+    mfprintf(tc[1], "\fAuto Pre-install Tool\n");
 
     /* ユニークＩＤは表示しなくていい？ */
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );

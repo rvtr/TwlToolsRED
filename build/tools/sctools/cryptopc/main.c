@@ -147,31 +147,15 @@ static int my_sign_make(MY_SIGN_SIGNATURE *encrypted_sign, u8 *buf, int buf_size
 #define RSA_PKCS1_PADDING_SIZE	11
 #endif
 
-
-#if 1
-
-  if(rsaSize != (outlen = 
-#if 0
-		 RSA_public_encrypt
-#else
-		 RSA_private_encrypt
-#endif
-		 (rsaSize - RSA_PKCS1_PADDING_SIZE, 
-		  (u8 *)&temp_sign, (u8 *)encrypted_sign,
-		  rsa_key,  RSA_PKCS1_PADDING ))) {
+  if(rsaSize != (outlen = RSA_private_encrypt(rsaSize - RSA_PKCS1_PADDING_SIZE, 
+					      (u8 *)&temp_sign, (u8 *)encrypted_sign,
+					      rsa_key,  RSA_PKCS1_PADDING ))) {
     
     fprintf(stderr,"encrypt error rsaSize=%d outlen=%d\n",rsaSize, outlen);
     ret_flag = -1;
     goto end;
   }
-#else
-  if(rsaSize != (outlen = RSA_public_encrypt(rsaSize, (u8 *)&temp_sign, (u8 *)encrypted_sign,
-					     rsa_key,  RSA_NO_PADDING ))) {
-    fprintf(stderr,"encrypt error rsaSize=%d outlen=%d\n",rsaSize, outlen);
-    ret_flag = -1;
-    goto end;
-  }
-#endif
+
  end:
   RSA_free(rsa_key);
 

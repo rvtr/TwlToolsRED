@@ -3,6 +3,7 @@
 #include <string.h>
 #include "my_rsa_sign.h"
 #include "my_aes.h"
+#include "my_sha.h"
 #include "my_sign.h"
 
 #define AES_KEY_BIT_LEN 256

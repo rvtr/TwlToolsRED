@@ -22,7 +22,6 @@ int my_rsa_sign(  u8 *inbuf, u8 *outbuf, int buf_size,  int *output_size );
 
 BOOL RsaTestInit(void);
 int RsaTestDecrypt(char *input, int in_len, char *output, int outlen);
-void SHA256(const unsigned char *d, size_t n, unsigned char *md);
 
 #ifdef __cplusplus
 }

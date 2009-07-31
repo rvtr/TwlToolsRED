@@ -3,6 +3,7 @@
  [SD用] make_tad_table.exe -sd -dir . -o table_file.txt -fdir sdtads
 */
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +26,9 @@ typedef int BOOL;
 #define FALSE 0
 #endif
 
+
+
+
 /* tadのデータは基本的にビッグエンディアン */
 
 typedef struct {
@@ -37,6 +41,7 @@ typedef struct {
   u32 tmdSize;
   u32 contentSize;
   u32 metaSize;    
+
   u32 certOffset;
   u32 crlOffset;
   u32 ticketOffset;
@@ -45,6 +50,336 @@ typedef struct {
   u32 metaOffset;
   u32 fileSize;
 } TAD_INFO;
+
+typedef struct NAMiTADHeader
+{
+    u32 hdrSize;        // Size of TADHeader1 96
+    u8  tadType[2];
+    u16 tadVersion;		// TAD_VERSION_1
+    u32 certSize;
+    u32 crlSize;
+    u32 ticketSize;
+    u32 tmdSize;
+    u32 contentSize;
+    u32 metaSize;
+} NAMiTADHeader;
+
+typedef u64 OSTitleId;
+typedef OSTitleId NAMTitleId;
+
+typedef struct NAMTitleInfo
+{
+    NAMTitleId  titleId;
+    u16 companyCode;
+    u16 version;
+    u32 publicSaveSize;
+    u32 privateSaveSize;
+    u32 blockSize;
+} NAMTitleInfo;
+
+typedef struct NAMTadInfo
+{
+    NAMTitleInfo titleInfo;
+    u32     fileSize;
+} NAMTadInfo;
+
+#if 0
+    pInfo->sizes.cert       = NAMi_EndianU32(pHeader->certSize);
+    pInfo->sizes.crl        = NAMi_EndianU32(pHeader->crlSize);
+    pInfo->sizes.ticket     = NAMi_EndianU32(pHeader->ticketSize);
+    pInfo->sizes.tmd        = NAMi_EndianU32(pHeader->tmdSize);
+    pInfo->sizes.content    = NAMi_EndianU32(pHeader->contentSize);
+    pInfo->sizes.meta       = NAMi_EndianU32(pHeader->metaSize);
+
+
+    pInfo->offsets.cert     = MATH_ROUNDUP(sizeof(NAMiTADHeader), TAD_ALIGN);
+    pInfo->offsets.crl      = pInfo->offsets.cert       + MATH_ROUNDUP(pInfo->sizes.cert,       TAD_ALIGN);
+    pInfo->offsets.ticket   = pInfo->offsets.crl        + MATH_ROUNDUP(pInfo->sizes.crl,        TAD_ALIGN);
+    pInfo->offsets.tmd      = pInfo->offsets.ticket     + MATH_ROUNDUP(pInfo->sizes.ticket,     TAD_ALIGN);
+    pInfo->offsets.content  = pInfo->offsets.tmd        + MATH_ROUNDUP(pInfo->sizes.tmd,        TAD_ALIGN);
+    pInfo->offsets.meta     = pInfo->offsets.content    + MATH_ROUNDUP(pInfo->sizes.content,    TAD_ALIGN);
+#endif
+
+
+
+
+#define ES_APP_ENC_HANDLE       6
+
+#define ES_ROOT_NAME            "Root"
+#define ES_CA_PREFIX            "CA"
+#define ES_XS_PREFIX            "XS"
+#define ES_MS_PREFIX            "MS"
+#define ES_CP_PREFIX            "CP"
+#define ES_APP_CERT_PREFIX      "AP"
+
+#define ES_BUF_SIZE             256
+
+typedef u32  ESId;                 /* 32-bit device identity */
+typedef u32  ESContentId;          /* 32-bit content identity */
+typedef u64  ESTitleId;            /* 64-bit title identity */
+typedef u64  ESTicketId;           /* 64-bit ticket id */
+typedef u8   ESVersion;            /* 8-bit data structure version */
+typedef u16  ESTitleVersion;       /* 16-bit title version */
+typedef ESTitleId ESSysVersion;    /* 64-bit system software version */
+typedef u32  ESTitleType;          /* title type */
+typedef u16  ESContentType;        /* content type */
+typedef u8   ESTmdReserved[62];    /* reserved field in TMD structure */
+typedef u8   ESTicketReserved[47]; /* reserved field in eTicket structure */
+typedef u8   ESSysAccessMask[2];   /* 16 bit cidx Mask to indicate which 
+                                      content can be accessed by sys app */
+#if !defined(__ES_INTERNAL__)
+/* IOSC types */
+typedef u8   IOSCAesKey[16];
+typedef u8   IOSCHash[20];
+typedef u8   IOSCName[64];
+typedef u8   IOSCSigDummy[60];
+typedef u8   IOSCCertPad[52];
+typedef u8   IOSCEccCertPad[4];
+typedef u8   IOSCRsaSig2048[256];
+typedef enum {
+    IOSC_SIG_RSA4096 = 0x00010000,  /* RSA 4096 bit signature */
+    IOSC_SIG_RSA2048,  /* RSA 2048 bit signature */
+    IOSC_SIG_ECC       /* ECC signature 512 bits*/
+} IOSCCertSigType;
+typedef enum {
+    IOSC_PUBKEY_RSA4096,  /* RSA 4096 bit key */
+    IOSC_PUBKEY_RSA2048,  /* RSA 2048 bit key */
+    IOSC_PUBKEY_ECC       /* ECC pub key 512 bits*/
+} IOSCCertPubKeyType;
+typedef u8   IOSCEccSig[60];
+typedef u8   IOSCEccPublicKey[60];
+
+typedef struct {
+    IOSCCertSigType sigType;
+    IOSCRsaSig2048  sig;
+    IOSCSigDummy    dummy;
+    IOSCName        issuer;
+} IOSCSigRsa2048;
+
+typedef u8   IOSCEccPrivatePad[2];
+typedef u8   IOSCEccPublicPad[4];
+typedef struct {
+    IOSCCertSigType  sigType;
+    IOSCEccSig       sig;
+    IOSCEccPublicPad eccPad;
+    IOSCSigDummy     dummy;
+    IOSCName         issuer;
+} IOSCSigEcc;
+
+typedef u8   IOSCDeviceId[64];
+typedef u8   IOSCServerId[64];
+typedef struct {
+    IOSCCertPubKeyType pubKeyType;
+    union {
+        IOSCServerId serverId;
+        IOSCDeviceId deviceId;
+    } name;
+    u32 date;
+} IOSCCertHeader;
+typedef struct {
+    IOSCSigEcc          sig;        /* ECC signature struct */
+    IOSCCertHeader      head;
+    IOSCEccPublicKey    pubKey;     /* 60 byte ECC public key */
+    IOSCEccPublicPad    eccPad;
+    IOSCCertPad         pad;
+    IOSCEccCertPad      pad2;
+} IOSCEccEccCert;
+#endif
+
+#define ES_TMD_VERSION             0
+#define ES_TICKET_VERSION          0
+
+/* TMD View */
+#define ES_MAX_CONTENT             512
+
+#define ES_TITLE_TYPE_NC_TITLE     0         /* NC title */
+#define ES_TITLE_TYPE_NG_TITLE     1         /* NG title */
+#define ES_TITLE_TYPE_DS_TITLE     2         /* DS title for NC */
+#define ES_TITLE_TYPE_STREAM       4         /* stream title */
+#define ES_TITLE_TYPE_DATA         8         /* data title */
+#define ES_CONTENT_TYPE_SHARED     (1<<15)   /* shared content */
+#define ES_CONTENT_TYPE_OPTIONAL   (1<<14)   /* optional content */
+#define ES_CONTENT_TYPE_DISC       (1<< 1)   /* disc content */
+#define ES_CONTENT_TYPE_NC_EXE     0         /* NC merged elf */
+#define ES_CONTENT_TYPE_NG_EXE     1         /* NG content */
+
+#define ES_LICENSE_MASK      0x0f /*  allow 16 licensing types */
+#define ES_LICENSE_PERMANENT 0x00 /* e.g.,  regular game with permanent rights */
+#define ES_LICENSE_DEMO      0x01 /* e.g.,  demo game with permanent rights */
+#define ES_LICENSE_TRIAL     0x02 /* e.g.,  regular game with limited rights */
+#define ES_LICENSE_RENTAL    0x03 /* TBD */
+#define ES_LICENSE_SUBSCRIPTION 0x04 /* TBD */    
+#define ES_LICENSE_GIFT_MASK 0x80 /* this is a gift */
+
+/* TMD */
+typedef struct {
+    ESContentId    cid;    /* 32 bit content id */
+    u16            index;  /* content index, unique per title */
+    ESContentType  type;   /* content type*/
+    u64            size;   /* unencrypted content size in bytes */
+    IOSCHash       hash;   /* 160-bit SHA1 hash of the content */
+} ESContentMeta;
+
+typedef struct {
+    ESVersion      version;  /* TMD version number */
+    ESVersion      caCrlVersion;  /* CA CRL version number */
+    ESVersion      signerCrlVersion; /* signer CRL version number */
+    ESSysVersion   sysVersion;  /* required system software version number */
+
+    ESTitleId      titleId;      /* 64 bit title id */
+    ESTitleType    type;         /* 32 bit title type */
+    u16            groupId;
+    ESTmdReserved  reserved;     /* 62 bytes reserved info for Nintendo */
+    u32            accessRights; /* title's access rights to use 
+                                    system resources */
+    ESTitleVersion titleVersion; /* 16 bit title version */
+    u16            numContents;  /* number of contents per title */
+    u16            bootIndex;    /* boot content index */
+} ESTitleMetaHeader;
+
+typedef struct {
+    IOSCSigRsa2048     sig;      /* RSA 2048bit sign of all the data in 
+                                    the TMD file */
+    ESTitleMetaHeader  head;
+    ESContentMeta      contents[ES_MAX_CONTENT];
+} ESTitleMeta;
+
+/* TMD View */
+typedef struct {
+    ESVersion        version;           /* TMD data structure version */
+    ESSysVersion     sysVersion;        /* required system software 
+                                           version number */
+    ESTitleId        titleId;           /* 64 bit title id */
+    ESTitleType      type;              /* 32 bit title type */
+    u16              groupId;
+    ESTmdReserved    reserved;          /* 62 bytes reserved info */
+    ESTitleVersion   titleVersion;      /* 16 bit title version */
+    u16              numContents;       /* number of contents in the title */
+} ESTmdViewHeader;
+
+typedef struct {
+    ESContentId      cid;               /* 32 bit content id */
+    u16              index;             /* 16 bit content index */
+    ESContentType    type;              /* 16 bit content type */
+    u64              size;              /* 64 bit content size */
+} ESCmdView;
+
+typedef struct {
+    ESTmdViewHeader head;
+    ESCmdView       contents[ES_MAX_CONTENT];
+} ESTmdView;
+
+
+
+typedef struct NAMiTadParams
+{
+    u32 cert;
+    u32 crl;
+    u32 ticket;
+    u32 tmd;
+    u32 content;
+    u32 meta;
+}
+NAMiTadParams;
+
+//---- tad 構成情報
+typedef struct NAMiTadInfo
+{
+    NAMiTadParams sizes;        // 各領域のサイズ
+    NAMiTadParams offsets;      // ファイル先頭から各領域へのオフセット
+}
+NAMiTadInfo;
+
+#if 0
+static my_NAM_ReadTadInfoWithFile(FILE *fp, TAD_INFO *tad_info)
+{
+ NAMiTadInfo tadInfo;
+ ESTitleMeta tmd;
+ int result;
+
+ result = my_sign_ReadTadHeader(fp, &tadInfo);
+
+ // TMD を読む
+ fread(&tmd, tmd-size, fp);
+ result = NAMi_Load_sign( fp, (void*)tmd, tadInfo.sizes.tmd,
+			  tadInfo.offsets.tmd,
+
+
+ NAMi_CopyTmdReservedInfo(&pInfo->titleInfo, &pTmd->head.reserved);
+ pInfo->titleInfo.titleId            = NAMi_EndianU64(pTmd->head.titleId);
+ pInfo->titleInfo.companyCode        = NAMi_EndianU16(pTmd->head.groupId);
+ pInfo->titleInfo.version            = NAMi_EndianU16(pTmd->head.titleVersion);
+ pInfo->titleInfo.blockSize          = my_NAMi_CalcTitleBlocksFromTmd(pTmd);
+ pInfo->fileSize                     = my_sign_FS_GetLength(pTadFile);
+ 
+ NAMi_Free(pTmd);
+
+}
+#endif
+
+#if 0
+static void test(void)
+{
+  NAMiTadInfo* pInfo;
+  // ESTitleMeta tmd;
+#if 0
+  typedef struct {
+    ESVersion      version;  /* TMD version number */
+    ESVersion      caCrlVersion;  /* CA CRL version number */
+    ESVersion      signerCrlVersion; /* signer CRL version number */
+    ESSysVersion   sysVersion;  /* required system software version number */
+    
+    ESTitleId      titleId;      // 8 
+    ESTitleType    type;         // 4
+    u16            groupId;      // 2
+    ESTmdReserved  reserved;     /* 62 bytes reserved info for Nintendo */
+    u32            accessRights; /* title's access rights to use 
+                                    system resources */
+    ESTitleVersion titleVersion; /* 16 bit title version */
+    u16            numContents;  /* number of contents per title */
+    u16            bootIndex;    /* boot content index */
+  } ESTitleMetaHeader;
+#endif
+
+  printf("TMD head offset = %d 0x%04x\n", offsetof(ESTitleMeta, head), offsetof(ESTitleMeta, head));
+  printf("ESTitleMetaHeader titleId offset = %d 0x%04x\n", offsetof(ESTitleMetaHeader ,titleId ), offsetof(ESTitleMetaHeader ,titleId));
+
+  printf("ESTitleMetaHeader titleVersion offset = %d 0x%04x\n", offsetof(ESTitleMetaHeader ,titleVersion ), offsetof(ESTitleMetaHeader ,titleVersion));
+
+
+  printf("ESTitleMetaHeader groupId offset = %d 0x%04x\n", offsetof(ESTitleMetaHeader ,groupId ), offsetof(ESTitleMetaHeader ,groupId));
+
+  printf("ESTitleMetaHeader numContents offset = %d 0x%04x\n", offsetof(ESTitleMetaHeader ,numContents ), offsetof(ESTitleMetaHeader ,numContents));
+
+
+
+  printf("NAMiTADHeader = %d 0x%04x\n",sizeof(NAMiTADHeader),sizeof(NAMiTADHeader));
+  printf("ESTmdView = %d 0x%04x\n",sizeof(ESTmdView),sizeof(ESTmdView));
+  printf("ESTmdViewHeader = %d 0x%04x\n",sizeof(ESTmdViewHeader),sizeof(ESTmdViewHeader));
+  printf("ESCmdView = %d 0x%04x\n",sizeof(ESCmdView),sizeof(ESCmdView));
+#if 0
+
+  printf(" = %d 0x%04x\n",sizeof(),sizeof());
+  printf(" = %d 0x%04x\n",sizeof(),sizeof());
+  printf(" = %d 0x%04x\n",sizeof(),sizeof());
+  printf(" = %d 0x%04x\n",sizeof(),sizeof());
+  printf(" = %d 0x%04x\n",sizeof(),sizeof());
+#endif
+
+}
+
+#endif
+
+
+
+
+
+
+
+
+
+
+
 
 static BOOL debug_print_flag = FALSE;
 
@@ -208,12 +543,14 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   u8 *tmd = NULL;
   u32 titleid_hi = 0;
   u32 titleid_lo = 0;
+  u16 t_ver;
+  u16 gid;
 
   fp_in = fopen(path,"rb");	/* fseek効かすため */
   if( fp_in == NULL ) {
     fprintf(stderr, "error: file open %s\n",path);
-    goto end_file;
-  }
+    goto end_file; 
+ }
 
   /* TADファイルかどうかチェック */
   if( FALSE == read_tad_info(fp_in, &tad_info) ) {
@@ -233,7 +570,13 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
 
   titleid_hi = reverseEndian4( *((u32 *)( tmd + 0x18C )) );
   titleid_lo = reverseEndian4( *((u32 *)( tmd + 0x18C + 4 )) );
-  
+
+  t_ver = reverseEndian2( *((u16 *)( tmd + 0x1DC )) ); 
+  gid  = reverseEndian2( *((u16 *)( tmd + 0x198)) ); 
+#if 0
+  printf("0x%08x%08x ver=0x%04x gid=0x%04x\n",titleid_hi,  titleid_lo, 
+	 t_ver,groupId);
+#endif
 
   if( debug_print_flag ) {
     printf("inputfile = %s\n", path);
@@ -241,10 +584,10 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
 
   if( fp_out ) {
     if( is_sd == FALSE ) {
-      fprintf(fp_out, "0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+      fprintf(fp_out, "0x%08x%08x, 0x%04x , 0x%04x , rom:/%s,\n", titleid_hi,  titleid_lo, t_ver , gid , d_name);
     }
     else {
-      fprintf(fp_out, "0x%08x%08x, %d , %d , sdmc:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+      fprintf(fp_out, "0x%08x%08x, 0x%04x , 0x%04x , sdmc:/%s,\n", titleid_hi,  titleid_lo, t_ver , gid , d_name);
     }
     if( fp_mk ) {
       fprintf(fp_mk, "\t\t%s \\\n", d_name);
@@ -252,10 +595,10 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   }
   else {
     if( is_sd == FALSE ) {
-      printf("0x%08x%08x, %d , %d , rom:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+      printf("0x%08x%08x, 0x%04x , 0x%04x , rom:/%s,\n", titleid_hi,  titleid_lo, t_ver , gid , d_name);
     }
     else {
-      printf("0x%08x%08x, %d , %d , sdmc:/%s,\n", titleid_hi,  titleid_lo, 0 , 0 , d_name);
+      printf("0x%08x%08x, 0x%04x , 0x%04x , sdmc:/%s,\n", titleid_hi,  titleid_lo, t_ver , gid , d_name);
     }
   }
 
@@ -308,6 +651,7 @@ int main(int argc, char **argv)
   char *full_path;
   char rom_file_full_path[256];
 
+  //  test();
 
   prog=argv[0];
   argc--;

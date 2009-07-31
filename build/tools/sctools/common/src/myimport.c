@@ -58,12 +58,78 @@ NAMTadInfo;
 
 c:/twlsdk/add-ins/es/es-sdk-20090216/twl/include/estypes.h
 
+typedef u32  ESContentId;          // 32-bit content identity
+typedef u64  ESTitleId;            // 64-bit title identity
 typedef u8   ESVersion;            // 8-bit data structure version
 typedef u16  ESTitleVersion;       // 16-bit title version
 typedef ESTitleId ESSysVersion;    // 64-bit system software version
-
+typedef u32  ESTitleType;          // title type
+typedef u16  ESContentType;        // content type
+typedef u8   IOSCHash[20];
 
 */
+
+#if 0
+/* TMD */
+typedef struct {
+4    ESContentId    cid;    /* 32 bit content id */
+2    u16            index;  /* content index, unique per title */
+2    ESContentType  type;   /* content type*/
+8    u64            size;   /* unencrypted content size in bytes */
+    IOSCHash       hash;   /* 160-bit SHA1 hash of the content */
+} ESContentMeta;
+
+typedef struct {
+1    ESVersion      version;  /* TMD version number */
+1    ESVersion      caCrlVersion;  /* CA CRL version number */
+1    ESVersion      signerCrlVersion; /* signer CRL version number */
+
+8    ESSysVersion   sysVersion;  /* required system software version number */
+
+8    ESTitleId      titleId;      /* 64 bit title id */
+4    ESTitleType    type;         /* 32 bit title type */
+2    u16            groupId;
+62    ESTmdReserved  reserved;     /* 62 bytes reserved info for Nintendo */
+4    u32            accessRights; /* title's access rights to use 
+                                    system resources */
+8    ESTitleVersion titleVersion; /* 16 bit title version */
+2    u16            numContents;  /* number of contents per title */
+2    u16            bootIndex;    /* boot content index */
+} ESTitleMetaHeader; 104
+
+typedef struct {
+256    IOSCSigRsa2048     sig;      /* RSA 2048bit sign of all the data in 
+                                    the TMD file */
+    ESTitleMetaHeader  head;
+    ESContentMeta      contents[ES_MAX_CONTENT];
+} ESTitleMeta;
+
+
+typedef struct {
+1    ESVersion        version;           /* TMD data structure version */
+8    ESSysVersion     sysVersion;        /* required system software 
+                                           version number */
+8    ESTitleId        titleId;           /* 64 bit title id */
+4    ESTitleType      type;              /* 32 bit title type */
+2    u16              groupId;
+62    ESTmdReserved    reserved;          /* 62 bytes reserved info */
+2    ESTitleVersion   titleVersion;      /* 16 bit title version */
+2    u16              numContents;       /* number of contents in the title */
+} ESTmdViewHeader;
+
+typedef struct {
+    ESContentId      cid;               /* 32 bit content id */
+    u16              index;             /* 16 bit content index */
+    ESContentType    type;              /* 16 bit content type */
+    u64              size;              /* 64 bit content size */
+} ESCmdView;
+
+typedef struct {
+    ESTmdViewHeader head;
+    ESCmdView       contents[ES_MAX_CONTENT];
+} ESTmdView;
+
+#endif
 
 #include <twl.h>
 #include <nitro/nvram/nvram.h>
@@ -1815,9 +1881,9 @@ BOOL myImportTad(char* full_path, int org_version, FSFile *log_fd)
     return FALSE;
   }
 
-  miya_log_fprintf(log_fd,"tadfile.ver=%d org.ver=%d\n", tadInfo.titleInfo.version,org_version);
+  miya_log_fprintf(log_fd,"tadfile.ver=%d org.ver=%d\n", tadInfo.titleInfo.version, org_version);
   if(  org_version > tadInfo.titleInfo.version ) {
-    miya_log_fprintf(log_fd,"Error:org.ver=%d tadfile.ver=%d %s\n",full_path);
+    miya_log_fprintf(log_fd,"Error:org.ver=%d tadfile.ver=%d %s\n",org_version, tadInfo.titleInfo.version, full_path);
     return FALSE;
   }
 
@@ -1921,7 +1987,7 @@ BOOL myImportTad_sign(char* full_path, int org_version, FSFile *log_fd)
 
   miya_log_fprintf(log_fd,"tadfile.ver=%d org.ver=%d\n", tadInfo.titleInfo.version,org_version);
   if(  org_version > tadInfo.titleInfo.version ) {
-    miya_log_fprintf(log_fd,"Error:org.ver=%d tadfile.ver=%d %s\n",full_path);
+    miya_log_fprintf(log_fd,"Error:org.ver=%d tadfile.ver=%d %s\n",org_version, tadInfo.titleInfo.version, full_path);
     return FALSE;
   }
 

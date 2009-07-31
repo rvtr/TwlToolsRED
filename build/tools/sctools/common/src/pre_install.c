@@ -157,7 +157,7 @@ typedef struct {
 }
 
 
-static BOOL pre_install_add_list(u64 tid, u8 region, u8 country_code, char *temp_file_name, FSFile *log_fd)
+static BOOL pre_install_add_list(u64 tid, u16 version, u16 groupid, char *temp_file_name, FSFile *log_fd)
 {
   PRE_INSTALL_FILE *temp_pre_install_file = NULL;
   PRE_INSTALL_FILE *temp_list;
@@ -172,8 +172,8 @@ static BOOL pre_install_add_list(u64 tid, u8 region, u8 country_code, char *temp
     return FALSE;
   }
   temp_pre_install_file->tid = tid;
-  temp_pre_install_file->region = region;
-  temp_pre_install_file->country = country_code;
+  temp_pre_install_file->version = version;
+  temp_pre_install_file->groupid = groupid;
   temp_pre_install_file->next = NULL;
 
   STD_StrCpy(temp_pre_install_file->file_name, temp_file_name);
@@ -196,21 +196,46 @@ static BOOL pre_install_add_list(u64 tid, u8 region, u8 country_code, char *temp
 static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd)
 {
   PRE_INSTALL_FILE *temp_list;
+  PRE_INSTALL_FILE *latest_list;
+
+  //  OS_TPrintf("%s\n",__FUNCTION__);
+  //  pre_install_print_list(log_fd);
   
+  latest_list = NULL;
+
   for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
     if( temp_list->tid == tid ) {
-      miya_log_fprintf(log_fd,"\ntad file entry tid=0x%08x%08x\n%s\n", 
-		       (u32)(tid >> 32) , (u32)(tid & 0xffffffff), temp_list->file_name );
-
-      if( !STD_StrNCmp( temp_list->file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
-	*is_in_sd = TRUE;
+      if( latest_list == NULL ) {
+	latest_list = temp_list;
       }
       else {
-	*is_in_sd = FALSE;
+	miya_log_fprintf(log_fd,"\n 1 tid=0x%08x%08x ver=0x%04x %s\n", 
+			 (u32)(tid >> 32) , (u32)(tid & 0xffffffff), latest_list->version , latest_list->file_name );
+	miya_log_fprintf(log_fd," 2 tid=0x%08x%08x ver=0x%04x %s\n", 
+			 (u32)(tid >> 32) , (u32)(tid & 0xffffffff), temp_list->version, temp_list->file_name );
+
+	if( latest_list->version < temp_list->version ) {
+	  latest_list = temp_list;
+	}
       }
-      return temp_list->file_name;
     }
   }
+
+
+  if( latest_list ) {
+    if( !STD_StrNCmp( latest_list->file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
+      *is_in_sd = TRUE;
+    }
+    else {
+      *is_in_sd = FALSE;
+    }
+    miya_log_fprintf(log_fd,"\ntad file entry tid=0x%08x%08x\n%s\n", 
+		     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), latest_list->file_name );
+
+    return latest_list->file_name;
+  }
+
+
   miya_log_fprintf(log_fd,"\n%s:No entry\ntid 0x%08x%08x\n",__FUNCTION__,
 		   (u32)(tid >> 32) , (u32)(tid & 0xffffffff));
   return NULL;
@@ -317,13 +342,19 @@ static int my_char_to_hex(char c)
   else if( 'a' <= c && c <= 'f' ) {
     return (int)( c - 'a' + 10 );
   } 
+  else if( ('x' == c) || ('X' == c) ) {
+    return -2;
+  }
   return -1; /* error */
 }
 
 /* main() -> pre_install_process() -> pre_install_load_file()で呼ばれる。 */
-static BOOL pre_install_load_file(char *path, FSFile *log_fd)
+static MY_SIGN_File ms_file;
+
+static BOOL pre_install_load_file(char *path, FSFile *log_fd, BOOL encrypt_flag)
 {
   FSFile file;
+
   BOOL bSuccess = TRUE;
   //  s32 result;
   s32 readSize;
@@ -338,31 +369,51 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
   char temp_file_name[FS_FILE_NAME_MAX];
 
   u64 temp_tid;
-  u8 temp_region;
-  u8 temp_country_code;
+  u16 temp_version;
+  u16 temp_groupid;
+  //  u8 temp_region;
+  //  u8 temp_country_code;
   int temp_hex;
   int temp_filename_count;
   char c;
+  int scan_counter;
 
-  FS_InitFile(&file);
-
-  bSuccess = FS_OpenFile(&file, path);
-  if( ! bSuccess ) {
-    fsres = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd,"Error:%s %s open file\n",__FILE__,__FUNCTION__);
-    miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( fsres ));
-    return FALSE; /* open error! */
+  if( encrypt_flag == TRUE ) {
+    my_sign_FS_InitFile(&ms_file);
+    bSuccess = my_sign_FS_OpenFile(&ms_file, path);
+    if( ! bSuccess ) {
+      //    fsres = FS_GetArchiveResultCode(path);
+      miya_log_fprintf(log_fd,"Error:%s %s open file failed %s\n",__FILE__,__FUNCTION__,path);
+      //    miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( fsres ));
+      return FALSE; /* open error! */
+    }
+  }
+  else {
+    FS_InitFile(&file);
+    bSuccess = FS_OpenFile(&file, path);
+    if( ! bSuccess ) {
+      fsres = FS_GetArchiveResultCode(path);
+      miya_log_fprintf(log_fd,"Error:%s %s open file\n",__FILE__,__FUNCTION__);
+      miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( fsres ));
+      return FALSE; /* open error! */
+    }
   }
 
   /*
     title id
-    0x00000000 00000000, region , country code, file name,
+    0x00000000 00000000, version , groupid, file name,
    */
+  OS_TPrintf("%s %s %d : Start of File\n", __FILE__,__FUNCTION__,__LINE__);
 
   while( 1 ) {
   next_line_read:
     buf_state = 0;
-    readSize = ReadLine(&file, line_buf, LINE_BUF_SIZE );
+    if( encrypt_flag == TRUE ) {
+      readSize = my_sign_ReadLine(&ms_file, line_buf, LINE_BUF_SIZE );
+    }
+    else {
+      readSize = ReadLine(&file, line_buf, LINE_BUF_SIZE );
+    }
     if( readSize == 0 ) {
       /* EOF */
       OS_TPrintf("%s %s %d : End of File\n", __FILE__,__FUNCTION__,__LINE__);
@@ -376,8 +427,8 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
       buf_counter = STD_StrLen("0x");
       buf_state = 1;
       temp_tid = 0;
-      temp_region = 0;
-      temp_country_code = 0;
+      temp_version = 0;
+      temp_groupid = 0;
       temp_filename_count = 0;
       
       while( readSize > buf_counter ) {
@@ -389,6 +440,7 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	    if( buf_counter == 18 ) {
 	      // OS_TPrintf("temp_tid=0x%08x %08x\n", (u32)(temp_tid >> 32) , (u32)(temp_tid & 0xffffffff));
 	      buf_state = 2;	/* next state */
+	      scan_counter = 0;
 	    }
 	    else {
 	      /* format error */
@@ -399,7 +451,7 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	  }
 	  else {
 	    temp_hex = my_char_to_hex(c);
-	    if( temp_hex != -1 ) {
+	    if( temp_hex != -1 && temp_hex != -2 ) {
 	      temp_tid |= ( ((u64)temp_hex) << (64 - (4 * (buf_counter-1))) );
 	    }
 	    else {
@@ -410,16 +462,51 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	    }
 	  }
 	  break;
-	case 2:	/* region */
+	case 2:	/* version */
 	  if( c == ' ' ) {
 	  }
 	  else if( c == ',' ) {
+
 	    buf_state = 3; /* next state */
+	    scan_counter = 0;
 	  }
 	  else {
+
 	    temp_hex = my_char_to_hex(c);
 	    if( temp_hex != -1 ) {
-	      temp_region = (u8)temp_hex;
+	      switch( scan_counter ) {
+	      case 0:
+		//OS_TPrintf("%s %d\n",__FUNCTION__,__LINE__);
+		if( temp_hex != 0 ) {
+		  /* error */
+		  goto next_line_read;
+		}
+		else {
+		  scan_counter++;
+		}
+		break;
+	      case 1:
+		if( temp_hex != -2 /* x or X */ ) {
+		  /* error */
+		  goto next_line_read;
+		}
+		else {
+		  scan_counter++;
+		  temp_version = 0;
+		}
+		break;
+	      case 2:
+	      case 3:
+	      case 4:
+	      case 5:
+		temp_version |= ( ((u16)temp_hex) << (16 - (4 * (scan_counter-1))) );
+		scan_counter++;
+		break;
+	      case 6:
+		break;
+	      default:
+		break;
+	      }
 	    }
 	    else {
 	      /* format error */
@@ -428,7 +515,7 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	    }
 	  }
 	  break;
-	case 3:	/* country code */
+	case 3:	/* group id */
 	  if( c == ' ' ) {
 	  }
 	  else if( c == ',' ) {
@@ -437,7 +524,38 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	  else {
 	    temp_hex = my_char_to_hex(c);
 	    if( temp_hex != -1 ) {
-	      temp_country_code = (u8)temp_hex;
+	      switch( scan_counter ) {
+	      case 0:
+		if( temp_hex != 0 ) {
+		  /* error */
+		  goto next_line_read;
+		}
+		else {
+		  scan_counter++;
+		}
+		break;
+	      case 1:
+		if( temp_hex != -2 ) {
+		  /* error */
+		  goto next_line_read;
+		}
+		else {
+		  scan_counter++;
+		  temp_groupid = 0;
+		}
+		break;
+	      case 2:
+	      case 3:
+	      case 4:
+	      case 5:
+		temp_groupid |= ( ((u16)temp_hex) << (16 - (4 * (scan_counter-1))) );
+		scan_counter++;
+		break;
+	      case 6:
+		break;
+	      default:
+		break;
+	      }
 	    }
 	    else {
 	      /* format error */
@@ -451,7 +569,7 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
 	  if( c == ',' ) {
 	    temp_file_name[temp_filename_count] = '\0';
 	    /* add list */
-	    if( TRUE != pre_install_add_list(temp_tid, temp_region, temp_country_code, temp_file_name, log_fd) ) {
+	    if( TRUE != pre_install_add_list(temp_tid, temp_version, temp_groupid, temp_file_name, log_fd) ) {
 	      OS_TPrintf("Error: add list error %s %s %d\n", __FILE__,__FUNCTION__,__LINE__);
 	    }
 	    buf_state = 5; /* next state */	    
@@ -478,176 +596,17 @@ static BOOL pre_install_load_file(char *path, FSFile *log_fd)
   }
 
 label_last:
-  (void)FS_CloseFile(&file);
+  if( encrypt_flag == TRUE) {
+    (void)my_sign_FS_CloseFile(&ms_file);
+  }
+  else {
+    (void)FS_CloseFile(&file);
+  }
 
   return bSuccess;
 }
 
 
-static BOOL pre_install_load_sd_file(char *path, FSFile *log_fd)
-{
-  MY_SIGN_File file;
-  BOOL bSuccess = TRUE;
-  //  s32 result;
-  s32 readSize;
-  //  FSResult fsres;
-
-  int buf_counter;
-  int buf_state;
-
-#define LINE_BUF_SIZE 512
-  char line_buf[LINE_BUF_SIZE];
-  //  PRE_INSTALL_FILE temp_pre_install_file;
-  char temp_file_name[FS_FILE_NAME_MAX];
-
-  u64 temp_tid;
-  u8 temp_region;
-  u8 temp_country_code;
-  int temp_hex;
-  int temp_filename_count;
-  char c;
-
-
-  OS_TPrintf("%s %d path=%s\n", __FUNCTION__,__LINE__,path);
-
-  my_sign_FS_InitFile(&file);
-
-  bSuccess = my_sign_FS_OpenFile(&file, path);
-  if( ! bSuccess ) {
-    //    fsres = FS_GetArchiveResultCode(path);
-    miya_log_fprintf(log_fd,"Error:%s %s open file failed %s\n",__FILE__,__FUNCTION__,path);
-    //    miya_log_fprintf(log_fd, " Failed open file:%s\n", my_fs_util_get_fs_result_word( fsres ));
-    return FALSE; /* open error! */
-  }
-
-  /*
-    title id
-    0x00000000 00000000, region , country code, file name,
-   */
-
-  while( 1 ) {
-  next_line_read:
-    buf_state = 0;
-    readSize = my_sign_ReadLine(&file, line_buf, LINE_BUF_SIZE );
-    if( readSize == 0 ) {
-      /* EOF */
-      OS_TPrintf("%s %s %d : End of File\n", __FILE__,__FUNCTION__,__LINE__);
-      break;
-    }
-
-    if( !STD_StrNCmp( line_buf, "0x" , STD_StrLen("0x")) ) {
-
-      OS_TPrintf("%s\n", line_buf);
-
-      buf_counter = STD_StrLen("0x");
-      buf_state = 1;
-      temp_tid = 0;
-      temp_region = 0;
-      temp_country_code = 0;
-      temp_filename_count = 0;
-      
-      while( readSize > buf_counter ) {
-	c = line_buf[buf_counter];
-
-	switch( buf_state ) {
-	case 1:	/* TID */
-	  if( c == ',') {
-	    if( buf_counter == 18 ) {
-	      // OS_TPrintf("temp_tid=0x%08x %08x\n", (u32)(temp_tid >> 32) , (u32)(temp_tid & 0xffffffff));
-	      buf_state = 2;	/* next state */
-	    }
-	    else {
-	      /* format error */
-	      miya_log_fprintf(log_fd,"Error:%s %s %d format error \n",__FILE__,__FUNCTION__,__LINE__);
-	      goto next_line_read;
-	      // break;
-	    }
-	  }
-	  else {
-	    temp_hex = my_char_to_hex(c);
-	    if( temp_hex != -1 ) {
-	      temp_tid |= ( ((u64)temp_hex) << (64 - (4 * (buf_counter-1))) );
-	    }
-	    else {
-	      /* format error */
-	      miya_log_fprintf(log_fd,"Error:%s %s %d format error\n",__FILE__,__FUNCTION__,__LINE__);
-	      goto next_line_read;
-	      // break;
-	    }
-	  }
-	  break;
-	case 2:	/* region */
-	  if( c == ' ' ) {
-	  }
-	  else if( c == ',' ) {
-	    buf_state = 3; /* next state */
-	  }
-	  else {
-	    temp_hex = my_char_to_hex(c);
-	    if( temp_hex != -1 ) {
-	      temp_region = (u8)temp_hex;
-	    }
-	    else {
-	      /* format error */
-	      miya_log_fprintf(log_fd,"Error:%s %s %d format error\n",__FILE__,__FUNCTION__,__LINE__);
-	      goto next_line_read;
-	    }
-	  }
-	  break;
-	case 3:	/* country code */
-	  if( c == ' ' ) {
-	  }
-	  else if( c == ',' ) {
-	    buf_state = 4; /* next state */
-	  }
-	  else {
-	    temp_hex = my_char_to_hex(c);
-	    if( temp_hex != -1 ) {
-	      temp_country_code = (u8)temp_hex;
-	    }
-	    else {
-	      /* format error */
-	      miya_log_fprintf(log_fd,"Error:%s %s %d format error\n",__FILE__,__FUNCTION__,__LINE__);
-	      goto next_line_read;
-	    }
-	  }
-	  break;
-
-	case 4: /* file name */
-	  if( c == ',' ) {
-	    temp_file_name[temp_filename_count] = '\0';
-	    /* add list */
-	    if( TRUE != pre_install_add_list(temp_tid, temp_region, temp_country_code, temp_file_name, log_fd) ) {
-	      OS_TPrintf("Error: add list error %s %s %d\n", __FILE__,__FUNCTION__,__LINE__);
-	    }
-	    buf_state = 5; /* next state */	    
-	  }
-	  else {
-	    if( c != ' ' ) {
-	      temp_file_name[temp_filename_count] = c;
-	      temp_filename_count++;
-	    }
-	  }
-	  break;
-	case 5: /* until line end */
-	  break;
-	default:
-	  /* error */
-	  break;
-	}
-	buf_counter++;
-      }
-    }
-    else {
-      /* 妙なフォーマットは全部コメント扱い. */
-    }
-  }
-
-label_last:
-  (void)my_sign_FS_CloseFile(&file);
-
-  return bSuccess;
-}
 
 
 
@@ -742,12 +701,12 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
   int org_version =-1;
 
   if( development_version_flag ) {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd, FALSE);
   }
   else {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
   }
 
   pre_install_print_list(log_fd);
@@ -795,6 +754,9 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
 	  ret_flag = myImportTad( tad_file_name , org_version, log_fd );
 	}
       }
+      else {
+	ret_flag = FALSE;
+      }
 
       break;
     case 2:
@@ -809,6 +771,10 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
 	  ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
 	}
       }
+      else {
+	ret_flag = FALSE;
+      }
+
       break;
     case 3:
       mprintf("DA ");
@@ -855,12 +821,12 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
 BOOL pre_install_debug(FSFile *log_fd, BOOL development_version_flag )
 {
   if( development_version_flag ) {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd, FALSE);
   }
   else {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
   }
   
   pre_install_print_list(NULL);
@@ -879,12 +845,12 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
   int version;
 
   if( development_version_flag ) {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd, FALSE);
   }
   else {
-    (void)pre_install_load_sd_file(PRE_INSTALL_TABLE_FILE_SD, log_fd);
-    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
   }
 
   

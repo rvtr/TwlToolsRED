@@ -5,8 +5,8 @@
 typedef struct _PRE_INSTALL_FILE {
   struct _PRE_INSTALL_FILE *next;
   u64 tid;
-  u8 region;
-  u8 country;
+  u16 version;
+  u16 groupid;
   char file_name[FS_FILE_NAME_MAX];
 } PRE_INSTALL_FILE;
 

@@ -829,7 +829,7 @@ BOOL pre_install_debug(FSFile *log_fd, BOOL development_version_flag )
     (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
   }
   
-  pre_install_print_list(NULL);
+  pre_install_print_list( log_fd );
   return TRUE;
 }
 
@@ -854,7 +854,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
   }
 
   
-  pre_install_print_list(NULL);
+  pre_install_print_list( log_fd );
 
   /* チケットだけのインストール */
   for( i = 0 ; i < ticket_id_count ; i++ ) {

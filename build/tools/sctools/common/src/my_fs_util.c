@@ -6,6 +6,7 @@
 #include        "logprintf.h"
 #include        "error_report.h"
 
+#define TITLE_LIST_ENCRYPTION  1
 
 #define ATTRIBUTE_BACK 1
 
@@ -291,6 +292,7 @@ s32 my_fs_crypto_read(FSFile *f, void *ptr, s32 size)
   }
   return readSize;
 }
+
 
 s32 my_fs_crypto_write(FSFile *f, void *ptr, s32 size)
 {
@@ -2061,7 +2063,14 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
     goto function_end;
   }
 
-  if( sizeof(int) != FS_ReadFile(&f, &id_count, (s32)sizeof(int)) ) {
+
+
+#ifdef TITLE_LIST_ENCRYPTION 
+  readSize = my_fs_crypto_read(&f, &id_count, (s32)sizeof(int));
+#else /* TITLE_LIST_ENCRYPTION */
+  readSize = FS_ReadFile(&f, &id_count, (s32)sizeof(int));
+#endif /* TITLE_LIST_ENCRYPTION */
+  if( sizeof(int) != readSize ) {
     miya_log_fprintf(log_fd, "Failed Read File %s\n",__FUNCTION__);
     miya_log_fprintf(log_fd, " path=%s\n", path );
     miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
@@ -2070,8 +2079,14 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
   } 
 
 
+  if( (id_count < 0 ) || (128 < id_count) ) {
+    ret_flag = FALSE;
+    miya_log_fprintf(log_fd, "%s Failed suspicous data id_count=%d\n",__FUNCTION__, id_count );
+    goto function_end;
+  }
+
   *count = id_count;
-  //  size = (int)sizeof(u64) * id_count;
+
   size = (int)sizeof(MY_USER_APP_TID) * id_count;
 
   //  *pBuffer = (u64 *)OS_Alloc( (u32)size );
@@ -2082,7 +2097,11 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
     goto function_end;
   }
 
+#ifdef TITLE_LIST_ENCRYPTION 
+  readSize = my_fs_crypto_read(&f, (void *)*pBuffer, (s32)size );
+#else /* TITLE_LIST_ENCRYPTION */
   readSize = FS_ReadFile(&f, (void *)*pBuffer, (s32)size );
+#endif /* TITLE_LIST_ENCRYPTION */
   if( readSize != size ) {
     miya_log_fprintf(log_fd, "Failed Read File: %s request size %d read size %d\n",path, size, readSize);
     if( readSize != size ) {
@@ -2118,7 +2137,7 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
   FSFile *log_fd;
   FSFile log_fd_real;
   BOOL ret_flag = TRUE;
-
+  int write_size;
   log_fd = &log_fd_real;
 
   FS_InitFile(&f);
@@ -2167,7 +2186,12 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
     goto function_end;
   }
 
-  if( sizeof(int) != FS_WriteFile(&f, &count, (s32)sizeof(int)) ) {
+#ifdef TITLE_LIST_ENCRYPTION 
+  write_size = my_fs_crypto_write(&f, &count, (s32)sizeof(int));
+#else /* TITLE_LIST_ENCRYPTION */
+  write_size = FS_WriteFile(&f, &count, (s32)sizeof(int));
+#endif /* TITLE_LIST_ENCRYPTION */
+  if( sizeof(int) != write_size ) {
     res = FS_GetArchiveResultCode( path );
     miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
     miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
@@ -2190,7 +2214,12 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
 
   if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16•¶Žš‚¾‚©‚ç */
-    if( (count*sizeof(MY_USER_APP_TID)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_APP_TID)) )) {
+#ifdef TITLE_LIST_ENCRYPTION 
+    write_size = my_fs_crypto_write(&f, pData, (s32)(count*sizeof(MY_USER_APP_TID)));
+#else /* TITLE_LIST_ENCRYPTION */
+    write_size = FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_APP_TID)));
+#endif /* TITLE_LIST_ENCRYPTION */
+    if( (count*sizeof(MY_USER_APP_TID)) != write_size ) {
       res = FS_GetArchiveResultCode( path );
       miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
       miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
@@ -2262,13 +2291,25 @@ BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int
     goto function_end;
   }
 
-  if( sizeof(int) != FS_ReadFile(&f, &id_count, (s32)sizeof(int)) ) {
+#ifdef TITLE_LIST_ENCRYPTION 
+  readSize = my_fs_crypto_read(&f, &id_count, (s32)sizeof(int));
+#else /* TITLE_LIST_ENCRYPTION */
+  readSize = FS_ReadFile(&f, &id_count, (s32)sizeof(int));
+#endif /* TITLE_LIST_ENCRYPTION */
+  if( sizeof(int) != readSize ) {
     miya_log_fprintf(log_fd, "Failed Read File %s\n",__FUNCTION__);
     miya_log_fprintf(log_fd, " path=%s\n", path );
     miya_log_fprintf(log_fd, " res=%s\n", my_fs_util_get_fs_result_word( FS_GetArchiveResultCode(path) ));
     ret_flag = FALSE;
     goto function_end;
   } 
+
+
+  if( (id_count < 0 ) || (128 < id_count) ) {
+    ret_flag = FALSE;
+    miya_log_fprintf(log_fd, "%s Failed suspicous data id_count=%d\n",__FUNCTION__, id_count );
+    goto function_end;
+  }
 
   *count = id_count;
   size = (int)sizeof(MY_USER_ETICKET_TID) * id_count;
@@ -2279,7 +2320,11 @@ BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int
     miya_log_fprintf(log_fd, "%s Failed memory alloc size %d\n",__FUNCTION__, size);
     goto function_end;
   }
+#ifdef TITLE_LIST_ENCRYPTION 
+  readSize = my_fs_crypto_read(&f, (void *)*pBuffer, (s32)size );
+#else /* TITLE_LIST_ENCRYPTION */
   readSize = FS_ReadFile(&f, (void *)*pBuffer, (s32)size );
+#endif /* TITLE_LIST_ENCRYPTION */
   if( readSize != size ) {
     miya_log_fprintf(log_fd, "Failed Read File: %s request size %d read size %d\n",path, size, readSize);
     if( readSize != size ) {
@@ -2313,6 +2358,7 @@ BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int co
   FSFile *log_fd;
   FSFile log_fd_real;
   BOOL ret_flag = TRUE;
+  int write_size;
 
   log_fd = &log_fd_real;
 
@@ -2359,7 +2405,13 @@ BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int co
     goto function_end;
   }
 
-  if( sizeof(int) != FS_WriteFile(&f, &count, (s32)sizeof(int)) ) {
+
+#ifdef TITLE_LIST_ENCRYPTION 
+    write_size = my_fs_crypto_write(&f, &count, (s32)sizeof(int));
+#else /* TITLE_LIST_ENCRYPTION */
+  write_size = FS_WriteFile(&f, &count, (s32)sizeof(int));
+#endif /* TITLE_LIST_ENCRYPTION */
+  if( sizeof(int) != write_size ) {
     res = FS_GetArchiveResultCode( path );
     miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
     miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word( res ));
@@ -2372,7 +2424,12 @@ BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int co
 
   if( ( pData != NULL ) && ( count != 0 ) ) {
     /* 16•¶Žš‚¾‚©‚ç */
-    if( (count*sizeof(MY_USER_ETICKET_TID)) != FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_ETICKET_TID)) )) {
+#ifdef TITLE_LIST_ENCRYPTION 
+    write_size = my_fs_crypto_write(&f, pData, (s32)(count*sizeof(MY_USER_ETICKET_TID)) );
+#else /* TITLE_LIST_ENCRYPTION */
+    write_size = FS_WriteFile(&f, pData, (s32)(count*sizeof(MY_USER_ETICKET_TID)) );
+#endif /* TITLE_LIST_ENCRYPTION */
+    if( (count*sizeof(MY_USER_ETICKET_TID)) != write_size ) {
       res = FS_GetArchiveResultCode( path );
       miya_log_fprintf(log_fd, "%s file write error %s\n", __FUNCTION__,path );
       miya_log_fprintf(log_fd, " Failed write file:%s\n", my_fs_util_get_fs_result_word(res));

@@ -27,6 +27,15 @@ typedef int BOOL;
 #endif
 
 
+/* グローバルデータ */
+
+#define MAX_TITLE_IDS 2048
+static int num_of_title_ids = 0;
+static u32 title_id_hi_array[MAX_TITLE_IDS];
+static u32 title_id_lo_array[MAX_TITLE_IDS];
+static u16 title_ver_array[MAX_TITLE_IDS];
+static u16 title_gid_array[MAX_TITLE_IDS];
+static char title_rom_file_full_path[MAX_TITLE_IDS][256];
 
 
 /* tadのデータは基本的にビッグエンディアン */
@@ -83,25 +92,6 @@ typedef struct NAMTadInfo
     u32     fileSize;
 } NAMTadInfo;
 
-#if 0
-    pInfo->sizes.cert       = NAMi_EndianU32(pHeader->certSize);
-    pInfo->sizes.crl        = NAMi_EndianU32(pHeader->crlSize);
-    pInfo->sizes.ticket     = NAMi_EndianU32(pHeader->ticketSize);
-    pInfo->sizes.tmd        = NAMi_EndianU32(pHeader->tmdSize);
-    pInfo->sizes.content    = NAMi_EndianU32(pHeader->contentSize);
-    pInfo->sizes.meta       = NAMi_EndianU32(pHeader->metaSize);
-
-
-    pInfo->offsets.cert     = MATH_ROUNDUP(sizeof(NAMiTADHeader), TAD_ALIGN);
-    pInfo->offsets.crl      = pInfo->offsets.cert       + MATH_ROUNDUP(pInfo->sizes.cert,       TAD_ALIGN);
-    pInfo->offsets.ticket   = pInfo->offsets.crl        + MATH_ROUNDUP(pInfo->sizes.crl,        TAD_ALIGN);
-    pInfo->offsets.tmd      = pInfo->offsets.ticket     + MATH_ROUNDUP(pInfo->sizes.ticket,     TAD_ALIGN);
-    pInfo->offsets.content  = pInfo->offsets.tmd        + MATH_ROUNDUP(pInfo->sizes.tmd,        TAD_ALIGN);
-    pInfo->offsets.meta     = pInfo->offsets.content    + MATH_ROUNDUP(pInfo->sizes.content,    TAD_ALIGN);
-#endif
-
-
-
 
 #define ES_APP_ENC_HANDLE       6
 
@@ -126,6 +116,7 @@ typedef u16  ESContentType;        /* content type */
 typedef u8   ESTmdReserved[62];    /* reserved field in TMD structure */
 typedef u8   ESTicketReserved[47]; /* reserved field in eTicket structure */
 typedef u8   ESSysAccessMask[2];   /* 16 bit cidx Mask to indicate which 
+
                                       content can be accessed by sys app */
 #if !defined(__ES_INTERNAL__)
 /* IOSC types */
@@ -536,7 +527,7 @@ static write_tad_table_form(FILE *fp, u32 tid_hi, u32 tid_lo, char *filename)
 }
 #endif
 
-static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out, FILE *fp_mk, BOOL is_sd )
+static BOOL read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out, FILE *fp_mk, BOOL is_sd )
 {
   FILE *fp_in = NULL;
   TAD_INFO tad_info;
@@ -545,16 +536,21 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   u32 titleid_lo = 0;
   u16 t_ver;
   u16 gid;
+  int i;
+  BOOL ret_flag = TRUE;
+
 
   fp_in = fopen(path,"rb");	/* fseek効かすため */
   if( fp_in == NULL ) {
     fprintf(stderr, "error: file open %s\n",path);
+    ret_flag = FALSE;
     goto end_file; 
  }
 
   /* TADファイルかどうかチェック */
   if( FALSE == read_tad_info(fp_in, &tad_info) ) {
     //    fprintf(stderr, "error:%s %d\n",__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
     goto end_file;
   }
 
@@ -562,6 +558,7 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   fseek( fp_in, 0, SEEK_END );
   if( tad_info.fileSize != ftell( fp_in ) ) {
     printf( "file size is not expected size(=%d)", tad_info.fileSize );
+    ret_flag = FALSE;
     goto end_file;
   }
   
@@ -581,6 +578,35 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
   if( debug_print_flag ) {
     printf("inputfile = %s\n", path);
   }
+
+
+  /* ここでタイトルＩＤの重複チェックする */
+  for( i = 0 ; i < num_of_title_ids ; i++ ) {
+    if( (title_id_hi_array[i] == titleid_hi) && (title_id_lo_array[i] == titleid_lo) ) {
+      if( title_ver_array[i] == t_ver ) {
+	/* バージョンも含めて重複してる！ */
+	fprintf(stderr, "Error: title exists redundantly\n");
+      }
+      else {
+	/* バージョン違いだけど重複してる */
+	fprintf(stderr, "Warning: title exists in different versions\n");
+      }
+
+      fprintf(stderr, "  0x%08x%08x, 0x%04x , 0x%04x  %s\n", 
+	      title_id_hi_array[i], title_id_lo_array[i], 
+	      title_ver_array[i], title_gid_array[i], title_rom_file_full_path[i] );
+      fprintf(stderr, "  0x%08x%08x, 0x%04x , 0x%04x  %s\n", titleid_hi,  titleid_lo, t_ver , gid , path);
+    }
+  }
+
+
+  title_id_hi_array[ num_of_title_ids ] = titleid_hi;
+  title_id_lo_array[ num_of_title_ids ] = titleid_lo;
+  title_ver_array[ num_of_title_ids ] = t_ver;
+  title_gid_array[ num_of_title_ids ] = gid;
+  strcpy( title_rom_file_full_path[num_of_title_ids], path);
+
+  num_of_title_ids++;
 
   if( fp_out ) {
     if( is_sd == FALSE ) {
@@ -612,10 +638,12 @@ static void read_file_and_print_titleid( char *path , char *d_name, FILE *fp_out
     fclose(fp_in);
   }
 
+  return ret_flag;
 }
 
 int main(int argc, char **argv)
 {
+  int i;
   FILE *fp_in = NULL;
   FILE *fp_out = NULL;
   FILE *fp_mk = NULL;
@@ -650,6 +678,7 @@ int main(int argc, char **argv)
   struct stat st;
   char *full_path;
   char rom_file_full_path[256];
+  BOOL func_ret_flag;
 
   //  test();
 
@@ -752,7 +781,15 @@ int main(int argc, char **argv)
       }
     }
 
-
+    /* チェック用のテーブル初期化(いらんけど) */
+    num_of_title_ids = 0;
+    for( i = 0 ; i < MAX_TITLE_IDS ; i++ ) {
+      title_id_hi_array[i] = 0;
+      title_id_lo_array[i] = 0;
+      title_ver_array[i] = 0;
+      title_gid_array[i] = 0;
+      title_rom_file_full_path[i][0] = 0;
+    }
     
     /* ディレクトリ中のTADファイルをリストにして表示する。 */
     while( (dr = readdir(dir)) != NULL ) {
@@ -782,17 +819,28 @@ int main(int argc, char **argv)
 	}
 	if( st.st_size >= 32 ) { 
 	  if( file_dir_flag ) {
+	    /* テーブルファイルに登録するときディレクトリ名をつけて処理する、というフラグ */
 	    strcpy( rom_file_full_path, file_dir);
 	    strcat( rom_file_full_path, "/");
 	    if( sd_flag == TRUE ) {
 	      strcat( rom_file_full_path, "en_");
 	    }
 	    strcat( rom_file_full_path, dr->d_name);
-	    read_file_and_print_titleid( full_path ,rom_file_full_path, fp_out , fp_mk , sd_flag);
+	    func_ret_flag = read_file_and_print_titleid( full_path ,rom_file_full_path, fp_out , fp_mk , sd_flag);
 	  }
 	  else {
-	    read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk , sd_flag);
+	    func_ret_flag = read_file_and_print_titleid( full_path ,dr->d_name, fp_out , fp_mk , sd_flag);
 	  }
+
+	  if( func_ret_flag == TRUE ) {
+	    /* 
+	       tadファイルだったのでテーブルファイルに登録された。
+	       なので暗号化をついでにする。
+	    */
+	    // printf("cryptopc.exe tad1024.der %s\n",full_path);
+
+	  }
+
 	}
       }
 

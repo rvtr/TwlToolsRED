@@ -232,6 +232,12 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 {
 	// ROMヘッダのチェック (NTR互換領域)
 
+	// 開始アドレスが0x02004000よりも前のときにはエラー
+	if( (u32)(this->pRomHeader->s.main_ram_address) < 0x02004000 )
+	{
+		this->hErrorList->Add( this->makeMrcError("RomStartAddress") );
+	}
+
 	// NANDアプリがHYBRIDとなるのはクローンブートのときのみ
 	if( this->IsMediaNand )
 	{

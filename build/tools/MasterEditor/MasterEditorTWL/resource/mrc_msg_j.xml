@@ -3,12 +3,75 @@
 
 <!-- 英訳依頼 ここから (ver.1.7 追加メッセージ) -->
 
-	<!-- RomStart Address CW -->
+	<!-- TWL Rom Info -->
 	<RomStartAddress>
 		<name>スタートアドレス</name>
 		<sentence>ROMのスタートアドレスは、0x02004000以降でなければなりません。</sentence>
 		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
 	</RomStartAddress>
+
+	<DebugDwc>
+		<name>DWCライブラリ</name>
+		<sentence>開発用サーバにアクセスする関数が使用されています。</sentence>
+		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
+	</DebugDwc>
+
+	<DigestArea>
+		<name>ダイジェスト</name>
+		<sentence>ファイルサイズがダイジェストの対象範囲よりも小さくなっています。ROM末尾のパディングやROMの一部が削除されている可能性があります。</sentence>
+		<begin>1e0</begin><end>1ef</end><modify>False</modify><affect>True</affect>
+	</DigestArea>
+
+	<!-- For China -->
+	<ChinaAllRatingFree>
+		<name>レーティング(中国版対応)</name>
+		<sentence>中国にはレーティング審査団体が存在しませんので、中国向けソフトに対しては、各審査団体のレーティング値を設定する必要はありません。(自動的にマスターエディタが値をセットしますので、本警告を無視していただいてかまいません。)</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</ChinaAllRatingFree>
+
+	<!-- For DS Station -->
+	<DSStationTmpJump>
+		<name>DS Station対応</name>
+		<sentence>DS Station用ROMではtmpジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</DSStationTmpJump>
+
+	<DSStationRomSize>
+		<name>DS Station対応</name>
+		<sentence>DS Station用ROMのファイルサイズは768Mbit以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationRomSize>
+
+	<DSStationLib>
+		<name>DS Station対応</name>
+		<sentence>店頭試遊台用ライブラリが使用されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationLib>
+
+	<!-- For Nintendo Zone -->
+	<ZoneTmpJump>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ZoneTmpJump>
+
+	<ZoneHybrid>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneHybrid>
+
+	<ZoneLimited>
+		<name>ダウンロードサービス対応</name>
+		<sentence>このソフトはLIMITED版ですので、NintendoZoneのみで配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneLimited>
+
+	<ZoneRomSize>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneRomSize>
 
 <!-- 英訳依頼 ここまで -->
 
@@ -76,49 +139,6 @@
 		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ChinaBannerCharSet>
-	<ChinaAllRatingFree>
-		<name>レーティング(中国版対応)</name>
-		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
-		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
-	</ChinaAllRatingFree>
-
-	<!-- For DS Station -->
-	<DSStationTmpJump>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
-		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
-	</DSStationTmpJump>
-
-	<DSStationRomSize>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSStationRomSize>
-
-	<DSStationLib>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSStationLib>
-
-	<!-- For Nintendo Zone -->
-	<ZoneTmpJump>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
-		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
-	</ZoneTmpJump>
-
-	<ZoneHybrid>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
-		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
-	</ZoneHybrid>
-
-	<ZoneRomSize>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</ZoneRomSize>
 
 	<!-- SDK Version -->
 	<SDKVersionExModuleTwlOld>

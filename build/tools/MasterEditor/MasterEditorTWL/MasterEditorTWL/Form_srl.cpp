@@ -259,6 +259,11 @@ void Form1::setSrlForms(void)
 				System::Int32 last = this->gridLibrary->Rows->Count - 2;
 				this->gridLibrary->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
 			}
+			if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->StartsWith( "DEBUG DWC" ) )
+			{
+				System::Int32 last = this->gridLibrary->Rows->Count - 2;
+				this->gridLibrary->Rows[ last ]->DefaultCellStyle->ForeColor = System::Drawing::Color::Red;
+			}
 		}
 	}
 	this->gridLibrary->CurrentCell = nullptr;

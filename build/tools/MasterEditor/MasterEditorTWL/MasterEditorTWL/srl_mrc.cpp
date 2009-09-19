@@ -238,6 +238,15 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		this->hErrorList->Add( this->makeMrcError("RomStartAddress") );
 	}
 
+	// ダイジェスト範囲よりもファイルサイズが小さいときエラー
+	fseek( fp, 0, SEEK_END );
+	u32 fileend = ftell(fp);
+	if( (fileend < (this->pRomHeader->s.twl_digest_area_rom_offset + this->pRomHeader->s.twl_digest_area_size)) ||
+		(fileend < (this->pRomHeader->s.twl_digest_area_rom_offset + this->pRomHeader->s.twl_digest_area_size)) )
+	{
+		this->hErrorList->Add( this->makeMrcError("DigestArea") );
+	}
+
 	// NANDアプリがHYBRIDとなるのはクローンブートのときのみ
 	if( this->IsMediaNand )
 	{

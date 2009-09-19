@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
+
+<!-- 英訳依頼 ver1.7 追加メッセージ ここから -->
+<E_JapaneseFont>ＭＳ ゴシック (MS Gothic) フォントがインストールされていないPCでの日本語表示には対応していません。</E_JapaneseFont>
+<!-- 英訳依頼 ver1.7 追加メッセージ ここまで -->
+
 <!-- common -->
 <OverWrite>{0} はすでに存在します。上書きしますか?</OverWrite>
 

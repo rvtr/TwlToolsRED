@@ -1,0 +1,635 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<message>
+
+<!-- 英訳依頼 ここから (ver.1.7 追加メッセージ) -->
+
+	<!-- RomStart Address CW -->
+	<RomStartAddress>
+		<name>ロード先アドレス</name>
+		<sentence>プログラムのロード先アドレスは、0x02004000以降でなければなりません。LSFファイルの "ADDRESS_STATIC" の値、もしくは CodeWarrior for DSi の設定を確認してください。</sentence>
+		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
+	</RomStartAddress>
+
+<!-- 英訳依頼 ここまで -->
+
+<!-- (ver.1.6 追加メッセージ ここから) -->
+
+	<!-- Clone Boot -->
+	<NandHybridBefore51PR>
+		<name>NANDアプリのHYBRID条件</name>
+		<sentence>TwlSDK5.1PRよりも前のバージョンをご使用の場合、HYBRID版NANDアプリを作成するためには、弊社窓口への確認が必要です。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandHybridBefore51PR>
+
+	<!-- Access Control -->
+	<PhotoTclAccessUser>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへアクセスする場合にはTCLライブラリを使用してください。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoTclAccessUser>
+	<SDAccessPriv>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのアクセス権の設定が不十分です。RSFファイルのSDCardAccessプロパティに"None"、"Read"、"Write"、"ReadWrite"のいずれかを指定する必要があります。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessPriv>
+
+	<!-- For Korea -->
+	<KoreaFlagNegated>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国であるにもかかわらず、RSFファイルでForKoreaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagNegated>
+	<KoreaFlagAsserted>
+		<name>韓国版対応</name>
+		<sentence>仕向地が韓国でないにもかかわらず、RSFファイルでForKoreaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</KoreaFlagAsserted>
+	<KoreaBannerCharSet>
+		<name>韓国版バナー</name>
+		<sentence>韓国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</KoreaBannerCharSet>
+
+	<!-- For China -->
+	<ChinaFlagNegated>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、RSFファイルでForChinaプロパティが設定されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagNegated>
+	<ChinaFlagAsserted>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、RSFファイルでForChinaプロパティが設定されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ChinaFlagAsserted>
+	<OSInitChinaUnused>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国であるにもかかわらず、OS_InitChina関数が使用されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUnused>
+	<OSInitChinaUsed>
+		<name>中国版対応</name>
+		<sentence>仕向地が中国でないにもかかわらず、OS_InitChina関数が使用されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</OSInitChinaUsed>
+	<ChinaBannerCharSet>
+		<name>中国版バナー</name>
+		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ChinaBannerCharSet>
+	<ChinaAllRatingFree>
+		<name>レーティング(中国版対応)</name>
+		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</ChinaAllRatingFree>
+
+	<!-- For DS Station -->
+	<DSStationTmpJump>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</DSStationTmpJump>
+
+	<DSStationRomSize>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationRomSize>
+
+	<DSStationLib>
+		<name>店頭試遊版対応</name>
+		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSStationLib>
+
+	<!-- For Nintendo Zone -->
+	<ZoneTmpJump>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ZoneTmpJump>
+
+	<ZoneHybrid>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneHybrid>
+
+	<ZoneRomSize>
+		<name>ダウンロードサービス対応</name>
+		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneRomSize>
+
+	<!-- SDK Version -->
+	<SDKVersionExModuleTwlOld>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlOld>
+	<SDKVersionExModuleTwlPR>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>PR版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlPR>
+	<SDKVersionExModuleTwlRC>
+		<name>SDKバージョン(TWL非常駐モジュール)</name>
+		<sentence>RC版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleTwlRC>
+	<SDKVersionExModuleNtrOld>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いモジュールがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrOld>
+	<SDKVersionExModuleNtrPR>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>PR版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrPR>
+	<SDKVersionExModuleNtrRC>
+		<name>SDKバージョン(NTR非常駐モジュール)</name>
+		<sentence>RC版が使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionExModuleNtrRC>
+
+	<!-- Application Jump -->
+	<NormalJumpCard>
+		<name>アプリジャンプ</name>
+		<sentence>ゲームカード向けのソフトではノーマルアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJumpCard>
+	<TmpJumpCard>
+		<name>アプリジャンプ</name>
+		<sentence>ゲームカード向けのソフトではtmpアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</TmpJumpCard>
+	<NormalJumpAndTmpJump>
+		<name>アプリジャンプ</name>
+		<sentence>ノーマルアプリジャンプとtmpジャンプを同時に設定することはできません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJumpAndTmpJump>
+
+<!-- (ver.1.6追加メッセージ ここまで) -->
+
+	<!-- NTR Compatible Area -->
+	<TitleNameAscii>
+		<name>ソフトタイトル</name>
+		<sentence>使用不可のASCIIコードが使用されています。</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameAscii>
+	<TitleNameSuffix>
+		<name>ソフトタイトル</name>
+		<sentence>末尾の未使用部分には00hを登録してください。</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameSuffix>
+	<TitleNameSpace>
+		<name>ソフトタイトル</name>
+		<sentence>スペース部分には20hを登録してください。</sentence>
+		<begin>0</begin><end>b</end><modify>False</modify><affect>True</affect>
+	</TitleNameSpace>
+	<InitialCodeAscii>
+		<name>イニシャルコード</name>
+		<sentence>使用不可のASCIIコードが使用されています。</sentence>
+		<begin>c</begin><end>f</end><modify>False</modify><affect>True</affect>
+	</InitialCodeAscii>
+	<InitialCodeSDKDefault>
+		<name>イニシャルコード</name>
+		<sentence>SDKデフォルトのコード(NTRJ)が使用されています。</sentence>
+		<begin>c</begin><end>f</end><modify>False</modify><affect>True</affect>
+	</InitialCodeSDKDefault>
+	<MakerCodeAscii>
+		<name>メーカーコード</name>
+		<sentence>使用不可のASCIIコードが使用されています。</sentence>
+		<begin>10</begin><end>11</end><modify>False</modify><affect>True</affect>
+	</MakerCodeAscii>
+	<DeviceType>
+		<name>デバイスタイプ</name>
+		<sentence>不正な値です。00hを設定してください。</sentence>
+		<begin>13</begin><end>13</end><modify>False</modify><affect>True</affect>
+	</DeviceType>
+	<RemasterVersion>
+		<name>リマスターバージョン</name>
+		<sentence>不正な値です。正式版では01h-0Fhのいずれかの値、事前版ではE0hを設定してください。</sentence>
+		<begin>1e</begin><end>1e</end><modify>False</modify><affect>True</affect>
+	</RemasterVersion>
+	<BannerOffset>
+		<name>バナーオフセット</name>
+		<sentence>バナーデータが設定されていません。</sentence>
+		<begin>68</begin><end>6b</end><modify>False</modify><affect>True</affect>
+	</BannerOffset>
+	<RomValidSize>
+		<name>ROM実効サイズ</name>
+		<sentence>値が設定されていません。</sentence>
+		<begin>80</begin><end>83</end><modify>False</modify><affect>True</affect>
+	</RomValidSize>
+	<SecureCRCAddress>
+		<name>セキュア領域CRC</name>
+		<sentence>セキュア領域のアドレス指定が不正です。</sentence>
+		<begin>7c</begin><end>7d</end><modify>False</modify><affect>True</affect>
+	</SecureCRCAddress>
+	<SecureCRCVerify>
+		<name>セキュア領域CRC</name>
+		<sentence>計算結果と一致しません。セキュア領域が改ざんされた可能性があります。</sentence>
+		<begin>7c</begin><end>7d</end><modify>False</modify><affect>True</affect>
+	</SecureCRCVerify>
+	<LogoCRC>
+		<name>キャラクターデータCRC</name>
+		<sentence>計算結果と一致しません。キャラクターデータが改ざんされた可能性があります。</sentence>
+		<begin>15c</begin><end>15d</end><modify>False</modify><affect>True</affect>
+	</LogoCRC>
+	<HeaderCRC>
+		<name>ROMヘッダCRC</name>
+		<sentence>計算結果と一致しません。ROMヘッダが改ざんされた可能性があります。</sentence>
+		<begin>15e</begin><end>15f</end><modify>False</modify><affect>True</affect>
+	</HeaderCRC>
+	<Syscall>
+		<name>システムコールライブラリ</name>
+		<sentence>SDKデフォルトです。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Syscall>
+
+	<!-- TWL Unique Area -->
+	<NandHybrid>
+		<name>NANDアプリのHYBRID条件</name>
+		<sentence>クローンブート対応でないNANDアプリをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandHybrid>
+	<NandLimited>
+		<name>NANDアプリのLIMITED条件</name>
+		<sentence>クローンブート対応のNANDアプリをLIMITED版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</NandLimited>
+	<OldDevFlag>
+		<name>旧開発用暗号フラグ</name>
+		<sentence>このROMはクローンブート対応アプリですが、製品用本体ではクローンブートができなくなります。</sentence>
+		<begin>1c</begin><end>1c</end><modify>False</modify><affect>True</affect>
+	</OldDevFlag>
+	<CapacityCardLess>
+		<name>デバイス容量</name>
+		<sentence>実ファイルサイズよりも小さい値が指定されています。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardLess>
+	<CapacityCardWaste>
+		<name>デバイス容量</name>
+		<sentence>実ファイルサイズに比べて無駄のある値が設定されています。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardWaste>
+	<CapacityCardRange>
+		<name>デバイス容量</name>
+		<sentence>指定可能な容量ではありません。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityCardRange>
+	<CapacityNandRange>
+		<name>デバイス容量</name>
+		<sentence>NANDアプリに対して指定可能な容量ではありません。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</CapacityNandRange>
+	<FilesizeFraction>
+		<name>実ファイルサイズ</name>
+		<sentence>中途半端な値です。通常では2のべき乗[Mbit]の値です。</sentence>
+		<begin>14</begin><end>14</end><modify>False</modify><affect>True</affect>
+	</FilesizeFraction>
+	<UsedNandSizeLimit>
+		<name>NAND使用サイズ</name>
+		<sentence>NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が32MBを超えています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</UsedNandSizeLimit>
+	<UsedNandSizeExceed>
+		<name>NAND使用サイズ</name>
+		<sentence>NANDアプリによるNAND領域の使用サイズ(セーブデータ含む)が16MBを超えています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</UsedNandSizeExceed>
+	<Seg3CRC>
+		<name>セグメント3 CRC</name>
+		<sentence>セグメント3領域に誤りがあります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Seg3CRC>
+	<TwlRomOffset>
+		<name>TWL ROMオフセット</name>
+		<sentence>TWLノーマル領域ROMオフセット(NA)およびTWL専用領域ROMオフセット(KA)はともに1以上で、かつNAはKAを超えてはいけません。</sentence>
+		<begin>90</begin><end>93</end><modify>False</modify><affect>True</affect>
+	</TwlRomOffset>
+	<DisableDebugSystem>
+		<name>デバッガ動作禁止フラグ</name>
+		<sentence>デバッガ上で解析可能な設定になっています。デバッガ向けソフトとしてROMをリリースする場合にはセキュリティ上の問題がないかご確認ください。</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</DisableDebugSystem>
+	<DisableDebugUser>
+		<name>デバッガ動作禁止フラグ</name>
+		<sentence>デバッガ上で解析不可な設定になっています。この設定は許可されていません。</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</DisableDebugUser>
+	<ExtraRegion>
+		<name>特定仕向地</name>
+		<sentence>不正なビットが立っています。この設定は許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</ExtraRegion>
+	<NormalJump>
+		<name>ノーマルアプリジャンプ</name>
+		<sentence>ノーマルアプリジャンプは許可されていません。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</NormalJump>
+	<RomSpeedType>
+		<name>諸フラグ</name>
+		<sentence>RSFファイルでRomSpeedTypeが設定されていません。</sentence>
+		<begin>1f</begin><end>1f</end><modify>False</modify><affect>True</affect>
+	</RomSpeedType>
+	<RomControl>
+		<name>ROMコントロール情報</name>
+		<sentence>TWLではマスクROMは用意されていません。ワンタイムPROM設定にしてください。</sentence>
+		<begin>60</begin><end>67</end><modify>False</modify><affect>True</affect>
+	</RomControl>
+	<AES>
+		<name>AES暗号</name>
+		<sentence>AES暗号が無効になっています。セキュリティ上の問題があります。</sentence>
+		<begin>220</begin><end>22f</end><modify>False</modify><affect>True</affect>
+	</AES>
+	<WhiteList>
+		<name>TWL拡張諸フラグ</name>
+		<sentence>本来、立つはずのないフラグが立てられています。ビルド時の設定をご確認ください。</sentence>
+		<begin>1bf</begin><end>1bf</end><modify>False</modify><affect>True</affect>
+	</WhiteList>
+	<ConnectIcon>
+		<name>アイコン表示フラグ</name>
+		<sentence>ワイヤレス通信アイコンとWi-Fi通信アイコンは同時に表示できません。</sentence>
+		<begin>1bf</begin><end>1bf</end><modify>False</modify><affect>True</affect>
+	</ConnectIcon>
+	<LimitedStatic>
+		<name>拡張常駐モジュール</name>
+		<sentence>TWL拡張常駐モジュールの配置に問題があります。弊社窓口にご連絡ください。</sentence>
+		<begin>1c0</begin><end>1c3</end><modify>False</modify><affect>True</affect>
+	</LimitedStatic>
+	<SCFGAccess>
+		<name>SCFG設定</name>
+		<sentence>SCFGレジスタへアクセス可能になっています。</sentence>
+		<begin>1b8</begin><end>1bb</end><modify>False</modify><affect>True</affect>
+	</SCFGAccess>
+	<TitleID>
+		<name>タイトルID</name>
+		<sentence>下位4バイトがイニシャルコードと一致しません。</sentence>
+		<begin>230</begin><end>233</end><modify>False</modify><affect>True</affect>
+	</TitleID>
+	<SaveData>
+		<name>Pubilc/Privateセーブデータ</name>
+		<sentence>ゲームカード向けソフトではPublicセーブデータおよびPrivateセーブデータのサイズを指定することはできません。</sentence>
+		<begin>238</begin><end>23f</end><modify>False</modify><affect>True</affect>
+	</SaveData>
+	<DebugBuild>
+		<name>Debug/Releaseビルド</name>
+		<sentence>FINALROMビルドのROMではありません。必ずFINALROMビルドのROMを作成してご提出ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DebugBuild>
+
+	<!-- Application Type -->
+	<IllegalAppType>
+		<name>アプリ種別</name>
+		<sentence>不正な値です。</sentence>
+		<begin>230</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</IllegalAppType>
+	<DifferentAppType>
+		<name>アプリ種別</name>
+		<sentence>アプリ種別は「{0}」です。本プログラムでは非対応です。</sentence>
+		<begin>230</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</DifferentAppType>
+
+	<!-- Access Control -->
+	<CardAccess>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードアクセス設定にノーマルモードとNTRモードの両方を設定することはできません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</CardAccess>
+	<NandAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカード用ソフトはNANDフラッシュメモリへのアクセスを許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</NandAccessUser>
+	<SDAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessUser>
+	<SDReadAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDReadAccessUser>
+	<SDWriteAccessUser>
+		<name>SDカードアクセス</name>
+		<sentence>SDカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDWriteAccessUser>
+	<SDAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>SDカードへアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDAccessSystem>
+	<GameCardNormalAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessUser>
+	<GameCardNormalAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNormalAccessSystem>
+	<GameCardNTRAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードNTR互換領域へのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessUser>
+	<GameCardNTRAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードNTR互換領域へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardNTRAccessSystem>
+	<GameCardReadAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardReadAccessUser>
+	<GameCardWriteAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>ゲームカードへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</GameCardWriteAccessUser>
+	<PhotoReadAccessUser>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへのリードアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoReadAccessUser>
+	<PhotoWriteAccessUser>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへのライトアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoWriteAccessUser>
+	<PhotoJpegSignAccessUser>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへのライトアクセスが指定されているにもかかわらずJPEG署名(JpegSign)が有効になっていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</PhotoJpegSignAccessUser>
+	<JpegSignAccessUserCard>
+		<name>アクセスコントロール情報</name>
+		<sentence>JPEG署名(JpegSign)が有効になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserCard>
+	<JpegSignAccessUserNand>
+		<name>写真データベースアクセス</name>
+		<sentence>写真データベースへのライトアクセスが指定されていないにもかかわらずJPEG署名(JpegSign)が有効になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessUserNand>
+	<JpegSignAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>JPEG署名(JpegSign)が有効になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</JpegSignAccessSystem>
+	<SDJpegSignAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>JPEG画像をSDカードに読み書きする場合にはJPEG署名(JpegSign)の付与と検証が必要になりますのでご注意ください。(JPEG画像をSDカードに読み書きしない場合、この警告を無視していただいて構いません。)</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</SDJpegSignAccessUser>
+	<IllegalAccessUser>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へのアクセスは許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUser>
+	<IllegalAccessUserWarn>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessUserWarn>
+	<IllegalAccessSystem>
+		<name>アクセスコントロール情報</name>
+		<sentence>{0} へアクセス可能になっています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</IllegalAccessSystem>
+	<AccessDefault>
+		<name>アクセスコントロール情報</name>
+		<sentence>未定義のアクセスビットが設定されています。この設定は許可されていません。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</AccessDefault>
+
+	<!-- Padding -->
+	<PaddingRead>
+		<name>パディング</name>
+		<sentence>最終{0}を読み出すことができませんでした。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingRead>
+	<PaddingValue>
+		<name>パディング</name>
+		<sentence>最終{0}にFFh以外の値が格納されています。{1} ROMの制限が守られていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</PaddingValue>
+
+	<!-- Reserved Area -->
+	<ReservedArea>
+		<name>予約領域</name>
+		<sentence>不正な値が含まれています。この領域をすべて0で埋めてください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ReservedArea>
+
+	<!-- Shared2 file -->
+	<Shared2Disable>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイルへのアクセスが指定されていないにもかかわらずファイルサイズが設定されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2Disable>
+	<Shared2Enable>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイルへのアクセスが指定されているにもかかわらずファイルサイズが設定されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2Enable>
+	<Shared2AccessSystem>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイル(No.{0})へのアクセス(非公開)が設定されています。アクセス許可されているかご確認ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2AccessSystem>
+	<Shared2AccessUser>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイル(No.{0})へのアクセスは許可されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2AccessUser>
+	<Shared2SizeSystem>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイル(No.{0})のファイルサイズが {1} に設定されています。正しい値かどうかをご確認ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2SizeSystem>
+	<Shared2SizeUser>
+		<name>Shared2ファイル</name>
+		<sentence>Shared2ファイル(No.{0})のファイルサイズが {1} に設定されています。正しい値かどうかをご確認ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</Shared2SizeUser>
+
+	<!-- SDK Version -->
+	<SDKVersionOld>
+		<name>SDKバージョン</name>
+		<sentence>設定ファイルに登録されているバージョンよりも古いバージョンです。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionOld>
+	<SDKVersionPR>
+		<name>SDKバージョン</name>
+		<sentence>ご使用のSDKバージョンはPR版です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionPR>
+	<SDKVersionRC>
+		<name>SDKバージョン</name>
+		<sentence>ご使用のSDKバージョンはRC版です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</SDKVersionRC>
+
+	<!-- Banner -->
+	<BannerRead>
+		<name>バナーファイル</name>
+		<sentence>読み出すことができませんでした。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</BannerRead>
+	<BannerChar>
+		<name>バナーファイル</name>
+		<sentence>使用不可能な文字セットが使用されています。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</BannerChar>
+
+	<!-- Region -->
+	<IllegalRegion>
+		<name>リージョン</name>
+		<sentence>仕向地の組み合わせが不正です。ペアレンタルコントロール情報は無視して読み込まれました。</sentence>
+		<begin>1b0</begin><end>1b4</end><modify>True</modify><affect>True</affect>
+	</IllegalRegion>
+	<AllRegion>
+		<name>リージョン</name>
+		<sentence>読み込み時のROMでは全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。</sentence>
+		<begin>1b0</begin><end>1b4</end><modify>True</modify><affect>True</affect>
+	</AllRegion>
+
+	<!-- Rating -->
+	<UnnecessaryRatingIllegal>
+		<name>レーティング</name>
+		<sentence>レーティング表示が不要かどうかを判断できません。再設定してください。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</UnnecessaryRatingIllegal>
+	<UnnecessaryRatingSetting>
+		<name>レーティング</name>
+		<sentence>読み込み時のROMにはレーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</UnnecessaryRatingSetting>
+	<RatingUndefine>
+		<name>レーティング</name>
+		<sentence>{0}: 未定義です。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingUndefine>
+	<RatingPendingSetting>
+		<name>レーティング</name>
+		<sentence>{0}: 読み込み時のROMには審査中であると指定されています。審査が決まりしだい、再提出してください。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingPendingSetting>
+	<RatingPendingConcurrent>
+		<name>レーティング</name>
+		<sentence>{0}: 審査中指定とレーティング年齢が同時に設定されています。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</RatingPendingConcurrent>
+	<IllegalRating>
+		<name>レーティング</name>
+		<sentence>{0}: レーティング年齢が団体によって指定された値ではありません。</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</IllegalRating>
+</message>

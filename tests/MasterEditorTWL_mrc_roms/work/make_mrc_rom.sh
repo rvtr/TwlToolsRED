@@ -101,6 +101,8 @@ $maker $sys_nand $outdir/disable_debug_nand_sys1.srl 1C -d 3 -f
 $maker $usr_card $outdir/rom_offset_card1.srl 90 -2 -a 0000 -f
 $maker $usr_card $outdir/rom_offset_card2.srl 92 -2 -a 0000 -f
 $maker $usr_card $outdir/rom_offset_card3.srl 90 -4 -a 00010002 -f
+$maker $usr_nand $outdir/load_address_nand1.srl 28 -4 -a 02000400 -f
+$maker $usr_card $outdir/load_address_card1.srl 28 -4 -a 02000400 -f
 
 #
 # Region

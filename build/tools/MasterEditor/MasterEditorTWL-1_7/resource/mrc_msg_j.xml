@@ -78,7 +78,7 @@
 	</ChinaBannerCharSet>
 	<ChinaAllRatingFree>
 		<name>レーティング(中国版対応)</name>
-		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
+		<sentence>中国にはレーティング審査団体が存在しませんので、中国向けソフトに対しては、各審査団体のレーティング値を設定する必要はありません。(自動的にマスターエディタが値をセットしますので、本警告を無視していただいてかまいません。)</sentence>
 		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
 	</ChinaAllRatingFree>
 

@@ -5,8 +5,8 @@
 
 	<!-- TWL Rom Info -->
 	<RomStartAddress>
-		<name>スタートアドレス</name>
-		<sentence>ROMのスタートアドレスは、0x02004000以降でなければなりません。</sentence>
+		<name>ロード先アドレス</name>
+		<sentence>プログラムのロード先アドレスは、0x02004000以降でなければなりません。LSFファイルの "ADDRESS_STATIC" の値、もしくは CodeWarrior for DSi の設定を確認してください。</sentence>
 		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
 	</RomStartAddress>
 

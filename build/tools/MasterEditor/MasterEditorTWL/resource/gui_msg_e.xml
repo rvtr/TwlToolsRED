@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
 
-<!-- 英訳依頼 ver1.7 追加メッセージ ここから -->
-<E_JapaneseFont>ＭＳ ゴシック (MS Gothic) フォントがインストールされていないPCでの日本語表示には対応していません。</E_JapaneseFont>
-<!-- 英訳依頼 ver1.7 追加メッセージ ここまで -->
+<!-- Begin messages appended in ver1.7-->
+<E_JapaneseFont>Japanese text display is only supported on PCs that have the MS Gothic Japanese font installed.</E_JapaneseFont>
+<!-- End messages appended in ver1.7-->
 
 <!-- common -->
 <OverWrite>{0} already exists. Overwrite data?</OverWrite>
@@ -72,7 +72,7 @@ Exception:{0}
 </E_SaveRom_FileDefault>
 <E_SaveRom_Exception>Failed to create Master ROM.
 
-例外:{0}
+Exception:{0}
 {1}</E_SaveRom_Exception>
 <SaveRom_Success>Succeeded in creating Master ROM.</SaveRom_Success>
 <E_SaveRom_CRC>Failed to calculate CRC.</E_SaveRom_CRC>

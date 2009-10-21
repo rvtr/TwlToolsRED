@@ -96,7 +96,7 @@ void Form1::construct(void)
 	else
 	{
 		this->stripItemJapanese->Checked = false;
-		this->stripItemJapanese->Enabled = false;	// 日本語を選択できなくする
+		//this->stripItemJapanese->Enabled = false;	// 日本語を選択できなくする
 		this->stripItemEnglish->Checked  = true;
 		this->changeEnglish();
 	}

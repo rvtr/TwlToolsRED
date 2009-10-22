@@ -59,6 +59,8 @@
 #include        "pre_install.h"
 
 
+#include <twl/ltdmain_begin.h>
+
 // #define PRE_INSTALL 1
 
 //================================================================================
@@ -659,74 +661,94 @@ static BOOL RestoreFromSDCard7(void)
   log_fd = hatamotolib_log_start( MyFile_GetEcDownloadLogFileName() );
 
 
-  if( mydata.num_of_user_download_app > 0 ) {
-    if( mydata.num_of_user_download_app > 0 ) {
-      miya_log_fprintf(log_fd,"User title list loading\n");
-      mprintf("User title list load         ");
-      if( TRUE == TitleIDLoad( MyFile_GetDownloadTitleIDFileName(), &title_id_buf_ptr, 
-			       &title_id_count, MyFile_GetDownloadTitleIDRestoreLogFileName()) ) {
+  if( mydata.num_of_user_app > 0 ) {
+    miya_log_fprintf(log_fd,"User title list loading\n");
+    mprintf("User title list load         ");
+    if( TRUE == UserTitleIDLoad( MyFile_GetUserTitleIDFileName(), &title_id_buf_ptr, 
+			     &title_id_count, MyFile_GetUserTitleIDRestoreLogFileName()) ) {
+      
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      for( i = 0; i < title_id_count ; i++ ) {
+	/* 
+	   インストール成功フラグの初期化
+	   とりあえず全部失敗状態にする。
+	*/
+	title_id_buf_ptr[i].install_success_flag = FALSE;
+	tid = title_id_buf_ptr[i].tid;
+	is_personalized = title_id_buf_ptr[i].is_personalized;
 	
-	m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-	mprintf("OK.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	for( i = 0; i < title_id_count ; i++ ) {
-	  /* 
-	     インストール成功フラグの初期化
-	     とりあえず全部失敗状態にする。
-	   */
-	  title_id_buf_ptr[i].install_success_flag = FALSE;
-	  tid = title_id_buf_ptr[i].tid;
-	  is_personalized = title_id_buf_ptr[i].is_personalized;
-
-	  (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
-	  mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
-	  if( is_personalized == 1 ) {
-	    mprintf("Pre\n");
-	  }
-	  else {
-	    mprintf("Dwn\n");
-	  }
-
-	  miya_log_fprintf(log_fd," id %08X %08X [%s] %c\n", (u32)(tid >> 32), (u32)tid, game_code_buf, 
-			   (is_personalized == 1)? 'P':'D');
+	(void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+	mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+	if( is_personalized == 1 ) {
+	  mprintf("Pre\n"); /* プリインストール物 */
 	}
-      }
-      else {
-	ret_flag = FALSE;
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );
-	mprintf("NG.\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	else {
+	  mprintf("Dwn\n"); /* ダウンロード物 */
+	}
+	
+	miya_log_fprintf(log_fd," id %08X %08X [%s] %c\n", (u32)(tid >> 32), (u32)tid, game_code_buf, 
+			 (is_personalized == 1)? 'P':'D');
       }
     }
+    else {
+      ret_flag = FALSE;
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
   }
-  else if( mydata.num_of_user_download_app == 0 ) {
-    miya_log_fprintf(log_fd,"Original device has no user download app.\n");
+  else if( mydata.num_of_user_app == 0 ) {
+    miya_log_fprintf(log_fd,"Original device has no user app.\n");
     mprintf("Original device has no user download app.\n");
   }
   else {
-    miya_log_fprintf(log_fd,"Original user download app. list saving failed\n");
-    mprintf("Original user download app. list saving failed\n");
+    miya_log_fprintf(log_fd,"Original user app. list saving failed\n");
+    mprintf("Original user app. list saving failed\n");
   }
 
     
-  /* 
-     miya 2009/5/8
+  /* miya 2009/5/8
      ここで書き込み側に入ってるプリンインストールものを全部消す！
-     もっと前でもいい
-  */
+     もっと前でもいい */
+
   if( my_fs_get_print_debug_flag() == FALSE ) {
     (void)pre_install_Cleanup_User_Titles( log_fd );
   }
+
+
+  /* ECDownload の前準備だけど、プリンストール（インポート）の前にやっておく必要がある。*/
+  // 必須：タイトル ID の偽装
+  SetupShopTitleId(); /* エラーはない */
+  miya_log_fprintf(log_fd,"SetupShopTitleId done.\n");
+  
+  // ？：ユーザ設定がされていないと接続できないので適当に設定
+  // SetupUserInfo();
+  // 必須：バージョンデータのマウント
+  if( FALSE == SetupVerData() ) {
+    miya_log_fprintf(log_fd, "%s failed SetupVerData\n", __FUNCTION__);
+    mprintf("%s failed SetupVerData\n", __FUNCTION__);
+    ret_flag = FALSE;
+    goto end_log_e;
+  }
+  
+  /*
+    本来、EC downloadの後にNAM_ImportをやらないとLoadCertのSEA_Decryptでこける。
+    理由はAESエンジンのスロットをNAM_Importでつぶしちゃうので、
+    ここでCertの復号化だけやっとく。
+  */
+  (void)SetupEC_pre();
+  /* ECDownload の前準備,終わり。*/
+
+
 
   if( no_network_flag == TRUE ) {
     miya_log_fprintf(log_fd,"no network flag ON\n");
     goto pre_install_label;
   }
 
-  /*
-    EC downloadの後にNAM_ImportをやらないとLoadCertのSEA_Decryptでこける。
-    理由はAESエンジンのスロットをNAM_Importでつぶしちゃうから。
-   */
+
 
   if( mydata.shop_record_flag == FALSE ) {
     /* ネットワークにつながなくていいか？ */
@@ -734,6 +756,16 @@ static BOOL RestoreFromSDCard7(void)
     mprintf(" (--no shop record--)\n");
   }
   else {
+
+
+    /* miya 2009/10/12 */
+    /* TitleIDLoadの後、title_id_buf_ptr, title_id_countに書き込む */
+    /* title_id_buf_ptr[i].common_and_download == 1 のときはダウンロードするように。 */
+    miya_log_fprintf(log_fd,"Internal data version check.\n");
+    mprintf("Internal data version check.\n");
+    (void)pre_install_check_tad_version(log_fd, title_id_buf_ptr, title_id_count, development_console_flag );
+
+
     miya_log_fprintf(log_fd,"EC download\n");
     mprintf("EC download\n");
 
@@ -744,23 +776,6 @@ static BOOL RestoreFromSDCard7(void)
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-
-      /* nand:/ticketはチケット同期でダウンロード */
-      // 不要：デバイス情報の表示
-      //      PrintDeviceInfo();
-      // setup
-      // 必須：タイトル ID の偽装
-      SetupShopTitleId(); /* エラーはない */
-      miya_log_fprintf(log_fd,"SetupShopTitleId\n");
-
-      // ？：ユーザ設定がされていないと接続できないので適当に設定
-      // SetupUserInfo();
-      // 必須：バージョンデータのマウント
-      if( FALSE == SetupVerData() ) {
-	miya_log_fprintf(log_fd, "%s failed SetupVerData\n", __FUNCTION__);
-	ret_flag = FALSE;
-	goto end_log_e;
-      }
 
       // 必須：ネットワークへの接続
       if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
@@ -872,9 +887,9 @@ static BOOL RestoreFromSDCard7(void)
     miya_log_fprintf(log_fd,"Import Pre-installed apps.\n");
     mprintf("Import Pre-installed apps..\n");
     if( mydata.num_of_user_pre_installed_eticket_only > 0 ) {
-      if( FALSE == TitleIDLoadETicketOnly( MyFile_GetDownloadTitleIDTicketOnlyFileName(),
+      if( FALSE == UserTitleIDLoadETicketOnly( MyFile_GetUserTitleIDTicketOnlyFileName(),
 					   &eticket_only_id_buf, &num_of_eticket_only_titles,  
-					   MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName()) ) {
+					   MyFile_GetUserTitleIDTicketOnlyRestoreLogFileName()) ) {
 	;
       }
     }
@@ -889,6 +904,7 @@ static BOOL RestoreFromSDCard7(void)
 
     if( eticket_only_id_buf ) {
       OS_Free(eticket_only_id_buf );
+      eticket_only_id_buf = NULL;
     }
   }
 
@@ -2134,6 +2150,7 @@ BOOL DWC_GetProxySetting( DWCProxySetting* proxy )
 #endif
 
 
+#include <twl/ltdmain_end.h>
 
 /*====== End of main.c ======*/
 

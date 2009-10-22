@@ -301,8 +301,68 @@ static void Dummy_WWW_AddJSPlugin()
 {
 }
 
-static BOOL LoadCert(void** ppCert, u32* pSize, const char* name)
+
+static void* miya_pCert[2];
+static u32 miya_certSize[2];
+
+static BOOL PreLoadCert(const char* name, int no)
 {
+  FSFile f;
+  BOOL bSuccess;
+  s32 readSize;
+  s32 result;
+  char path[64];
+
+  FS_InitFile(&f);
+
+  STD_TSNPrintf(path, sizeof(path), "verdata:/%s", name);
+        
+  bSuccess = FS_OpenFile(&f, path);
+  if( ! bSuccess )
+    {
+      miya_log_fprintf(log_fd, "%s Cannot open %s\n", __FUNCTION__, path);
+      mprintf("%s Cannot open %s\n", __FUNCTION__,path);
+      return FALSE;
+    }
+
+  miya_certSize[no] = FS_GetFileLength(&f);
+  miya_pCert[no] = OS_Alloc(miya_certSize[no]);
+  if ( miya_pCert[no] == NULL )
+    {
+      miya_log_fprintf(log_fd, "%s Cannot allocate work memroy\n",__FUNCTION__);
+      mprintf("%s Cannot allocate work memroy \n",__FUNCTION__);
+      return FALSE;
+    }
+
+  readSize = FS_ReadFile(&f, miya_pCert[no], static_cast<s32>(miya_certSize[no]));
+  if( readSize != miya_certSize[no] )
+    {
+      miya_log_fprintf(log_fd, "%s fail to read file\n", __FUNCTION__);
+      mprintf("%s fail to read file\n",__FUNCTION__);
+      return FALSE;
+    }
+
+  FS_CloseFile(&f);
+
+
+  result = NA_DecodeVersionData(miya_pCert[no], miya_certSize[no], miya_pCert[no], miya_certSize[no]);
+  if( result <= 0 )
+    {
+      miya_log_fprintf(log_fd, "%s fail to decode version info %d\n",__FUNCTION__,result);
+      mprintf("%s fail to decode version info %d\n", __FUNCTION__,result);
+      return FALSE;
+    }
+
+  //  *ppCert = pCert;
+  //  *pSize  = certSize;
+  return TRUE;
+}
+
+
+static BOOL LoadCert(void** ppCert, u32* pSize, const char* name, int no)
+{
+#pragma unused(name)
+#if 0
   FSFile f;
   BOOL bSuccess;
   s32 readSize;
@@ -344,42 +404,6 @@ static BOOL LoadCert(void** ppCert, u32* pSize, const char* name)
   FS_CloseFile(&f);
 
 
-  //  LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");
-  //  LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der");
-
-  // static inline s32  NA_DecodeVersionData(const void* src, u32 srcSize, void* dst, u32 dstSize)
-  //    { return OS_IsRunOnTwl() ? NAi_DecodeVersionData(src, srcSize, dst, dstSize): -4; }
-
-  /*
-    s32 NAi_DecodeVersionData(const void* src, u32 srcSize, void* dst, u32 dstSize)
-    {
-    u32 decryptedSize;
-    AESResult result;
-    
-    if ( !SEAi_IsHWInitialized() )
-    {
-    return -1;
-    }
-    
-    decryptedSize = srcSize - AES_SIGN_HEADER_SIZE;
-    
-    if ( src == NULL || dst == NULL || decryptedSize > dstSize )
-    {
-    return -2;
-    }
-    
-    SEA_UseWeakKeyTemporary(SEA_WEAK_KEY_VERSION);
-    result = SEA_Decrypt(src, srcSize, dst);
-    
-    if( result != AES_RESULT_SUCCESS )
-    {
-    return -3;
-    }
-    
-    return (s32)decryptedSize;
-    }
-  */
-
   result = NA_DecodeVersionData(pCert, certSize, pCert, certSize);
   if( result <= 0 )
     {
@@ -387,12 +411,18 @@ static BOOL LoadCert(void** ppCert, u32* pSize, const char* name)
       mprintf("%s fail to decode version info %d\n", __FUNCTION__,result);
       return FALSE;
     }
-
-  *ppCert = pCert;
-  *pSize  = certSize;
+#endif
+  *ppCert = miya_pCert[no];
+  *pSize  = miya_certSize[no];
   return TRUE;
 }
 
+BOOL SetupEC_pre(void)
+{
+  PreLoadCert(".twl-nup-cert.der", 0);
+  PreLoadCert(".twl-nup-prvkey.der", 1);
+  return TRUE;
+}
 
 BOOL SetupEC(void)
 {
@@ -419,8 +449,11 @@ BOOL SetupEC(void)
   //  logLevel = EC_LOG_FINE;
   logLevel = EC_LOG_WARN;
 
-  LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der");
-  LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der");
+  // ここだけ先にできへんか？
+  // SetupEC_pre();
+
+  LoadCert(&pClientCert, &clientCertSize, ".twl-nup-cert.der", 0);
+  LoadCert(&pClientKey,  &clientKeySize,  ".twl-nup-prvkey.der",1);
   GetDeviceCode(deviceCode, sizeof(deviceCode));
   
   ECNameValue initArgs[] =
@@ -823,12 +856,13 @@ static BOOL DownloadTitles(MY_USER_APP_TID* pTitleIds, u32 numTitleIds)
 
   for( u32 i = 0; i < numTitleIds; i++ ) {
     //      tid = pTitleIds[i];
-    if( pTitleIds[i].is_personalized == 1 ) {
+    if( (pTitleIds[i].is_personalized == 1) && (pTitleIds[i].common_and_download == 0) ) {
       /* 
 	 personalized ticketのときは何もしない、というかプリンストールもの 
 	 pTitleIds[i].is_personalized = 1 -> common 
 	 pTitleIds[i].is_personalized = 2 -> personalized
       */
+      /* でもpTitleIds[i].common_and_download == 1 のときはダウンロードする。 */
     }
     else {
       tid = pTitleIds[i].tid;

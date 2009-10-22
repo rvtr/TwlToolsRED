@@ -226,7 +226,7 @@ int cryptopc(char *input_file, char *output_file)
     goto end;
   }
 
-  if( (fp_out = fopen( output_file, "wb+" )) == NULL ) {
+  if( (fp_out = fopen( output_file, "wb" )) == NULL ) {
     fprintf(stderr, "failed to fopen output file(%s)\n",output_file);
     rsa_error_flag = 1;
     goto end;

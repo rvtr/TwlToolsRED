@@ -1081,7 +1081,6 @@ static BOOL CheckSystemApp(char path[])
   }
 }
 
-//BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, u64 **pBuffer, int *size, char *log_file_name )
 BOOL GetUserAppTitleList( MY_DIR_ENTRY_LIST *head, MY_USER_APP_TID **pBuffer, int *size, char *log_file_name )
 {
   int i;
@@ -2031,7 +2030,7 @@ BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd)
 }
 
 
-BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name)
+BOOL UserTitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -2080,6 +2079,7 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
 
 
   if( (id_count < 0 ) || (128 < id_count) ) {
+    /* バッファオーバーフロー防止 */
     ret_flag = FALSE;
     miya_log_fprintf(log_fd, "%s Failed suspicous data id_count=%d\n",__FUNCTION__, id_count );
     goto function_end;
@@ -2126,7 +2126,7 @@ BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *
   return ret_flag;
 }
 
-BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name )
+BOOL UserTitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name )
 {
   FSFile f;
   BOOL bSuccess;
@@ -2259,7 +2259,7 @@ BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_
 
 }
 
-BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name)
+BOOL UserTitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name)
 {
   FSFile f;
   BOOL bSuccess;
@@ -2347,7 +2347,7 @@ BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int
   return ret_flag;
 }
 
-BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name )
+BOOL UserTitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name )
 {
   FSFile f;
   BOOL bSuccess;

@@ -94,14 +94,14 @@ char *MyFile_GetSaveDataListLogFileName(void);
 char *MyFile_GetSaveDataRestoreLogFileName(void);
 char *MyFile_GetSaveDataSaveLogFileName(void);
 
-char *MyFile_GetDownloadTitleIDLogFileName(void);
-char *MyFile_GetDownloadTitleIDFileName(void);
-char *MyFile_GetDownloadTitleIDRestoreLogFileName(void);
-char *MyFile_GetDownloadTitleIDSaveLogFileName(void);
+char *MyFile_GetUserTitleIDLogFileName(void);
+char *MyFile_GetUserTitleIDFileName(void);
+char *MyFile_GetUserTitleIDRestoreLogFileName(void);
+char *MyFile_GetUserTitleIDSaveLogFileName(void);
 
-char *MyFile_GetDownloadTitleIDTicketOnlyFileName(void);
-char *MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName(void);
-char *MyFile_GetDownloadTitleIDTicketOnlyRestoreLogFileName(void);
+char *MyFile_GetUserTitleIDTicketOnlyFileName(void);
+char *MyFile_GetUserTitleIDTicketOnlySaveLogFileName(void);
+char *MyFile_GetUserTitleIDTicketOnlyRestoreLogFileName(void);
 
 char *MyFile_GetGlobalInformationFileName(void);
 char *MyFile_GetGlobalInformationRestoreFileName(void);

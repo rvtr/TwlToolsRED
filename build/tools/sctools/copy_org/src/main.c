@@ -158,7 +158,6 @@ static void FreeForNAM(void* ptr)
   }
 }
 
-static NAMTitleId pArray[NAM_TITLE_ID_S];
 
 
 static int Check_User_Titles_ETicket_Only(void)
@@ -173,12 +172,19 @@ static int Check_User_Titles_ETicket_Only(void)
   //  u16 version = 0;
   u8 es_version;
   u16 ticket_version;
+  NAMTitleId *pArray;
+
+  pArray = (NAMTitleId *)OS_Alloc( NAM_TITLE_ID_S * sizeof(NAMTitleId) );
+  if( pArray == NULL ) {
+    return -1;
+  }
 
   //  num = NAM_GetNumTitles();
   num = NAM_GetNumInstalledTitles();
   if( num >= 0 ) {
     if( NAM_OK !=  NAM_GetInstalledTitleList( pArray , NAM_TITLE_ID_S ) ) {
       OS_TPrintf("error:NAM_GetInstalledTitleList\n");
+      OS_Free( pArray );
       return -1; /* error */
     }
     OS_TPrintf("NAND Ticket only titles\n");
@@ -236,9 +242,11 @@ static int Check_User_Titles_ETicket_Only(void)
   }
   else {
     OS_TPrintf("error:NAM_GetInstalledTitles\n");
+    OS_Free( pArray );
     return -1;
   }
 
+  OS_Free( pArray );
   num_of_eticket_only_titles = user_title_count;
   return user_title_count;
 }
@@ -256,7 +264,6 @@ static int Check_User_Titles(void)
 
   num = NAM_GetNumTitles();
   if( num >= 0 ) {
-
 
     if( NAM_OK !=  NAM_GetTitleList( array_app_titles , NAM_TITLE_ID_S ) ) {
       OS_TPrintf("error:NAM_GetTitleList\n");
@@ -592,7 +599,7 @@ static BOOL SDBackupToSDCard7(void)
   OS_TPrintf("User title list backup \n");
   mprintf("User title list backup       ");
   if( 0 == get_title_id( &dir_entry_list_head, "nand:/title", &save_dir_info, 
-			 MyFile_GetDownloadTitleIDLogFileName(), 0 ) ) {
+			 MyFile_GetUserTitleIDLogFileName(), 0 ) ) {
 
     flag = GetUserAppTitleList( dir_entry_list_head, &pBuffer, &count, 
 				MyFile_GetUserAppTitleListLogFileName()) ;
@@ -600,7 +607,7 @@ static BOOL SDBackupToSDCard7(void)
 
     if( TRUE == flag ) {
       ptr = pBuffer;
-      mydata.num_of_user_download_app = count;
+      mydata.num_of_user_app = count;
       mydata.num_of_error_user_download_app = 0;
       mydata.num_of_user_pre_installed_app = 0;
       mydata.num_of_user_pre_installed_eticket_only = 0;
@@ -616,9 +623,9 @@ static BOOL SDBackupToSDCard7(void)
 
 
       mydata.num_of_user_pre_installed_eticket_only = num_of_eticket_only_titles;
-      if( FALSE == TitleIDSaveETicketOnly( MyFile_GetDownloadTitleIDTicketOnlyFileName(),
+      if( FALSE == UserTitleIDSaveETicketOnly( MyFile_GetUserTitleIDTicketOnlyFileName(),
 					   array_eticket_only_titles, num_of_eticket_only_titles,  
-					   MyFile_GetDownloadTitleIDTicketOnlySaveLogFileName()) ) {
+					   MyFile_GetUserTitleIDTicketOnlySaveLogFileName()) ) {
 	;
       }
       
@@ -691,8 +698,8 @@ static BOOL SDBackupToSDCard7(void)
       }
 
       // PrintSrcDirEntryListBackward( dir_entry_list_head, NULL );
-      flag =  TitleIDSave( MyFile_GetDownloadTitleIDFileName(), 
-			   pBuffer, count,  MyFile_GetDownloadTitleIDSaveLogFileName());
+      flag =  UserTitleIDSave( MyFile_GetUserTitleIDFileName(), 
+			   pBuffer, count,  MyFile_GetUserTitleIDSaveLogFileName());
     }
     if( pBuffer ) {
       OS_Free(pBuffer);
@@ -708,7 +715,7 @@ static BOOL SDBackupToSDCard7(void)
     m_set_palette(tc[0], 0x1);	/* red  */
     mprintf("NG.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-    mydata.num_of_user_download_app = -1; /* failed */
+    mydata.num_of_user_app = -1; /* failed */
     mydata.num_of_error_user_download_app = -1;
   }
   (void)ClearDirEntryList( &dir_entry_list_head );
@@ -720,7 +727,7 @@ static BOOL SDBackupToSDCard7(void)
   Error_Report_End();
 
   if(TRUE == no_sd_clean_flag ) {
-    mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app);
+    mprintf("num of user tiltes = %d\n",mydata.num_of_user_app);
   }
 
   return flag;
@@ -1103,8 +1110,8 @@ void TwlMain(void)
   NAM_Init(&AllocForNAM, &FreeForNAM);
 
 
-  //  mydata.num_of_user_download_app_by_nam = Check_User_Titles();
-  //  mprintf("num of user tiltes = %d\n",mydata.num_of_user_download_app_by_nam);
+  //  mydata.num_of_user_app_by_nam = Check_User_Titles();
+  //  mprintf("num of user tiltes = %d\n",mydata.num_of_user_app_by_nam);
   /* èáî‘åµéÁ */
   mprintf("user tiltes(installed)   = %d\n", Check_User_Titles());
   mprintf("user tiltes(ticket only) = %d\n", Check_User_Titles_ETicket_Only());

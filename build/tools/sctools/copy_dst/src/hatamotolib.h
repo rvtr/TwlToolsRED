@@ -27,7 +27,7 @@ void SetupNSSL(void);
 BOOL SetupNHTTP(void);
 BOOL SetupEC(void);
 void DeleteECDirectory(void);
-
+BOOL SetupEC_pre(void);
 // void SetupTitlesDataFile(const NAMTitleId* pTitleIds, u32 numTitleIds);
 void SetupTitlesDataFile(const MY_USER_APP_TID * pTitleIds, u32 numTitleIds);
 

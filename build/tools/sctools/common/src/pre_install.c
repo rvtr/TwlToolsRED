@@ -27,8 +27,10 @@ static PRE_INSTALL_FILE *pre_install_file_list = NULL;
 
 #if 1
 //char *pre_install_search_tid(u64 tid, FSFile *log_fd);
-static BOOL pre_install_discard_list(void);
 static void pre_install_print_list(FSFile *log_fd);
+static BOOL pre_install_discard_list(void);
+static BOOL pre_install_load_file(char *path, FSFile *log_fd, BOOL encrypt_flag);
+
 #endif
 
 
@@ -201,7 +203,12 @@ static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd)
   //  OS_TPrintf("%s\n",__FUNCTION__);
   //  pre_install_print_list(log_fd);
   
+  if( pre_install_file_list == NULL) {
+    goto end;
+  }
+
   latest_list = NULL;
+
 
   for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
     if( temp_list->tid == tid ) {
@@ -234,7 +241,7 @@ static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd)
 
     return latest_list->file_name;
   }
-
+ end:
 
   miya_log_fprintf(log_fd,"\n%s:No entry\ntid 0x%08x%08x\n",__FUNCTION__,
 		   (u32)(tid >> 32) , (u32)(tid & 0xffffffff));
@@ -262,11 +269,17 @@ static void pre_install_print_list(FSFile *log_fd)
   PRE_INSTALL_FILE *temp_list;
   u64 tid;
 
+  if( pre_install_file_list == NULL ) {
+    miya_log_fprintf(log_fd,"no tad file entry\n"); 
+    return;
+  }
+
   for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
     tid = temp_list->tid;
     miya_log_fprintf(log_fd,"tad file entry tid=0x%08x%08x %s\n", 
 		     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), temp_list->file_name );
   }
+  
 }
 
 static int ReadLine(FSFile *f, char *buf, int buf_size)
@@ -912,7 +925,9 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
        pTitleIds[i].is_personalized = 1 -> common (pre installed)
        pTitleIds[i].is_personalized = 2 -> personalized
     */
-    if( title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */ ) {
+    if( (title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */) && 
+	(title_id_buf_ptr[i].common_and_download == 0  ) )  {
+      /* commonだけどユーザーが最新バージョンを持ってる場合はダウンロードに切り替えてる。 */
       /*
 	0x00030004484E474A "rom:/tads/TWL-KGUJ-v257.tad.out"
 	0x000300044B32444A "rom:/tads/TWL-K2DJ-v0.tad.out"
@@ -967,4 +982,120 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
   }
   (void)pre_install_discard_list();
   return ret_flag;
+}
+
+
+
+int pre_install_check_tad_version(FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count, 
+				 BOOL development_version_flag )
+{
+  int ret_count = 0;
+  BOOL is_in_sd = FALSE;
+  int i;
+  u64 tid;
+  int version;
+  //  char game_code_buf[5];
+  PRE_INSTALL_FILE *temp_list;
+  PRE_INSTALL_FILE *latest_list;
+  char *tad_file_name;
+  BOOL ret_flag = TRUE;
+
+
+  miya_log_fprintf(log_fd, "%s start\n",__FUNCTION__);
+
+  if( development_version_flag ) {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd, FALSE);
+  }
+  else {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
+  }
+
+  if( pre_install_file_list == NULL ) {
+    goto end;
+  }
+
+  for( i = 0 ; i < title_id_count ; i++ ) {
+    /* 
+       pTitleIds[i].is_personalized = 1 -> common (pre installed)
+       pTitleIds[i].is_personalized = 2 -> personalized
+    */
+    if( title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */ ) {
+      tid = title_id_buf_ptr[i].tid;
+      version = title_id_buf_ptr[i].version;
+
+      latest_list = NULL;
+      for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
+	if( temp_list->tid == tid ) {
+	  if( latest_list == NULL ) {
+	    latest_list = temp_list;
+	  }
+	  else {
+	    if( latest_list->version < temp_list->version ) {
+	      latest_list = temp_list;
+	    }
+	  }
+	}
+      }
+      if( latest_list != NULL ) {
+
+	/* カードやSDに持ってるTADよりユーザーの方が新しいのを持ってた場合 */
+	if( version > latest_list->version ) {
+	  title_id_buf_ptr[i].common_and_download = 1;
+	  miya_log_fprintf(log_fd," Pre->Dwn tid=0x%08x%08x usr.ver=0x%04x tad.ver=0x%04x\n", 
+			   (u32)(tid >> 32) , (u32)(tid & 0xffffffff), version, latest_list->version );
+
+	  mprintf(" Pre->Dwn tid=0x%08x%08x usr.ver=0x%04x tad.ver=0x%04x ", 
+		  (u32)(tid >> 32) , (u32)(tid & 0xffffffff), version, latest_list->version );
+
+	  ret_flag = FALSE;
+#if 1 /* miya 20091021 */
+#define ONLY_TICKET 1
+
+	  /* とりあえずEチケットだけインストール？ */
+	  tad_file_name = latest_list->file_name;
+	  if( tad_file_name ) {
+	    if( !STD_StrNCmp( tad_file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
+#ifdef ONLY_TICKET
+	      ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
+#else
+	      ret_flag = myImportTad_sign( tad_file_name , 0, log_fd);
+#endif
+	    }
+	    else {
+#ifdef ONLY_TICKET
+	      ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
+#else
+	      ret_flag = myImportTad( tad_file_name , 0, log_fd);
+#endif
+	    }
+	  }
+#endif
+	  if( ret_flag == TRUE ) {
+	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	    mprintf("OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    miya_log_fprintf(log_fd, "OK.\n");
+	  }
+	  else {
+	    m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+	    mprintf("NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    miya_log_fprintf(log_fd, "NG.\n");
+	  }
+	  ret_count++;
+	}
+      }
+      else {
+      }
+    }
+    else {
+      /* personalized e-ticketのやつ */
+    }
+  }
+  (void)pre_install_discard_list();
+ end:
+  miya_log_fprintf(log_fd, "%s end: num=%d\n",__FUNCTION__,ret_count);
+  return ret_count;
 }

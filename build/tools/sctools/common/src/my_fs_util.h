@@ -22,7 +22,8 @@ typedef struct {
   u64 tid;
   int is_personalized;
   int version;
-  BOOL install_success_flag;
+  int common_and_download;
+  BOOL install_success_flag; 	/* バックアップしたセーブデータを復活してやるかどうか。 */
 } MY_USER_APP_TID;
 
 typedef struct {
@@ -76,13 +77,11 @@ BOOL MydataLoadDecrypt(const char *path, void *pBuffer, int size, FSFile *log_fd
 BOOL MydataSaveEncrypt(const char *path, void *pData, int size, FSFile *log_fd);
 
 
-// BOOL TitleIDSave(const char *path, u64 *pData, int count, char *log_file_name);
-// BOOL TitleIDLoad(const char *path, u64 **pBuffer, int *count, char *log_file_name);
-BOOL TitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name);
-BOOL TitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name);
+BOOL UserTitleIDSave(const char *path, MY_USER_APP_TID *pData, int count, char *log_file_name);
+BOOL UserTitleIDLoad(const char *path, MY_USER_APP_TID **pBuffer, int *count, char *log_file_name);
 
-BOOL TitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name );
-BOOL TitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name);
+BOOL UserTitleIDSaveETicketOnly(const char *path, MY_USER_ETICKET_TID *pData, int count, char *log_file_name );
+BOOL UserTitleIDLoadETicketOnly(const char *path, MY_USER_ETICKET_TID **pBuffer, int *count, char *log_file_name);
 
 
 BOOL CopyFile(const char *dst_path, const char *src_path, FSFile *log_fd );

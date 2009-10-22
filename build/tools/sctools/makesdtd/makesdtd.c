@@ -705,7 +705,7 @@ int main(int argc, char **argv)
   //  printf("d = %s\n", prog);
 
   
-  strcpy(key_file_path, ".\\");
+  //  strcpy(key_file_path, ".\\");
   strcat(key_file_path, prog);
 
   len = strlen(key_file_path);

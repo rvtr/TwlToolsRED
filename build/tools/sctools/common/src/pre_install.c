@@ -26,7 +26,6 @@ static PRE_INSTALL_FILE *pre_install_file_list = NULL;
 
 
 #if 1
-//char *pre_install_search_tid(u64 tid, FSFile *log_fd);
 static void pre_install_print_list(FSFile *log_fd);
 static BOOL pre_install_discard_list(void);
 static BOOL pre_install_load_file(char *path, FSFile *log_fd, BOOL encrypt_flag);
@@ -195,7 +194,7 @@ static BOOL pre_install_add_list(u64 tid, u16 version, u16 groupid, char *temp_f
   return TRUE;
 }
 
-static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd)
+static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd, u16 *version)
 {
   PRE_INSTALL_FILE *temp_list;
   PRE_INSTALL_FILE *latest_list;
@@ -230,12 +229,18 @@ static char *pre_install_search_tid(u64 tid, FSFile *log_fd, BOOL *is_in_sd)
 
 
   if( latest_list ) {
-    if( !STD_StrNCmp( latest_list->file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
-      *is_in_sd = TRUE;
+    if( is_in_sd ) {
+      if( !STD_StrNCmp( latest_list->file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
+	*is_in_sd = TRUE;
+      }
+      else {
+	*is_in_sd = FALSE;
+      }
     }
-    else {
-      *is_in_sd = FALSE;
+    if( version ) {
+      *version = latest_list->version;
     }
+
     miya_log_fprintf(log_fd,"\ntad file entry tid=0x%08x%08x\n%s\n", 
 		     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), latest_list->file_name );
 
@@ -758,7 +763,7 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
     case 1:
       mprintf("IA ");
       miya_log_fprintf(log_fd, "IA ");
-      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd);
+      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd, NULL);
       if( tad_file_name ) {
 	if( is_in_sd == TRUE ) {
 	  ret_flag = myImportTad_sign( tad_file_name , org_version, log_fd );
@@ -775,7 +780,7 @@ BOOL pre_install_command(FSFile *log_fd, u64 *tid_array,  int tid_count, int com
     case 2:
       mprintf("TO ");
       miya_log_fprintf(log_fd, "TO ");
-      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd);
+      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd, NULL);
       if( tad_file_name ) {
 	if( is_in_sd == TRUE ) {
 	  ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
@@ -856,6 +861,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
   BOOL ret_flag = TRUE;
   BOOL is_in_sd = FALSE;
   int version;
+  u16 version_in_tad;
 
   if( development_version_flag ) {
     (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
@@ -880,7 +886,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
       continue;
     }
 
-    tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd);
+    tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd, &version_in_tad);
     if( tad_file_name ) {
       if( is_in_sd == TRUE ) {
 	ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
@@ -925,9 +931,12 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
        pTitleIds[i].is_personalized = 1 -> common (pre installed)
        pTitleIds[i].is_personalized = 2 -> personalized
     */
-    if( (title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */) && 
-	(title_id_buf_ptr[i].common_and_download == 0  ) )  {
-      /* commonだけどユーザーが最新バージョンを持ってる場合はダウンロードに切り替えてる。 */
+
+
+    //    (title_id_buf_ptr[i].common_and_download == 0  )
+
+    if( (title_id_buf_ptr[i].is_personalized == 1 /* commonの場合 */) ) {
+
       /*
 	0x00030004484E474A "rom:/tads/TWL-KGUJ-v257.tad.out"
 	0x000300044B32444A "rom:/tads/TWL-K2DJ-v0.tad.out"
@@ -938,41 +947,83 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
 
 
       (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
-      mprintf(" AP %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
-      miya_log_fprintf(log_fd, " AP %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
 
-      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd);
+      tad_file_name = pre_install_search_tid( tid , log_fd, &is_in_sd, &version_in_tad);
       if( tad_file_name ) {
+	/* commonだけどユーザーが最新バージョンを持ってる場合はダウンロードに切り替えてる。 */
 
-	if( is_in_sd == TRUE ) {
-	  ret_flag = myImportTad_sign( tad_file_name , version, log_fd);
+	if( version > version_in_tad ) {
+
+	  //  miya....
+
+	  mprintf(" AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+	  miya_log_fprintf(log_fd, " AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+
+
+	  if( is_in_sd == TRUE ) {
+	    ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
+	  }
+	  else {
+	    ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
+	  }
+
+	  if( ret_flag == TRUE ) {
+	    title_id_buf_ptr[i].common_and_download = 1; /* あとでダウンロードするようにチェックをつける。 */
+	    miya_log_fprintf(log_fd, "OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	    mprintf("OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	    miya_log_fprintf(log_fd," Pre->Dwn usr.ver=0x%04x tad.ver=0x%04x\n", version, version_in_tad );
+	    mprintf("  Pre->Dwn usr.ver=0x%04x tad.ver=0x%04x\n", version, version_in_tad );
+
+
+	  }
+	  else {
+	    miya_log_fprintf(log_fd, "NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* red  */
+	    mprintf("NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    miya_log_fprintf(log_fd, "error: import ticket only tid=0x%08x%08x %s\n", 
+			     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), tad_file_name);
+	  }
 	}
 	else {
-	  ret_flag = myImportTad( tad_file_name , version, log_fd);
-	}
-	if( FALSE == ret_flag ) {
-	  miya_log_fprintf(log_fd, "NG.\n");
-	  m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
-	  mprintf("NG.\n");
-	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	  miya_log_fprintf(log_fd, "error: import tid=0x%08x%08x %s\n", 
-			   (u32)(tid >> 32) , (u32)(tid & 0xffffffff), tad_file_name);
-	  ret_flag = FALSE;
-	}
-	else {
-	  miya_log_fprintf(log_fd, "OK.\n");
-	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
-	  mprintf("OK.\n");
-	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	  title_id_buf_ptr[i].install_success_flag = TRUE; /* これを入れとかないと後でセーブデータを復活しない */
+	  mprintf(" AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+	  miya_log_fprintf(log_fd, " AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+
+	  if( is_in_sd == TRUE ) {
+	    ret_flag = myImportTad_sign( tad_file_name , version, log_fd);
+	  }
+	  else {
+	    ret_flag = myImportTad( tad_file_name , version, log_fd);
+	  }
+
+	  if( ret_flag == TRUE ) {
+	    title_id_buf_ptr[i].install_success_flag = TRUE; /* これを入れとかないと後でセーブデータを復活しない */
+	    miya_log_fprintf(log_fd, "OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	    mprintf("OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  }
+	  else {
+	    miya_log_fprintf(log_fd, "NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* red  */
+	    mprintf("NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	    miya_log_fprintf(log_fd, "error: import tid=0x%08x%08x %s\n", 
+			     (u32)(tid >> 32) , (u32)(tid & 0xffffffff), tad_file_name);
+	  }
 	}
       }
       else {
+	miya_log_fprintf(log_fd, " AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
 	miya_log_fprintf(log_fd, "No file\n");
-	m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+
+	mprintf(" AP %08x %08x [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* red  */
 	mprintf("No file\n");
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
-	miya_log_fprintf(log_fd, "error: no file\n"); 
 	ret_flag = FALSE;
       }
     }
@@ -985,7 +1036,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
 }
 
 
-
+#if 0
 int pre_install_check_tad_version(FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count, 
 				 BOOL development_version_flag )
 {
@@ -1050,28 +1101,18 @@ int pre_install_check_tad_version(FSFile *log_fd, MY_USER_APP_TID *title_id_buf_
 		  (u32)(tid >> 32) , (u32)(tid & 0xffffffff), version, latest_list->version );
 
 	  ret_flag = FALSE;
-#if 1 /* miya 20091021 */
-#define ONLY_TICKET 1
 
-	  /* とりあえずEチケットだけインストール？ */
+	  /* とりあえずEチケットだけインストール */
 	  tad_file_name = latest_list->file_name;
 	  if( tad_file_name ) {
 	    if( !STD_StrNCmp( tad_file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
-#ifdef ONLY_TICKET
 	      ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
-#else
-	      ret_flag = myImportTad_sign( tad_file_name , 0, log_fd);
-#endif
 	    }
 	    else {
-#ifdef ONLY_TICKET
 	      ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
-#else
-	      ret_flag = myImportTad( tad_file_name , 0, log_fd);
-#endif
 	    }
 	  }
-#endif
+
 	  if( ret_flag == TRUE ) {
 	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
 	    mprintf("OK.\n");
@@ -1099,3 +1140,5 @@ int pre_install_check_tad_version(FSFile *log_fd, MY_USER_APP_TID *title_id_buf_
   miya_log_fprintf(log_fd, "%s end: num=%d\n",__FUNCTION__,ret_count);
   return ret_count;
 }
+
+#endif

@@ -1,5 +1,8 @@
 /* cryptopc *.der infile outfile
    cryptopc miya1024.der main.c main.enc
+
+   openssl rsa -inform DER -in tad1024.der -text
+
 */
 
 #include <stdio.h>

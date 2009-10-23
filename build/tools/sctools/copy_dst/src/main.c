@@ -61,6 +61,8 @@
 
 #include <twl/ltdmain_begin.h>
 
+
+// #define CHINA_LIMITED 1
 // #define PRE_INSTALL 1
 
 //================================================================================
@@ -742,13 +744,50 @@ static BOOL RestoreFromSDCard7(void)
   /* ECDownload の前準備,終わり。*/
 
 
+#if 0
+  /* miya 2009/10/12 */
+  /* TitleIDLoadの後、title_id_buf_ptr, title_id_countに書き込む */
+  /* title_id_buf_ptr[i].common_and_download == 1 のときはダウンロードするように。 */
+  miya_log_fprintf(log_fd,"Internal data version check.\n");
+  mprintf("Internal data version check.\n");
+  (void)pre_install_check_tad_version(log_fd, title_id_buf_ptr, title_id_count, development_console_flag );
+#endif
 
-  if( no_network_flag == TRUE ) {
-    miya_log_fprintf(log_fd,"no network flag ON\n");
-    goto pre_install_label;
+
+ pre_install_label:
+
+  if( (mydata.num_of_user_pre_installed_app > 0) ||
+      (mydata.num_of_user_pre_installed_eticket_only > 0) ) {
+    /* プリンストール対応 */
+    miya_log_fprintf(log_fd,"Import Pre-installed apps.\n");
+    mprintf("Import Pre-installed apps.\n");
+    if( mydata.num_of_user_pre_installed_eticket_only > 0 ) {
+      if( FALSE == UserTitleIDLoadETicketOnly( MyFile_GetUserTitleIDTicketOnlyFileName(),
+					   &eticket_only_id_buf, &num_of_eticket_only_titles,  
+					   MyFile_GetUserTitleIDTicketOnlyRestoreLogFileName()) ) {
+	;
+      }
+    }
+
+    /* pre_install_process関数の中でＥチケットだけのやつもやりたい。 */
+    if( FALSE == pre_install_process( log_fd, title_id_buf_ptr, title_id_count,
+				      eticket_only_id_buf,
+				      mydata.num_of_user_pre_installed_eticket_only ,
+				      development_console_flag ) ) {
+      ret_flag = FALSE;
+    }
+
+    if( eticket_only_id_buf ) {
+      OS_Free(eticket_only_id_buf );
+      eticket_only_id_buf = NULL;
+    }
   }
 
 
+  if( no_network_flag == TRUE ) {
+    miya_log_fprintf(log_fd,"no network flag ON\n");
+    goto network_connection_end;
+  }
 
   if( mydata.shop_record_flag == FALSE ) {
     /* ネットワークにつながなくていいか？ */
@@ -757,13 +796,6 @@ static BOOL RestoreFromSDCard7(void)
   }
   else {
 
-
-    /* miya 2009/10/12 */
-    /* TitleIDLoadの後、title_id_buf_ptr, title_id_countに書き込む */
-    /* title_id_buf_ptr[i].common_and_download == 1 のときはダウンロードするように。 */
-    miya_log_fprintf(log_fd,"Internal data version check.\n");
-    mprintf("Internal data version check.\n");
-    (void)pre_install_check_tad_version(log_fd, title_id_buf_ptr, title_id_count, development_console_flag );
 
 
     miya_log_fprintf(log_fd,"EC download\n");
@@ -878,35 +910,7 @@ static BOOL RestoreFromSDCard7(void)
     }
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
   }
-
- pre_install_label:
-
-  if( (mydata.num_of_user_pre_installed_app > 0) ||
-      (mydata.num_of_user_pre_installed_eticket_only > 0) ) {
-    /* プリンストール対応 */
-    miya_log_fprintf(log_fd,"Import Pre-installed apps.\n");
-    mprintf("Import Pre-installed apps..\n");
-    if( mydata.num_of_user_pre_installed_eticket_only > 0 ) {
-      if( FALSE == UserTitleIDLoadETicketOnly( MyFile_GetUserTitleIDTicketOnlyFileName(),
-					   &eticket_only_id_buf, &num_of_eticket_only_titles,  
-					   MyFile_GetUserTitleIDTicketOnlyRestoreLogFileName()) ) {
-	;
-      }
-    }
-
-    /* pre_install_process関数の中でＥチケットだけのやつもやりたい。 */
-    if( FALSE == pre_install_process( log_fd, title_id_buf_ptr, title_id_count,
-				      eticket_only_id_buf,
-				      mydata.num_of_user_pre_installed_eticket_only ,
-				      development_console_flag ) ) {
-      ret_flag = FALSE;
-    }
-
-    if( eticket_only_id_buf ) {
-      OS_Free(eticket_only_id_buf );
-      eticket_only_id_buf = NULL;
-    }
-  }
+ network_connection_end:
 
   hatamotolib_log_end();
 
@@ -949,12 +953,6 @@ static BOOL RestoreFromSDCard8(void)
     mprintf("Original app. save data saving failed\n");
   }
 
-  if( title_id_buf_ptr != NULL ) {
-    OS_Free( title_id_buf_ptr );
-    title_id_buf_ptr = NULL;
-  }
-  title_id_count = 0;
-
   m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
 
   if( TRUE == Error_Report_Display(tc[0]) ) {
@@ -968,6 +966,16 @@ static BOOL RestoreFromSDCard8(void)
 }
 
 
+static BOOL RestoreFromSDCard9(void)
+{
+  if( title_id_buf_ptr != NULL ) {
+    OS_Free( title_id_buf_ptr );
+    title_id_buf_ptr = NULL;
+  }
+  title_id_count = 0;
+  return TRUE;
+}
+
 
 typedef BOOL (*function_ptr)(void);
 
@@ -980,7 +988,8 @@ static function_ptr function_table[] =
   RestoreFromSDCard5,
   RestoreFromSDCard6,
   RestoreFromSDCard7,
-  RestoreFromSDCard8
+  RestoreFromSDCard8,
+  RestoreFromSDCard9,
 };
 
 static int function_table_max = sizeof(function_table) / sizeof(*function_table);
@@ -1305,6 +1314,9 @@ void TwlMain(void)
   u16 BatterylevelBuf = 0;
   BOOL isAcConnectedBuf = FALSE;
 
+#ifdef CHINA_LIMITED
+  BOOL isIgnoreKeyInput = FALSE;
+#endif
 
   OS_Init();
   OS_InitThread();
@@ -1358,8 +1370,6 @@ void TwlMain(void)
   SEA_Init();
 
   reboot_flag = OS_IsRebooted();
-  /* OS_IsRebootedなんかおかしい・・ */
-
 
   MIYA_MCU_Init();
 
@@ -1446,10 +1456,25 @@ void TwlMain(void)
   }
 
 
-
   // region
   org_region = LCFG_THW_GetRegion();
-  // ES Device ID
+
+#ifdef CHINA_LIMITED
+  mprintf("This software has limited use\n");
+  mprintf("  of China region. - ");
+
+  if( org_region != OS_TWL_REGION_CHINA ) {
+    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+    mprintf("Invalid\n");
+    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    isIgnoreKeyInput = TRUE;
+  }
+  else {
+    mprintf("Valid\n");
+  }
+#endif
+
+
 
   // 国が選択されていないなら適当に設定
   if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
@@ -1508,10 +1533,9 @@ void TwlMain(void)
     #define LCFGi_GetTSD()      ( &s_settings )
     #define LCFGi_GetTSD_OS()	( (OSTWLSettingsData*)HW_PARAM_TWL_SETTINGS_DATA )
 
-
-
   *******************/
 
+  // ES Device ID
 
   org_fuseId = SCFG_ReadFuseData();
   OS_TPrintf("eFuseID:   %08X%08X\n", (u32)(org_fuseId >> 32), (u32)(org_fuseId));
@@ -1637,14 +1661,23 @@ void TwlMain(void)
     OS_WaitVBlankIntr();
     (void)RTC_GetDate( &rtc_date );
     (void)RTC_GetTime( &rtc_time );
+
+#ifdef CHINA_LIMITED
+    if( isIgnoreKeyInput == FALSE ) {
+      keyData = m_get_key_trigger();
+    }
+#else
     keyData = m_get_key_trigger();
-    
+#endif    
+
     // ＡＲＭ７コマンド応答受信
     while (SND_RecvCommandReply(SND_COMMAND_NOBLOCK) != NULL)
       {
       }
     // コマンドフラッシュ（フラッシュして即座に実行を要求）
     (void)SND_FlushCommand(SND_COMMAND_NOBLOCK | SND_COMMAND_IMMEDIATE);
+
+
     if ( keyData & PAD_BUTTON_R ) {
       vram_num_main++;
       if( vram_num_main > (MAX_VRAM_NUM-1) ) {
@@ -1924,6 +1957,8 @@ void TwlMain(void)
       }
     }
 
+
+    /* メイン表示部 */
     m_set_palette(tc[1], M_TEXT_COLOR_LIGHTBLUE );
     mfprintf(tc[1], "\fRepaire Tool RESTORE");
     m_set_palette(tc[1], M_TEXT_COLOR_WHITE );

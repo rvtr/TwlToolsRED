@@ -7,6 +7,14 @@
  makesdtd.exe -indir [inputdir] -odir sdtads
  makesdtd.exe -indir test-tad -odir sdtads
 
+
+
+
+ openssl genrsa -out tad1024miya.der 1024 -outform DER
+
+
+ rsa_keysrcgen.exe -in tad1024miya.der
+
 */
 
 

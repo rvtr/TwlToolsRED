@@ -118,14 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="labRomSize.Location" type="System.Drawing.Point, System.Drawing">
+    <value>21, 165</value>
+  </data>
   <data name="labRomSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>79, 12</value>
+    <value>84, 15</value>
   </data>
   <data name="labRomSize.Text" xml:space="preserve">
     <value>ROM Capacity</value>
   </data>
   <data name="cboxRemasterVerE.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 16</value>
+    <value>103, 19</value>
   </data>
   <data name="cboxRemasterVerE.Text" xml:space="preserve">
     <value>E (Pre-Check)</value>
@@ -133,23 +136,17 @@
   <data name="labRemasterVer.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 193</value>
   </data>
-  <data name="labRemasterVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 12</value>
-  </data>
-  <data name="labRemasterVer.Text" xml:space="preserve">
-    <value>Remaster Version</value>
-  </data>
   <data name="labBackup.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 20</value>
+    <value>9, 20</value>
   </data>
   <data name="labRomCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 20</value>
+    <value>34, 47</value>
   </data>
   <data name="labHeaderCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 20</value>
+    <value>26, 20</value>
   </data>
   <data name="labCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 12</value>
+    <value>259, 15</value>
   </data>
   <data name="labCaption.Text" xml:space="preserve">
     <value>Remarks - Enter any other related information.</value>
@@ -158,16 +155,16 @@
     <value>67, 247</value>
   </data>
   <data name="labOFLC.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 12</value>
+    <value>83, 15</value>
   </data>
   <data name="labOFLC.Text" xml:space="preserve">
     <value>AGCB (OFLC)</value>
   </data>
   <data name="labPEGI_BBFC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>11, 220</value>
+    <value>2, 220</value>
   </data>
   <data name="labPEGI_BBFC.Size" type="System.Drawing.Size, System.Drawing">
-    <value>138, 12</value>
+    <value>149, 15</value>
   </data>
   <data name="labPEGI_BBFC.Text" xml:space="preserve">
     <value>PEGI (General) and BBFC</value>
@@ -176,10 +173,10 @@
     <value>67, 194</value>
   </data>
   <data name="labPEGI.Location" type="System.Drawing.Point, System.Drawing">
-    <value>67, 168</value>
+    <value>61, 168</value>
   </data>
   <data name="labPEGI.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 12</value>
+    <value>90, 15</value>
   </data>
   <data name="labPEGI.Text" xml:space="preserve">
     <value>PEGI (General)</value>
@@ -277,9 +274,6 @@
   <data name="combCERO.Items4" xml:space="preserve">
     <value>Z (Ages 18 and up)</value>
   </data>
-  <data name="labRegion.Text" xml:space="preserve">
-    <value>Market</value>
-  </data>
   <data name="combRegion.Items" xml:space="preserve">
     <value>Japan only</value>
   </data>
@@ -299,7 +293,7 @@
     <value>USA, Europe, and Australia</value>
   </data>
   <data name="cboxIsInputPerson2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 16</value>
+    <value>165, 19</value>
   </data>
   <data name="cboxIsInputPerson2.Text" xml:space="preserve">
     <value>Enter Contact 2 (optional)</value>
@@ -308,43 +302,31 @@
     <value>Contact 2</value>
   </data>
   <data name="labArbit4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 12</value>
+    <value>61, 15</value>
   </data>
   <data name="labArbit4.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
   <data name="labArbit3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 12</value>
+    <value>61, 15</value>
   </data>
   <data name="labArbit3.Text" xml:space="preserve">
     <value>(Optional)</value>
-  </data>
-  <data name="labMail2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 12</value>
-  </data>
-  <data name="labMail2.Text" xml:space="preserve">
-    <value>E-mail</value>
   </data>
   <data name="gboxPerson1.Text" xml:space="preserve">
     <value>Contact 1</value>
   </data>
   <data name="labArbit2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 12</value>
+    <value>61, 15</value>
   </data>
   <data name="labArbit2.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
   <data name="labArbit1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>55, 12</value>
+    <value>61, 15</value>
   </data>
   <data name="labArbit1.Text" xml:space="preserve">
     <value>(Optional)</value>
-  </data>
-  <data name="labMail1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>39, 12</value>
-  </data>
-  <data name="labMail1.Text" xml:space="preserve">
-    <value>E-mail</value>
   </data>
   <data name="gboxUsage.Text" xml:space="preserve">
     <value>Usage</value>
@@ -353,223 +335,127 @@
     <value>Submission Method</value>
   </data>
   <data name="rSubmitHand.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 16</value>
+    <value>71, 19</value>
   </data>
   <data name="rSubmitHand.Text" xml:space="preserve">
     <value>By Hand</value>
   </data>
-  <data name="labSubmiteDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 143</value>
-  </data>
   <data name="labReleaseDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 114</value>
+    <value>21, 113</value>
   </data>
   <data name="labProductCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 84</value>
-  </data>
-  <data name="labProductName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 56</value>
+    <value>21, 83</value>
   </data>
   <data name="labCapSubmitVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 12</value>
+    <value>269, 15</value>
   </data>
   <data name="labCapSubmitVer.Text" xml:space="preserve">
     <value>* Reset to 0 when a new master ROM is created</value>
   </data>
   <data name="labSubmitVer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 174</value>
+    <value>13, 177</value>
   </data>
   <data name="labMultiForeign1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 12</value>
+    <value>122, 15</value>
   </data>
   <data name="labMultiForeign1.Text" xml:space="preserve">
     <value>(When for &gt;1 market)</value>
   </data>
   <data name="cboxReleaseForeign.Size" type="System.Drawing.Size, System.Drawing">
-    <value>214, 16</value>
+    <value>229, 19</value>
   </data>
   <data name="cboxReleaseForeign.Text" xml:space="preserve">
     <value>Foreign version is scheduled for sale</value>
   </data>
   <data name="labProductNameForeign.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 43</value>
+    <value>9, 48</value>
   </data>
   <data name="labProductCodeForeign.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 74</value>
+    <value>9, 83</value>
   </data>
   <data name="gboxShared2Size.Text" xml:space="preserve">
     <value>Shared 2 File Size</value>
   </data>
   <data name="cboxIsShared2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>130, 16</value>
+    <value>138, 19</value>
   </data>
   <data name="cboxIsShared2.Text" xml:space="preserve">
     <value>Use of Shared 2 File</value>
   </data>
-  <data name="labLib.Size" type="System.Drawing.Size, System.Drawing">
-    <value>161, 12</value>
-  </data>
-  <data name="labLib.Text" xml:space="preserve">
-    <value>Libraries Used by the Program</value>
-  </data>
-  <data name="labSDK.Size" type="System.Drawing.Size, System.Drawing">
-    <value>70, 12</value>
-  </data>
-  <data name="labSDK.Text" xml:space="preserve">
-    <value>SDK Version</value>
-  </data>
   <data name="labKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 50</value>
   </data>
-  <data name="labKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 12</value>
-  </data>
-  <data name="labKeyTableRomOffset.Text" xml:space="preserve">
-    <value>TWL-Only Region ROM Offset</value>
-  </data>
-  <data name="labNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>256, 147</value>
-  </data>
-  <data name="labNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
-    <value>171, 12</value>
-  </data>
-  <data name="labNormalRomOffset.Text" xml:space="preserve">
-    <value>TWL Normal Region ROM Offset</value>
-  </data>
   <data name="labPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 94</value>
+    <value>41, 94</value>
   </data>
   <data name="labPublicSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 69</value>
-  </data>
-  <data name="cboxIsSubBanner.Size" type="System.Drawing.Size, System.Drawing">
-    <value>146, 16</value>
-  </data>
-  <data name="cboxIsSubBanner.Text" xml:space="preserve">
-    <value>Enable Sub-Banner File</value>
-  </data>
-  <data name="cboxIsNormalJump.Size" type="System.Drawing.Size, System.Drawing">
-    <value>172, 16</value>
-  </data>
-  <data name="cboxIsNormalJump.Text" xml:space="preserve">
-    <value>Permit Normal Jump Landing</value>
-  </data>
-  <data name="cboxIsTmpJump.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 16</value>
-  </data>
-  <data name="cboxIsTmpJump.Text" xml:space="preserve">
-    <value>Permit Tmp Jump Landing</value>
-  </data>
-  <data name="gboxAccess.Text" xml:space="preserve">
-    <value>Access Control Information</value>
-  </data>
-  <data name="labPhotoAccess.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 12</value>
-  </data>
-  <data name="labPhotoAccess.Text" xml:space="preserve">
-    <value>Photo Database Access</value>
+    <value>41, 69</value>
   </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 12</value>
+    <value>37, 15</value>
   </data>
   <data name="labAccessOther.Text" xml:space="preserve">
     <value>Other</value>
   </data>
-  <data name="labAppType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 79</value>
-  </data>
-  <data name="labAppTypeOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>117, 12</value>
-  </data>
-  <data name="labAppTypeOther.Text" xml:space="preserve">
-    <value>Other Application Info</value>
-  </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
     <value>269, 82</value>
-  </data>
-  <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
-    <value>35, 12</value>
-  </data>
-  <data name="labMedia.Text" xml:space="preserve">
-    <value>Media</value>
-  </data>
-  <data name="labCaptionEx.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 12</value>
-  </data>
-  <data name="labCaptionEx.Text" xml:space="preserve">
-    <value>Special Instructions</value>
   </data>
   <data name="gboxProd.Text" xml:space="preserve">
     <value>ROM Submission Information</value>
   </data>
   <data name="stripItemOpenRom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="stripItemSepFile1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 6</value>
+    <value>257, 6</value>
   </data>
   <data name="stripItemSaveTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="stripItemSaveTemp.Text" xml:space="preserve">
     <value>Save submission data to temp file</value>
   </data>
   <data name="stripItemLoadTemp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>245, 22</value>
+    <value>260, 22</value>
   </data>
   <data name="stripItemLoadTemp.Text" xml:space="preserve">
     <value>Load saved submission data</value>
   </data>
   <data name="stripItemSheet.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
+    <value>304, 22</value>
   </data>
   <data name="stripItemSheet.Text" xml:space="preserve">
     <value>Create submission data set</value>
   </data>
   <data name="stripItemSepMaster1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 6</value>
+    <value>301, 6</value>
   </data>
   <data name="stripItemMasterRom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
+    <value>304, 22</value>
   </data>
   <data name="stripItemMasterRom.Text" xml:space="preserve">
     <value>Create master ROM only</value>
   </data>
   <data name="stripItemMiddlewareXml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
+    <value>304, 22</value>
   </data>
   <data name="stripItemMiddlewareXml.Text" xml:space="preserve">
     <value>Create middleware list only (XML format)</value>
   </data>
   <data name="stripItemMiddlewareHtml.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 22</value>
+    <value>304, 22</value>
   </data>
   <data name="stripItemMiddlewareHtml.Text" xml:space="preserve">
     <value>Create middleware list only (HTML format)</value>
-  </data>
-  <data name="tabRomInfo.Text" xml:space="preserve">
-    <value>Basic ROM Info</value>
-  </data>
-  <data name="tboxGuideRomInfo.Text" xml:space="preserve">
-    <value>Information on this tab cannot be edited. If data errors exist, review the ROM's build settings.</value>
-  </data>
-  <data name="tabTWLInfo.Text" xml:space="preserve">
-    <value>TWL Extended Info</value>
   </data>
   <data name="gboxLaunch.Text" xml:space="preserve">
     <value>Launch Control on DSi Menu</value>
   </data>
   <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
-    <value>198, 12</value>
+    <value>213, 15</value>
   </data>
   <data name="labConnectIcon.Text" xml:space="preserve">
     <value>Display Connection Icon on DSi Menu</value>
-  </data>
-  <data name="tboxGuideTWLInfo.Text" xml:space="preserve">
-    <value>Information on this tab cannot be edited. If data errors exist, review the ROM's build settings.</value>
-  </data>
-  <data name="tabNandSizeInfo.Text" xml:space="preserve">
-    <value>DSiWare Info</value>
   </data>
   <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
     <value>Information on this tab is required to confirm the amount of space a given Nintendo DSiWare title (NAND application) uses in the system memory. &lt;newline&gt;If the media of the application is a Game Card, there is no need to check the amount of system memory used.</value>
@@ -578,76 +464,34 @@
     <value>Amount of System NAND Memory Used by DSiWare Application</value>
   </data>
   <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>154, 23</value>
+    <value>174, 23</value>
   </data>
   <data name="labNandSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>111, 12</value>
+    <value>119, 15</value>
   </data>
   <data name="labNandSize.Text" xml:space="preserve">
     <value>Original Size in ROM</value>
   </data>
   <data name="labNandSizeFS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>290, 23</value>
-  </data>
-  <data name="labNandSizeFS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>119, 12</value>
-  </data>
-  <data name="labNandSizeFS.Text" xml:space="preserve">
-    <value>Size in NAND Memory</value>
+    <value>308, 23</value>
   </data>
   <data name="labSrlSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 44</value>
-  </data>
-  <data name="labSrlSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>115, 12</value>
-  </data>
-  <data name="labSrlSize.Text" xml:space="preserve">
-    <value>Actual ROM File Size</value>
+    <value>45, 44</value>
   </data>
   <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>139, 195</value>
-  </data>
-  <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>147, 12</value>
-  </data>
-  <data name="labSumSize2.Text" xml:space="preserve">
-    <value>(Total NAND memory used)</value>
+    <value>153, 195</value>
   </data>
   <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>209, 180</value>
   </data>
-  <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 12</value>
-  </data>
-  <data name="labSumSize.Text" xml:space="preserve">
-    <value>Total Size</value>
-  </data>
   <data name="labSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 119</value>
-  </data>
-  <data name="labSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 12</value>
-  </data>
-  <data name="labSubBannerSize.Text" xml:space="preserve">
-    <value>Sub-Banner File Size</value>
-  </data>
-  <data name="labTmdSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>99, 144</value>
-  </data>
-  <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 12</value>
-  </data>
-  <data name="labTmdSize.Text" xml:space="preserve">
-    <value>Other</value>
-  </data>
-  <data name="tabRomEditInfo.Text" xml:space="preserve">
-    <value>Market and Rating ***</value>
+    <value>42, 119</value>
   </data>
   <data name="gboxOtherSpec.Text" xml:space="preserve">
     <value>Other ROM Specifications</value>
   </data>
   <data name="cboxIsUGC.Size" type="System.Drawing.Size, System.Drawing">
-    <value>227, 16</value>
+    <value>244, 19</value>
   </data>
   <data name="cboxIsUGC.Text" xml:space="preserve">
     <value>UGC (User Generated Content) Support</value>
@@ -674,40 +518,22 @@
     <value>Teenager restricted</value>
   </data>
   <data name="cboxIsUnnecessaryRating.Size" type="System.Drawing.Size, System.Drawing">
-    <value>195, 16</value>
+    <value>207, 19</value>
   </data>
   <data name="cboxIsUnnecessaryRating.Text" xml:space="preserve">
     <value>Rating Not Required (Tools Only)</value>
   </data>
-  <data name="tabSubmitInfo.Text" xml:space="preserve">
-    <value>Submission Info ***</value>
-  </data>
-  <data name="labProductNameLimit.Text" xml:space="preserve">
-    <value>(100 characters or less)</value>
-  </data>
-  <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
-    <value>You must complete all items on this tab to create a submission checklist.</value>
-  </data>
   <data name="gboxForeign.Text" xml:space="preserve">
     <value>Foreign Version</value>
   </data>
-  <data name="labProductNameLimitForeign.Text" xml:space="preserve">
-    <value>(100 characters or less)</value>
-  </data>
   <data name="labMultiForeign2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>113, 12</value>
+    <value>122, 15</value>
   </data>
   <data name="labMultiForeign2.Text" xml:space="preserve">
     <value>(When for &gt;1 market)</value>
   </data>
-  <data name="tabCompanyInfo.Text" xml:space="preserve">
-    <value>Company Info ***</value>
-  </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist. Enter all information.</value>
-  </data>
-  <data name="tabErrorInfo.Text" xml:space="preserve">
-    <value>Error Info</value>
   </data>
   <data name="tboxGuideErrorInfo.Text" xml:space="preserve">
     <value>This tab lists problems in the ROM data file and editing mistakes made when using this program. &lt;newline&gt;Items in red cannot be corrected using this program. You must modify the ROM build settings. &lt;newline&gt;Items in blue indicate problems with the ROM data that can be can corrected using this program. &lt;newline&gt;Items in black indicate errors or omissions in the Submission Info and Company Info tabs.</value>
@@ -715,20 +541,8 @@
   <data name="gboxErrorTiming.Text" xml:space="preserve">
     <value>Display Information From</value>
   </data>
-  <data name="rErrorCurrent.Size" type="System.Drawing.Size, System.Drawing">
-    <value>121, 16</value>
-  </data>
-  <data name="rErrorCurrent.Text" xml:space="preserve">
-    <value>Apply current input</value>
-  </data>
-  <data name="labWarn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>466, 12</value>
-  </data>
-  <data name="labWarn.Text" xml:space="preserve">
-    <value>Warning (Although modification is not required, check this information for possible errors.)</value>
-  </data>
   <data name="labError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>164, 12</value>
+    <value>175, 15</value>
   </data>
   <data name="labError.Text" xml:space="preserve">
     <value>Error (Modification is required.)</value>

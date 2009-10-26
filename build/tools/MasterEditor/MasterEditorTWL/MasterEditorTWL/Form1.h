@@ -3486,6 +3486,23 @@ private: System::Windows::Forms::TextBox^  tboxWarningChinaRating;
 		//	}
 		//}
 
+		// 日本語フォントがあるかどうか調べる
+		bool hasJapaneseFont(void)
+		{
+			System::Drawing::Text::InstalledFontCollection ^ifc = gcnew System::Drawing::Text::InstalledFontCollection();
+
+			bool ret = false;
+			for each( System::Drawing::FontFamily ^ff in ifc->Families )
+			{
+				//System::Diagnostics::Debug::WriteLine(ff->Name);
+				if( ff->Name && (ff->Name->ToUpper()->Equals("MS PGOTHIC") || ff->Name->Equals("ＭＳ Ｐゴシック")) )
+				{
+					ret = true;
+				}
+			}
+			return ret;
+		}
+
 	private:
 		// ----------------------------------------------
 		// 固定ファイル名の取得
@@ -3847,6 +3864,12 @@ private: System::Windows::Forms::TextBox^  tboxWarningChinaRating;
 		}
 		System::Void stripItemJapanese_Click(System::Object^  sender, System::EventArgs^  e)
 		{
+			if( !this->hasJapaneseFont() )
+			{
+				this->errMsg( "E_JapaneseFont" );
+				return;
+			}
+
 			this->stripItemEnglish->Checked  = false;
 			this->stripItemJapanese->Checked = true;
 			this->changeJapanese();

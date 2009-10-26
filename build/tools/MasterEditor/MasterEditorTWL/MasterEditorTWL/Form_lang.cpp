@@ -56,13 +56,13 @@ void Form1::changeFormInput( System::String ^langname )
 		this->labArbit4->Visible     = true;
 
 		// 日本ではInternet提出を認めないので表示を消す
-		if( this->rSubmitInternet->Checked )
-		{
-			this->rSubmitInternet->Checked = false;		// Internetが選択されているときに表示を消すとどれも選択されていない状況になるので
-			this->rSubmitPost->Checked     = true;		// 必ずどれか1つが選択されているようにしておく
-		}
-		this->rSubmitInternet->Enabled = false;
-		this->rSubmitInternet->Visible = false;
+		//if( this->rSubmitInternet->Checked )
+		//{
+		//	this->rSubmitInternet->Checked = false;		// Internetが選択されているときに表示を消すとどれも選択されていない状況になるので
+		//	this->rSubmitPost->Checked     = true;		// 必ずどれか1つが選択されているようにしておく
+		//}
+		//this->rSubmitInternet->Enabled = false;
+		//this->rSubmitInternet->Visible = false;
 	}
 	else
 	{
@@ -79,8 +79,8 @@ void Form1::changeFormInput( System::String ^langname )
 		this->labArbit2->Visible     = false;
 		this->labArbit4->Visible     = false;
 
-		this->rSubmitInternet->Enabled = true;
-		this->rSubmitInternet->Visible = true;
+		//this->rSubmitInternet->Enabled = true;
+		//this->rSubmitInternet->Visible = true;
 	}
 }
 

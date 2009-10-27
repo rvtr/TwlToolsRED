@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:MasterEditorTWLSetup"
-"LanguageId" = "3:1041"
-"CodePage" = "3:932"
-"UILanguageId" = "3:1041"
+"LanguageId" = "3:0"
+"CodePage" = "3:1252"
+"UILanguageId" = "3:0"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -57,12 +57,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_69FDEF4B9A5E47BF87030D77CA500CF1"
-        "OwnerKey" = "8:_7746D2D347F0423FB46FA2300F6158A4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_6EC739CA561443E48045379A268C1657"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8D0AA958C2F3497FB8B2B78193601E40"
+        "OwnerKey" = "8:_DA5C7455D7854958BA50A10A88D9A699"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A3417E9C9F294832AE49B5BDAF95E373"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -99,14 +99,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DAC0F3BBAB014046906FA4ACE74604B7"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_DA5C7455D7854958BA50A10A88D9A699"
+        "OwnerKey" = "8:_7746D2D347F0423FB46FA2300F6158A4"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EE72447B1EAC4E24A028D3AA3060EF26"
-        "OwnerKey" = "8:_69FDEF4B9A5E47BF87030D77CA500CF1"
+        "MsmKey" = "8:_DAC0F3BBAB014046906FA4ACE74604B7"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -402,7 +402,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.31697, Culture=en, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.7.3556.20753, Culture=en, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -468,7 +468,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.6.3476.31697, Culture=ja, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.7.3556.20753, Culture=ja, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -623,7 +623,7 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1041"
+        "LangId" = "3:0"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
@@ -631,7 +631,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:MasterEditorTWL"
         "ProductCode" = "8:{B12B5AFF-26D1-47B5-85B6-1E2A7B5106F5}"
-        "PackageCode" = "8:{81911C57-DB7E-405D-9943-298C27E682F9}"
+        "PackageCode" = "8:{5305FF0A-F7B9-4424-997B-6F130ADC98BB}"
         "UpgradeCode" = "8:{CE22C209-7AE1-4F58-8F6B-6D044BA2A118}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
@@ -1160,11 +1160,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_69FDEF4B9A5E47BF87030D77CA500CF1"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_8D0AA958C2F3497FB8B2B78193601E40"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -1174,11 +1174,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_EE72447B1EAC4E24A028D3AA3060EF26"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DA5C7455D7854958BA50A10A88D9A699"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }

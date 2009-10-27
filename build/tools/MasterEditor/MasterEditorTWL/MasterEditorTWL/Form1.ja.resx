@@ -131,7 +131,7 @@
     <value>100, 19</value>
   </data>
   <data name="labPlatform.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 109</value>
+    <value>26, 106</value>
   </data>
   <data name="labPlatform.Size" type="System.Drawing.Size, System.Drawing">
     <value>87, 12</value>
@@ -143,7 +143,7 @@
     <value>100, 19</value>
   </data>
   <data name="labRomSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 165</value>
+    <value>26, 162</value>
   </data>
   <data name="labRomSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>54, 12</value>
@@ -152,7 +152,7 @@
     <value>ROM容量</value>
   </data>
   <data name="labRomType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 137</value>
+    <value>26, 134</value>
   </data>
   <data name="labRomType.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 12</value>
@@ -170,7 +170,7 @@
     <value>E(事前版)</value>
   </data>
   <data name="labMakerCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 81</value>
+    <value>26, 78</value>
   </data>
   <data name="labMakerCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
@@ -179,7 +179,7 @@
     <value>メーカコード</value>
   </data>
   <data name="labGameCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 53</value>
+    <value>26, 50</value>
   </data>
   <data name="labGameCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 12</value>
@@ -191,7 +191,7 @@
     <value>100, 19</value>
   </data>
   <data name="labTitleName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 24</value>
+    <value>26, 23</value>
   </data>
   <data name="labTitleName.Size" type="System.Drawing.Size, System.Drawing">
     <value>72, 12</value>
@@ -200,7 +200,7 @@
     <value>ソフトタイトル</value>
   </data>
   <data name="labRemasterVer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 193</value>
+    <value>8, 190</value>
   </data>
   <data name="labRemasterVer.Size" type="System.Drawing.Size, System.Drawing">
     <value>110, 12</value>
@@ -236,7 +236,7 @@
     <value>125, 19</value>
   </data>
   <data name="labRomCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 47</value>
+    <value>43, 54</value>
   </data>
   <data name="labRomCRC.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 12</value>
@@ -245,7 +245,7 @@
     <value>全体のCRC</value>
   </data>
   <data name="labHeaderCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>43, 20</value>
+    <value>43, 24</value>
   </data>
   <data name="labHeaderCRC.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 12</value>
@@ -448,6 +448,9 @@
   <data name="labRegion.Text" xml:space="preserve">
     <value>リージョン</value>
   </data>
+  <data name="cboxIsEULA.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 34</value>
+  </data>
   <data name="cboxIsEULA.Size" type="System.Drawing.Size, System.Drawing">
     <value>222, 16</value>
   </data>
@@ -496,9 +499,6 @@
   <data name="labArbit3.Text" xml:space="preserve">
     <value>(任意)</value>
   </data>
-  <data name="labNTSC2Sur.Location" type="System.Drawing.Point, System.Drawing">
-    <value>23, 214</value>
-  </data>
   <data name="labNTSC2Sur.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 12</value>
   </data>
@@ -506,13 +506,13 @@
     <value>158, 19</value>
   </data>
   <data name="labFax2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 152</value>
+    <value>28, 163</value>
   </data>
   <data name="labFax2.Size" type="System.Drawing.Size, System.Drawing">
     <value>27, 12</value>
   </data>
   <data name="labNTSC2Pre.Location" type="System.Drawing.Point, System.Drawing">
-    <value>23, 200</value>
+    <value>23, 214</value>
   </data>
   <data name="labNTSC2Pre.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 12</value>
@@ -545,16 +545,19 @@
     <value>268, 19</value>
   </data>
   <data name="labMail2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>23, 178</value>
+    <value>23, 190</value>
   </data>
   <data name="labMail2.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 12</value>
   </data>
   <data name="labTel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 128</value>
+    <value>28, 136</value>
   </data>
   <data name="labTel2.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 12</value>
+  </data>
+  <data name="labFurigana2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 109</value>
   </data>
   <data name="labFurigana2.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 12</value>
@@ -563,7 +566,7 @@
     <value>(ふりがな)</value>
   </data>
   <data name="labPerson2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>18, 78</value>
+    <value>18, 82</value>
   </data>
   <data name="labPerson2.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 12</value>
@@ -596,19 +599,19 @@
     <value>(任意)</value>
   </data>
   <data name="labNTSC1Sur.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 214</value>
+    <value>24, 228</value>
   </data>
   <data name="labNTSC1Sur.Size" type="System.Drawing.Size, System.Drawing">
     <value>44, 12</value>
   </data>
   <data name="labFax1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>30, 152</value>
+    <value>32, 163</value>
   </data>
   <data name="labFax1.Size" type="System.Drawing.Size, System.Drawing">
     <value>27, 12</value>
   </data>
   <data name="labNTSC1Pre.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 200</value>
+    <value>27, 214</value>
   </data>
   <data name="labNTSC1Pre.Size" type="System.Drawing.Size, System.Drawing">
     <value>35, 12</value>
@@ -644,19 +647,19 @@
     <value>261, 19</value>
   </data>
   <data name="labMail1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 178</value>
+    <value>24, 190</value>
   </data>
   <data name="labMail1.Size" type="System.Drawing.Size, System.Drawing">
     <value>39, 12</value>
   </data>
   <data name="labTel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>32, 128</value>
+    <value>32, 136</value>
   </data>
   <data name="labTel1.Size" type="System.Drawing.Size, System.Drawing">
     <value>25, 12</value>
   </data>
   <data name="labFurigana1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 103</value>
+    <value>15, 109</value>
   </data>
   <data name="labFurigana1.Size" type="System.Drawing.Size, System.Drawing">
     <value>57, 12</value>
@@ -665,7 +668,7 @@
     <value>(ふりがな)</value>
   </data>
   <data name="labPerson1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 78</value>
+    <value>22, 82</value>
   </data>
   <data name="labPerson1.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 12</value>
@@ -674,7 +677,7 @@
     <value>ご氏名</value>
   </data>
   <data name="labCompany1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>23, 28</value>
+    <value>22, 28</value>
   </data>
   <data name="labCompany1.Size" type="System.Drawing.Size, System.Drawing">
     <value>41, 12</value>
@@ -706,36 +709,6 @@
   <data name="dateRelease.Size" type="System.Drawing.Size, System.Drawing">
     <value>103, 19</value>
   </data>
-  <data name="tboxUsageOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>283, 19</value>
-  </data>
-  <data name="rUsageOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 16</value>
-  </data>
-  <data name="rUsageOther.Text" xml:space="preserve">
-    <value>その他</value>
-  </data>
-  <data name="rUsageDst.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 16</value>
-  </data>
-  <data name="rUsageDst.Text" xml:space="preserve">
-    <value>データ配信用</value>
-  </data>
-  <data name="rUsageSample.Size" type="System.Drawing.Size, System.Drawing">
-    <value>71, 16</value>
-  </data>
-  <data name="rUsageSample.Text" xml:space="preserve">
-    <value>試遊台用</value>
-  </data>
-  <data name="rUsageSale.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 16</value>
-  </data>
-  <data name="rUsageSale.Text" xml:space="preserve">
-    <value>一般販売用</value>
-  </data>
-  <data name="gboxUsage.Text" xml:space="preserve">
-    <value>用途</value>
-  </data>
   <data name="rSubmitInternet.Size" type="System.Drawing.Size, System.Drawing">
     <value>62, 16</value>
   </data>
@@ -755,7 +728,7 @@
     <value>提出方法</value>
   </data>
   <data name="labSubmiteDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>37, 146</value>
+    <value>42, 143</value>
   </data>
   <data name="labSubmiteDate.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 12</value>
@@ -764,7 +737,7 @@
     <value>書類提出日</value>
   </data>
   <data name="labReleaseDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>37, 113</value>
+    <value>42, 113</value>
   </data>
   <data name="labReleaseDate.Size" type="System.Drawing.Size, System.Drawing">
     <value>65, 12</value>
@@ -773,7 +746,7 @@
     <value>発売予定日</value>
   </data>
   <data name="labProductCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>37, 83</value>
+    <value>42, 83</value>
   </data>
   <data name="labProductCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 12</value>
@@ -782,7 +755,7 @@
     <value>製品コード</value>
   </data>
   <data name="labProductName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>49, 55</value>
+    <value>54, 55</value>
   </data>
   <data name="labProductName.Size" type="System.Drawing.Size, System.Drawing">
     <value>41, 12</value>
@@ -790,8 +763,11 @@
   <data name="labProductName.Text" xml:space="preserve">
     <value>製品名</value>
   </data>
+  <data name="labCapSubmitVer.Font" type="System.Drawing.Font, System.Drawing">
+    <value>ＭＳ Ｐゴシック, 8.25pt</value>
+  </data>
   <data name="labCapSubmitVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>266, 12</value>
+    <value>245, 11</value>
   </data>
   <data name="labCapSubmitVer.Text" xml:space="preserve">
     <value>* リマスターバージョンが上がると再び0からカウント</value>
@@ -800,7 +776,7 @@
     <value>38, 19</value>
   </data>
   <data name="labSubmitVer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 179</value>
+    <value>32, 174</value>
   </data>
   <data name="labSubmitVer.Size" type="System.Drawing.Size, System.Drawing">
     <value>82, 12</value>
@@ -926,7 +902,7 @@
     <value>75, 19</value>
   </data>
   <data name="labIsCodec.Location" type="System.Drawing.Point, System.Drawing">
-    <value>102, 19</value>
+    <value>102, 26</value>
   </data>
   <data name="labIsCodec.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 12</value>
@@ -935,7 +911,7 @@
     <value>CODECモード</value>
   </data>
   <data name="labKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>28, 51</value>
+    <value>28, 58</value>
   </data>
   <data name="labKeyTableRomOffset.Size" type="System.Drawing.Size, System.Drawing">
     <value>149, 12</value>
@@ -953,7 +929,7 @@
     <value>11, 12</value>
   </data>
   <data name="labNormalRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>268, 147</value>
+    <value>268, 159</value>
   </data>
   <data name="labNormalRomOffset.Size" type="System.Drawing.Size, System.Drawing">
     <value>168, 12</value>
@@ -968,7 +944,7 @@
     <value>96, 19</value>
   </data>
   <data name="labPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>35, 94</value>
+    <value>35, 100</value>
   </data>
   <data name="labPrivateSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>142, 12</value>
@@ -977,7 +953,7 @@
     <value>Privateセーブデータサイズ</value>
   </data>
   <data name="labPublicSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>35, 69</value>
+    <value>35, 73</value>
   </data>
   <data name="labPublicSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>137, 12</value>
@@ -1007,7 +983,7 @@
     <value>tmpジャンプ許可</value>
   </data>
   <data name="labSDAccessRight.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 70</value>
+    <value>6, 88</value>
   </data>
   <data name="labSDAccessRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>105, 12</value>
@@ -1022,7 +998,7 @@
     <value>123, 19</value>
   </data>
   <data name="labPhotoAccess.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 118</value>
+    <value>6, 141</value>
   </data>
   <data name="labPhotoAccess.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 12</value>
@@ -1052,7 +1028,7 @@
     <value>アクセスコントロール情報</value>
   </data>
   <data name="labIsGameCardOn2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>298, 336</value>
+    <value>294, 381</value>
   </data>
   <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 14</value>
@@ -1064,7 +1040,7 @@
     <value>124, 19</value>
   </data>
   <data name="labIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>291, 353</value>
+    <value>287, 398</value>
   </data>
   <data name="labIsGameCardOn.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 12</value>
@@ -1073,7 +1049,7 @@
     <value>ゲームカードアクセス</value>
   </data>
   <data name="labAppType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>40, 79</value>
+    <value>40, 83</value>
   </data>
   <data name="labAppType.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 12</value>
@@ -1093,6 +1069,9 @@
   <data name="labTitleIDLo.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 12</value>
   </data>
+  <data name="labTitleIDHi.Location" type="System.Drawing.Point, System.Drawing">
+    <value>37, 56</value>
+  </data>
   <data name="labTitleIDHi.Size" type="System.Drawing.Size, System.Drawing">
     <value>66, 12</value>
   </data>
@@ -1106,7 +1085,7 @@
     <value>その他アプリ情報</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>216, 82</value>
+    <value>245, 82</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 12</value>
@@ -1235,10 +1214,13 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabRomInfo.Text" xml:space="preserve">
     <value>ROM基本情報</value>
+  </data>
+  <data name="labConnectIcon.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 70</value>
   </data>
   <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>189, 12</value>
@@ -1265,7 +1247,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabTWLInfo.Text" xml:space="preserve">
     <value>TWL拡張情報</value>
@@ -1337,7 +1319,7 @@
     <value>NANDメモリ使用量</value>
   </data>
   <data name="labSrlSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>35, 44</value>
+    <value>43, 46</value>
   </data>
   <data name="labSrlSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>129, 12</value>
@@ -1346,7 +1328,7 @@
     <value>ROMの実ファイルサイズ</value>
   </data>
   <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>121, 198</value>
+    <value>126, 203</value>
   </data>
   <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
     <value>190, 12</value>
@@ -1355,7 +1337,7 @@
     <value>(DSiウェアによるNANDメモリ使用量)</value>
   </data>
   <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>181, 182</value>
+    <value>181, 189</value>
   </data>
   <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>99, 12</value>
@@ -1364,7 +1346,7 @@
     <value>上記サイズの合計</value>
   </data>
   <data name="labSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 119</value>
+    <value>34, 127</value>
   </data>
   <data name="labSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 12</value>
@@ -1373,7 +1355,7 @@
     <value>サブバナーファイルサイズ</value>
   </data>
   <data name="labTmdSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>35, 144</value>
+    <value>49, 154</value>
   </data>
   <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 12</value>
@@ -1388,7 +1370,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabNandSizeInfo.Text" xml:space="preserve">
     <value>DSiウェア情報</value>
@@ -1451,10 +1433,58 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
     <value>リージョンとレーティング(編集可)</value>
+  </data>
+  <data name="rPurposeDSStation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 16</value>
+  </data>
+  <data name="rPurposeDSStation.Text" xml:space="preserve">
+    <value>Touch!Try!DS</value>
+  </data>
+  <data name="rPurposeZone.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 16</value>
+  </data>
+  <data name="rPurposeDSiWare.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 16</value>
+  </data>
+  <data name="rPurposeDSiWare.Text" xml:space="preserve">
+    <value>DSiウェア</value>
+  </data>
+  <data name="gboxPurposeNetwork.Text" xml:space="preserve">
+    <value>ネットワーク配信ソフト</value>
+  </data>
+  <data name="tboxPurposeOther.Size" type="System.Drawing.Size, System.Drawing">
+    <value>349, 19</value>
+  </data>
+  <data name="rPurposeOther.Size" type="System.Drawing.Size, System.Drawing">
+    <value>58, 16</value>
+  </data>
+  <data name="rPurposeOther.Text" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="rPurposeCardProduction.Size" type="System.Drawing.Size, System.Drawing">
+    <value>113, 16</value>
+  </data>
+  <data name="rPurposeCardProduction.Text" xml:space="preserve">
+    <value>ゲームカード販売</value>
+  </data>
+  <data name="rPurposeCardDistribution.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 16</value>
+  </data>
+  <data name="rPurposeCardDistribution.Text" xml:space="preserve">
+    <value>データ配信ROM</value>
+  </data>
+  <data name="rPurposeCardKiosk.Size" type="System.Drawing.Size, System.Drawing">
+    <value>118, 16</value>
+  </data>
+  <data name="gboxPurposeCard.Text" xml:space="preserve">
+    <value>カード生産ソフト</value>
+  </data>
+  <data name="gboxPurpose.Text" xml:space="preserve">
+    <value>用途</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
     <value>(100文字以内)</value>
@@ -1481,7 +1511,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabSubmitInfo.Text" xml:space="preserve">
     <value>提出情報(要入力)</value>
@@ -1496,7 +1526,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabCompanyInfo.Text" xml:space="preserve">
     <value>会社情報(要入力)</value>
@@ -1559,13 +1589,13 @@
     <value>4, 21</value>
   </data>
   <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>773, 379</value>
+    <value>772, 423</value>
   </data>
   <data name="tabErrorInfo.Text" xml:space="preserve">
     <value>エラー情報</value>
   </data>
   <data name="labFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 53</value>
+    <value>13, 50</value>
   </data>
   <data name="labFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>104, 12</value>
@@ -1574,9 +1604,13 @@
     <value>ROMデータファイル</value>
   </data>
   <data name="labAssemblyVersion.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 12</value>
+    <value>37, 12</value>
   </data>
   <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
     <value>ＭＳ Ｐゴシック, 9pt</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
 </root>

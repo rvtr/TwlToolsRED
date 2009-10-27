@@ -93,22 +93,22 @@ void Form1::setDeliverableProperties(void)
 	}
 
 	// —p“r
-	if( this->rUsageSale->Checked == true )
-	{
-		this->hDeliv->hUsage = this->rUsageSale->Text;
-	}
-	else if( this->rUsageSample->Checked == true )
-	{
-		this->hDeliv->hUsage = this->rUsageSample->Text;
-	}
-	else if( this->rUsageDst->Checked == true )
-	{
-		this->hDeliv->hUsage = this->rUsageDst->Text;
-	}
-	else if( this->rUsageOther->Checked == true )
-	{
-		this->hDeliv->hUsage = this->tboxUsageOther->Text;
-	}
+	//if( this->rUsageSale->Checked == true )
+	//{
+	//	this->hDeliv->hUsage = this->rUsageSale->Text;
+	//}
+	//else if( this->rUsageSample->Checked == true )
+	//{
+	//	this->hDeliv->hUsage = this->rUsageSample->Text;
+	//}
+	//else if( this->rUsageDst->Checked == true )
+	//{
+	//	this->hDeliv->hUsage = this->rUsageDst->Text;
+	//}
+	//else if( this->rUsageOther->Checked == true )
+	//{
+	//	this->hDeliv->hUsage = this->tboxUsageOther->Text;
+	//}
 
 	// ‰ïŽÐî•ñ
 	this->hDeliv->hCompany1    = this->tboxCompany1->Text + " " + this->tboxDepart1->Text;
@@ -318,10 +318,10 @@ System::Boolean Form1::checkDeliverableForms(void)
 		this->checkTextForm( this->tboxProductCode1Foreign->Text, "LabelProductCodeForeign" );
 		this->checkTextForm( this->tboxProductCode2Foreign1->Text,"LabelProductCodeForeign" );
 	}
-	if( this->rUsageOther->Checked == true )
-	{
-		this->checkTextForm( this->tboxUsageOther->Text, "LabelUsage" );
-	}
+	//if( this->rUsageOther->Checked == true )
+	//{
+	//	this->checkTextForm( this->tboxUsageOther->Text, "LabelUsage" );
+	//}
 
 	// ‰ïŽÐî•ñ
 	this->checkTextForm( this->tboxPerson1->Text, "LabelPerson1" );

@@ -140,10 +140,10 @@
     <value>9, 20</value>
   </data>
   <data name="labRomCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 47</value>
+    <value>34, 54</value>
   </data>
   <data name="labHeaderCRC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>26, 20</value>
+    <value>26, 24</value>
   </data>
   <data name="labCaption.Size" type="System.Drawing.Size, System.Drawing">
     <value>259, 15</value>
@@ -152,7 +152,7 @@
     <value>Remarks - Enter any other related information.</value>
   </data>
   <data name="labOFLC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>67, 247</value>
+    <value>66, 264</value>
   </data>
   <data name="labOFLC.Size" type="System.Drawing.Size, System.Drawing">
     <value>83, 15</value>
@@ -161,7 +161,7 @@
     <value>AGCB (OFLC)</value>
   </data>
   <data name="labPEGI_BBFC.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 220</value>
+    <value>2, 235</value>
   </data>
   <data name="labPEGI_BBFC.Size" type="System.Drawing.Size, System.Drawing">
     <value>149, 15</value>
@@ -170,16 +170,22 @@
     <value>PEGI (General) and BBFC</value>
   </data>
   <data name="labPEGI_PRT.Location" type="System.Drawing.Point, System.Drawing">
-    <value>67, 194</value>
+    <value>67, 206</value>
   </data>
   <data name="labPEGI.Location" type="System.Drawing.Point, System.Drawing">
-    <value>61, 168</value>
+    <value>61, 177</value>
   </data>
   <data name="labPEGI.Size" type="System.Drawing.Size, System.Drawing">
     <value>90, 15</value>
   </data>
   <data name="labPEGI.Text" xml:space="preserve">
     <value>PEGI (General)</value>
+  </data>
+  <data name="labUSK.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 148</value>
+  </data>
+  <data name="labESRB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>101, 119</value>
   </data>
   <data name="combPEGI_BBFC.Items1" xml:space="preserve">
     <value>Ages 3 and up</value>
@@ -274,6 +280,9 @@
   <data name="combCERO.Items4" xml:space="preserve">
     <value>Z (Ages 18 and up)</value>
   </data>
+  <data name="labRegion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 24</value>
+  </data>
   <data name="combRegion.Items" xml:space="preserve">
     <value>Japan only</value>
   </data>
@@ -298,9 +307,6 @@
   <data name="cboxIsInputPerson2.Text" xml:space="preserve">
     <value>Enter Contact 2 (optional)</value>
   </data>
-  <data name="gboxPerson2.Text" xml:space="preserve">
-    <value>Contact 2</value>
-  </data>
   <data name="labArbit4.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 15</value>
   </data>
@@ -313,8 +319,8 @@
   <data name="labArbit3.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
-  <data name="gboxPerson1.Text" xml:space="preserve">
-    <value>Contact 1</value>
+  <data name="gboxPerson2.Text" xml:space="preserve">
+    <value>Contact 2</value>
   </data>
   <data name="labArbit2.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 15</value>
@@ -328,11 +334,8 @@
   <data name="labArbit1.Text" xml:space="preserve">
     <value>(Optional)</value>
   </data>
-  <data name="gboxUsage.Text" xml:space="preserve">
-    <value>Usage</value>
-  </data>
-  <data name="gboxSubmitWay.Text" xml:space="preserve">
-    <value>Submission Method</value>
+  <data name="gboxPerson1.Text" xml:space="preserve">
+    <value>Contact 1</value>
   </data>
   <data name="rSubmitHand.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 19</value>
@@ -340,14 +343,11 @@
   <data name="rSubmitHand.Text" xml:space="preserve">
     <value>By Hand</value>
   </data>
-  <data name="labReleaseDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>21, 113</value>
-  </data>
-  <data name="labProductCode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>21, 83</value>
+  <data name="gboxSubmitWay.Text" xml:space="preserve">
+    <value>Submission Method</value>
   </data>
   <data name="labCapSubmitVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>269, 15</value>
+    <value>241, 14</value>
   </data>
   <data name="labCapSubmitVer.Text" xml:space="preserve">
     <value>* Reset to 0 when a new master ROM is created</value>
@@ -373,23 +373,26 @@
   <data name="labProductCodeForeign.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 83</value>
   </data>
-  <data name="gboxShared2Size.Text" xml:space="preserve">
-    <value>Shared 2 File Size</value>
-  </data>
   <data name="cboxIsShared2.Size" type="System.Drawing.Size, System.Drawing">
     <value>138, 19</value>
   </data>
   <data name="cboxIsShared2.Text" xml:space="preserve">
     <value>Use of Shared 2 File</value>
   </data>
+  <data name="gboxShared2Size.Text" xml:space="preserve">
+    <value>Shared 2 File Size</value>
+  </data>
+  <data name="labIsCodec.Location" type="System.Drawing.Point, System.Drawing">
+    <value>98, 26</value>
+  </data>
   <data name="labKeyTableRomOffset.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 50</value>
+    <value>13, 58</value>
   </data>
   <data name="labPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 94</value>
+    <value>41, 100</value>
   </data>
   <data name="labPublicSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>41, 69</value>
+    <value>41, 73</value>
   </data>
   <data name="labAccessOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 15</value>
@@ -397,8 +400,8 @@
   <data name="labAccessOther.Text" xml:space="preserve">
     <value>Other</value>
   </data>
-  <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>269, 82</value>
+  <data name="labTitleIDHi.Location" type="System.Drawing.Point, System.Drawing">
+    <value>37, 56</value>
   </data>
   <data name="gboxProd.Text" xml:space="preserve">
     <value>ROM Submission Information</value>
@@ -448,20 +451,17 @@
   <data name="stripItemMiddlewareHtml.Text" xml:space="preserve">
     <value>Create middleware list only (HTML format)</value>
   </data>
-  <data name="gboxLaunch.Text" xml:space="preserve">
-    <value>Launch Control on DSi Menu</value>
-  </data>
   <data name="labConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>213, 15</value>
   </data>
   <data name="labConnectIcon.Text" xml:space="preserve">
     <value>Display Connection Icon on DSi Menu</value>
   </data>
+  <data name="gboxLaunch.Text" xml:space="preserve">
+    <value>Launch Control on DSi Menu</value>
+  </data>
   <data name="tboxGuideNandSizeInfo.Text" xml:space="preserve">
     <value>Information on this tab is required to confirm the amount of space a given Nintendo DSiWare title (NAND application) uses in the system memory. &lt;newline&gt;If the media of the application is a Game Card, there is no need to check the amount of system memory used.</value>
-  </data>
-  <data name="gboxNandSize.Text" xml:space="preserve">
-    <value>Amount of System NAND Memory Used by DSiWare Application</value>
   </data>
   <data name="labNandSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>174, 23</value>
@@ -476,19 +476,19 @@
     <value>308, 23</value>
   </data>
   <data name="labSrlSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>45, 44</value>
+    <value>45, 46</value>
   </data>
   <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>153, 195</value>
+    <value>156, 206</value>
   </data>
   <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>209, 180</value>
+    <value>209, 189</value>
   </data>
   <data name="labSubBannerSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>42, 119</value>
+    <value>42, 127</value>
   </data>
-  <data name="gboxOtherSpec.Text" xml:space="preserve">
-    <value>Other ROM Specifications</value>
+  <data name="gboxNandSize.Text" xml:space="preserve">
+    <value>Amount of System NAND Memory Used by DSiWare Application</value>
   </data>
   <data name="cboxIsUGC.Size" type="System.Drawing.Size, System.Drawing">
     <value>244, 19</value>
@@ -496,14 +496,14 @@
   <data name="cboxIsUGC.Text" xml:space="preserve">
     <value>UGC (User Generated Content) Support</value>
   </data>
+  <data name="gboxOtherSpec.Text" xml:space="preserve">
+    <value>Other ROM Specifications</value>
+  </data>
   <data name="butSetBack.Text" xml:space="preserve">
     <value>Restore Initial Settings</value>
   </data>
   <data name="tboxGuideRomEditInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist and Master ROM. &lt;newline&gt;This information is used as ROM registration data when the Master ROM is created (excluding "Other ROM Specifications").</value>
-  </data>
-  <data name="gboxParental.Text" xml:space="preserve">
-    <value>Market and Rating Information</value>
   </data>
   <data name="combGRB.Items" xml:space="preserve">
     <value>All</value>
@@ -523,14 +523,17 @@
   <data name="cboxIsUnnecessaryRating.Text" xml:space="preserve">
     <value>Rating Not Required (Tools Only)</value>
   </data>
-  <data name="gboxForeign.Text" xml:space="preserve">
-    <value>Foreign Version</value>
+  <data name="gboxParental.Text" xml:space="preserve">
+    <value>Market and Rating Information</value>
   </data>
   <data name="labMultiForeign2.Size" type="System.Drawing.Size, System.Drawing">
     <value>122, 15</value>
   </data>
   <data name="labMultiForeign2.Text" xml:space="preserve">
     <value>(When for &gt;1 market)</value>
+  </data>
+  <data name="gboxForeign.Text" xml:space="preserve">
+    <value>Foreign Version</value>
   </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>You must complete all items on this tab to create a submission checklist. Enter all information.</value>
@@ -558,5 +561,9 @@
   </data>
   <data name="colErrorBegin.HeaderText" xml:space="preserve">
     <value>Start</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
 </root>

@@ -308,12 +308,6 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labProductCode1, L"labProductCode1");
 	resources->ApplyResources(this->dateSubmit, L"dateSubmit");
 	resources->ApplyResources(this->dateRelease, L"dateRelease");
-	resources->ApplyResources(this->gboxUsage, L"gboxUsage");
-	resources->ApplyResources(this->tboxUsageOther, L"tboxUsageOther");
-	resources->ApplyResources(this->rUsageOther, L"rUsageOther");
-	resources->ApplyResources(this->rUsageDst, L"rUsageDst");
-	resources->ApplyResources(this->rUsageSample, L"rUsageSample");
-	resources->ApplyResources(this->rUsageSale, L"rUsageSale");
 	resources->ApplyResources(this->gboxSubmitWay, L"gboxSubmitWay");
 	resources->ApplyResources(this->rSubmitHand, L"rSubmitHand");
 	resources->ApplyResources(this->rSubmitPost, L"rSubmitPost");
@@ -491,7 +485,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	this->combBackup_SelectedIndexChanged( nullptr, nullptr );
 	this->cboxReleaseForeign_CheckedChanged( nullptr, nullptr );
 	this->cboxIsInputPerson2_CheckedChanged( nullptr, nullptr );
-	this->rUsageOther_CheckedChanged( nullptr, nullptr );
+	//this->rUsageOther_CheckedChanged( nullptr, nullptr );
 
 	// 「レーティング表示不要」にチェックが入っているときのみレーティングのコンボボックスのテキストを変更
 	// (それ以外のときにはApplyResourcesで自動的に切り替わる)

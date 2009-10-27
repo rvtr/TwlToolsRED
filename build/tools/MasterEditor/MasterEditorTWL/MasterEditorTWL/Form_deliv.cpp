@@ -93,22 +93,26 @@ void Form1::setDeliverableProperties(void)
 	}
 
 	// —p“r
-	//if( this->rUsageSale->Checked == true )
-	//{
-	//	this->hDeliv->hUsage = this->rUsageSale->Text;
-	//}
-	//else if( this->rUsageSample->Checked == true )
-	//{
-	//	this->hDeliv->hUsage = this->rUsageSample->Text;
-	//}
-	//else if( this->rUsageDst->Checked == true )
-	//{
-	//	this->hDeliv->hUsage = this->rUsageDst->Text;
-	//}
-	//else if( this->rUsageOther->Checked == true )
-	//{
-	//	this->hDeliv->hUsage = this->tboxUsageOther->Text;
-	//}
+	cli::array<System::Windows::Forms::RadioButton ^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+	{
+		this->rPurposeCardProduction,
+		this->rPurposeCardDistribution,
+		this->rPurposeCardKiosk,
+		this->rPurposeDSiWare,
+		this->rPurposeDSStation,
+		this->rPurposeZone
+	};
+	for each( System::Windows::Forms::RadioButton ^r in rbuts )
+	{
+		if( r->Checked )
+		{
+			this->hDeliv->hUsage = r->Text;
+		}
+	}
+	if( this->rPurposeOther->Checked )
+	{
+		this->hDeliv->hUsage = this->rPurposeOther->Text + "(" + this->tboxPurposeOther->Text + ")";
+	}
 
 	// ‰ïŽÐî•ñ
 	this->hDeliv->hCompany1    = this->tboxCompany1->Text + " " + this->tboxDepart1->Text;
@@ -318,10 +322,10 @@ System::Boolean Form1::checkDeliverableForms(void)
 		this->checkTextForm( this->tboxProductCode1Foreign->Text, "LabelProductCodeForeign" );
 		this->checkTextForm( this->tboxProductCode2Foreign1->Text,"LabelProductCodeForeign" );
 	}
-	//if( this->rUsageOther->Checked == true )
-	//{
-	//	this->checkTextForm( this->tboxUsageOther->Text, "LabelUsage" );
-	//}
+	if( this->rPurposeOther->Checked )
+	{
+		this->checkTextForm( this->tboxPurposeOther->Text, "LabelUsage" );
+	}
 
 	// ‰ïŽÐî•ñ
 	this->checkTextForm( this->tboxPerson1->Text, "LabelPerson1" );

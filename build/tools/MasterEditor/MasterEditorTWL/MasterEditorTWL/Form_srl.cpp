@@ -277,6 +277,8 @@ void Form1::setSrlForms(void)
 	this->maskBackupMemoryForms();
 	//// カードアプリのときにDSi Wareの販売カテゴリを自動的に「なし」にしておく
 	//this->maskDLCategoryForms();
+	// "用途"を絞る
+	this->maskPurposeForms();
 } // setSrlForms()
 
 // ----------------------------------------------

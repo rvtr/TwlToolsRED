@@ -70,17 +70,38 @@ System::Void Form1::saveTmp( System::String ^filename )
 		MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "Mail" );
 	}
 
-	//if( this->rUsageSale->Checked )
-	//	MasterEditorTWL::appendXmlTag( doc, form, "Purpose", "Sale" );
-	//else if( this->rUsageSample->Checked )
-	//	MasterEditorTWL::appendXmlTag( doc, form, "Purpose", "Sample" );
-	//else if( this->rUsageDst->Checked )
-	//	MasterEditorTWL::appendXmlTag( doc, form, "Purpose", "Dst" );
-	//else if( this->rUsageOther->Checked )
-	//	MasterEditorTWL::appendXmlTag( doc, form, "Purpose", "Other" );
-	//MasterEditorTWL::appendXmlTag( doc, form, "PurposeOther", this->tboxUsageOther->Text );
-	//MasterEditorTWL::appendXmlTag( doc, form, "ReleaseDate", this->dateRelease->Value.ToString() );
-	//MasterEditorTWL::appendXmlTag( doc, form, "SubmitDate", this->dateSubmit->Value.ToString() );
+	// —p“r
+	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+	{
+		this->rPurposeCardProduction,
+		this->rPurposeCardDistribution,
+		this->rPurposeCardKiosk,
+		this->rPurposeDSiWare,
+		this->rPurposeDSStation,
+		this->rPurposeZone,
+		this->rPurposeOther
+	};
+	cli::array<System::String^> ^strs = gcnew cli::array<System::String^>
+	{
+		"CardProduction",
+		"CardDistribution",
+		"CardKiosk",
+		"DSiWare",
+		"DSStation",
+		"Zone",
+		"Other"
+	};
+	int  i;
+	for(i=0; i < rbuts->Length; i++ )
+	{
+		if( rbuts[i]->Checked )
+		{
+			MasterEditorTWL::appendXmlTag( doc, form, "Purpose", strs[i] );
+		}
+	}
+	MasterEditorTWL::appendXmlTag( doc, form, "PurposeOther", this->tboxPurposeOther->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "ReleaseDate", this->dateRelease->Value.ToString() );
+	MasterEditorTWL::appendXmlTag( doc, form, "SubmitDate", this->dateSubmit->Value.ToString() );
 
 	//MasterEditorTWL::appendXmlTag( doc, form, "DLCategory", this->combDLCategory->SelectedIndex.ToString() );
 	//MasterEditorTWL::appendXmlTag( doc, form, "DLCategoryOther", this->tboxDLCategoryOther->Text );
@@ -194,16 +215,33 @@ void Form1::loadTmp( System::String ^filename )
 	strs  = gcnew cli::array<System::String^>{"Hand","Mail","Internet"};
 	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitWay", rbuts, strs );
 
-	//rbuts = gcnew cli::array<System::Windows::Forms::RadioButton^>{this->rUsageSale, this->rUsageSample, this->rUsageDst, this->rUsageOther};
-	//strs  = gcnew cli::array<System::String^>{"Sale","Sample","Dst","Other"};
-	//this->parseTmp( root, "/MasterEditorTWL/Form/Purpose", rbuts, strs );
-	//this->tboxUsageOther->Enabled = false;
-	//this->tboxUsageOther->Clear();
-	//if( this->rUsageOther->Checked )
-	//{
-	//	this->tboxUsageOther->Enabled = true;
-	//	this->parseTmp( root, "/MasterEditorTWL/Form/PurposeOther", this->tboxUsageOther );
-	//}
+	// —p“r
+	rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+	{
+		this->rPurposeCardProduction,
+		this->rPurposeCardDistribution,
+		this->rPurposeCardKiosk,
+		this->rPurposeDSiWare,
+		this->rPurposeDSStation,
+		this->rPurposeZone,
+		this->rPurposeOther
+	};
+	strs  = gcnew cli::array<System::String^>
+	{
+		"CardProduction",
+		"CardDistribution",
+		"CardKiosk",
+		"DSiWare",
+		"DSStation",
+		"Zone",
+		"Other"
+	};
+	this->parseTmp( root, "/MasterEditorTWL/Form/Purpose", rbuts, strs );
+	if( this->rPurposeOther->Checked )
+	{
+		this->tboxPurposeOther->Enabled = true;
+		this->parseTmp( root, "/MasterEditorTWL/Form/PurposeOther", this->tboxPurposeOther );
+	}
 
 	this->parseTmp( root, "/MasterEditorTWL/Form/ReleaseForeign", this->cboxReleaseForeign );
 	this->tboxProductNameForeign->Enabled   = false;

@@ -3844,6 +3844,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeDSStation->Name = L"rPurposeDSStation";
 			this->rPurposeDSStation->TabStop = true;
 			this->rPurposeDSStation->UseVisualStyleBackColor = true;
+			this->rPurposeDSStation->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeDSStation_CheckedChanged);
 			// 
 			// rPurposeZone
 			// 
@@ -3855,6 +3856,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeZone->Name = L"rPurposeZone";
 			this->rPurposeZone->TabStop = true;
 			this->rPurposeZone->UseVisualStyleBackColor = true;
+			this->rPurposeZone->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
 			// 
 			// rPurposeDSiWare
 			// 
@@ -3866,6 +3868,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeDSiWare->Name = L"rPurposeDSiWare";
 			this->rPurposeDSiWare->TabStop = true;
 			this->rPurposeDSiWare->UseVisualStyleBackColor = true;
+			this->rPurposeDSiWare->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeDSiWare_CheckedChanged);
 			// 
 			// tboxPurposeOther
 			// 
@@ -3884,8 +3887,8 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeOther->BackgroundImage = nullptr;
 			this->rPurposeOther->Font = nullptr;
 			this->rPurposeOther->Name = L"rPurposeOther";
-			this->rPurposeOther->TabStop = true;
 			this->rPurposeOther->UseVisualStyleBackColor = true;
+			this->rPurposeOther->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeOther_CheckedChanged);
 			// 
 			// gboxPurposeCard
 			// 
@@ -3911,6 +3914,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeCardProduction->Name = L"rPurposeCardProduction";
 			this->rPurposeCardProduction->TabStop = true;
 			this->rPurposeCardProduction->UseVisualStyleBackColor = true;
+			this->rPurposeCardProduction->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardProduction_CheckedChanged);
 			// 
 			// rPurposeCardDistribution
 			// 
@@ -3921,6 +3925,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeCardDistribution->Font = nullptr;
 			this->rPurposeCardDistribution->Name = L"rPurposeCardDistribution";
 			this->rPurposeCardDistribution->UseVisualStyleBackColor = true;
+			this->rPurposeCardDistribution->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardDistribution_CheckedChanged);
 			// 
 			// rPurposeCardKiosk
 			// 
@@ -3931,6 +3936,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->rPurposeCardKiosk->Font = nullptr;
 			this->rPurposeCardKiosk->Name = L"rPurposeCardKiosk";
 			this->rPurposeCardKiosk->UseVisualStyleBackColor = true;
+			this->rPurposeCardKiosk->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardKiosk_CheckedChanged);
 			// 
 			// labProductNameLimit
 			// 
@@ -4583,6 +4589,113 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			}
 			return ret;
 		}
+
+		// "用途"の項目で1つのラジオボタンしか押されないようにする
+		// (本来はグループボックスが自動的に処理してくれるが, グループボックスが複数あるためグループボックスをまたいだ排他処理が必要)
+		void changePurposeForms(System::Windows::Forms::RadioButton ^rbut)
+		{
+			// イベントが発生しないようにイベントを無効にする
+			this->rPurposeCardProduction->CheckedChanged   -= gcnew System::EventHandler(this, &Form1::rPurposeCardProduction_CheckedChanged);
+			this->rPurposeCardDistribution->CheckedChanged -= gcnew System::EventHandler(this, &Form1::rPurposeCardDistribution_CheckedChanged);
+			this->rPurposeCardKiosk->CheckedChanged        -= gcnew System::EventHandler(this, &Form1::rPurposeCardKiosk_CheckedChanged);
+			this->rPurposeDSiWare->CheckedChanged          -= gcnew System::EventHandler(this, &Form1::rPurposeDSiWare_CheckedChanged);
+			this->rPurposeDSStation->CheckedChanged        -= gcnew System::EventHandler(this, &Form1::rPurposeDSStation_CheckedChanged);
+			this->rPurposeZone->CheckedChanged             -= gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
+			this->rPurposeOther->CheckedChanged            -= gcnew System::EventHandler(this, &Form1::rPurposeOther_CheckedChanged);
+
+			// いったんすべてチェックを外す
+			this->rPurposeCardProduction->Checked   = false;
+			this->rPurposeCardDistribution->Checked = false;
+			this->rPurposeCardKiosk->Checked        = false;
+			this->rPurposeDSiWare->Checked          = false;
+			this->rPurposeDSStation->Checked        = false;
+			this->rPurposeZone->Checked             = false;
+			this->rPurposeOther->Checked            = false;
+
+			// 選択されたもののみチェックする
+			rbut->Checked = true;
+
+			// "その他"のテキストボックスを有効にする
+			if( rbut->Equals(this->rPurposeOther) )
+			{
+				this->tboxPurposeOther->Enabled = true;
+			}
+			else
+			{
+				this->tboxPurposeOther->Clear();
+				this->tboxPurposeOther->Enabled = false;
+			}
+
+			// イベントを有効にする
+			this->rPurposeCardProduction->CheckedChanged   += gcnew System::EventHandler(this, &Form1::rPurposeCardProduction_CheckedChanged);
+			this->rPurposeCardDistribution->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardDistribution_CheckedChanged);
+			this->rPurposeCardKiosk->CheckedChanged        += gcnew System::EventHandler(this, &Form1::rPurposeCardKiosk_CheckedChanged);
+			this->rPurposeDSiWare->CheckedChanged          += gcnew System::EventHandler(this, &Form1::rPurposeDSiWare_CheckedChanged);
+			this->rPurposeDSStation->CheckedChanged        += gcnew System::EventHandler(this, &Form1::rPurposeDSStation_CheckedChanged);
+			this->rPurposeZone->CheckedChanged             += gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
+			this->rPurposeOther->CheckedChanged            += gcnew System::EventHandler(this, &Form1::rPurposeOther_CheckedChanged);
+
+		} //changePurposeForms()
+
+		// ROMメディアにあわせて"用途"の選択可能なラジオボタンを絞る
+		void maskPurposeForms(void)
+		{
+			// カードアプリで選択可能な項目
+			cli::array<System::Windows::Forms::RadioButton ^> ^rbutsCard = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+			{
+				this->rPurposeCardProduction,
+				this->rPurposeCardDistribution,
+				this->rPurposeCardKiosk,
+				this->rPurposeDSStation,		// カードアプリとして作成
+			};
+			// NANDアプリで選択可能な項目
+			cli::array<System::Windows::Forms::RadioButton ^> ^rbutsNand = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+			{
+				this->rPurposeDSiWare,
+				this->rPurposeZone
+			};
+
+			if( this->hSrl->IsMediaNand )
+			{
+				for each( System::Windows::Forms::RadioButton ^r in rbutsCard )
+				{
+					r->Enabled = false;
+					if( r->Checked )	// カードアプリの選択可能項目にチェックがついていたらチェックをつけかえる
+					{
+						this->changePurposeForms(this->rPurposeDSiWare);
+					}
+				}
+				for each( System::Windows::Forms::RadioButton ^r in rbutsNand )
+				{
+					r->Enabled = true;
+				}
+			}
+			else
+			{
+				for each( System::Windows::Forms::RadioButton ^r in rbutsNand )
+				{
+					r->Enabled = false;
+					if( r->Checked )
+					{
+						this->changePurposeForms(this->rPurposeCardProduction);
+					}
+				}
+				for each( System::Windows::Forms::RadioButton ^r in rbutsCard )
+				{
+					r->Enabled = true;
+				}
+			}
+
+			// 日本向けでは"店頭試遊台(単独型)"をなくす
+			if( this->hSrl->IsRegionJapan )
+			{
+				this->rPurposeCardKiosk->Enabled = false;
+				if( this->rPurposeCardKiosk->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);	// わざわざこれを選ぶには特別な理由があるだろうから"その他"にチェックをつけかえる
+				}
+			}
+		} //maskPurposeForms()
 
 	private:
 		// ----------------------------------------------
@@ -5641,13 +5754,42 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 				this->updateGrid();
 			}
 		}
-
-
-
-
-
-
-
+	// 用途の項目のラジオボタン
+	private:
+		System::Void rPurposeCardProduction_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeCardProduction);
+		}
+	private:
+		System::Void rPurposeCardDistribution_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeCardDistribution);
+		}
+	private:
+		System::Void rPurposeCardKiosk_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeCardKiosk);
+		}
+	private:
+		System::Void rPurposeDSiWare_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeDSiWare);
+		}
+	private:
+		System::Void rPurposeDSStation_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeDSStation);
+		}
+	private:
+		System::Void rPurposeZone_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeZone);
+		}
+	private:
+		System::Void rPurposeOther_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
+		{
+			this->changePurposeForms(this->rPurposeOther);
+		}
 }; // enf of ref class Form1
 
 } // end of namespace MasterEditorTWL

@@ -467,6 +467,16 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->colWarnBegin, L"colWarnBegin");
 	resources->ApplyResources(this->colWarnEnd, L"colWarnEnd");
 	resources->ApplyResources(this->colWarnCause, L"colWarnCause");
+	resources->ApplyResources(this->rPurposeCardProduction, L"rPurposeCardProduction");
+	resources->ApplyResources(this->rPurposeCardDistribution, L"rPurposeCardDistribution");
+	resources->ApplyResources(this->rPurposeCardKiosk, L"rPurposeCardKiosk");
+	resources->ApplyResources(this->rPurposeDSiWare, L"rPurposeDSiWare");
+	resources->ApplyResources(this->rPurposeDSStation, L"rPurposeDSStation");
+	resources->ApplyResources(this->rPurposeZone, L"rPurposeZone");
+	resources->ApplyResources(this->rPurposeOther, L"rPurposeOther");
+	resources->ApplyResources(this->gboxPurposeCard, L"gboxPurposeCard");
+	resources->ApplyResources(this->gboxPurposeNetwork, L"gboxPurposeNetwork");
+	resources->ApplyResources(this->gboxPurpose, L"gboxPurpose");
 	resources->ApplyResources(this, L"$this");
 
 	// テキストボックスの表記を変更

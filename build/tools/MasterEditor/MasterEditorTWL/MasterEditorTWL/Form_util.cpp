@@ -31,7 +31,7 @@ System::Boolean Form1::checkTextForm( System::String ^formtext, System::String ^
 		System::String ^labelE = this->hMsg->getMessage(tag,"E");
 		System::String ^msgJ = this->hMsg->getMessage("TextBoxInput", "J");
 		System::String ^msgE = this->hMsg->getMessage("TextBoxInput", "E");
-		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false ) );
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false, RCMrcError::PurposeType::Common ) );
 		return false;
 	}
 	return true;
@@ -45,7 +45,7 @@ System::Boolean Form1::checkNumRange( System::Int32 val, System::Int32 min, Syst
 		System::String ^labelE = this->hMsg->getMessage(tag,"E");
 		System::String ^msgJ = this->hMsg->getMessage("NumRangeInput", "J");
 		System::String ^msgE = this->hMsg->getMessage("NumRangeInput", "E");
-		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false ) );
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false, RCMrcError::PurposeType::Common ) );
 		return false;
 	}
 	return true;
@@ -73,7 +73,7 @@ System::Boolean Form1::checkComboBoxIndex( System::Windows::Forms::ComboBox ^box
 		System::String ^msgJ = this->hMsg->getMessage("ComboBoxInput", "J");
 		System::String ^msgE = this->hMsg->getMessage("ComboBoxInput", "E");
 		this->hErrorList->Add( gcnew RCMrcError( 
-			labelJ, 0, 0, msgJ, labelE, msgE, true, isAffectRom ) );
+			labelJ, 0, 0, msgJ, labelE, msgE, true, isAffectRom, RCMrcError::PurposeType::Common ) );
 	}
 	return true;
 }
@@ -95,8 +95,41 @@ RCMrcError^ Form1::makeErrorMsg( System::Boolean isAffectRom, System::String ^la
 	System::String ^fmtE  = this->hMsg->getMessage( msgtag, "E" );
 	System::String ^msgE = System::String::Format( fmtE, args );
 
-	return (gcnew RCMrcError( nameJ, 0, 0, msgJ, nameE, msgE, true, isAffectRom ));
+	return (gcnew RCMrcError( nameJ, 0, 0, msgJ, nameE, msgE, true, isAffectRom, RCMrcError::PurposeType::Common ));  // C³‰Â”\‚ÈƒGƒ‰[‚Æ‚µ‚Äì¬
 }
+
+// —p“r‚Ìƒ‰ƒWƒIƒ{ƒ^ƒ“‚Ìó‘Ô‚É‚æ‚Á‚Ä•\Ž¦‚·‚é‚©‚Ç‚¤‚©‚ðU‚è•ª‚¯‚é
+bool Form1::isDisplayOneGridErrorForPurpose( RCMrcError ^err )
+{
+	bool is_display = false;
+
+	if( ((err->Purpose & RCMrcError::PurposeType::Production) != (RCMrcError::PurposeType)0) &&
+		(this->rPurposeCardProduction->Checked || this->rPurposeDSiWare->Checked || this->rPurposeOther->Checked) )
+	{
+		is_display = true;
+	}
+	if( ((err->Purpose & RCMrcError::PurposeType::CardDistribution) != (RCMrcError::PurposeType)0) &&
+		this->rPurposeCardDistribution->Checked )
+	{
+		is_display = true;
+	}
+	if( ((err->Purpose & RCMrcError::PurposeType::CardKiosk) != (RCMrcError::PurposeType)0) &&
+		this->rPurposeCardKiosk->Checked )
+	{
+		is_display = true;
+	}
+	if( ((err->Purpose & RCMrcError::PurposeType::DSStation) != (RCMrcError::PurposeType)0) &&
+		this->rPurposeDSStation->Checked )
+	{
+		is_display = true;
+	}
+	if( ((err->Purpose & RCMrcError::PurposeType::Zone) != (RCMrcError::PurposeType)0) &&
+		this->rPurposeZone->Checked )
+	{
+		is_display = true;
+	}
+	return is_display;
+} //isDisplayOneGridErrorForPurpose()
 
 // “Ç‚Ýž‚ÝŽžƒGƒ‰[‚Ì“o˜^
 void Form1::setGridError( void )
@@ -106,8 +139,11 @@ void Form1::setGridError( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hErrorList )
 		{
-			this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
-			this->colorGridError( err );
+			if( this->isDisplayOneGridErrorForPurpose( err ) )
+			{
+				this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
+				this->colorGridError( err );
+			}
 		}
 	}
 }
@@ -119,8 +155,11 @@ void Form1::setGridWarn( void )
 	{
 		for each( RCMrcError ^err in this->hSrl->hWarnList )
 		{
-			this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
-			this->colorGridWarn( err );
+			if( this->isDisplayOneGridErrorForPurpose( err ) )
+			{
+				this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
+				this->colorGridWarn( err );
+			}
 		}
 	}
 }
@@ -135,8 +174,11 @@ void Form1::overloadGridError( void )
 		{
 			if( !err->IsEnableModify )	// C³‰Â”\‚Èî•ñ‚Í•\Ž¦‚µ‚È‚¢
 			{
-				this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
-				this->colorGridError( err );
+				if( this->isDisplayOneGridErrorForPurpose( err ) )
+				{
+					this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
+					this->colorGridError( err );
+				}
 			}
 		}
 	}
@@ -144,8 +186,11 @@ void Form1::overloadGridError( void )
 	{
 		for each( RCMrcError ^err in this->hErrorList )
 		{
-			this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
-			this->colorGridError( err );
+			if( this->isDisplayOneGridErrorForPurpose( err ) )
+			{
+				this->gridError->Rows->Add( err->getAll(this->isJapanese()) );
+				this->colorGridError( err );
+			}
 		}
 	}
 }
@@ -158,8 +203,11 @@ void Form1::overloadGridWarn( void )
 		{
 			if( !err->IsEnableModify )
 			{
-				this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
-				this->colorGridWarn( err );
+				if( this->isDisplayOneGridErrorForPurpose( err ) )
+				{
+					this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
+					this->colorGridWarn( err );
+				}
 			}
 		}
 	}
@@ -167,8 +215,11 @@ void Form1::overloadGridWarn( void )
 	{
 		for each( RCMrcError ^err in this->hWarnList )
 		{
-			this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
-			this->colorGridWarn( err );
+			if( this->isDisplayOneGridErrorForPurpose( err ) )
+			{
+				this->gridWarn->Rows->Add( err->getAll(this->isJapanese()) );
+				this->colorGridWarn( err );
+			}
 		}
 	}
 }

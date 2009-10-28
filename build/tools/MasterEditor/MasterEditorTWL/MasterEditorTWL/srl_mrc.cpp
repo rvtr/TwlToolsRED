@@ -905,7 +905,7 @@ void RCSrl::mrcReservedArea(FILE *fp)
 		}
 		if( !bReserved )
 		{
-			this->hErrorList->Add( this->makeMrcError(begin, end, false, true, "ReservedArea") );
+			this->hErrorList->Add( this->makeMrcError(begin, end, false, true, RCMrcError::PurposeType::Common, "ReservedArea") );
 		}
 	} //for each
 }

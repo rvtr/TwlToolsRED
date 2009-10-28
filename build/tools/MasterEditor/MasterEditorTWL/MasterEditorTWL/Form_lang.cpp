@@ -46,6 +46,11 @@ void Form1::changeFormInput( System::String ^langname )
 		this->tboxNTSC1->Enabled     = true;
 		this->tboxFurigana2->Enabled = true;
 		this->tboxNTSC2->Enabled     = true;
+		this->tboxFurigana1->Visible = true;
+		this->tboxNTSC1->Visible     = true;
+		this->tboxFurigana2->Visible = true;
+		this->tboxNTSC2->Visible     = true;
+
 		this->labFurigana1->Visible  = true;
 		this->labNTSC1Pre->Visible   = true;
 		this->labNTSC1Sur->Visible   = true;
@@ -70,6 +75,15 @@ void Form1::changeFormInput( System::String ^langname )
 		this->tboxNTSC1->Enabled     = false;
 		this->tboxFurigana2->Enabled = false;
 		this->tboxNTSC2->Enabled     = false;
+		this->tboxFurigana1->Visible = false;
+		this->tboxNTSC1->Visible     = false;
+		this->tboxFurigana2->Visible = false;
+		this->tboxNTSC2->Visible     = false;
+		this->tboxFurigana1->Clear();
+		this->tboxNTSC1->Clear();
+		this->tboxFurigana2->Clear();
+		this->tboxNTSC2->Clear();
+
 		this->labFurigana1->Visible  = false;
 		this->labNTSC1Pre->Visible   = false;
 		this->labNTSC1Sur->Visible   = false;

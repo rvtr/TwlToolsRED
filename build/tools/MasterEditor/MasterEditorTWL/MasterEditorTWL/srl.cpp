@@ -1033,15 +1033,16 @@ void RCSrl::calcNandUsedSize(FILE *fp)
 // -------------------------------------------------------------------
 RCMrcError^ RCSrl::makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args )
 {
-	// パラメータも取得(日本語版から)
+	// パラメータも取得(パラメータは英語版にも日本語版にも登録されておりどちらでもよいが日本語版のものにしておく)
 	System::UInt32  beg = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/begin", "J" ), System::Globalization::NumberStyles::HexNumber );
 	System::UInt32  end = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/end",   "J" ), System::Globalization::NumberStyles::HexNumber );
 	System::Boolean isEnableModify = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/modify", "J" ) );
 	System::Boolean isAffectRom    = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/affect", "J" ) );
 
-	return (this->makeMrcError( beg, end, isEnableModify, isAffectRom, tag, args ));
+	return (this->makeMrcError( beg, end, isEnableModify, isAffectRom, RCMrcError::PurposeType::Common, tag, args ));	// 共通エラー
 }
 RCMrcError^ RCSrl::makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
+								 RCMrcError::PurposeType purpose,
 								 System::String ^tag, ... cli::array<System::String^> ^args )
 {
 	// 外部ファイルから項目名を取得
@@ -1053,5 +1054,5 @@ RCMrcError^ RCSrl::makeMrcError( System::UInt32 beg, System::UInt32 end, System:
 	System::String ^fmtE  = this->hMrcMsg->getMessage( tag+"/sentence", "E" );
 	System::String ^msgE = System::String::Format( fmtE, args );
 
-	return (gcnew RCMrcError( nameJ, beg, end, msgJ, nameE, msgE, isEnableModify, isAffectRom ));
+	return (gcnew RCMrcError( nameJ, beg, end, msgJ, nameE, msgE, isEnableModify, isAffectRom, purpose ));
 }

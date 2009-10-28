@@ -191,6 +191,7 @@ namespace MasterEditorTWL
 		// MRCメッセージを追加
 		RCMrcError^ makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args );
 		RCMrcError^ makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
+								  RCMrcError::PurposeType purpose,
 								  System::String ^tag, ... cli::array<System::String^> ^args );
 
 	}; // end of ref class RCSrl

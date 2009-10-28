@@ -5038,6 +5038,9 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 		RCMrcError^ makeErrorMsg( 
 			System::Boolean isAffectRom, System::String ^labeltag, System::String ^msgtag, ... cli::array<System::String^> ^args );
 
+		// 用途のラジオボタンの状態によって表示するかどうかを振り分ける
+		bool isDisplayOneGridErrorForPurpose( RCMrcError ^err );
+
 		// 読み込み時エラーの登録
 		void setGridError( void );
 		void setGridWarn( void );

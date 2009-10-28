@@ -266,6 +266,17 @@ namespace MasterEditorTWL
 	// -------------------------------------------------------------------
 	public ref class RCMrcError
 	{
+	public:
+		enum class PurposeType : System::UInt32	// 型指定
+		{
+			Production		  = 1 << 0,		// 一般販売用(カード/NAND)
+			CardDistribution  = 1 << 1,		// データ配信用カード
+			CardKiosk         = 1 << 2,		// 店頭試遊台(単独型)
+			DSStation         = 1 << 3,		// DS Station
+			Zone              = 1 << 4,		// Nintendo Zone
+
+			Common            = 0xFFFFFFFF,	// すべての用途で共通のエラー
+		};
 	private:
 		System::String  ^hName;		// 項目名
 		System::UInt32   begin;		// 開始アドレス
@@ -275,12 +286,13 @@ namespace MasterEditorTWL
 		System::String  ^hMsgE;
 		System::Boolean  isEnableModify;	// マスタエディタで修正可能かどうか
 		System::Boolean  isAffectRom;		// 変更するとSRL(ROMバイナリ)が変更されるか
+		PurposeType      purpose;
 	private:
 		RCMrcError(){}		// 封じる
 	public:
 		RCMrcError(			// この形式でしかインスタンスを作成できない
 			System::String ^name,  System::UInt32 beg,   System::UInt32 end, System::String ^msg, 
-			System::String ^nameE, System::String ^msgE, System::Boolean isEnableModify, System::Boolean isAffectRom )
+			System::String ^nameE, System::String ^msgE, System::Boolean isEnableModify, System::Boolean isAffectRom, PurposeType purpose )
 		{
 			if( name == nullptr )
 				this->hName = gcnew System::String("");
@@ -307,6 +319,8 @@ namespace MasterEditorTWL
 
 			this->isEnableModify = isEnableModify;
 			this->isAffectRom    = isAffectRom;
+
+			this->purpose = purpose;
 		}
 	public:
 		property System::Boolean IsEnableModify
@@ -340,6 +354,10 @@ namespace MasterEditorTWL
 		property System::UInt32 End
 		{
 			System::UInt32 get(){ return this->end; }
+		}
+		property PurposeType Purpose
+		{
+			PurposeType get(){ return this->purpose; }
 		}
 	public:
 		// gridViewの表示形式にあわせる

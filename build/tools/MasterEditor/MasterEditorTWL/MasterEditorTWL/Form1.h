@@ -69,6 +69,9 @@ namespace MasterEditorTWL {
 		// ミドルウェア名称リスト
 		RCMiddlewareNameList ^hMiddlewareNameList;
 
+		// デフォルト(起動時)のロケール名
+		System::String ^hDefaultCultureName;
+
 	/////////////////////////////////////////////
 	// VC自動追加フィールド
 	/////////////////////////////////////////////
@@ -4927,7 +4930,8 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 		System::String^ makeMsg( System::String ^tag, ... cli::array<System::String^> ^args )
 		{
 			System::String ^lang;
-			if( this->isJapanese() )
+			//if( this->isJapanese() )
+			if( this->hDefaultCultureName && this->hDefaultCultureName->StartsWith("ja") )		// 日本版Windowsのみ日本語メッセージにする
 			{
 				lang = "J";
 			}

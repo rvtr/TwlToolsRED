@@ -27,6 +27,10 @@ using namespace MasterEditorTWL;
 // ----------------------------------------------
 void Form1::construct(void)
 {
+	// 言語切り替えで一時的にカルチャを変更するのでデフォルトのカルチャを取得して戻せるようにしておく
+	// これを取得しておかないとエラーメッセージを出せないので一番最初に取得しておく
+	this->hDefaultCultureName = System::Threading::Thread::CurrentThread->CurrentUICulture->Name;
+
 	// フィールド初期化
 	this->hSrl   = gcnew RCSrl( this->getMrcMessageFileJ(), this->getMrcMessageFileE() );
 	this->hDeliv = gcnew RCDeliverable;
@@ -87,7 +91,7 @@ void Form1::construct(void)
 	this->tboxGuideErrorInfo->Text    = this->tboxGuideErrorInfo->Text->Replace( "<newline>", "\r\n" );
 
 	// システムの言語バージョンにあわせて言語切り替え
-	if( System::Threading::Thread::CurrentThread->CurrentUICulture->Name->StartsWith( "ja" ) )
+	if( this->hDefaultCultureName->StartsWith( "ja" ) )
 	{
 		this->stripItemJapanese->Checked = true;
 		this->stripItemEnglish->Checked  = false;

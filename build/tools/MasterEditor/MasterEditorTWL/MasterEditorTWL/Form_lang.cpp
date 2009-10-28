@@ -108,6 +108,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 {
 	//int  index;
 
+	// リソース切り替えのために一時的にカルチャを切り替え
 	System::Threading::Thread::CurrentThread->CurrentUICulture = gcnew System::Globalization::CultureInfo(langname,true);
 	System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 
@@ -538,6 +539,9 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	{
 		this->Text += " [ Supported App: " + appstr + "User ]";
 	}
+
+	// カルチャを戻す
+	System::Threading::Thread::CurrentThread->CurrentUICulture = gcnew System::Globalization::CultureInfo(this->hDefaultCultureName,true);
 }
 
 // end of file

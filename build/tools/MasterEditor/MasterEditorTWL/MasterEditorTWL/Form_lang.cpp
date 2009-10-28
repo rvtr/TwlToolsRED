@@ -478,6 +478,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->gboxPurposeCard, L"gboxPurposeCard");
 	resources->ApplyResources(this->gboxPurposeNetwork, L"gboxPurposeNetwork");
 	resources->ApplyResources(this->gboxPurpose, L"gboxPurpose");
+	resources->ApplyResources(this->labPurposeInError, L"labPurposeInError");
 	resources->ApplyResources(this, L"$this");
 
 	// テキストボックスの表記を変更
@@ -487,16 +488,18 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	}
 
 	// 中国用特別メッセージ
-	// デフォルトでVisible=falseなのでリソースを読み込みなおすと表示されていてもVisible=falseに初期化されてしまう
+	// デフォルトでVisible=falseなのでリソースを読み込みなおすと表示されていてもVisible=falseに初期化されてしまうため
+	// いったん退避しておく必要がある
 	bool visible = this->tboxWarningChinaRating->Visible;
 	resources->ApplyResources(this->tboxWarningChinaRating, L"tboxWarningChinaRating");
 	this->tboxWarningChinaRating->Visible = visible;
 
-	// バックアップメモリのテキストボックス
+	// コンボボックスやテキストボックスの中身の表示を更新する
 	this->combBackup_SelectedIndexChanged( nullptr, nullptr );
 	this->cboxReleaseForeign_CheckedChanged( nullptr, nullptr );
 	this->cboxIsInputPerson2_CheckedChanged( nullptr, nullptr );
 	//this->rUsageOther_CheckedChanged( nullptr, nullptr );
+	this->tabMain_SelectedIndexChanged( nullptr, nullptr );
 
 	// 「レーティング表示不要」にチェックが入っているときのみレーティングのコンボボックスのテキストを変更
 	// (それ以外のときにはApplyResourcesで自動的に切り替わる)

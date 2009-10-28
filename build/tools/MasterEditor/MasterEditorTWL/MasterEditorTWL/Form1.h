@@ -523,8 +523,8 @@ private: System::Windows::Forms::TextBox^  tboxGuideCompanyInfo;
 
 
 private: System::Windows::Forms::Label^  labFile;
-public: System::Windows::Forms::DataGridView^  gridError;
-private: System::Windows::Forms::TabPage^  tabErrorInfo;
+
+
 public: 
 private: 
 
@@ -533,8 +533,8 @@ public:
 
 
 
-public: System::Windows::Forms::DataGridView^  gridWarn;
-private: System::Windows::Forms::TextBox^  tboxGuideErrorInfo;
+
+
 public: 
 private: 
 
@@ -543,12 +543,12 @@ public:
 
 
 
-private: System::Windows::Forms::GroupBox^  gboxErrorTiming;
-private: System::Windows::Forms::Label^  labWarn;
-private: System::Windows::Forms::Label^  labError;
-private: System::Windows::Forms::RadioButton^  rErrorCurrent;
 
-private: System::Windows::Forms::RadioButton^  rErrorReading;
+
+
+
+
+
 
 
 
@@ -619,14 +619,14 @@ private: System::Windows::Forms::CheckBox^  cboxIsPhotoEx;
 
 
 
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorName;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorBegin;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorEnd;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorCause;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnName;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnBegin;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnEnd;
-private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
+
+
+
+
+
+
+
+
 private: System::Windows::Forms::GroupBox^  gboxLaunch;
 private: System::Windows::Forms::Label^  labConnectIcon;
 private: System::Windows::Forms::TextBox^  tboxConnectIcon;
@@ -749,6 +749,31 @@ private: System::Windows::Forms::RadioButton^  rPurposeDSStation;
 
 
 private: System::Windows::Forms::RadioButton^  rPurposeZone;
+private: System::Windows::Forms::TabPage^  tabErrorInfo;
+private: System::Windows::Forms::TextBox^  tboxGuideErrorInfo;
+private: System::Windows::Forms::GroupBox^  gboxErrorTiming;
+private: System::Windows::Forms::RadioButton^  rErrorCurrent;
+private: System::Windows::Forms::RadioButton^  rErrorReading;
+private: System::Windows::Forms::Label^  labWarn;
+private: System::Windows::Forms::Label^  labError;
+public: System::Windows::Forms::DataGridView^  gridWarn;
+private: 
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnName;
+public: 
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnBegin;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnEnd;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colWarnCause;
+public: System::Windows::Forms::DataGridView^  gridError;
+private: 
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorName;
+public: 
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorBegin;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorEnd;
+private: System::Windows::Forms::DataGridViewTextBoxColumn^  colErrorCause;
+private: System::Windows::Forms::Label^  labPurposeInError;
+private: System::Windows::Forms::TextBox^  tboxPurposeInError;
+
+
 
 
 
@@ -915,11 +940,11 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 		void InitializeComponent(void)
 		{
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle1 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle2 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle3 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle4 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
-			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle5 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle6 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle7 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle8 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle9 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
+			System::Windows::Forms::DataGridViewCellStyle^  dataGridViewCellStyle10 = (gcnew System::Windows::Forms::DataGridViewCellStyle());
 			this->tboxFile = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl = (gcnew System::Windows::Forms::GroupBox());
 			this->tboxRemasterVer = (gcnew System::Windows::Forms::TextBox());
@@ -1189,6 +1214,8 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->tabCompanyInfo = (gcnew System::Windows::Forms::TabPage());
 			this->tboxGuideCompanyInfo = (gcnew System::Windows::Forms::TextBox());
 			this->tabErrorInfo = (gcnew System::Windows::Forms::TabPage());
+			this->labPurposeInError = (gcnew System::Windows::Forms::Label());
+			this->tboxPurposeInError = (gcnew System::Windows::Forms::TextBox());
 			this->tboxGuideErrorInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxErrorTiming = (gcnew System::Windows::Forms::GroupBox());
 			this->rErrorCurrent = (gcnew System::Windows::Forms::RadioButton());
@@ -3216,14 +3243,14 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->gridSDK->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridSDK->ColumnHeadersVisible = false;
 			this->gridSDK->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) {this->dataSDKVer});
-			dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
-			dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle1->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridSDK->DefaultCellStyle = dataGridViewCellStyle1;
+			dataGridViewCellStyle6->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle6->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle6->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
+			dataGridViewCellStyle6->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle6->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle6->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle6->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridSDK->DefaultCellStyle = dataGridViewCellStyle6;
 			this->gridSDK->Font = nullptr;
 			this->gridSDK->Name = L"gridSDK";
 			this->gridSDK->ReadOnly = true;
@@ -3249,14 +3276,14 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->gridLibrary->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridLibrary->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(2) {this->colLibPublisher, 
 				this->colLibName});
-			dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
-			dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle2->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle2;
+			dataGridViewCellStyle7->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle7->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle7->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
+			dataGridViewCellStyle7->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle7->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle7->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle7->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridLibrary->DefaultCellStyle = dataGridViewCellStyle7;
 			this->gridLibrary->Font = nullptr;
 			this->gridLibrary->Name = L"gridLibrary";
 			this->gridLibrary->ReadOnly = true;
@@ -4030,6 +4057,8 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->tabErrorInfo->AccessibleName = nullptr;
 			resources->ApplyResources(this->tabErrorInfo, L"tabErrorInfo");
 			this->tabErrorInfo->BackgroundImage = nullptr;
+			this->tabErrorInfo->Controls->Add(this->labPurposeInError);
+			this->tabErrorInfo->Controls->Add(this->tboxPurposeInError);
 			this->tabErrorInfo->Controls->Add(this->tboxGuideErrorInfo);
 			this->tabErrorInfo->Controls->Add(this->gboxErrorTiming);
 			this->tabErrorInfo->Controls->Add(this->labWarn);
@@ -4039,6 +4068,24 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->tabErrorInfo->Font = nullptr;
 			this->tabErrorInfo->Name = L"tabErrorInfo";
 			this->tabErrorInfo->UseVisualStyleBackColor = true;
+			// 
+			// labPurposeInError
+			// 
+			this->labPurposeInError->AccessibleDescription = nullptr;
+			this->labPurposeInError->AccessibleName = nullptr;
+			resources->ApplyResources(this->labPurposeInError, L"labPurposeInError");
+			this->labPurposeInError->Font = nullptr;
+			this->labPurposeInError->Name = L"labPurposeInError";
+			// 
+			// tboxPurposeInError
+			// 
+			this->tboxPurposeInError->AccessibleDescription = nullptr;
+			this->tboxPurposeInError->AccessibleName = nullptr;
+			resources->ApplyResources(this->tboxPurposeInError, L"tboxPurposeInError");
+			this->tboxPurposeInError->BackgroundImage = nullptr;
+			this->tboxPurposeInError->Font = nullptr;
+			this->tboxPurposeInError->Name = L"tboxPurposeInError";
+			this->tboxPurposeInError->ReadOnly = true;
 			// 
 			// tboxGuideErrorInfo
 			// 
@@ -4117,14 +4164,14 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->gridWarn->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridWarn->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colWarnName, 
 				this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
-			dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
-			dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle3->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle3;
+			dataGridViewCellStyle8->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle8->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle8->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
+			dataGridViewCellStyle8->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle8->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle8->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle8->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridWarn->DefaultCellStyle = dataGridViewCellStyle8;
 			this->gridWarn->Font = nullptr;
 			this->gridWarn->GridColor = System::Drawing::SystemColors::Control;
 			this->gridWarn->Name = L"gridWarn";
@@ -4161,8 +4208,8 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			// 
 			this->gridError->AccessibleDescription = nullptr;
 			this->gridError->AccessibleName = nullptr;
-			dataGridViewCellStyle4->BackColor = System::Drawing::Color::White;
-			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+			dataGridViewCellStyle9->BackColor = System::Drawing::Color::White;
+			this->gridError->AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
 			resources->ApplyResources(this->gridError, L"gridError");
 			this->gridError->AutoSizeRowsMode = System::Windows::Forms::DataGridViewAutoSizeRowsMode::AllCellsExceptHeaders;
 			this->gridError->BackgroundColor = System::Drawing::SystemColors::Control;
@@ -4170,14 +4217,14 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			this->gridError->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->gridError->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(4) {this->colErrorName, 
 				this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
-			dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
-			dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-			dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
-			dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
-			dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
-			dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
-			dataGridViewCellStyle5->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
-			this->gridError->DefaultCellStyle = dataGridViewCellStyle5;
+			dataGridViewCellStyle10->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
+			dataGridViewCellStyle10->BackColor = System::Drawing::SystemColors::Window;
+			dataGridViewCellStyle10->Font = (gcnew System::Drawing::Font(L"‚l‚r ‚oƒSƒVƒbƒN", 9));
+			dataGridViewCellStyle10->ForeColor = System::Drawing::SystemColors::ControlText;
+			dataGridViewCellStyle10->SelectionBackColor = System::Drawing::SystemColors::Highlight;
+			dataGridViewCellStyle10->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
+			dataGridViewCellStyle10->WrapMode = System::Windows::Forms::DataGridViewTriState::True;
+			this->gridError->DefaultCellStyle = dataGridViewCellStyle10;
 			this->gridError->Font = nullptr;
 			this->gridError->GridColor = System::Drawing::SystemColors::Control;
 			this->gridError->Name = L"gridError";
@@ -4517,7 +4564,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "TRIAL" );
 		}
 
 		// SRL‚É“o˜^‚³‚ê‚È‚¢ROMd—l‚ÌƒtƒH[ƒ€“ü—Í‚ğ
@@ -5756,6 +5803,26 @@ private: System::Windows::Forms::RadioButton^  rPurposeZone;
 			if( tabMain->SelectedIndex == 6 )
 			{
 				this->updateGrid();
+
+				// ’ñoî•ñ‚Ì—p“r‚Æ‚µ‚Ä‘I‘ğ‚³‚ê‚Ä‚¢‚éƒ‰ƒWƒIƒ{ƒ^ƒ“‚ğ•\¦‚·‚é
+				cli::array<System::Windows::Forms::RadioButton ^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+				{
+					this->rPurposeCardProduction,
+					this->rPurposeCardDistribution,
+					this->rPurposeCardKiosk,
+					this->rPurposeDSiWare,
+					this->rPurposeZone,
+					this->rPurposeDSStation,
+					this->rPurposeOther
+				};
+				this->tboxPurposeInError->Text = "";
+				for each( System::Windows::Forms::RadioButton ^r in rbuts )
+				{
+					if( r->Checked )
+					{
+						this->tboxPurposeInError->Text = System::String::Copy( r->Text );
+					}
+				}
 			}
 		}
 	// —p“r‚Ì€–Ú‚Ìƒ‰ƒWƒIƒ{ƒ^ƒ“

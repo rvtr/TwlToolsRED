@@ -187,12 +187,14 @@ namespace MasterEditorTWL
 		void mrcShared2( FILE *fp );
 		void mrcSDKVersion( FILE *fp );
 		void mrcChinaKorea(void);
+		void mrcTrialApp( FILE *fp );		// 体験版アプリ用の追加チェック
 
 		// MRCメッセージを追加
-		RCMrcError^ makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args );
 		RCMrcError^ makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
 								  RCMrcError::PurposeType purpose,
 								  System::String ^tag, ... cli::array<System::String^> ^args );
+		RCMrcError^ makeMrcError( RCMrcError::PurposeType purpose, System::String ^tag, ... cli::array<System::String^> ^args );
+		RCMrcError^ makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args );
 
 	}; // end of ref class RCSrl
 

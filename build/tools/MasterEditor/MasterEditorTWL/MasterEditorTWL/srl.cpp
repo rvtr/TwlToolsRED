@@ -1031,16 +1031,8 @@ void RCSrl::calcNandUsedSize(FILE *fp)
 // -------------------------------------------------------------------
 // MRCメッセージを取得
 // -------------------------------------------------------------------
-RCMrcError^ RCSrl::makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args )
-{
-	// パラメータも取得(パラメータは英語版にも日本語版にも登録されておりどちらでもよいが日本語版のものにしておく)
-	System::UInt32  beg = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/begin", "J" ), System::Globalization::NumberStyles::HexNumber );
-	System::UInt32  end = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/end",   "J" ), System::Globalization::NumberStyles::HexNumber );
-	System::Boolean isEnableModify = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/modify", "J" ) );
-	System::Boolean isAffectRom    = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/affect", "J" ) );
 
-	return (this->makeMrcError( beg, end, isEnableModify, isAffectRom, RCMrcError::PurposeType::Common, tag, args ));	// 共通エラー
-}
+// 開始と終了アドレスがROMによって異なる/存在しないエラー
 RCMrcError^ RCSrl::makeMrcError( System::UInt32 beg, System::UInt32 end, System::Boolean isEnableModify, System::Boolean isAffectRom,
 								 RCMrcError::PurposeType purpose,
 								 System::String ^tag, ... cli::array<System::String^> ^args )
@@ -1055,4 +1047,22 @@ RCMrcError^ RCSrl::makeMrcError( System::UInt32 beg, System::UInt32 end, System:
 	System::String ^msgE = System::String::Format( fmtE, args );
 
 	return (gcnew RCMrcError( nameJ, beg, end, msgJ, nameE, msgE, isEnableModify, isAffectRom, purpose ));
+}
+
+// 開始と終了アドレスに設定ファイルに書かれているものを採用するエラー (用途が限定されるとき用)
+RCMrcError^ RCSrl::makeMrcError( RCMrcError::PurposeType purpose, System::String ^tag, ... cli::array<System::String^> ^args )
+{
+	// パラメータも取得(パラメータは英語版にも日本語版にも登録されておりどちらでもよいが日本語版のものにしておく)
+	System::UInt32  beg = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/begin", "J" ), System::Globalization::NumberStyles::HexNumber );
+	System::UInt32  end = System::UInt32::Parse( this->hMrcMsg->getMessage( tag+"/end",   "J" ), System::Globalization::NumberStyles::HexNumber );
+	System::Boolean isEnableModify = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/modify", "J" ) );
+	System::Boolean isAffectRom    = System::Boolean::Parse( this->hMrcMsg->getMessage( tag+"/affect", "J" ) );
+
+	return (this->makeMrcError( beg, end, isEnableModify, isAffectRom, purpose, tag, args ));
+}
+
+// 用途にかかわらず共通のエラー
+RCMrcError^ RCSrl::makeMrcError( System::String ^tag, ... cli::array<System::String^> ^args )
+{
+	return (this->makeMrcError( RCMrcError::PurposeType::Common, tag, args ));	// 共通エラー
 }

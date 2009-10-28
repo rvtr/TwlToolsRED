@@ -31,45 +31,45 @@
 
 	<!-- For DS Station -->
 	<DSStationTmpJump>
-		<name>DS Station対応</name>
-		<sentence>DS Station用ROMではtmpジャンプは許可されていません。</sentence>
+		<name>Touch!Try!DS対応</name>
+		<sentence>Touch!Try!DS用アプリではtmpジャンプは許可されていません。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</DSStationTmpJump>
 
 	<DSStationRomSize>
-		<name>DS Station対応</name>
-		<sentence>DS Station用ROMのファイルサイズは768Mbit以下でなければなりません。</sentence>
+		<name>Touch!Try!DS対応</name>
+		<sentence>Touch!Try!DS用アプリのファイルサイズは768Mbit(96MByte)以下でなければなりません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSStationRomSize>
 
 	<DSStationLib>
-		<name>DS Station対応</name>
-		<sentence>店頭試遊台用ライブラリが使用されていません。</sentence>
+		<name>Touch!Try!DS対応</name>
+		<sentence>Touch!Try!DSライブラリ(NIS_FOR_TWLSDK)が使用されていません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSStationLib>
 
 	<!-- For Nintendo Zone -->
 	<ZoneTmpJump>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo Zone用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</ZoneTmpJump>
 
 	<ZoneHybrid>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo Zone用アプリをHYBRID版として作成することは許可されていません。</sentence>
 		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
 	</ZoneHybrid>
 
 	<ZoneLimited>
-		<name>ダウンロードサービス対応</name>
-		<sentence>このソフトはLIMITED版ですので、NintendoZoneのみで配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできません。</sentence>
+		<name>Nintendo Zone対応</name>
+		<sentence>このソフトはNintendo Zoneのみで配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできませんのでご注意ください。(本警告はROMの問題を指摘しているわけではありませんので、本警告を無視していただいて結構です。)</sentence>
 		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
 	</ZoneLimited>
 
 	<ZoneRomSize>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo Zone用のファイルサイズは2.5MByte以下でなければなりません。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ZoneRomSize>
 

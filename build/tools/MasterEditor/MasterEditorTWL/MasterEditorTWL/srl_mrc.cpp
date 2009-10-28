@@ -484,6 +484,9 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 	// 追加チェック
 	this->mrcSDKVersion(fp);
 
+	// 体験版用追加チェック
+	this->mrcTrialApp(fp);
+
 	return ECSrlResult::NOERROR;
 } // mrcTWL()
 
@@ -1233,3 +1236,54 @@ void RCSrl::mrcChinaKorea(void)
 		}
 	}
 }
+
+// -------------------------------------------------------------------
+// 体験版用の追加チェック
+// -------------------------------------------------------------------
+void RCSrl::mrcTrialApp(FILE *fp)
+{
+	// ROM読み出し時には用途はわからないのですべてのチェックをしておき
+	// 表示するときに振り分けをする
+
+	// Touch!Try!DS
+	if( this->IsTmpJump )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationTmpJump") );
+	}
+	fseek( fp, 0, SEEK_END );
+	u32  filesize = ftell(fp);	// 実ファイルサイズ
+	if( filesize > (96 * 1024 * 1024) )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationRomSize") );
+	}
+	bool use_nis = false;
+	for each( RCLicense ^lic in this->hLicenseList )
+	{
+		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->Equals( "NIS_FOR_TWLSDK" ) )
+		{
+			use_nis = true;
+		}
+	}
+	if( !use_nis )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationLib") );
+	}
+
+	// Nintendo Zone
+	if( !this->IsTmpJump )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneTmpJump") );
+	}
+	if( filesize > (5 * 1024 * 1024 / 2) )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
+	}
+	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneHybrid") );
+	}
+	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED )
+	{
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneLimited") );
+	}
+} //mrcTrialApp()

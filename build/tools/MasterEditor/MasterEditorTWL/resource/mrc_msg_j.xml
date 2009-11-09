@@ -38,7 +38,7 @@
 
 	<DSStationRomSize>
 		<name>Touch!Try!DS対応</name>
-		<sentence>Touch!Try!DS用アプリのファイルサイズは768Mbit(96MByte)以下でなければなりません。</sentence>
+		<sentence>Touch!Try!DS用アプリのROMファイルサイズは通常、768Mbit(96MByte)以下でなければなりません。サイズオーバーしたROMを提出する場合、弊社窓口にご連絡ください。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSStationRomSize>
 
@@ -69,7 +69,7 @@
 
 	<ZoneRomSize>
 		<name>Nintendo Zone対応</name>
-		<sentence>Nintendo Zone用のファイルサイズは2.5MByte以下でなければなりません。</sentence>
+		<sentence>Nintendo Zone用のROMファイルサイズは通常、2.5MByte以下でなければなりません。サイズオーバーしたROMを提出する場合、弊社窓口への確認が必要です。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ZoneRomSize>
 

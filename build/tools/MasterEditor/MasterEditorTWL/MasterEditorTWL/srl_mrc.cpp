@@ -284,36 +284,50 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u32 filesizeMb = (filesize / (1024*1024)) * 8;	// 単位をMbitに直す
 		if( romsize < filesizeMb )
 		{
-			this->hErrorList->Add( this->makeMrcError("CapacityCardLess") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,	// Touch!Try!DS用のROMを除く
+				"CapacityCardLess") );
 		}
 		else if( filesizeMb < romsize )
 		{
-			this->hWarnList->Add( this->makeMrcError("CapacityCardWaste") );
+			this->hWarnList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				"CapacityCardWaste") );
 		}
 		if( (romsize < METWL_ROMSIZE_MIN) || (METWL_ROMSIZE_MAX < romsize) )
 		{
-			this->hErrorList->Add( this->makeMrcError("CapacityCardRange") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				"CapacityCardRange") );
 		}
-		if( (filesizeMb < 1) || (MasterEditorTWL::countBits(filesizeMb) != 1) )
+		if( (filesizeMb < 1) || (MasterEditorTWL::countBits(filesizeMb) != 1) )		// 立っているビットが1つかどうかでべき乗かどうかを調べる
 		{
-			this->hWarnList->Add( this->makeMrcError("FilesizeFraction") );
+			this->hWarnList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				"FilesizeFraction") );
 		}
 	} //if( *(this->hIsNAND) == false )
 	else	// NANDアプリのときのみのチェック
 	{
 		if( (romsize < METWL_ROMSIZE_MIN_NAND) || (METWL_ROMSIZE_MAX_NAND < romsize) )
 		{
-			this->hErrorList->Add( this->makeMrcError("CapacityNandRange") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production,
+				"CapacityNandRange") );
 		}
 		//u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
 		u32  allsize = this->hNandUsedSize->NandUsedSize;	// TMDやサブバナーのサイズを含める
 		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
-			this->hErrorList->Add( this->makeMrcError("UsedNandSizeLimit") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production,
+				"UsedNandSizeLimit") );
 		}
 		if( (allsize > METWL_ALLSIZE_MAX_NAND_LIC) && this->IsAppUser )		// ユーザアプリのときのみ
 		{
-			this->hErrorList->Add( this->makeMrcError("UsedNandSizeExceed") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production,
+				"UsedNandSizeExceed") );
 		}
 	}
 
@@ -328,7 +342,9 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		BOOL crcret = getSeg3CRCInFp( fp, &crcseg3 );
 		if( !crcret || (crcseg3 != METWL_SEG3_CRC) )
 		{
-			this->hErrorList->Add( this->makeMrcError("Seg3CRC") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				"Seg3CRC") );
 		}
 	}
 
@@ -855,7 +871,9 @@ void RCSrl::mrcPadding(FILE *fp)
 	u32  offset = ((romsize / 8) * 1024 * 1024) - padsize;
 	if( (offset + padsize) > filesize )
 	{
-		this->hErrorList->Add( this->makeMrcError("PaddingRead", padstr) );
+		this->hErrorList->Add( this->makeMrcError(
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			"PaddingRead", padstr) );
 		return;
 	}
 
@@ -863,7 +881,9 @@ void RCSrl::mrcPadding(FILE *fp)
 	fseek( fp, offset, SEEK_SET );
 	if( padsize != fread( buf, 1, padsize, fp ) )
 	{
-		this->hErrorList->Add( this->makeMrcError("PaddingRead", padstr) );
+		this->hErrorList->Add( this->makeMrcError(
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			"PaddingRead", padstr) );
 		delete []buf;
 		return;
 	}
@@ -879,7 +899,9 @@ void RCSrl::mrcPadding(FILE *fp)
 	}
 	if( !bResult )
 	{
-		this->hErrorList->Add( this->makeMrcError("PaddingValue", padstr, romstr) );
+		this->hErrorList->Add( this->makeMrcError(
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			"PaddingValue", padstr, romstr) );
 	}
 	delete []buf;
 } //RCSrl::mrcPadding
@@ -1254,7 +1276,7 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	u32  filesize = ftell(fp);	// 実ファイルサイズ
 	if( filesize > (96 * 1024 * 1024) )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationRomSize") );
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationRomSize") );
 	}
 	bool use_nis = false;
 	for each( RCLicense ^lic in this->hLicenseList )
@@ -1276,7 +1298,7 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	}
 	if( filesize > (5 * 1024 * 1024 / 2) )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
 	}
 	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID )
 	{

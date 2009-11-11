@@ -4745,6 +4745,16 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 					this->changePurposeForms(this->rPurposeOther);	// わざわざこれを選ぶには特別な理由があるだろうから"その他"にチェックをつけかえる
 				}
 			}
+			// 英語版では"Touch!Try!DS"をなくす
+			if( this->hSrl->IsRegionAmerica )
+			{
+				this->rPurposeDSStation->Enabled = false;
+				if( this->rPurposeDSStation->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);
+				}
+			}
+
 		} //maskPurposeForms()
 
 	private:
@@ -5753,17 +5763,35 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 			this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
 
 			// リージョン変更によって表示する「用途」を変更する
-			if( this->combRegion->SelectedIndex == 0 )	// 日本リージョンの場合には「店頭体験版(単独型)」を非表示にする
+
+			// 日本リージョンの場合には"店頭体験版(単独型)"を非表示にする
+			if( this->combRegion->SelectedIndex == 0 )
 			{
+				this->rPurposeCardKiosk->Enabled = false;
 				if( this->rPurposeCardKiosk->Checked )
 				{
 					this->changePurposeForms( this->rPurposeOther );
 				}
-				this->rPurposeCardKiosk->Enabled = false;
 			}
 			else
 			{
 				this->rPurposeCardKiosk->Enabled = true;
+			}
+
+			// 英語版では"Touch!Try!DS"をなくす
+			if( (this->combRegion->SelectedIndex == 1) ||
+				(this->combRegion->SelectedIndex == 5) ||
+				(this->combRegion->SelectedIndex == 6) )
+			{
+				this->rPurposeDSStation->Enabled = false;
+				if( this->rPurposeDSStation->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);
+				}
+			}
+			else
+			{
+				this->rPurposeDSStation->Enabled = true;
 			}
 		}
 	private:

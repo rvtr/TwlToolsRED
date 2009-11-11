@@ -102,12 +102,13 @@ Exception:{0}
 <TextBoxInput>Insufficient input: Input data.</TextBoxInput>
 <NumRangeInput>Insufficient input: Illegal value.</NumRangeInput>
 <ComboBoxInput>Insufficient input: Select data.</ComboBoxInput>
+<RadioButtonInput>Insufficient input: Select data.</RadioButtonInput>
 <LabelProductName>Product Name</LabelProductName>
 <LabelProductCode>Product Code</LabelProductCode>
 <LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
 <LabelProductNameForeign>Product Name(Foreign Version)</LabelProductNameForeign>
 <LabelProductCodeForeign>Product Code(Foreign Version)</LabelProductCodeForeign>
-<LabelUsage>Usage</LabelUsage>
+<LabelUsage>Purpose</LabelUsage>
 <LabelBackup>Backup Memory</LabelBackup>
 <LabelPerson1>Contact1</LabelPerson1>
 <LabelFurigana1>Furigana</LabelFurigana1>

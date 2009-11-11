@@ -74,10 +74,33 @@ System::Boolean Form1::checkComboBoxIndex( System::Windows::Forms::ComboBox ^box
 		System::String ^msgE = this->hMsg->getMessage("ComboBoxInput", "E");
 		this->hErrorList->Add( gcnew RCMrcError( 
 			labelJ, 0, 0, msgJ, labelE, msgE, true, isAffectRom, RCMrcError::PurposeType::Common ) );
+		return false;
 	}
 	return true;
 }
 
+// ラジオボタンをチェック
+System::Boolean Form1::checkRadioButton( cli::array<System::Windows::Forms::RadioButton^> ^rbuts, System::String ^tag )
+{
+	bool checked = false;
+	for each( System::Windows::Forms::RadioButton ^r in rbuts )
+	{
+		if( r->Checked )
+		{
+			checked = true;
+		}
+	}
+	if( !checked )
+	{
+		System::String ^labelJ = this->hMsg->getMessage(tag,"J");
+		System::String ^labelE = this->hMsg->getMessage(tag,"E");
+		System::String ^msgJ = this->hMsg->getMessage("RadioButtonInput", "J");
+		System::String ^msgE = this->hMsg->getMessage("RadioButtonInput", "E");
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false, RCMrcError::PurposeType::Common ) );
+		return false;
+	}
+	return true;
+}
 
 // --------------------------------------------------------
 // エラー情報の登録

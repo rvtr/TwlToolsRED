@@ -327,6 +327,20 @@ System::Boolean Form1::checkDeliverableForms(void)
 		this->checkTextForm( this->tboxPurposeOther->Text, "LabelUsage" );
 	}
 
+	//「用途」の項目はグループボックスの機能を使っておらず
+	// もしかしたらチェック漏れが発生するかもしれないのでチェックが入っているかを調べておく
+	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+	{
+		this->rPurposeCardProduction,
+		this->rPurposeCardDistribution,
+		this->rPurposeCardKiosk,
+		this->rPurposeDSiWare,
+		this->rPurposeDSStation,
+		this->rPurposeZone,
+		this->rPurposeOther
+	};
+	this->checkRadioButton( rbuts, "LabelUsage" );
+
 	// 会社情報
 	this->checkTextForm( this->tboxPerson1->Text, "LabelPerson1" );
 	this->checkTextForm( this->tboxCompany1->Text, "LabelCompany1" );

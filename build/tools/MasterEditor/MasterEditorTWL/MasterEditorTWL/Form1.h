@@ -4705,7 +4705,7 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 				this->rPurposeZone
 			};
 
-			if( this->hSrl->IsMediaNand )
+			if( this->hSrl->IsMediaNand )		// SRLが読み込まれていないときにはfalseであることが保証されている
 			{
 				for each( System::Windows::Forms::RadioButton ^r in rbutsCard )
 				{
@@ -4736,6 +4736,8 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 				}
 			}
 
+			// SRLのリージョンによって選択可能な項目をマスクする
+
 			// 日本向けでは"店頭試遊台(単独型)"をなくす
 			if( this->hSrl->IsRegionJapan )
 			{
@@ -4755,6 +4757,51 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 				}
 			}
 
+			// さらにリージョンのコンボボックスによって選択可能な項目をマスクする
+
+			// 日本リージョンの場合には"店頭体験版(単独型)"を非表示にする
+			if( this->combRegion->SelectedIndex == 0 )
+			{
+				this->rPurposeCardKiosk->Enabled = false;
+				if( this->rPurposeCardKiosk->Checked )
+				{
+					this->changePurposeForms( this->rPurposeOther );
+				}
+			}
+			else
+			{
+				if( !System::String::IsNullOrEmpty(this->tboxFile->Text) && this->hSrl->IsMediaNand )
+				{
+					this->rPurposeCardKiosk->Enabled = false;	// すでにメディアによってマスクされているときには選択不可
+				}
+				else
+				{
+					this->rPurposeCardKiosk->Enabled = true;
+				}
+			}
+
+			// 英語版では"Touch!Try!DS"をなくす
+			if( (this->combRegion->SelectedIndex == 1) ||
+				(this->combRegion->SelectedIndex == 5) ||
+				(this->combRegion->SelectedIndex == 6) )
+			{
+				this->rPurposeDSStation->Enabled = false;
+				if( this->rPurposeDSStation->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);
+				}
+			}
+			else
+			{
+				if( !System::String::IsNullOrEmpty(this->tboxFile->Text) && this->hSrl->IsMediaNand )
+				{
+					this->rPurposeDSStation->Enabled = false;
+				}
+				else
+				{
+					this->rPurposeDSStation->Enabled = true;
+				}
+			}
 		} //maskPurposeForms()
 
 	private:
@@ -4956,6 +5003,9 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 
 		// コンボボックスをチェック
 		System::Boolean checkComboBoxIndex( System::Windows::Forms::ComboBox ^box, System::String ^tag, System::Boolean isAffectRom );
+
+		// ラジオボタンをチェック
+		System::Boolean checkRadioButton( cli::array<System::Windows::Forms::RadioButton^> ^rbuts, System::String ^tag );
 
 		// -----------------------------------------------------------------
 		// 提出情報(SRLに影響しない箇所のみ)とフォーム間のデータのやりとり
@@ -5763,36 +5813,7 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 			this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
 
 			// リージョン変更によって表示する「用途」を変更する
-
-			// 日本リージョンの場合には"店頭体験版(単独型)"を非表示にする
-			if( this->combRegion->SelectedIndex == 0 )
-			{
-				this->rPurposeCardKiosk->Enabled = false;
-				if( this->rPurposeCardKiosk->Checked )
-				{
-					this->changePurposeForms( this->rPurposeOther );
-				}
-			}
-			else
-			{
-				this->rPurposeCardKiosk->Enabled = true;
-			}
-
-			// 英語版では"Touch!Try!DS"をなくす
-			if( (this->combRegion->SelectedIndex == 1) ||
-				(this->combRegion->SelectedIndex == 5) ||
-				(this->combRegion->SelectedIndex == 6) )
-			{
-				this->rPurposeDSStation->Enabled = false;
-				if( this->rPurposeDSStation->Checked )
-				{
-					this->changePurposeForms(this->rPurposeOther);
-				}
-			}
-			else
-			{
-				this->rPurposeDSStation->Enabled = true;
-			}
+			this->maskPurposeForms();
 		}
 	private:
 		// レーティング表示不要が選択されたときにレーティングを選択不可にする

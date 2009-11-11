@@ -102,12 +102,13 @@
 <TextBoxInput>入力漏れ: 入力してください。</TextBoxInput>
 <NumRangeInput>入力漏れ: 値が不正です。</NumRangeInput>
 <ComboBoxInput>入力漏れ: 選択してください。</ComboBoxInput>
+<RadioButtonInput>入力漏れ: 選択してください。</RadioButtonInput>
 <LabelProductName>製品名</LabelProductName>
 <LabelProductCode>製品コード</LabelProductCode>
 <LabelCountryCode>製品コード(仕向地仕様コード)</LabelCountryCode>
 <LabelProductNameForeign>製品名(海外版)</LabelProductNameForeign>
 <LabelProductCodeForeign>製品コード(海外版)</LabelProductCodeForeign>
-<LabelUsage>目的</LabelUsage>
+<LabelUsage>用途</LabelUsage>
 <LabelBackup>バックアップメモリ</LabelBackup>
 <LabelPerson1>ご氏名(担当者1)</LabelPerson1>
 <LabelFurigana1>ふりがな(担当者1)</LabelFurigana1>

@@ -63,7 +63,7 @@
 
 	<ZoneLimited>
 		<name>Nintendo Zone対応</name>
-		<sentence>このソフトはNintendo Zoneのみで配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできませんのでご注意ください。(本警告はROMの問題を指摘しているわけではありませんので、本警告を無視していただいて結構です。)</sentence>
+		<sentence>このソフトはNintendo Zoneでのみ配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできませんのでご注意ください。(本警告はROMの問題を指摘しているわけではありませんので、本警告を無視していただいて結構です。)</sentence>
 		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
 	</ZoneLimited>
 

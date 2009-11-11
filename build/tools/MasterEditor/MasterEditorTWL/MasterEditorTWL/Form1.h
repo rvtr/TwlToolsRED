@@ -5751,6 +5751,20 @@ private: System::Windows::Forms::TextBox^  tboxPurposeInError;
 		{
 			this->maskRatingForms();
 			this->changeUnnecessaryRatingForms(false);	// 一度コンボボックスがenableになるので再設定
+
+			// リージョン変更によって表示する「用途」を変更する
+			if( this->combRegion->SelectedIndex == 0 )	// 日本リージョンの場合には「店頭体験版(単独型)」を非表示にする
+			{
+				if( this->rPurposeCardKiosk->Checked )
+				{
+					this->changePurposeForms( this->rPurposeOther );
+				}
+				this->rPurposeCardKiosk->Enabled = false;
+			}
+			else
+			{
+				this->rPurposeCardKiosk->Enabled = true;
+			}
 		}
 	private:
 		// レーティング表示不要が選択されたときにレーティングを選択不可にする

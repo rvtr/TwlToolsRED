@@ -30,6 +30,9 @@ namespace MasterEditorTWL
 		ROM_Header *pRomHeader;
 
 	public:
+		// 一度でも読み込まれたかどうか
+		property System::Boolean  IsAlreadyReadOnce;
+
 		// (GUIに表示される)ROMヘッダ固有情報
 
 		// NTR互換情報 ReadOnly

@@ -139,6 +139,10 @@ ECSrlResult RCSrl::readFromFile( System::String ^srlfile )
 		}
 	}
 	(void)fclose( fp );
+
+	// ˆê“x‚Å‚à“Ç‚Ýž‚Ü‚ê‚½‚ç true
+	this->IsAlreadyReadOnce = true;
+
 	return (ECSrlResult::NOERROR);
 }
 

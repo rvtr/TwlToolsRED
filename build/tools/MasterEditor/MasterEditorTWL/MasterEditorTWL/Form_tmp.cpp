@@ -74,20 +74,28 @@ System::Void Form1::saveTmp( System::String ^filename )
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
 	{
 		this->rPurposeCardProduction,
+		this->rPurposeCardTouchTryDS,
+		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeDSStation,
+		this->rPurposeNandTouchTryDS,
+		this->rPurposeNandDSCentre,
+		this->rPurposeNandShop,
 		this->rPurposeZone,
 		this->rPurposeOther
 	};
 	cli::array<System::String^> ^strs = gcnew cli::array<System::String^>
 	{
 		"CardProduction",
+		"CardTouchTryDS",
+		"CardDSCentre",
 		"CardDistribution",
 		"CardKiosk",
 		"DSiWare",
-		"DSStation",
+		"NandTouchTryDS",
+		"NandDSCentre",
+		"NandShop",
 		"Zone",
 		"Other"
 	};
@@ -219,20 +227,28 @@ void Form1::loadTmp( System::String ^filename )
 	rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
 	{
 		this->rPurposeCardProduction,
+		this->rPurposeCardTouchTryDS,
+		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeDSStation,
+		this->rPurposeNandTouchTryDS,
+		this->rPurposeNandDSCentre,
+		this->rPurposeNandShop,
 		this->rPurposeZone,
 		this->rPurposeOther
 	};
 	strs  = gcnew cli::array<System::String^>
 	{
 		"CardProduction",
+		"CardTouchTryDS",
+		"CardDSCentre",
 		"CardDistribution",
 		"CardKiosk",
 		"DSiWare",
-		"DSStation",
+		"NandTouchTryDS",
+		"NandDSCentre",
+		"NandShop",
 		"Zone",
 		"Other"
 	};

@@ -96,11 +96,15 @@ void Form1::setDeliverableProperties(void)
 	cli::array<System::Windows::Forms::RadioButton ^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
 	{
 		this->rPurposeCardProduction,
+		this->rPurposeCardTouchTryDS,
+		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeDSStation,
-		this->rPurposeZone
+		this->rPurposeNandTouchTryDS,
+		this->rPurposeNandDSCentre,
+		this->rPurposeNandShop,
+		this->rPurposeZone,
 	};
 	for each( System::Windows::Forms::RadioButton ^r in rbuts )
 	{
@@ -332,12 +336,16 @@ System::Boolean Form1::checkDeliverableForms(void)
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
 	{
 		this->rPurposeCardProduction,
+		this->rPurposeCardTouchTryDS,
+		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeDSStation,
+		this->rPurposeNandTouchTryDS,
+		this->rPurposeNandDSCentre,
+		this->rPurposeNandShop,
 		this->rPurposeZone,
-		this->rPurposeOther
+		this->rPurposeOther,
 	};
 	this->checkRadioButton( rbuts, "LabelUsage" );
 

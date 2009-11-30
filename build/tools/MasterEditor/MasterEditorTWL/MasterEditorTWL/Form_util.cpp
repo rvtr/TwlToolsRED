@@ -127,7 +127,10 @@ bool Form1::isDisplayOneGridErrorForPurpose( RCMrcError ^err )
 	bool is_display = false;
 
 	if( ((err->Purpose & RCMrcError::PurposeType::Production) != (RCMrcError::PurposeType)0) &&
-		(this->rPurposeCardProduction->Checked || this->rPurposeDSiWare->Checked || this->rPurposeOther->Checked) )
+		(this->rPurposeCardProduction->Checked ||
+		this->rPurposeDSiWare->Checked || 
+		this->rPurposeNandShop ||			// ショップ配信体験版は通常版と同じ
+		this->rPurposeOther->Checked) )
 	{
 		is_display = true;
 	}
@@ -142,7 +145,8 @@ bool Form1::isDisplayOneGridErrorForPurpose( RCMrcError ^err )
 		is_display = true;
 	}
 	if( ((err->Purpose & RCMrcError::PurposeType::DSStation) != (RCMrcError::PurposeType)0) &&
-		this->rPurposeDSStation->Checked )
+		(this->rPurposeCardTouchTryDS->Checked || this->rPurposeCardDSCentre->Checked ||
+		 this->rPurposeNandTouchTryDS->Checked || this->rPurposeNandDSCentre->Checked) )
 	{
 		is_display = true;
 	}

@@ -42,19 +42,20 @@ namespace MasterEditorTWL
 		// field
 	public:
 		// 提出情報
-		property System::String ^hProductName;		// 製品名
-		property System::String ^hProductCode1;		// 製品コード
-		property System::String ^hProductCode2;		// 製品コード
+		property System::String  ^hProductName;		// 製品名
+		property System::String  ^hProductCode1;	// 製品コード
+		property System::String  ^hProductCode2;	// 製品コード
 		property System::Int32   ReleaseYear;		// 発売予定日
 		property System::Int32   ReleaseMonth;
 		property System::Int32   ReleaseDay;
 		property System::Int32   SubmitYear;		// 提出日
 		property System::Int32   SubmitMonth;
 		property System::Int32   SubmitDay;
-		property System::String ^hSubmitWay;		// 提出方法
-		property System::String ^hUsage;			// 用途
+		property System::String  ^hSubmitWay;		// 提出方法
+		property System::String  ^hUsage;			// 用途
+		property System::String  ^hUsageDetail;
 		property System::Int32   SubmitVersion;		// 提出バージョン
-		property System::String ^hSDK;				// SDKバージョン
+		property System::String  ^hSDK;				// SDKバージョン
 		property System::Boolean  IsReleaseForeign;	// 海外版の予定
 		property System::String  ^hProductNameForeign;
 		property System::String  ^hProductCode1Foreign;

@@ -105,6 +105,7 @@ void Form1::setDeliverableProperties(void)
 		this->rPurposeNandDSCentre,
 		this->rPurposeNandShop,
 		this->rPurposeZone,
+		this->rPurposeOther,
 	};
 	for each( System::Windows::Forms::RadioButton ^r in rbuts )
 	{
@@ -115,7 +116,11 @@ void Form1::setDeliverableProperties(void)
 	}
 	if( this->rPurposeOther->Checked )
 	{
-		this->hDeliv->hUsage = this->rPurposeOther->Text + "(" + this->tboxPurposeOther->Text + ")";
+		this->hDeliv->hUsageDetail = this->tboxPurposeOther->Text;
+	}
+	else
+	{
+		this->hDeliv->hUsageDetail = "";
 	}
 
 	// ‰ïĞî•ñ

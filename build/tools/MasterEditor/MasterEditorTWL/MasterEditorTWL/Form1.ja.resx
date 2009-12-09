@@ -1208,7 +1208,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabRomInfo.Text" xml:space="preserve">
     <value>ROM基本情報</value>
@@ -1223,7 +1223,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabTWLInfo.Text" xml:space="preserve">
     <value>TWL拡張情報</value>
@@ -1256,7 +1256,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabNandSizeInfo.Text" xml:space="preserve">
     <value>DSiウェア情報</value>
@@ -1379,7 +1379,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
     <value>リージョンとレーティング(編集可)</value>
@@ -1442,7 +1442,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabSubmitInfo.Text" xml:space="preserve">
     <value>提出情報(要入力)</value>
@@ -1453,35 +1453,14 @@
   <data name="gboxPurposeNand.Text" xml:space="preserve">
     <value>DSiWare (NANDアプリ)</value>
   </data>
-  <data name="rPurposeNandShop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>152, 16</value>
-  </data>
-  <data name="rPurposeNandShop.Text" xml:space="preserve">
-    <value>DSiショップ配信用体験版</value>
-  </data>
-  <data name="rPurposeNandDSCentre.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 16</value>
-  </data>
-  <data name="rPurposeNandDSCentre.Text" xml:space="preserve">
-    <value>DS CENTRE体験版</value>
-  </data>
-  <data name="rPurposeNandTouchTryDS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 16</value>
-  </data>
-  <data name="rPurposeNandTouchTryDS.Text" xml:space="preserve">
-    <value>Touch!Try!DS体験版</value>
-  </data>
-  <data name="rPurposeZone.Size" type="System.Drawing.Size, System.Drawing">
-    <value>97, 16</value>
-  </data>
   <data name="rPurposeDSiWare.Size" type="System.Drawing.Size, System.Drawing">
-    <value>120, 16</value>
+    <value>71, 16</value>
   </data>
   <data name="rPurposeDSiWare.Text" xml:space="preserve">
-    <value>DSiウェア一般販売</value>
+    <value>一般販売</value>
   </data>
   <data name="tboxPurposeOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>349, 19</value>
+    <value>209, 19</value>
   </data>
   <data name="rPurposeOther.Size" type="System.Drawing.Size, System.Drawing">
     <value>58, 16</value>
@@ -1492,17 +1471,11 @@
   <data name="gboxPurposeCard.Text" xml:space="preserve">
     <value>TWLカードアプリ</value>
   </data>
-  <data name="rPurposeCardDSCentre.Size" type="System.Drawing.Size, System.Drawing">
-    <value>123, 16</value>
-  </data>
-  <data name="rPurposeCardDSCentre.Text" xml:space="preserve">
-    <value>DS CENTRE体験版</value>
-  </data>
   <data name="rPurposeCardProduction.Size" type="System.Drawing.Size, System.Drawing">
-    <value>137, 16</value>
+    <value>71, 16</value>
   </data>
   <data name="rPurposeCardProduction.Text" xml:space="preserve">
-    <value>ゲームカード一般販売</value>
+    <value>一般販売</value>
   </data>
   <data name="rPurposeCardTouchTryDS.Size" type="System.Drawing.Size, System.Drawing">
     <value>128, 16</value>
@@ -1547,7 +1520,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabCompanyInfo.Text" xml:space="preserve">
     <value>会社情報(要入力)</value>
@@ -1562,7 +1535,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 468</value>
+    <value>772, 436</value>
   </data>
   <data name="tabErrorInfo.Text" xml:space="preserve">
     <value>エラー情報</value>

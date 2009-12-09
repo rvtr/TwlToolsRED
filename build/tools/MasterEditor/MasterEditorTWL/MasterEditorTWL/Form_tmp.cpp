@@ -75,28 +75,18 @@ System::Void Form1::saveTmp( System::String ^filename )
 	{
 		this->rPurposeCardProduction,
 		this->rPurposeCardTouchTryDS,
-		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeNandTouchTryDS,
-		this->rPurposeNandDSCentre,
-		this->rPurposeNandShop,
-		this->rPurposeZone,
 		this->rPurposeOther
 	};
 	cli::array<System::String^> ^strs = gcnew cli::array<System::String^>
 	{
 		"CardProduction",
 		"CardTouchTryDS",
-		"CardDSCentre",
 		"CardDistribution",
 		"CardKiosk",
 		"DSiWare",
-		"NandTouchTryDS",
-		"NandDSCentre",
-		"NandShop",
-		"Zone",
 		"Other"
 	};
 	int  i;
@@ -228,28 +218,18 @@ void Form1::loadTmp( System::String ^filename )
 	{
 		this->rPurposeCardProduction,
 		this->rPurposeCardTouchTryDS,
-		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeNandTouchTryDS,
-		this->rPurposeNandDSCentre,
-		this->rPurposeNandShop,
-		this->rPurposeZone,
 		this->rPurposeOther
 	};
 	strs  = gcnew cli::array<System::String^>
 	{
 		"CardProduction",
 		"CardTouchTryDS",
-		"CardDSCentre",
 		"CardDistribution",
 		"CardKiosk",
 		"DSiWare",
-		"NandTouchTryDS",
-		"NandDSCentre",
-		"NandShop",
-		"Zone",
 		"Other"
 	};
 	this->parseTmp( root, "/MasterEditorTWL/Form/Purpose", rbuts, strs );

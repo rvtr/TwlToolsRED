@@ -97,14 +97,9 @@ void Form1::setDeliverableProperties(void)
 	{
 		this->rPurposeCardProduction,
 		this->rPurposeCardTouchTryDS,
-		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeNandTouchTryDS,
-		this->rPurposeNandDSCentre,
-		this->rPurposeNandShop,
-		this->rPurposeZone,
 		this->rPurposeOther,
 	};
 	for each( System::Windows::Forms::RadioButton ^r in rbuts )
@@ -342,14 +337,9 @@ System::Boolean Form1::checkDeliverableForms(void)
 	{
 		this->rPurposeCardProduction,
 		this->rPurposeCardTouchTryDS,
-		this->rPurposeCardDSCentre,
 		this->rPurposeCardDistribution,
 		this->rPurposeCardKiosk,
 		this->rPurposeDSiWare,
-		this->rPurposeNandTouchTryDS,
-		this->rPurposeNandDSCentre,
-		this->rPurposeNandShop,
-		this->rPurposeZone,
 		this->rPurposeOther,
 	};
 	this->checkRadioButton( rbuts, "LabelUsage" );

@@ -146,9 +146,6 @@
   <data name="labLib.Location" type="System.Drawing.Point, System.Drawing">
     <value>339, 203</value>
   </data>
-  <data name="&gt;&gt;rPurposeCardDSCentre.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="labFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>27, 45</value>
   </data>
@@ -198,7 +195,7 @@
     <value>gboxTWLExInfo</value>
   </data>
   <data name="tboxPurposeOther.Size" type="System.Drawing.Size, System.Drawing">
-    <value>349, 21</value>
+    <value>209, 21</value>
   </data>
   <data name="&gt;&gt;labCompany1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -226,9 +223,6 @@
   </data>
   <data name="&gt;&gt;labProductCode2Foreign.Name" xml:space="preserve">
     <value>labProductCode2Foreign</value>
-  </data>
-  <data name="&gt;&gt;rPurposeNandTouchTryDS.Parent" xml:space="preserve">
-    <value>gboxPurposeNand</value>
   </data>
   <data name="&gt;&gt;labFax1.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -263,8 +257,8 @@
   <data name="labProductCode2.TabIndex" type="System.Int32, mscorlib">
     <value>33</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandDSCentre.Parent" xml:space="preserve">
-    <value>gboxPurposeNand</value>
+  <data name="&gt;&gt;rPurposeCardProduction.Parent" xml:space="preserve">
+    <value>gboxPurposeCard</value>
   </data>
   <data name="labConnectIcon.Text" xml:space="preserve">
     <value>Display Connection Icon On DSi Menu</value>
@@ -338,9 +332,6 @@
   <data name="labProductCode1Foreign.Text" xml:space="preserve">
     <value>TWL -</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandTouchTryDS.Name" xml:space="preserve">
-    <value>rPurposeNandTouchTryDS</value>
-  </data>
   <data name="stripLang.Text" xml:space="preserve">
     <value>Language</value>
   </data>
@@ -409,7 +400,7 @@
     <value>gboxNandSize</value>
   </data>
   <data name="tboxPurposeOther.Location" type="System.Drawing.Point, System.Drawing">
-    <value>88, 172</value>
+    <value>228, 109</value>
   </data>
   <data name="labNTSC2Pre.Location" type="System.Drawing.Point, System.Drawing">
     <value>18, 214</value>
@@ -448,7 +439,7 @@
     <value>Permit Tmp Jump Landing</value>
   </data>
   <data name="gridLibrary.Size" type="System.Drawing.Size, System.Drawing">
-    <value>411, 218</value>
+    <value>411, 177</value>
   </data>
   <data name="combUSK.Items1" xml:space="preserve">
     <value>aged 6 or older</value>
@@ -476,6 +467,9 @@
   </data>
   <data name="combPEGI_PRT.Location" type="System.Drawing.Point, System.Drawing">
     <value>155, 203</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
   </data>
   <data name="&gt;&gt;tboxAppTypeOther.ZOrder" xml:space="preserve">
     <value>7</value>
@@ -552,8 +546,8 @@
   <data name="&gt;&gt;labProductName.ZOrder" xml:space="preserve">
     <value>20</value>
   </data>
-  <data name="labGameCode.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+  <data name="&gt;&gt;tboxIsCodec.Parent" xml:space="preserve">
+    <value>gboxTWLExInfo</value>
   </data>
   <data name="&gt;&gt;labAppType.Parent" xml:space="preserve">
     <value>gboxTitleID</value>
@@ -615,17 +609,23 @@
   <data name="gboxPurposeNand.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
+  <data name="tboxMedia.Location" type="System.Drawing.Point, System.Drawing">
+    <value>339, 100</value>
+  </data>
   <data name="&gt;&gt;combBackup.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <data name="tboxIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>408, 406</value>
+    <value>408, 401</value>
   </data>
   <data name="tboxCaption.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="labWarn.Size" type="System.Drawing.Size, System.Drawing">
     <value>497, 15</value>
+  </data>
+  <data name="&gt;&gt;labIsGameCardOn2.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
   </data>
   <data name="tboxPublicSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 21</value>
@@ -654,8 +654,8 @@
   <data name="stripMaster.Size" type="System.Drawing.Size, System.Drawing">
     <value>56, 20</value>
   </data>
-  <data name="&gt;&gt;labCapSubmitVer.ZOrder" xml:space="preserve">
-    <value>8</value>
+  <data name="&gt;&gt;tboxGuideSubmitInfo.Parent" xml:space="preserve">
+    <value>tabSubmitInfo</value>
   </data>
   <data name="gboxExFlags.Location" type="System.Drawing.Point, System.Drawing">
     <value>558, 54</value>
@@ -693,9 +693,6 @@
   <data name="&gt;&gt;labGameCode.Name" xml:space="preserve">
     <value>labGameCode</value>
   </data>
-  <data name="rPurposeNandTouchTryDS.Text" xml:space="preserve">
-    <value>Demo for "Touch!Try!DS"</value>
-  </data>
   <data name="cboxIsNAND.Text" xml:space="preserve">
     <value>NAND Flash Memory</value>
   </data>
@@ -723,8 +720,8 @@
   <data name="labTmdSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 15</value>
   </data>
-  <data name="&gt;&gt;tboxAccessOther.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;labSrlSize.Name" xml:space="preserve">
+    <value>labSrlSize</value>
   </data>
   <data name="rErrorReading.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -758,6 +755,9 @@
   </data>
   <data name="&gt;&gt;labByte1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;labMakerCode.Parent" xml:space="preserve">
+    <value>gboxSrl</value>
   </data>
   <data name="labProductNameLimitForeign.Location" type="System.Drawing.Point, System.Drawing">
     <value>223, 68</value>
@@ -830,9 +830,6 @@
   </data>
   <data name="&gt;&gt;rPurposeCardProduction.Name" xml:space="preserve">
     <value>rPurposeCardProduction</value>
-  </data>
-  <data name="rPurposeNandShop.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
   </data>
   <data name="tboxTitleIDLo.Size" type="System.Drawing.Size, System.Drawing">
     <value>71, 21</value>
@@ -1125,8 +1122,8 @@
   <data name="&gt;&gt;labSumSize2.Name" xml:space="preserve">
     <value>labSumSize2</value>
   </data>
-  <data name="&gt;&gt;labFax1.Parent" xml:space="preserve">
-    <value>gboxPerson1</value>
+  <data name="labTitleIDHi.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="rPurposeCardProduction.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1137,8 +1134,8 @@
   <data name="labProductName.Location" type="System.Drawing.Point, System.Drawing">
     <value>21, 55</value>
   </data>
-  <data name="&gt;&gt;labSrlSize.Name" xml:space="preserve">
-    <value>labSrlSize</value>
+  <data name="&gt;&gt;tabSubmitInfo.Parent" xml:space="preserve">
+    <value>tabMain</value>
   </data>
   <data name="labBracketR.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1161,9 +1158,6 @@
   <data name="&gt;&gt;stripItemJapanese.Name" xml:space="preserve">
     <value>stripItemJapanese</value>
   </data>
-  <data name="rPurposeCardDSCentre.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 19</value>
-  </data>
   <data name="labArbit3.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 15</value>
   </data>
@@ -1176,8 +1170,8 @@
   <data name="&gt;&gt;labRomType.Parent" xml:space="preserve">
     <value>gboxSrl</value>
   </data>
-  <data name="tboxMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>339, 100</value>
+  <data name="&gt;&gt;labCapSubmitVer.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
   <data name="tboxTitleName.MaxLength" type="System.Int32, mscorlib">
     <value>12</value>
@@ -1314,9 +1308,6 @@
   <data name="labNandSize.Text" xml:space="preserve">
     <value>Orignal Size in ROM</value>
   </data>
-  <data name="rPurposeNandShop.Text" xml:space="preserve">
-    <value>Demo for "Nintendo DSi Shop"</value>
-  </data>
   <data name="&gt;&gt;labCaptionEx.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
@@ -1353,9 +1344,6 @@
   <data name="labIsCodec.TabIndex" type="System.Int32, mscorlib">
     <value>27</value>
   </data>
-  <data name="&gt;&gt;rSubmitHand.Parent" xml:space="preserve">
-    <value>gboxSubmitWay</value>
-  </data>
   <data name="&gt;&gt;labDepart2.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1391,6 +1379,9 @@
   </data>
   <data name="rSubmitHand.Location" type="System.Drawing.Point, System.Drawing">
     <value>117, 18</value>
+  </data>
+  <data name="&gt;&gt;tboxIsGameCardOn.Parent" xml:space="preserve">
+    <value>tabTWLInfo</value>
   </data>
   <data name="labNormalRomOffset.Text" xml:space="preserve">
     <value>TWL Normal Region ROM Offset</value>
@@ -1446,8 +1437,8 @@
   <data name="tboxHeaderCRC.Size" type="System.Drawing.Size, System.Drawing">
     <value>55, 21</value>
   </data>
-  <data name="&gt;&gt;tboxSubBannerSizeFS.Name" xml:space="preserve">
-    <value>tboxSubBannerSizeFS</value>
+  <data name="tboxFax2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>158, 21</value>
   </data>
   <data name="gboxShared2Size.Size" type="System.Drawing.Size, System.Drawing">
     <value>202, 212</value>
@@ -1465,7 +1456,7 @@
     <value>gboxTitleID</value>
   </data>
   <data name="&gt;&gt;rPurposeCardDistribution.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>2</value>
   </data>
   <data name="&gt;&gt;tboxGameCode.ZOrder" xml:space="preserve">
     <value>11</value>
@@ -1551,9 +1542,6 @@
   <data name="&gt;&gt;labKeyTableRomOffset.Parent" xml:space="preserve">
     <value>gboxTWLExInfo</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandShop.Parent" xml:space="preserve">
-    <value>gboxPurposeNand</value>
-  </data>
   <data name="&gt;&gt;tboxSumSizeMB.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -1566,11 +1554,11 @@
   <data name="&gt;&gt;gboxPerson1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="tboxDepart1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>261, 21</value>
+  <data name="labAssemblyVersion.Text" xml:space="preserve">
+    <value>ver.0.0</value>
   </data>
-  <data name="&gt;&gt;tboxIsGameCardOn.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
+  <data name="rSubmitInternet.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
   <data name="&gt;&gt;gridError.ZOrder" xml:space="preserve">
     <value>7</value>
@@ -1600,7 +1588,7 @@
     <value>True</value>
   </data>
   <data name="gboxAccess.Size" type="System.Drawing.Size, System.Drawing">
-    <value>289, 195</value>
+    <value>289, 190</value>
   </data>
   <data name="labArbit4.Text" xml:space="preserve">
     <value>(Arbitrary)</value>
@@ -1664,9 +1652,6 @@
   </data>
   <data name="&gt;&gt;cboxIsNormalJump.Parent" xml:space="preserve">
     <value>gboxExFlags</value>
-  </data>
-  <data name="&gt;&gt;rPurposeNandDSCentre.Name" xml:space="preserve">
-    <value>rPurposeNandDSCentre</value>
   </data>
   <data name="labMakerCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>73, 15</value>
@@ -1750,7 +1735,7 @@
     <value>aged 3 or older</value>
   </data>
   <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="&gt;&gt;labOFLC.Parent" xml:space="preserve">
     <value>gboxParental</value>
@@ -1778,9 +1763,6 @@
   </data>
   <data name="combESRB.Items5" xml:space="preserve">
     <value>M (aged 17 or older)</value>
-  </data>
-  <data name="&gt;&gt;rPurposeCardDSCentre.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="colErrorBegin.HeaderText" xml:space="preserve">
     <value>Begin</value>
@@ -1824,9 +1806,6 @@
   <data name="tboxProductCode2Foreign1.Location" type="System.Drawing.Point, System.Drawing">
     <value>171, 80</value>
   </data>
-  <data name="labBracketR.Location" type="System.Drawing.Point, System.Drawing">
-    <value>532, 188</value>
-  </data>
   <data name="labFax2.Location" type="System.Drawing.Point, System.Drawing">
     <value>23, 163</value>
   </data>
@@ -1863,9 +1842,6 @@
   <data name="&gt;&gt;stripItemRomInfoAndErrorListCurrent.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="rPurposeCardDSCentre.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="labSrlSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>119, 15</value>
   </data>
@@ -1883,6 +1859,9 @@
   </data>
   <data name="&gt;&gt;gboxLaunch.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="&gt;&gt;labSDAccessRight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;labPurposeInError.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1902,17 +1881,11 @@
   <data name="&gt;&gt;labProductCode1Foreign.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tboxMakerCode.Name" xml:space="preserve">
-    <value>tboxMakerCode</value>
-  </data>
   <data name="&gt;&gt;tboxGuideRomInfo.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;stripItemEnglish.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="rPurposeNandDSCentre.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
   </data>
   <data name="&gt;&gt;labLib.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -1977,14 +1950,14 @@
   <data name="&gt;&gt;tboxCompany1.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
-  <data name="rPurposeZone.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="gboxOtherSpec.Text" xml:space="preserve">
     <value>Other ROM Spec.</value>
   </data>
   <data name="colErrorName.HeaderText" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
+    <value>You must complete all items on this tab to create a submission checklist.</value>
   </data>
   <data name="combPEGI_PRT.Items" xml:space="preserve">
     <value>All ages</value>
@@ -2058,6 +2031,9 @@
   <data name="&gt;&gt;labSubmitVer.Parent" xml:space="preserve">
     <value>tabSubmitInfo</value>
   </data>
+  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="&gt;&gt;cboxReleaseForeign.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -2073,11 +2049,8 @@
   <data name="&gt;&gt;labNandSize.ZOrder" xml:space="preserve">
     <value>17</value>
   </data>
-  <data name="colErrorEnd.HeaderText" xml:space="preserve">
-    <value>End</value>
-  </data>
-  <data name="&gt;&gt;labMakerCode.Parent" xml:space="preserve">
-    <value>gboxSrl</value>
+  <data name="combUSK.Items3" xml:space="preserve">
+    <value>aged 16 or older</value>
   </data>
   <data name="tboxFurigana1.Size" type="System.Drawing.Size, System.Drawing">
     <value>261, 21</value>
@@ -2124,9 +2097,6 @@
   <data name="tboxFurigana2.Size" type="System.Drawing.Size, System.Drawing">
     <value>268, 21</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandShop.Name" xml:space="preserve">
-    <value>rPurposeNandShop</value>
-  </data>
   <data name="tboxPublicSizeFS.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
   </data>
@@ -2155,10 +2125,10 @@
     <value>29, 15</value>
   </data>
   <data name="&gt;&gt;rPurposeDSiWare.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>0</value>
   </data>
-  <data name="combBackup.Items1" xml:space="preserve">
-    <value>64Kbit EEPROM</value>
+  <data name="rSubmitInternet.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="&gt;&gt;rSubmitPost.Name" xml:space="preserve">
     <value>rSubmitPost</value>
@@ -2208,9 +2178,6 @@
   <data name="&gt;&gt;labFurigana2.Name" xml:space="preserve">
     <value>labFurigana2</value>
   </data>
-  <data name="labAssemblyVersion.Text" xml:space="preserve">
-    <value>ver.0.0</value>
-  </data>
   <data name="combPEGI_BBFC.Location" type="System.Drawing.Point, System.Drawing">
     <value>155, 232</value>
   </data>
@@ -2219,9 +2186,6 @@
   </data>
   <data name="tboxProductName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
-  </data>
-  <data name="labProductNameLimit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>142, 18</value>
   </data>
   <data name="&gt;&gt;labShared2Size0.ZOrder" xml:space="preserve">
     <value>5</value>
@@ -2241,11 +2205,11 @@
   <data name="&gt;&gt;gboxErrorTiming.Name" xml:space="preserve">
     <value>gboxErrorTiming</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandDSCentre.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="labProductNameLimit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>142, 18</value>
   </data>
   <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="tboxProductCode2Foreign1.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -2295,8 +2259,8 @@
   <data name="tboxPurposeInError.Size" type="System.Drawing.Size, System.Drawing">
     <value>181, 21</value>
   </data>
-  <data name="&gt;&gt;tboxIsCodec.Parent" xml:space="preserve">
-    <value>gboxTWLExInfo</value>
+  <data name="&gt;&gt;tboxTitleIDHi.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;labSumSize.Parent" xml:space="preserve">
     <value>gboxNandSize</value>
@@ -2333,9 +2297,6 @@
   </data>
   <data name="&gt;&gt;cboxReleaseForeign.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="rPurposeNandTouchTryDS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="&gt;&gt;gboxSrl.Parent" xml:space="preserve">
     <value>tabRomInfo</value>
@@ -2406,8 +2367,8 @@
   <data name="gridSDK.TabIndex" type="System.Int32, mscorlib">
     <value>37</value>
   </data>
-  <data name="rPurposeNandTouchTryDS.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
+  <data name="&gt;&gt;tboxAppTypeOther.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tboxProductCode2Foreign3.Parent" xml:space="preserve">
     <value>gboxForeign</value>
@@ -2428,7 +2389,7 @@
     <value>13</value>
   </data>
   <data name="rPurposeDSiWare.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 19</value>
+    <value>67, 19</value>
   </data>
   <data name="&gt;&gt;tboxGuideErrorInfo.Parent" xml:space="preserve">
     <value>tabErrorInfo</value>
@@ -2455,12 +2416,6 @@
     <value>1</value>
   </data>
   <data name="&gt;&gt;labNTSC2Pre.Parent" xml:space="preserve">
-    <value>gboxPerson2</value>
-  </data>
-  <data name="rPurposeZone.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;labFax2.Parent" xml:space="preserve">
     <value>gboxPerson2</value>
   </data>
   <data name="&gt;&gt;cboxIsShared2.ZOrder" xml:space="preserve">
@@ -2491,7 +2446,7 @@
     <value>tabSubmitInfo</value>
   </data>
   <data name="gboxPurposeNand.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 146</value>
+    <value>209, 53</value>
   </data>
   <data name="labProductCode2Foreign.Text" xml:space="preserve">
     <value>-</value>
@@ -2515,7 +2470,7 @@
     <value>4</value>
   </data>
   <data name="rPurposeCardDistribution.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 95</value>
+    <value>6, 70</value>
   </data>
   <data name="&gt;&gt;tabCompanyInfo.ZOrder" xml:space="preserve">
     <value>5</value>
@@ -2580,9 +2535,6 @@
   <data name="tboxFurigana1.MaxLength" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
-  <data name="labProductCode1Foreign.Location" type="System.Drawing.Point, System.Drawing">
-    <value>95, 83</value>
-  </data>
   <data name="tboxSDAccessRight.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 21</value>
   </data>
@@ -2608,7 +2560,7 @@
     <value>True</value>
   </data>
   <data name="gridWarn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 298</value>
+    <value>24, 279</value>
   </data>
   <data name="&gt;&gt;tboxPublicSizeFS.Name" xml:space="preserve">
     <value>tboxPublicSizeFS</value>
@@ -2757,26 +2709,23 @@
   <data name="&gt;&gt;labFurigana2.Parent" xml:space="preserve">
     <value>gboxPerson2</value>
   </data>
+  <data name="labESRB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 15</value>
+  </data>
   <data name="tboxCaption.MaxLength" type="System.Int32, mscorlib">
     <value>300</value>
-  </data>
-  <data name="rPurposeZone.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="combPEGI_BBFC.Items8" xml:space="preserve">
     <value>aged 18 or older</value>
   </data>
   <data name="tboxCaption.Size" type="System.Drawing.Size, System.Drawing">
-    <value>285, 164</value>
+    <value>285, 131</value>
   </data>
   <data name="&gt;&gt;gboxOtherSpec.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="labGameCode.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="labTitleIDHi.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
   </data>
   <data name="gboxExFlags.Size" type="System.Drawing.Size, System.Drawing">
     <value>203, 101</value>
@@ -2847,9 +2796,6 @@
   <data name="&gt;&gt;gboxCRC.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="rPurposeNandDSCentre.Text" xml:space="preserve">
-    <value>Demo for "DS CENTRE"</value>
-  </data>
   <data name="numSubmitVersion.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
   </data>
@@ -2857,13 +2803,10 @@
     <value>149, 52</value>
   </data>
   <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="gboxParental.Text" xml:space="preserve">
     <value>Region and Rating Infomation</value>
-  </data>
-  <data name="rPurposeNandShop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>192, 19</value>
   </data>
   <data name="labCaptionEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>115, 15</value>
@@ -2896,9 +2839,6 @@
     <value>labPEGI</value>
   </data>
   <data name="cboxIsInputPerson2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rSubmitInternet.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="tboxProductCode2Foreign2.Enabled" type="System.Boolean, mscorlib">
@@ -3048,6 +2988,9 @@
   <data name="&gt;&gt;labProductName.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="labNTSC1Sur.Size" type="System.Drawing.Size, System.Drawing">
+    <value>49, 15</value>
+  </data>
   <data name="&gt;&gt;labMultiForeign2.Name" xml:space="preserve">
     <value>labMultiForeign2</value>
   </data>
@@ -3066,8 +3009,8 @@
   <data name="labIsCodec.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 15</value>
   </data>
-  <data name="rPurposeZone.Text" xml:space="preserve">
-    <value>Nintendo Zone</value>
+  <data name="&gt;&gt;gboxErrorTiming.Parent" xml:space="preserve">
+    <value>tabErrorInfo</value>
   </data>
   <data name="&gt;&gt;labBackup.Parent" xml:space="preserve">
     <value>gboxProd</value>
@@ -3141,9 +3084,6 @@
   <data name="gboxSrl.Text" xml:space="preserve">
     <value>ROM Info.</value>
   </data>
-  <data name="&gt;&gt;tabSubmitInfo.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
   <data name="tboxProductCode2.Size" type="System.Drawing.Size, System.Drawing">
     <value>45, 21</value>
   </data>
@@ -3183,14 +3123,8 @@
   <data name="&gt;&gt;gboxTitleID.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
-  <data name="&gt;&gt;gboxOtherSpec.Name" xml:space="preserve">
-    <value>gboxOtherSpec</value>
-  </data>
   <data name="labTitleIDHi.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;labAppTypeOther.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tboxFurigana2.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
@@ -3219,9 +3153,6 @@
   <data name="&gt;&gt;labArbit3.Parent" xml:space="preserve">
     <value>gboxPerson2</value>
   </data>
-  <data name="rPurposeNandTouchTryDS.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="&gt;&gt;labCaptionEx.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -3230,9 +3161,6 @@
   </data>
   <data name="tboxTmdSizeFS.Location" type="System.Drawing.Point, System.Drawing">
     <value>322, 151</value>
-  </data>
-  <data name="rPurposeNandDSCentre.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 70</value>
   </data>
   <data name="&gt;&gt;rPurposeCardTouchTryDS.Parent" xml:space="preserve">
     <value>gboxPurposeCard</value>
@@ -3269,9 +3197,6 @@
   </data>
   <data name="labShared2Size3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;rPurposeZone.Parent" xml:space="preserve">
-    <value>gboxPurposeNand</value>
   </data>
   <data name="&gt;&gt;cboxIsSubBanner.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -3318,8 +3243,8 @@
   <data name="rErrorCurrent.Size" type="System.Drawing.Size, System.Drawing">
     <value>125, 19</value>
   </data>
-  <data name="&gt;&gt;gboxErrorTiming.Parent" xml:space="preserve">
-    <value>tabErrorInfo</value>
+  <data name="labProductCode1Foreign.Location" type="System.Drawing.Point, System.Drawing">
+    <value>95, 83</value>
   </data>
   <data name="tboxConnectIcon.Size" type="System.Drawing.Size, System.Drawing">
     <value>192, 21</value>
@@ -3432,9 +3357,6 @@
   <data name="&gt;&gt;stripItemErrorListRead.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="combUSK.Items3" xml:space="preserve">
-    <value>aged 16 or older</value>
-  </data>
   <data name="&gt;&gt;tboxPrivateSizeFS.Name" xml:space="preserve">
     <value>tboxPrivateSizeFS</value>
   </data>
@@ -3540,20 +3462,17 @@
   <data name="labBackup.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 15</value>
   </data>
+  <data name="labGameCode.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
   <data name="tboxTmdSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 21</value>
-  </data>
-  <data name="&gt;&gt;rPurposeCardDSCentre.Parent" xml:space="preserve">
-    <value>gboxPurposeCard</value>
   </data>
   <data name="combESRB.Items3" xml:space="preserve">
     <value>E10+ (aged 10 or older)</value>
   </data>
   <data name="labShared2Size2.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 15</value>
-  </data>
-  <data name="&gt;&gt;rPurposeNandShop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="labPEGI.Text" xml:space="preserve">
     <value>PEGI(General)</value>
@@ -3592,13 +3511,16 @@
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="gboxLaunch.Size" type="System.Drawing.Size, System.Drawing">
-    <value>233, 139</value>
+    <value>233, 134</value>
   </data>
   <data name="gboxSrl.TabIndex" type="System.Int32, mscorlib">
     <value>3</value>
   </data>
   <data name="cboxIsSD.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
+  </data>
+  <data name="rErrorReading.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 18</value>
   </data>
   <data name="labShared2Size3.Text" xml:space="preserve">
     <value>File 3</value>
@@ -3635,9 +3557,6 @@
   </data>
   <data name="labArbit3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;labMultiForeign1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tboxMail1.Size" type="System.Drawing.Size, System.Drawing">
     <value>261, 21</value>
@@ -3716,9 +3635,6 @@
   </data>
   <data name="&gt;&gt;gridSDK.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;tboxCaptionEx.ZOrder" xml:space="preserve">
-    <value>6</value>
   </data>
   <data name="&gt;&gt;combGRB.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -3831,6 +3747,9 @@
   <data name="tboxNTSC1.MaxLength" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
+  <data name="combPEGI_PRT.Items1" xml:space="preserve">
+    <value>aged 4 or older</value>
+  </data>
   <data name="&gt;&gt;labSDAccessRight.Name" xml:space="preserve">
     <value>labSDAccessRight</value>
   </data>
@@ -3859,7 +3778,7 @@
     <value>18, 228</value>
   </data>
   <data name="&gt;&gt;rPurposeCardKiosk.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>3</value>
   </data>
   <data name="cboxRemasterVerE.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 19</value>
@@ -3877,10 +3796,10 @@
     <value>tabCompanyInfo</value>
   </data>
   <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>780, 493</value>
+    <value>780, 461</value>
   </data>
   <data name="gridWarn.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 152</value>
+    <value>737, 131</value>
   </data>
   <data name="&gt;&gt;tboxTel2.Parent" xml:space="preserve">
     <value>gboxPerson2</value>
@@ -3910,7 +3829,7 @@
     <value>True</value>
   </data>
   <data name="gridError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 152</value>
+    <value>737, 131</value>
   </data>
   <data name="combOFLC.Size" type="System.Drawing.Size, System.Drawing">
     <value>204, 23</value>
@@ -3984,8 +3903,8 @@
   <data name="&gt;&gt;labShared2Size2.Parent" xml:space="preserve">
     <value>gboxShared2Size</value>
   </data>
-  <data name="rPurposeNandDSCentre.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
+  <data name="&gt;&gt;tboxDepart1.Name" xml:space="preserve">
+    <value>tboxDepart1</value>
   </data>
   <data name="dateSubmit.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -3999,17 +3918,14 @@
   <data name="&gt;&gt;tboxSubBannerSizeFS.Parent" xml:space="preserve">
     <value>gboxNandSize</value>
   </data>
-  <data name="gboxLaunch.Text" xml:space="preserve">
-    <value>Launch Control On DSi Menu</value>
+  <data name="colErrorEnd.HeaderText" xml:space="preserve">
+    <value>End</value>
   </data>
   <data name="gridLibrary.Location" type="System.Drawing.Point, System.Drawing">
     <value>337, 221</value>
   </data>
   <data name="&gt;&gt;labRemasterVer.Parent" xml:space="preserve">
     <value>gboxSrl</value>
-  </data>
-  <data name="rPurposeNandDSCentre.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
   </data>
   <data name="tboxPrivateSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>183, 97</value>
@@ -4050,11 +3966,14 @@
   <data name="&gt;&gt;cboxIsSD.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="tboxDepart1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>261, 21</value>
+  </data>
   <data name="&gt;&gt;tboxPlatform.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="&gt;&gt;labIsGameCardOn2.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
+  <data name="&gt;&gt;combGRB.Parent" xml:space="preserve">
+    <value>gboxParental</value>
   </data>
   <data name="rSubmitPost.Text" xml:space="preserve">
     <value>Mail</value>
@@ -4079,9 +3998,6 @@
   </data>
   <data name="cboxRemasterVerE.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
-  </data>
-  <data name="&gt;&gt;rPurposeNandTouchTryDS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tboxBackupOther.Parent" xml:space="preserve">
     <value>gboxProd</value>
@@ -4233,9 +4149,6 @@
   <data name="&gt;&gt;labProductCode.Parent" xml:space="preserve">
     <value>tabSubmitInfo</value>
   </data>
-  <data name="&gt;&gt;labTmdSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="tboxShared2Size4.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Right</value>
   </data>
@@ -4255,13 +4168,13 @@
     <value>85, 154</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>792, 566</value>
+    <value>792, 541</value>
   </data>
   <data name="&gt;&gt;tboxFile.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="gboxPurpose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>447, 201</value>
+    <value>447, 160</value>
   </data>
   <data name="&gt;&gt;labTel1.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -4271,9 +4184,6 @@
   </data>
   <data name="&gt;&gt;rPurposeCardKiosk.Name" xml:space="preserve">
     <value>rPurposeCardKiosk</value>
-  </data>
-  <data name="rPurposeNandDSCentre.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 19</value>
   </data>
   <data name="&gt;&gt;cboxIsNormalJump.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -4304,9 +4214,6 @@
   </data>
   <data name="&gt;&gt;labError.Parent" xml:space="preserve">
     <value>tabErrorInfo</value>
-  </data>
-  <data name="labProductName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 15</value>
   </data>
   <data name="&gt;&gt;tboxShared2Size4.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -4347,8 +4254,8 @@
   <data name="&gt;&gt;butSetBack.Parent" xml:space="preserve">
     <value>tabRomEditInfo</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandTouchTryDS.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="labBracketR.Location" type="System.Drawing.Point, System.Drawing">
+    <value>532, 188</value>
   </data>
   <data name="labNTSC2Sur.Size" type="System.Drawing.Size, System.Drawing">
     <value>49, 15</value>
@@ -4362,8 +4269,8 @@
   <data name="&gt;&gt;labShared2Size5.Parent" xml:space="preserve">
     <value>gboxShared2Size</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandDSCentre.ZOrder" xml:space="preserve">
-    <value>1</value>
+  <data name="&gt;&gt;labMultiForeign1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tboxShared2Size3.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 21</value>
@@ -4382,9 +4289,6 @@
   </data>
   <data name="&gt;&gt;tboxDepart1.ZOrder" xml:space="preserve">
     <value>11</value>
-  </data>
-  <data name="&gt;&gt;rPurposeZone.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="labHex3.Location" type="System.Drawing.Point, System.Drawing">
     <value>525, 167</value>
@@ -4566,9 +4470,6 @@
   <data name="gboxPerson1.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 88</value>
   </data>
-  <data name="&gt;&gt;rPurposeZone.Name" xml:space="preserve">
-    <value>rPurposeZone</value>
-  </data>
   <data name="combOFLC.Location" type="System.Drawing.Point, System.Drawing">
     <value>155, 261</value>
   </data>
@@ -4592,9 +4493,6 @@
   </data>
   <data name="combESRB.Items" xml:space="preserve">
     <value>All ages</value>
-  </data>
-  <data name="tboxGuideRomInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
   </data>
   <data name="labBackup.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 21</value>
@@ -4627,7 +4525,7 @@
     <value>9</value>
   </data>
   <data name="tabRomInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="labBracketR.Text" xml:space="preserve">
     <value>)</value>
@@ -4698,8 +4596,8 @@
   <data name="&gt;&gt;tboxShared2Size3.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tboxCompany1.Parent" xml:space="preserve">
-    <value>gboxPerson1</value>
+  <data name="labNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
   </data>
   <data name="combBackup.Items8" xml:space="preserve">
     <value>None</value>
@@ -4722,8 +4620,8 @@
   <data name="combBackup.Items2" xml:space="preserve">
     <value>512Kbit EEPROM</value>
   </data>
-  <data name="&gt;&gt;exportToolStripMenuItem.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="combBackup.Items1" xml:space="preserve">
+    <value>64Kbit EEPROM</value>
   </data>
   <data name="&gt;&gt;tboxTel1.Parent" xml:space="preserve">
     <value>gboxPerson1</value>
@@ -4769,9 +4667,6 @@
   </data>
   <data name="cboxIsEULA.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
-  </data>
-  <data name="rPurposeCardDSCentre.Text" xml:space="preserve">
-    <value>Demo for "DS CENTRE"</value>
   </data>
   <data name="tabRomInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 24</value>
@@ -4833,9 +4728,6 @@
   <data name="tboxCompany1.Location" type="System.Drawing.Point, System.Drawing">
     <value>78, 25</value>
   </data>
-  <data name="rPurposeZone.Size" type="System.Drawing.Size, System.Drawing">
-    <value>106, 19</value>
-  </data>
   <data name="&gt;&gt;labHex2.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
@@ -4849,13 +4741,13 @@
     <value>tboxPurposeInError</value>
   </data>
   <data name="rPurposeCardKiosk.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 120</value>
+    <value>6, 95</value>
   </data>
   <data name="labCaption.Text" xml:space="preserve">
     <value>Remarks - Enter any other related information</value>
   </data>
-  <data name="&gt;&gt;tboxGuideSubmitInfo.Parent" xml:space="preserve">
-    <value>tabSubmitInfo</value>
+  <data name="&gt;&gt;tboxAccessOther.ZOrder" xml:space="preserve">
+    <value>5</value>
   </data>
   <data name="tboxPurposeInError.TabIndex" type="System.Int32, mscorlib">
     <value>42</value>
@@ -4947,8 +4839,8 @@
   <data name="&gt;&gt;labPrivateSize.Parent" xml:space="preserve">
     <value>gboxNandSize</value>
   </data>
-  <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
-    <value>You must complete all items on this tab to create a submission checklist.</value>
+  <data name="&gt;&gt;labTmdSize.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;labRomType.ZOrder" xml:space="preserve">
     <value>6</value>
@@ -5010,6 +4902,9 @@
   <data name="labSDK.Size" type="System.Drawing.Size, System.Drawing">
     <value>77, 15</value>
   </data>
+  <data name="&gt;&gt;labGameCode.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
   <data name="&gt;&gt;labNTSC2Sur.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
@@ -5049,26 +4944,23 @@
   <data name="&gt;&gt;tboxFax2.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;labSDAccessRight.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;gboxOtherSpec.Name" xml:space="preserve">
+    <value>gboxOtherSpec</value>
   </data>
-  <data name="rPurposeNandShop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 95</value>
+  <data name="&gt;&gt;labProductCode.Name" xml:space="preserve">
+    <value>labProductCode</value>
   </data>
   <data name="&gt;&gt;labCERO.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <data name="labNormalRomOffset.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
+  <data name="&gt;&gt;labFax1.Parent" xml:space="preserve">
+    <value>gboxPerson1</value>
   </data>
   <data name="labHex3.Size" type="System.Drawing.Size, System.Drawing">
     <value>14, 15</value>
   </data>
-  <data name="tboxSumSizeMB.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
-    <value>Right</value>
-  </data>
-  <data name="&gt;&gt;labIsGameCardOn.Parent" xml:space="preserve">
-    <value>tabTWLInfo</value>
+  <data name="labProductName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 15</value>
   </data>
   <data name="&gt;&gt;labIsGameCardOn2.Name" xml:space="preserve">
     <value>labIsGameCardOn2</value>
@@ -5085,8 +4977,8 @@
   <data name="combCERO.Location" type="System.Drawing.Point, System.Drawing">
     <value>155, 87</value>
   </data>
-  <data name="labPEGI.TabIndex" type="System.Int32, mscorlib">
-    <value>30</value>
+  <data name="combRegion.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
   </data>
   <data name="&gt;&gt;rPurposeDSiWare.Parent" xml:space="preserve">
     <value>gboxPurposeNand</value>
@@ -5121,8 +5013,8 @@
   <data name="&gt;&gt;numSubmitVersion.Type" xml:space="preserve">
     <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="labNTSC1Sur.Size" type="System.Drawing.Size, System.Drawing">
-    <value>49, 15</value>
+  <data name="&gt;&gt;labTel1.Name" xml:space="preserve">
+    <value>labTel1</value>
   </data>
   <data name="&gt;&gt;labFax2.Name" xml:space="preserve">
     <value>labFax2</value>
@@ -5147,9 +5039,6 @@
   </data>
   <data name="&gt;&gt;tboxConnectIcon.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="&gt;&gt;combGRB.Parent" xml:space="preserve">
-    <value>gboxParental</value>
   </data>
   <data name="&gt;&gt;labWarn.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -5189,9 +5078,6 @@
   </data>
   <data name="&gt;&gt;labCaption.Parent" xml:space="preserve">
     <value>tabSubmitInfo</value>
-  </data>
-  <data name="&gt;&gt;tboxDepart1.Name" xml:space="preserve">
-    <value>tboxDepart1</value>
   </data>
   <data name="&gt;&gt;labProductCodeForeign.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -5322,8 +5208,8 @@
   <data name="&gt;&gt;labProductNameLimitForeign.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="labESRB.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 15</value>
+  <data name="&gt;&gt;labAppTypeOther.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;rPurposeCardTouchTryDS.Type" xml:space="preserve">
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -5334,8 +5220,8 @@
   <data name="&gt;&gt;tboxSDAccessRight.Name" xml:space="preserve">
     <value>tboxSDAccessRight</value>
   </data>
-  <data name="&gt;&gt;labGameCode.ZOrder" xml:space="preserve">
-    <value>10</value>
+  <data name="&gt;&gt;labFax2.Parent" xml:space="preserve">
+    <value>gboxPerson2</value>
   </data>
   <data name="&gt;&gt;labPEGI.Parent" xml:space="preserve">
     <value>gboxParental</value>
@@ -5354,9 +5240,6 @@
   </data>
   <data name="labPEGI_BBFC.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>
-  </data>
-  <data name="tboxFax2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>158, 21</value>
   </data>
   <data name="tabRomEditInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 24</value>
@@ -5491,7 +5374,7 @@
     <value>188, 19</value>
   </data>
   <data name="&gt;&gt;rPurposeCardTouchTryDS.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>1</value>
   </data>
   <data name="&gt;&gt;combPEGI.ZOrder" xml:space="preserve">
     <value>16</value>
@@ -5526,11 +5409,14 @@
   <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
     <value>201, 189</value>
   </data>
+  <data name="&gt;&gt;tboxCompany1.Parent" xml:space="preserve">
+    <value>gboxPerson1</value>
+  </data>
   <data name="labShared2Size4.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
   </data>
-  <data name="&gt;&gt;rPurposeCardDSCentre.Name" xml:space="preserve">
-    <value>rPurposeCardDSCentre</value>
+  <data name="&gt;&gt;tboxAccessOther.Name" xml:space="preserve">
+    <value>tboxAccessOther</value>
   </data>
   <data name="&gt;&gt;tboxSumSizeMB.Name" xml:space="preserve">
     <value>tboxSumSizeMB</value>
@@ -5701,7 +5587,7 @@
     <value>TWL -</value>
   </data>
   <data name="&gt;&gt;rPurposeCardProduction.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>0</value>
   </data>
   <data name="cboxRemasterVerE.Text" xml:space="preserve">
     <value>E(Pre-Check)</value>
@@ -5718,8 +5604,8 @@
   <data name="tboxFax2.TabIndex" type="System.Int32, mscorlib">
     <value>13</value>
   </data>
-  <data name="&gt;&gt;gboxNandSize.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="tboxSumSizeMB.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
+    <value>Right</value>
   </data>
   <data name="&gt;&gt;labAppType.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -5739,11 +5625,8 @@
   <data name="tboxGuideRomInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>
   </data>
-  <data name="&gt;&gt;labProductCode.Name" xml:space="preserve">
-    <value>labProductCode</value>
-  </data>
   <data name="labWarn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>22, 280</value>
+    <value>22, 261</value>
   </data>
   <data name="cboxIsUGC.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -5771,9 +5654,6 @@
   </data>
   <data name="labGameCode.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 15</value>
-  </data>
-  <data name="&gt;&gt;tboxAccessOther.Name" xml:space="preserve">
-    <value>tboxAccessOther</value>
   </data>
   <data name="&gt;&gt;combESRB.Parent" xml:space="preserve">
     <value>gboxParental</value>
@@ -5947,16 +5827,13 @@
     <value>1</value>
   </data>
   <data name="rPurposeOther.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 173</value>
+    <value>234, 90</value>
   </data>
   <data name="labCompany1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
   <data name="&gt;&gt;tboxNTSC2.ZOrder" xml:space="preserve">
     <value>3</value>
-  </data>
-  <data name="rPurposeCardDSCentre.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 70</value>
   </data>
   <data name="&gt;&gt;combGRB.Type" xml:space="preserve">
     <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -6006,8 +5883,8 @@
   <data name="labPEGI.Size" type="System.Drawing.Size, System.Drawing">
     <value>87, 15</value>
   </data>
-  <data name="rPurposeZone.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 121</value>
+  <data name="&gt;&gt;labByte1.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="&gt;&gt;labNandSize.Name" xml:space="preserve">
     <value>labNandSize</value>
@@ -6027,11 +5904,8 @@
   <data name="tboxRemasterVer.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
-  <data name="rPurposeNandShop.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;tboxSubBannerSizeFS.Name" xml:space="preserve">
+    <value>tboxSubBannerSizeFS</value>
   </data>
   <data name="&gt;&gt;tboxFax1.Parent" xml:space="preserve">
     <value>gboxPerson1</value>
@@ -6096,9 +5970,6 @@
   <data name="&gt;&gt;labConnectIcon.Parent" xml:space="preserve">
     <value>gboxLaunch</value>
   </data>
-  <data name="rPurposeNandShop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
   <data name="tboxFax1.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
@@ -6152,9 +6023,6 @@
   </data>
   <data name="&gt;&gt;labBracketR.Name" xml:space="preserve">
     <value>labBracketR</value>
-  </data>
-  <data name="rPurposeCardDSCentre.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
   </data>
   <data name="&gt;&gt;labProductNameLimitForeign.Parent" xml:space="preserve">
     <value>gboxForeign</value>
@@ -6294,8 +6162,8 @@
   <data name="&gt;&gt;tboxProductName.Name" xml:space="preserve">
     <value>tboxProductName</value>
   </data>
-  <data name="rErrorReading.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 18</value>
+  <data name="&gt;&gt;exportToolStripMenuItem.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;cboxIsUGC.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -6331,10 +6199,10 @@
     <value>True</value>
   </data>
   <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
-  <data name="&gt;&gt;tboxTitleIDHi.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;labMedia.Parent" xml:space="preserve">
+    <value>tabNandSizeInfo</value>
   </data>
   <data name="labFurigana2.Text" xml:space="preserve">
     <value>(Furigana)</value>
@@ -6442,7 +6310,7 @@
     <value>158, 15</value>
   </data>
   <data name="gboxPurposeCard.Size" type="System.Drawing.Size, System.Drawing">
-    <value>209, 146</value>
+    <value>209, 124</value>
   </data>
   <data name="&gt;&gt;tboxWarningChinaRating.Parent" xml:space="preserve">
     <value>tabRomEditInfo</value>
@@ -6456,8 +6324,8 @@
   <data name="&gt;&gt;gboxParental.Parent" xml:space="preserve">
     <value>tabRomEditInfo</value>
   </data>
-  <data name="&gt;&gt;labMedia.Parent" xml:space="preserve">
-    <value>tabNandSizeInfo</value>
+  <data name="&gt;&gt;tboxMakerCode.Name" xml:space="preserve">
+    <value>tboxMakerCode</value>
   </data>
   <data name="&gt;&gt;labIsCodec.Type" xml:space="preserve">
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -6510,17 +6378,11 @@
   <data name="&gt;&gt;labTitleIDLo.Parent" xml:space="preserve">
     <value>gboxTitleID</value>
   </data>
-  <data name="&gt;&gt;rPurposeCardProduction.Parent" xml:space="preserve">
-    <value>gboxPurposeCard</value>
-  </data>
   <data name="labIsCodec.Text" xml:space="preserve">
     <value>CODEC Mode</value>
   </data>
   <data name="labTitleIDLo.Text" xml:space="preserve">
     <value>TitleID Low</value>
-  </data>
-  <data name="&gt;&gt;gboxPurpose.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="labMedia.Text" xml:space="preserve">
     <value>Media</value>
@@ -6547,7 +6409,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="labIsGameCardOn2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>273, 398</value>
+    <value>273, 393</value>
   </data>
   <data name="&gt;&gt;stripItemSaveTemp.Name" xml:space="preserve">
     <value>stripItemSaveTemp</value>
@@ -6634,7 +6496,7 @@
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="&gt;&gt;combPEGI_PRT.Name" xml:space="preserve">
     <value>combPEGI_PRT</value>
@@ -6786,8 +6648,8 @@
   <data name="tboxSubBannerSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 21</value>
   </data>
-  <data name="&gt;&gt;rPurposeNandShop.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="tboxGuideRomInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
   </data>
   <data name="&gt;&gt;cboxIsEULA.Parent" xml:space="preserve">
     <value>gboxLaunch</value>
@@ -6801,8 +6663,8 @@
   <data name="&gt;&gt;tabRomEditInfo.Parent" xml:space="preserve">
     <value>tabMain</value>
   </data>
-  <data name="&gt;&gt;tboxAppTypeOther.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;tboxCaptionEx.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="labFurigana1.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -6865,7 +6727,7 @@
     <value>11</value>
   </data>
   <data name="rPurposeCardProduction.Size" type="System.Drawing.Size, System.Drawing">
-    <value>124, 19</value>
+    <value>67, 19</value>
   </data>
   <data name="rPurposeOther.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -6972,9 +6834,6 @@
   <data name="tboxFurigana2.Location" type="System.Drawing.Point, System.Drawing">
     <value>78, 106</value>
   </data>
-  <data name="&gt;&gt;labByte1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="tboxGuideSubmitInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>24, 11</value>
   </data>
@@ -6989,9 +6848,6 @@
   </data>
   <data name="labIsGameCardOn2.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleRight</value>
-  </data>
-  <data name="combRegion.TabIndex" type="System.Int32, mscorlib">
-    <value>36</value>
   </data>
   <data name="gboxNandSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>554, 238</value>
@@ -7038,9 +6894,6 @@
   <data name="tboxShared2Size4.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 21</value>
   </data>
-  <data name="rPurposeCardDSCentre.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
   <data name="&gt;&gt;gboxParental.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
@@ -7084,16 +6937,13 @@
     <value>stripItemMasterRom</value>
   </data>
   <data name="rPurposeDSiWare.Text" xml:space="preserve">
-    <value>DSiWare</value>
+    <value>Product</value>
   </data>
   <data name="&gt;&gt;tboxGuideNandSizeInfo.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;stripItemSaveTemp.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripMenuItem, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="rPurposeNandTouchTryDS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>160, 19</value>
   </data>
   <data name="colWarnName.HeaderText" xml:space="preserve">
     <value>Name</value>
@@ -7105,7 +6955,7 @@
     <value>100</value>
   </data>
   <data name="labIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>281, 412</value>
+    <value>281, 407</value>
   </data>
   <data name="labArbit1.Location" type="System.Drawing.Point, System.Drawing">
     <value>228, 164</value>
@@ -7121,6 +6971,9 @@
   </data>
   <data name="tboxAppTypeOther.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="labPEGI.TabIndex" type="System.Int32, mscorlib">
+    <value>30</value>
   </data>
   <data name="tboxGuideErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
     <value>550, 71</value>
@@ -7159,7 +7012,7 @@
     <value>NoControl</value>
   </data>
   <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 465</value>
+    <value>772, 433</value>
   </data>
   <data name="&gt;&gt;stripItemErrorListRead.Name" xml:space="preserve">
     <value>stripItemErrorListRead</value>
@@ -7188,8 +7041,8 @@
   <data name="butSetBack.Text" xml:space="preserve">
     <value>Set Back to Initial Settings</value>
   </data>
-  <data name="&gt;&gt;labTel1.Name" xml:space="preserve">
-    <value>labTel1</value>
+  <data name="&gt;&gt;rSubmitHand.Parent" xml:space="preserve">
+    <value>gboxSubmitWay</value>
   </data>
   <data name="&gt;&gt;colErrorBegin.Type" xml:space="preserve">
     <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
@@ -7212,6 +7065,9 @@
   <data name="&gt;&gt;labTitleIDHi.Name" xml:space="preserve">
     <value>labTitleIDHi</value>
   </data>
+  <data name="&gt;&gt;gboxExFlags.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="&gt;&gt;tboxSumSize.Name" xml:space="preserve">
     <value>tboxSumSize</value>
   </data>
@@ -7227,8 +7083,8 @@
   <data name="tboxPlatform.Size" type="System.Drawing.Size, System.Drawing">
     <value>100, 21</value>
   </data>
-  <data name="combPEGI_PRT.Items1" xml:space="preserve">
-    <value>aged 4 or older</value>
+  <data name="gboxLaunch.Text" xml:space="preserve">
+    <value>Launch Control On DSi Menu</value>
   </data>
   <data name="tboxCompany1.MaxLength" type="System.Int32, mscorlib">
     <value>200</value>
@@ -7253,9 +7109,6 @@
   </data>
   <data name="tboxPublicSize.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
-  </data>
-  <data name="rPurposeNandTouchTryDS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 45</value>
   </data>
   <data name="rSubmitPost.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -7359,11 +7212,11 @@
   <data name="gboxForeign.Text" xml:space="preserve">
     <value>Foreign Ver.</value>
   </data>
-  <data name="rSubmitInternet.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+  <data name="&gt;&gt;gboxPurpose.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="rPurposeCardProduction.Text" xml:space="preserve">
-    <value>Retail Game Card</value>
+    <value>Product</value>
   </data>
   <data name="tboxShared2Size3.TextAlign" type="System.Windows.Forms.HorizontalAlignment, System.Windows.Forms">
     <value>Right</value>
@@ -7409,9 +7262,6 @@
   </data>
   <data name="labIsGameCardOn.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
-  </data>
-  <data name="&gt;&gt;rPurposeZone.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <data name="&gt;&gt;cboxIsSubBanner.Parent" xml:space="preserve">
     <value>gboxExFlags</value>

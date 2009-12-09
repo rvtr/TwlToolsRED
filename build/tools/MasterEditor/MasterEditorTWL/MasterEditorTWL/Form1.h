@@ -745,14 +745,14 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardKiosk;
 
 private: System::Windows::Forms::GroupBox^  gboxPurpose;
 private: System::Windows::Forms::RadioButton^  rPurposeDSiWare;
-private: System::Windows::Forms::RadioButton^  rPurposeCardDSCentre;
 
 
 
 
 
 
-private: System::Windows::Forms::RadioButton^  rPurposeZone;
+
+
 private: System::Windows::Forms::TabPage^  tabErrorInfo;
 private: System::Windows::Forms::TextBox^  tboxGuideErrorInfo;
 private: System::Windows::Forms::GroupBox^  gboxErrorTiming;
@@ -780,11 +780,11 @@ private: System::Windows::Forms::DataGridViewTextBoxColumn^  colLibPublisher;
 private: System::Windows::Forms::DataGridViewTextBoxColumn^  colLibName;
 private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 
-private: System::Windows::Forms::RadioButton^  rPurposeNandShop;
-private: System::Windows::Forms::RadioButton^  rPurposeNandDSCentre;
 
 
-private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
+
+
+
 
 
 
@@ -1229,15 +1229,10 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			this->tabSubmitInfo = (gcnew System::Windows::Forms::TabPage());
 			this->gboxPurpose = (gcnew System::Windows::Forms::GroupBox());
 			this->gboxPurposeNand = (gcnew System::Windows::Forms::GroupBox());
-			this->rPurposeNandShop = (gcnew System::Windows::Forms::RadioButton());
-			this->rPurposeNandDSCentre = (gcnew System::Windows::Forms::RadioButton());
-			this->rPurposeNandTouchTryDS = (gcnew System::Windows::Forms::RadioButton());
-			this->rPurposeZone = (gcnew System::Windows::Forms::RadioButton());
 			this->rPurposeDSiWare = (gcnew System::Windows::Forms::RadioButton());
 			this->tboxPurposeOther = (gcnew System::Windows::Forms::TextBox());
 			this->rPurposeOther = (gcnew System::Windows::Forms::RadioButton());
 			this->gboxPurposeCard = (gcnew System::Windows::Forms::GroupBox());
-			this->rPurposeCardDSCentre = (gcnew System::Windows::Forms::RadioButton());
 			this->rPurposeCardProduction = (gcnew System::Windows::Forms::RadioButton());
 			this->rPurposeCardTouchTryDS = (gcnew System::Windows::Forms::RadioButton());
 			this->rPurposeCardDistribution = (gcnew System::Windows::Forms::RadioButton());
@@ -3893,61 +3888,10 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			this->gboxPurposeNand->AccessibleName = nullptr;
 			resources->ApplyResources(this->gboxPurposeNand, L"gboxPurposeNand");
 			this->gboxPurposeNand->BackgroundImage = nullptr;
-			this->gboxPurposeNand->Controls->Add(this->rPurposeNandShop);
-			this->gboxPurposeNand->Controls->Add(this->rPurposeNandDSCentre);
-			this->gboxPurposeNand->Controls->Add(this->rPurposeNandTouchTryDS);
-			this->gboxPurposeNand->Controls->Add(this->rPurposeZone);
 			this->gboxPurposeNand->Controls->Add(this->rPurposeDSiWare);
 			this->gboxPurposeNand->Font = nullptr;
 			this->gboxPurposeNand->Name = L"gboxPurposeNand";
 			this->gboxPurposeNand->TabStop = false;
-			// 
-			// rPurposeNandShop
-			// 
-			this->rPurposeNandShop->AccessibleDescription = nullptr;
-			this->rPurposeNandShop->AccessibleName = nullptr;
-			resources->ApplyResources(this->rPurposeNandShop, L"rPurposeNandShop");
-			this->rPurposeNandShop->BackgroundImage = nullptr;
-			this->rPurposeNandShop->Font = nullptr;
-			this->rPurposeNandShop->Name = L"rPurposeNandShop";
-			this->rPurposeNandShop->UseVisualStyleBackColor = true;
-			this->rPurposeNandShop->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeNandShop_CheckedChanged);
-			// 
-			// rPurposeNandDSCentre
-			// 
-			this->rPurposeNandDSCentre->AccessibleDescription = nullptr;
-			this->rPurposeNandDSCentre->AccessibleName = nullptr;
-			resources->ApplyResources(this->rPurposeNandDSCentre, L"rPurposeNandDSCentre");
-			this->rPurposeNandDSCentre->BackgroundImage = nullptr;
-			this->rPurposeNandDSCentre->Font = nullptr;
-			this->rPurposeNandDSCentre->Name = L"rPurposeNandDSCentre";
-			this->rPurposeNandDSCentre->TabStop = true;
-			this->rPurposeNandDSCentre->UseVisualStyleBackColor = true;
-			this->rPurposeNandDSCentre->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeNandDSCentre_CheckedChanged);
-			// 
-			// rPurposeNandTouchTryDS
-			// 
-			this->rPurposeNandTouchTryDS->AccessibleDescription = nullptr;
-			this->rPurposeNandTouchTryDS->AccessibleName = nullptr;
-			resources->ApplyResources(this->rPurposeNandTouchTryDS, L"rPurposeNandTouchTryDS");
-			this->rPurposeNandTouchTryDS->BackgroundImage = nullptr;
-			this->rPurposeNandTouchTryDS->Font = nullptr;
-			this->rPurposeNandTouchTryDS->Name = L"rPurposeNandTouchTryDS";
-			this->rPurposeNandTouchTryDS->TabStop = true;
-			this->rPurposeNandTouchTryDS->UseVisualStyleBackColor = true;
-			this->rPurposeNandTouchTryDS->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeNandTouchTryDS_CheckedChanged);
-			// 
-			// rPurposeZone
-			// 
-			this->rPurposeZone->AccessibleDescription = nullptr;
-			this->rPurposeZone->AccessibleName = nullptr;
-			resources->ApplyResources(this->rPurposeZone, L"rPurposeZone");
-			this->rPurposeZone->BackgroundImage = nullptr;
-			this->rPurposeZone->Font = nullptr;
-			this->rPurposeZone->Name = L"rPurposeZone";
-			this->rPurposeZone->TabStop = true;
-			this->rPurposeZone->UseVisualStyleBackColor = true;
-			this->rPurposeZone->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
 			// 
 			// rPurposeDSiWare
 			// 
@@ -3987,7 +3931,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			this->gboxPurposeCard->AccessibleName = nullptr;
 			resources->ApplyResources(this->gboxPurposeCard, L"gboxPurposeCard");
 			this->gboxPurposeCard->BackgroundImage = nullptr;
-			this->gboxPurposeCard->Controls->Add(this->rPurposeCardDSCentre);
 			this->gboxPurposeCard->Controls->Add(this->rPurposeCardProduction);
 			this->gboxPurposeCard->Controls->Add(this->rPurposeCardTouchTryDS);
 			this->gboxPurposeCard->Controls->Add(this->rPurposeCardDistribution);
@@ -3995,18 +3938,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			this->gboxPurposeCard->Font = nullptr;
 			this->gboxPurposeCard->Name = L"gboxPurposeCard";
 			this->gboxPurposeCard->TabStop = false;
-			// 
-			// rPurposeCardDSCentre
-			// 
-			this->rPurposeCardDSCentre->AccessibleDescription = nullptr;
-			this->rPurposeCardDSCentre->AccessibleName = nullptr;
-			resources->ApplyResources(this->rPurposeCardDSCentre, L"rPurposeCardDSCentre");
-			this->rPurposeCardDSCentre->BackgroundImage = nullptr;
-			this->rPurposeCardDSCentre->Font = nullptr;
-			this->rPurposeCardDSCentre->Name = L"rPurposeCardDSCentre";
-			this->rPurposeCardDSCentre->TabStop = true;
-			this->rPurposeCardDSCentre->UseVisualStyleBackColor = true;
-			this->rPurposeCardDSCentre->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardDSCentre_CheckedChanged);
 			// 
 			// rPurposeCardProduction
 			// 
@@ -4734,27 +4665,17 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			// イベントが発生しないようにイベントを無効にする
 			this->rPurposeCardProduction->CheckedChanged   -= gcnew System::EventHandler(this, &Form1::rPurposeCardProduction_CheckedChanged);
 			this->rPurposeCardTouchTryDS->CheckedChanged   -= gcnew System::EventHandler(this, &Form1::rPurposeCardTouchTryDS_CheckedChanged);
-			this->rPurposeCardDSCentre->CheckedChanged     -= gcnew System::EventHandler(this, &Form1::rPurposeCardDSCentre_CheckedChanged);
 			this->rPurposeCardDistribution->CheckedChanged -= gcnew System::EventHandler(this, &Form1::rPurposeCardDistribution_CheckedChanged);
 			this->rPurposeCardKiosk->CheckedChanged        -= gcnew System::EventHandler(this, &Form1::rPurposeCardKiosk_CheckedChanged);
 			this->rPurposeDSiWare->CheckedChanged          -= gcnew System::EventHandler(this, &Form1::rPurposeDSiWare_CheckedChanged);
-			this->rPurposeNandTouchTryDS->CheckedChanged   -= gcnew System::EventHandler(this, &Form1::rPurposeNandTouchTryDS_CheckedChanged);
-			this->rPurposeNandDSCentre->CheckedChanged     -= gcnew System::EventHandler(this, &Form1::rPurposeNandDSCentre_CheckedChanged);
-			this->rPurposeNandShop->CheckedChanged         -= gcnew System::EventHandler(this, &Form1::rPurposeNandShop_CheckedChanged);
-			this->rPurposeZone->CheckedChanged             -= gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
 			this->rPurposeOther->CheckedChanged            -= gcnew System::EventHandler(this, &Form1::rPurposeOther_CheckedChanged);
 
 			// いったんすべてチェックを外す
 			this->rPurposeCardProduction->Checked   = false;
 			this->rPurposeCardTouchTryDS->Checked   = false;
-			this->rPurposeCardDSCentre->Checked     = false;
 			this->rPurposeCardDistribution->Checked = false;
 			this->rPurposeCardKiosk->Checked        = false;
 			this->rPurposeDSiWare->Checked          = false;
-			this->rPurposeNandTouchTryDS->Checked   = false;
-			this->rPurposeNandDSCentre->Checked     = false;
-			this->rPurposeNandShop->Checked         = false;
-			this->rPurposeZone->Checked             = false;
 			this->rPurposeOther->Checked            = false;
 
 			// 選択されたもののみチェックする
@@ -4774,14 +4695,9 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			// イベントを有効にする
 			this->rPurposeCardProduction->CheckedChanged   += gcnew System::EventHandler(this, &Form1::rPurposeCardProduction_CheckedChanged);
 			this->rPurposeCardTouchTryDS->CheckedChanged   += gcnew System::EventHandler(this, &Form1::rPurposeCardTouchTryDS_CheckedChanged);
-			this->rPurposeCardDSCentre->CheckedChanged     += gcnew System::EventHandler(this, &Form1::rPurposeCardDSCentre_CheckedChanged);
 			this->rPurposeCardDistribution->CheckedChanged += gcnew System::EventHandler(this, &Form1::rPurposeCardDistribution_CheckedChanged);
 			this->rPurposeCardKiosk->CheckedChanged        += gcnew System::EventHandler(this, &Form1::rPurposeCardKiosk_CheckedChanged);
 			this->rPurposeDSiWare->CheckedChanged          += gcnew System::EventHandler(this, &Form1::rPurposeDSiWare_CheckedChanged);
-			this->rPurposeNandTouchTryDS->CheckedChanged   += gcnew System::EventHandler(this, &Form1::rPurposeNandTouchTryDS_CheckedChanged);
-			this->rPurposeNandDSCentre->CheckedChanged     += gcnew System::EventHandler(this, &Form1::rPurposeNandDSCentre_CheckedChanged);
-			this->rPurposeNandShop->CheckedChanged         += gcnew System::EventHandler(this, &Form1::rPurposeNandShop_CheckedChanged);
-			this->rPurposeZone->CheckedChanged             += gcnew System::EventHandler(this, &Form1::rPurposeZone_CheckedChanged);
 			this->rPurposeOther->CheckedChanged            += gcnew System::EventHandler(this, &Form1::rPurposeOther_CheckedChanged);
 
 		} //changePurposeForms()
@@ -4800,7 +4716,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			{
 				this->rPurposeCardProduction,
 				this->rPurposeCardTouchTryDS,
-				this->rPurposeCardDSCentre,
 				this->rPurposeCardDistribution,
 				this->rPurposeCardKiosk,
 			};
@@ -4808,10 +4723,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			cli::array<System::Windows::Forms::RadioButton ^> ^rbutsNand = gcnew cli::array<System::Windows::Forms::RadioButton ^>
 			{
 				this->rPurposeDSiWare,
-				this->rPurposeNandTouchTryDS,
-				this->rPurposeNandDSCentre,
-				this->rPurposeNandShop,
-				this->rPurposeZone,
 			};
 
 			if( this->hSrl->IsMediaNand )		// SRLが読み込まれていないときにはfalseであることが保証されている
@@ -4847,22 +4758,12 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 
 			// SRLのリージョンによって選択可能な項目をマスクする
 
-			// 日本リージョンでは"DS CENTRE"をなくす
-			if( this->hSrl->IsRegionJapan || this->hSrl->IsRegionAmerica )
-			{
-				this->rPurposeCardDSCentre->Enabled = false;
-				this->rPurposeNandDSCentre->Enabled = false;
-				if( this->rPurposeCardDSCentre->Checked || this->rPurposeNandDSCentre->Checked )
-				{
-					this->changePurposeForms(this->rPurposeOther);	// わざわざこれを選ぶには特別な理由があるだろうから"その他"にチェックをつけかえる
-				}
-			}
-			// 北米/欧州リージョンでは"Touch!Try!DS"をなくす
-			if( this->hSrl->IsRegionAmerica || this->hSrl->IsRegionEurope || this->hSrl->IsRegionAustralia )
+			// 北米/欧州/中国韓国リージョンでは"Touch!Try!DS"をなくす
+			if( this->hSrl->IsRegionAmerica || this->hSrl->IsRegionEurope || this->hSrl->IsRegionAustralia ||
+				this->hSrl->IsRegionChina   || this->hSrl->IsRegionKorea )
 			{
 				this->rPurposeCardTouchTryDS->Enabled = false;
-				this->rPurposeNandTouchTryDS->Enabled = false;
-				if( this->rPurposeCardTouchTryDS->Checked || this->rPurposeNandTouchTryDS->Checked )
+				if( this->rPurposeCardTouchTryDS->Checked )
 				{
 					this->changePurposeForms(this->rPurposeOther);
 				}
@@ -4870,45 +4771,17 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 
 			// リージョンがコンボボックスで変更されている場合があるのでそちらを優先する
 
-			// 日本/北米リージョンでは"DS CENTRE"をなくす
-			if( (this->combRegion->SelectedIndex == 0) ||
-				(this->combRegion->SelectedIndex == 1) ||
-				(this->combRegion->SelectedIndex == 5) ||
-				(this->combRegion->SelectedIndex == 6) )
-			{
-				this->rPurposeCardDSCentre->Enabled = false;
-				this->rPurposeNandDSCentre->Enabled = false;
-				if( this->rPurposeCardDSCentre->Checked || this->rPurposeNandDSCentre->Checked )
-				{
-					this->changePurposeForms(this->rPurposeOther);
-				}
-			}
-			else
-			{
-				// 別のリージョンに変更されたときに enable にしなければならない
-				if( !System::String::IsNullOrEmpty(this->tboxFile->Text) && this->hSrl->IsMediaNand )
-				{
-					this->rPurposeCardDSCentre->Enabled = false;
-					this->rPurposeNandDSCentre->Enabled = true;
-				}
-				else
-				{
-					this->rPurposeCardDSCentre->Enabled = true;
-					this->rPurposeNandDSCentre->Enabled = false;
-				}
-			}
-
-			// 北米/欧州/豪州リージョンでは"Touch!Try!DS"をなくす
+			// 北米/欧州/豪州/中韓リージョンでは"Touch!Try!DS"をなくす
 			if( (this->combRegion->SelectedIndex == 1) ||
 				(this->combRegion->SelectedIndex == 2) ||
 				(this->combRegion->SelectedIndex == 3) ||
 				(this->combRegion->SelectedIndex == 4) ||
 				(this->combRegion->SelectedIndex == 5) ||
-				(this->combRegion->SelectedIndex == 6) )
+				(this->combRegion->SelectedIndex == 6) ||
+				(this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown))	// 中韓のときはドロップダウンではない
 			{
 				this->rPurposeCardTouchTryDS->Enabled = false;
-				this->rPurposeNandTouchTryDS->Enabled = false;
-				if( this->rPurposeCardTouchTryDS->Checked || this->rPurposeNandTouchTryDS->Checked )
+				if( this->rPurposeCardTouchTryDS->Checked )
 				{
 					this->changePurposeForms(this->rPurposeOther);
 				}
@@ -4918,12 +4791,10 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 				if( !System::String::IsNullOrEmpty(this->tboxFile->Text) && this->hSrl->IsMediaNand )
 				{
 					this->rPurposeCardTouchTryDS->Enabled = false;
-					this->rPurposeNandTouchTryDS->Enabled = true;
 				}
 				else
 				{
 					this->rPurposeCardTouchTryDS->Enabled = true;
-					this->rPurposeNandTouchTryDS->Enabled = false;
 				}
 			}
 		} //maskPurposeForms()
@@ -5999,14 +5870,9 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 				{
 					this->rPurposeCardProduction,
 					this->rPurposeCardTouchTryDS,
-					this->rPurposeCardDSCentre,
 					this->rPurposeCardDistribution,
 					this->rPurposeCardKiosk,
 					this->rPurposeDSiWare,
-					this->rPurposeNandTouchTryDS,
-					this->rPurposeNandDSCentre,
-					this->rPurposeNandShop,
-					this->rPurposeZone,
 					this->rPurposeOther
 				};
 				this->tboxPurposeInError->Text = "";
@@ -6031,11 +5897,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 			this->changePurposeForms(this->rPurposeCardTouchTryDS);
 		}
 	private:
-		System::Void rPurposeCardDSCentre_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			this->changePurposeForms(this->rPurposeCardDSCentre);
-		}
-	private:
 		System::Void rPurposeCardDistribution_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->changePurposeForms(this->rPurposeCardDistribution);
@@ -6049,26 +5910,6 @@ private: System::Windows::Forms::RadioButton^  rPurposeNandTouchTryDS;
 		System::Void rPurposeDSiWare_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
 		{
 			this->changePurposeForms(this->rPurposeDSiWare);
-		}
-	private:
-		System::Void rPurposeNandTouchTryDS_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			this->changePurposeForms(this->rPurposeNandTouchTryDS);
-		}
-	private:
-		System::Void rPurposeNandDSCentre_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			this->changePurposeForms(this->rPurposeNandDSCentre);
-		}
-	private:
-		System::Void rPurposeNandShop_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			this->changePurposeForms(this->rPurposeNandShop);
-		}
-	private:
-		System::Void rPurposeZone_CheckedChanged(System::Object^  sender, System::EventArgs^  e)
-		{
-			this->changePurposeForms(this->rPurposeZone);
 		}
 	private:
 		System::Void rPurposeOther_CheckedChanged(System::Object^  sender, System::EventArgs^  e)

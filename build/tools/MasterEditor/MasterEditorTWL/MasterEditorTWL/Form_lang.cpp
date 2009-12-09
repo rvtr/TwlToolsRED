@@ -484,14 +484,9 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->colWarnCause, L"colWarnCause");
 	resources->ApplyResources(this->rPurposeCardProduction, L"rPurposeCardProduction");
 	resources->ApplyResources(this->rPurposeCardTouchTryDS, L"rPurposeCardTouchTryDS");
-	resources->ApplyResources(this->rPurposeCardDSCentre, L"rPurposeCardDSCentre");
 	resources->ApplyResources(this->rPurposeCardDistribution, L"rPurposeCardDistribution");
 	resources->ApplyResources(this->rPurposeCardKiosk, L"rPurposeCardKiosk");
 	resources->ApplyResources(this->rPurposeDSiWare, L"rPurposeDSiWare");
-	resources->ApplyResources(this->rPurposeNandTouchTryDS, L"rPurposeNandTouchTryDS");
-	resources->ApplyResources(this->rPurposeNandDSCentre, L"rPurposeNandDSCentre");
-	resources->ApplyResources(this->rPurposeNandShop, L"rPurposeNandShop");
-	resources->ApplyResources(this->rPurposeZone, L"rPurposeZone");
 	resources->ApplyResources(this->rPurposeOther, L"rPurposeOther");
 	resources->ApplyResources(this->gboxPurposeCard, L"gboxPurposeCard");
 	resources->ApplyResources(this->gboxPurposeNand, L"gboxPurposeNand");

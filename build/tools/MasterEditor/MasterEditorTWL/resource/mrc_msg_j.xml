@@ -60,11 +60,11 @@
 		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
 	</TouchTryDSSDCard>
 
-	<TouchTryDSSDK>
+	<TouchTryDSSyscall>
 		<name>Touch!Try!DS体験版対応</name>
 		<sentence>Touch!Try!DS体験版では、SDK付属のシステムコールライブラリを使用せず、弊社より体験版専用に提供されたライブラリを使用してください。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</TouchTryDSSDK>
+	</TouchTryDSSyscall>
 
 	<TouchTryDSRomSize>
 		<name>Touch!Try!DS体験版対応</name>
@@ -97,11 +97,11 @@
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ZoneCardAccess>
 
-	<ZoneLib>
+	<ZoneSyscall>
 		<name>Nintendo Zone対応</name>
 		<sentence>Nintendo ZoneソフトではSDK付属のシステムコールライブラリを使用する必要があります。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</ZoneLib>
+	</ZoneSyscall>
 
 	<ZoneMedia>
 		<name>Nintendo Zone対応</name>
@@ -140,11 +140,11 @@
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</DSDownloadCardAccess>
 
-	<DSDownloadLib>
+	<DSDownloadSyscall>
 		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
 		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトではSDK付属のシステムコールライブラリを使用する必要があります。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSDownloadLib>
+	</DSDownloadSyscall>
 
 	<DSDownloadMedia>
 		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>

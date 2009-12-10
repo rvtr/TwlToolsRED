@@ -220,7 +220,10 @@ ECSrlResult RCSrl::mrcNTR( FILE *fp )
 	}
 	if( i == 32 )	// 全部0
 	{
-		this->hErrorList->Add( this->makeMrcError("Syscall") );
+		this->hErrorList->Add( this->makeMrcError(
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution |
+			RCMrcError::PurposeType::DSiShop,
+			"Syscall") );
 	}
 	return ECSrlResult::NOERROR;
 } // mrcNTR()
@@ -284,26 +287,27 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u32 filesizeMb = (filesize / (1024*1024)) * 8;	// 単位をMbitに直す
 		if( romsize < filesizeMb )
 		{
+			// Touch!Try!DS用のROMを除く
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,	// Touch!Try!DS用のROMを除く
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 				"CapacityCardLess") );
 		}
 		else if( filesizeMb < romsize )
 		{
 			this->hWarnList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 				"CapacityCardWaste") );
 		}
 		if( (romsize < METWL_ROMSIZE_MIN) || (METWL_ROMSIZE_MAX < romsize) )
 		{
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 				"CapacityCardRange") );
 		}
 		if( (filesizeMb < 1) || (MasterEditorTWL::countBits(filesizeMb) != 1) )		// 立っているビットが1つかどうかでべき乗かどうかを調べる
 		{
 			this->hWarnList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 				"FilesizeFraction") );
 		}
 	} //if( *(this->hIsNAND) == false )
@@ -312,7 +316,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		if( (romsize < METWL_ROMSIZE_MIN_NAND) || (METWL_ROMSIZE_MAX_NAND < romsize) )
 		{
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
 				"CapacityNandRange") );
 		}
 		//u32  allsize = filesize + this->pRomHeader->s.public_save_data_size + this->pRomHeader->s.private_save_data_size;
@@ -320,13 +324,13 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
 				"UsedNandSizeLimit") );
 		}
 		if( (allsize > METWL_ALLSIZE_MAX_NAND_LIC) && this->IsAppUser )		// ユーザアプリのときのみ
 		{
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
 				"UsedNandSizeExceed") );
 		}
 	}
@@ -343,7 +347,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		if( !crcret || (crcseg3 != METWL_SEG3_CRC) )
 		{
 			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 				"Seg3CRC") );
 		}
 	}
@@ -386,11 +390,15 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		}
 		if( !this->IsMediaNand && this->IsNormalJump )
 		{
-			this->hErrorList->Add( this->makeMrcError("NormalJumpCard") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
+				"NormalJumpCard") );
 		}
 		if( !this->IsMediaNand && this->IsTmpJump )
 		{
-			this->hErrorList->Add( this->makeMrcError("TmpJumpCard") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
+				"TmpJumpCard") );
 		}
 		if( this->IsNormalJump && this->IsTmpJump )
 		{
@@ -694,7 +702,10 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		}
 		if( this->pRomHeader->s.access_control.game_card_on != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("GameCardNormalAccessUser") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution |
+				RCMrcError::PurposeType::DSiShop,
+				"GameCardNormalAccessUser") );
 		}
 		if( this->pRomHeader->s.access_control.hw_aes_slot_B_SignJPEGForLauncher != 0 )
 		{
@@ -702,7 +713,10 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		}
 		if( this->pRomHeader->s.access_control.game_card_nitro_mode != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("GameCardNTRAccessUser") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution |
+				RCMrcError::PurposeType::DSiShop,
+				"GameCardNTRAccessUser") );
 		}
 		if( this->pRomHeader->s.access_control.hw_aes_slot_A_SSLClientCert != 0 )
 		{
@@ -710,11 +724,17 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		}
 		if( this->pRomHeader->s.access_control.backup_access_read != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("GameCardReadAccessUser") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution |
+				RCMrcError::PurposeType::DSiShop,
+				"GameCardReadAccessUser") );
 		}
 		if( this->pRomHeader->s.access_control.backup_access_write != 0 )
 		{
-			this->hErrorList->Add( this->makeMrcError("GameCardWriteAccessUser") );
+			this->hErrorList->Add( this->makeMrcError(
+				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution |
+				RCMrcError::PurposeType::DSiShop,
+				"GameCardWriteAccessUser") );
 		}
 
 		// SDアクセスは 5.2RELEASE で特定のアプリには許可される
@@ -723,15 +743,21 @@ void RCSrl::mrcAccessControl(FILE *fp)
 			// カードアプリはSDアクセス禁止
 			if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 			{
-				this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+				this->hErrorList->Add( this->makeMrcError(
+					RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
+					"SDAccessUser") );
 			}
 			if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
 			{
-				this->hErrorList->Add( this->makeMrcError("SDReadAccessUser") );
+				this->hErrorList->Add( this->makeMrcError(
+					RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
+					"SDReadAccessUser") );
 			}
 			if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
 			{
-				this->hErrorList->Add( this->makeMrcError("SDWriteAccessUser") );
+				this->hErrorList->Add( this->makeMrcError(
+					RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
+					"SDWriteAccessUser") );
 			}
 		}
 		else
@@ -742,15 +768,21 @@ void RCSrl::mrcAccessControl(FILE *fp)
 				// 5.2 RELEASE以前は原則SDアクセス禁止
 				if( this->pRomHeader->s.access_control.sd_card_access != 0 )
 				{
-					this->hErrorList->Add( this->makeMrcError("SDAccessUser") );
+					this->hErrorList->Add( this->makeMrcError(
+						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
+						"SDAccessUser") );
 				}
 				if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
 				{
-					this->hErrorList->Add( this->makeMrcError("SDReadAccessUser") );
+					this->hErrorList->Add( this->makeMrcError(
+						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
+						"SDReadAccessUser") );
 				}
 				if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
 				{
-					this->hErrorList->Add( this->makeMrcError("SDWriteAccessUser") );
+					this->hErrorList->Add( this->makeMrcError(
+						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
+						"SDWriteAccessUser") );
 				}
 			}
 			else
@@ -760,7 +792,9 @@ void RCSrl::mrcAccessControl(FILE *fp)
 					(this->pRomHeader->s.access_control.sdmc_access_write == 0) &&	// アクセス権のフラグが下りている
 					(this->pRomHeader->s.access_control.sdmc_access_read  == 0 ) )
 				{
-					this->hErrorList->Add( this->makeMrcError("SDAccessPriv") );
+					this->hErrorList->Add( this->makeMrcError(
+						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
+						"SDAccessPriv") );
 				}
 			}
 		} //else
@@ -872,7 +906,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	if( (offset + padsize) > filesize )
 	{
 		this->hErrorList->Add( this->makeMrcError(
-			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 			"PaddingRead", padstr) );
 		return;
 	}
@@ -882,7 +916,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	if( padsize != fread( buf, 1, padsize, fp ) )
 	{
 		this->hErrorList->Add( this->makeMrcError(
-			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 			"PaddingRead", padstr) );
 		delete []buf;
 		return;
@@ -900,7 +934,7 @@ void RCSrl::mrcPadding(FILE *fp)
 	if( !bResult )
 	{
 		this->hErrorList->Add( this->makeMrcError(
-			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk,
+			RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 			"PaddingValue", padstr, romstr) );
 	}
 	delete []buf;
@@ -1268,38 +1302,66 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	// 表示するときに振り分けをする
 
 	// Touch!Try!DS
-	if( this->IsTmpJump )
-	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationTmpJump") );
-	}
-	fseek( fp, 0, SEEK_END );
-	u32  filesize = ftell(fp);	// 実ファイルサイズ
-	if( filesize > (96 * 1024 * 1024) )
-	{
-		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationRomSize") );
-	}
 	bool use_nis = false;
 	for each( RCLicense ^lic in this->hLicenseList )
 	{
-		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->Equals( "NIS_FOR_TWLSDK" ) )
+		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->StartsWith( "NIS_FOR_TWLSDK" ) )
 		{
 			use_nis = true;
 		}
 	}
 	if( !use_nis )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSStation, "DSStationLib") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSLib") );
+	}
+	if( this->IsMediaNand )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSMedia") );
+	}
+	if( this->IsNormalJump )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSNormalJump") );
+	}
+	if( this->IsTmpJump )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSTmpJump") );
+	}
+	if( this->IsSD )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSSDCard") );
+	}
+	fseek( fp, 0, SEEK_END );
+	u32  filesize = ftell(fp);	// 実ファイルサイズ
+	if( filesize > (96 * 1024 * 1024) )
+	{
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSRomSize") );
 	}
 
-	// Nintendo Zone
-	if( !this->IsTmpJump )
+	// システムコール
+	u8  syscall[32];
+	u32 offset = this->pRomHeader->s.main_rom_offset;
+	fseek( fp, offset, SEEK_SET );
+	if( 32 != fread( syscall, 1, 32, fp ) )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneTmpJump") );
+		return;
 	}
-	if( filesize > (5 * 1024 * 1024 / 2) )
+	int i;
+	for( i=0; i < 32; i++ )
 	{
-		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
+		if( syscall[i] != 0x00 )
+			break;
 	}
+	if( i == 32 )	// 全部0
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSSyscall") );	// SDK付属のときダメ
+	}
+	else
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadSyscall") );	// SDK付属でないとダメ
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneSyscall") );
+	}
+
+	// Zone or DS Download Service
 	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_HYBLID )
 	{
 		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneHybrid") );
@@ -1307,5 +1369,30 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED )
 	{
 		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneLimited") );
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadLimited") );
+	}
+	if( filesize > (5 * 1024 * 1024 / 2) )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadRomSize") );
+	}
+	if( !this->HasDSDLPlaySign )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadCloneBoot") );
+	}
+	if( this->IsGameCardOn || this->IsGameCardNitro )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneCardAccess") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadCardAccess") );
+	}
+	if( !this->IsMediaNand )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneMedia") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadMedia") );
+	}
+	if( !this->IsTmpJump )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneTmpJump") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadTmpJump") );
 	}
 } //mrcTrialApp()

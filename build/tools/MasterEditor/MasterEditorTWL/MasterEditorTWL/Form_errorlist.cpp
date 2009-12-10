@@ -41,7 +41,7 @@ System::Xml::XmlElement^ Form1::makeErrorListXmlElement(System::Xml::XmlDocument
 		{
 			for each( RCMrcError ^err in this->hSrl->hErrorList )
 			{
-				if( !err->IsEnableModify )	// 修正可能な情報は出力しない
+				if( !err->IsEnableModify && this->isDisplayOneGridErrorForPurpose( err ) )	// 修正可能な情報は出力しない
 				{
 					list->AppendChild( CreateErrorListElement(doc, err, 0, "error", this->isJapanese()) );
 				}
@@ -51,7 +51,7 @@ System::Xml::XmlElement^ Form1::makeErrorListXmlElement(System::Xml::XmlDocument
 		{
 			for each( RCMrcError ^err in this->hErrorList )
 			{
-				if( err->IsAffectRom )	// 書類上のエラーは出力しない
+				if( err->IsAffectRom && this->isDisplayOneGridErrorForPurpose( err ) )	// 書類上のエラーは出力しない
 				{
 					list->AppendChild( CreateErrorListElement(doc, err, 1, "error", this->isJapanese()) );
 				}
@@ -69,7 +69,10 @@ System::Xml::XmlElement^ Form1::makeErrorListXmlElement(System::Xml::XmlDocument
 				{
 					errtype = 1;
 				}
-				list->AppendChild( CreateErrorListElement(doc, err, errtype, "error", this->isJapanese()) );
+				if( this->isDisplayOneGridErrorForPurpose( err ) )
+				{
+					list->AppendChild( CreateErrorListElement(doc, err, errtype, "error", this->isJapanese()) );
+				}
 			}
 		}
 	}
@@ -86,7 +89,7 @@ System::Xml::XmlElement^ Form1::makeWarningListXmlElement(System::Xml::XmlDocume
 		{
 			for each( RCMrcError ^err in this->hSrl->hWarnList )
 			{
-				if( !err->IsEnableModify )	// 修正可能な情報は出力しない
+				if( !err->IsEnableModify && this->isDisplayOneGridErrorForPurpose( err ) )	// 修正可能な情報は出力しない
 				{
 					list->AppendChild( CreateErrorListElement(doc, err, 0, "warning", this->isJapanese()) );
 				}
@@ -96,7 +99,7 @@ System::Xml::XmlElement^ Form1::makeWarningListXmlElement(System::Xml::XmlDocume
 		{
 			for each( RCMrcError ^err in this->hWarnList )
 			{
-				if( err->IsAffectRom )	// 書類上のエラーは出力しない
+				if( err->IsAffectRom && this->isDisplayOneGridErrorForPurpose( err ) )	// 書類上のエラーは出力しない
 				{
 					list->AppendChild( CreateErrorListElement(doc, err, 1, "warning", this->isJapanese()) );
 				}
@@ -114,7 +117,10 @@ System::Xml::XmlElement^ Form1::makeWarningListXmlElement(System::Xml::XmlDocume
 				{
 					errtype = 1;
 				}
-				list->AppendChild( CreateErrorListElement(doc, err, errtype, "warning", this->isJapanese()) );
+				if( this->isDisplayOneGridErrorForPurpose( err ) )
+				{
+					list->AppendChild( CreateErrorListElement(doc, err, errtype, "warning", this->isJapanese()) );
+				}
 			}
 		}
 	}

@@ -270,10 +270,12 @@ namespace MasterEditorTWL
 		enum class PurposeType : System::UInt32	// 型指定
 		{
 			Production		  = 1 << 0,		// 一般販売用(カード/NAND)
-			CardDistribution  = 1 << 1,		// データ配信用カード
-			CardKiosk         = 1 << 2,		// 店頭試遊台(単独型)
-			DSStation         = 1 << 3,		// DS Station
-			Zone              = 1 << 4,		// Nintendo Zone
+			TouchTryDS        = 1 << 1,		// TouchTryDS/DS CENTRE
+			CardDistribution  = 1 << 2,		// データ配信用カード
+			CardKiosk         = 1 << 3,		// 店頭試遊台(単独型)
+			DSiShop           = 1 << 4,		// DSiショップ配信用体験版
+			DSDownload		  = 1 << 5,		// DSダウンロードサービス(& ニンテンドーチャンネル)
+			Zone              = 1 << 6,		// Nintendo Zone
 
 			Common            = 0xFFFFFFFF,	// すべての用途で共通のエラー
 		};

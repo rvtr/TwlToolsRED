@@ -143,11 +143,14 @@ bool Form1::isDisplayOneGridErrorForPurpose( RCMrcError ^err )
 	{
 		is_display = true;
 	}
-	if( ((err->Purpose & RCMrcError::PurposeType::DSStation) != (RCMrcError::PurposeType)0) &&
+	if( ((err->Purpose & RCMrcError::PurposeType::TouchTryDS) != (RCMrcError::PurposeType)0) &&
 		this->rPurposeCardTouchTryDS->Checked)
 	{
 		is_display = true;
 	}
+	/*
+		Zone と DSDownload Service は用途のラジオボタンが追加されていないので追加されるまで何もしない
+	*/
 	return is_display;
 } //isDisplayOneGridErrorForPurpose()
 

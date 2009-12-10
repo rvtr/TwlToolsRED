@@ -1028,7 +1028,7 @@
     <value>SDカード</value>
   </data>
   <data name="labIsGameCardOn2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>294, 398</value>
+    <value>287, 395</value>
   </data>
   <data name="labIsGameCardOn2.Size" type="System.Drawing.Size, System.Drawing">
     <value>97, 14</value>
@@ -1040,7 +1040,7 @@
     <value>124, 19</value>
   </data>
   <data name="labIsGameCardOn.Location" type="System.Drawing.Point, System.Drawing">
-    <value>289, 413</value>
+    <value>282, 410</value>
   </data>
   <data name="labIsGameCardOn.Size" type="System.Drawing.Size, System.Drawing">
     <value>114, 12</value>
@@ -1208,13 +1208,13 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabRomInfo.Text" xml:space="preserve">
     <value>ROM基本情報</value>
   </data>
   <data name="tboxGuideRomInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 19</value>
+    <value>730, 19</value>
   </data>
   <data name="tboxGuideRomInfo.Text" xml:space="preserve">
     <value>このタブの情報は編集不可です。データに誤りがある場合にはROMデータ作成時の設定を見直してください。</value>
@@ -1223,7 +1223,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabTWLInfo.Text" xml:space="preserve">
     <value>TWL拡張情報</value>
@@ -1244,7 +1244,7 @@
     <value>192, 19</value>
   </data>
   <data name="tboxGuideTWLInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 19</value>
+    <value>730, 19</value>
   </data>
   <data name="tboxGuideTWLInfo.Text" xml:space="preserve">
     <value>このタブの情報は編集不可です。データに誤りがある場合にはROMデータ作成時の設定を見直してください。</value>
@@ -1256,7 +1256,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabNandSizeInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabNandSizeInfo.Text" xml:space="preserve">
     <value>DSiウェア情報</value>
@@ -1379,7 +1379,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabRomEditInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabRomEditInfo.Text" xml:space="preserve">
     <value>リージョンとレーティング(編集可)</value>
@@ -1442,7 +1442,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabSubmitInfo.Text" xml:space="preserve">
     <value>提出情報(要入力)</value>
@@ -1499,7 +1499,7 @@
     <value>(100文字以内)</value>
   </data>
   <data name="tboxGuideSubmitInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 19</value>
+    <value>730, 19</value>
   </data>
   <data name="tboxGuideSubmitInfo.Text" xml:space="preserve">
     <value>このタブの情報は提出確認書の作成に必要です。入力してください。</value>
@@ -1520,13 +1520,13 @@
     <value>4, 21</value>
   </data>
   <data name="tabCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabCompanyInfo.Text" xml:space="preserve">
     <value>会社情報(要入力)</value>
   </data>
   <data name="tboxGuideCompanyInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>737, 19</value>
+    <value>730, 19</value>
   </data>
   <data name="tboxGuideCompanyInfo.Text" xml:space="preserve">
     <value>このタブの情報は提出確認書の作成に必要です。入力してください。</value>
@@ -1535,7 +1535,7 @@
     <value>4, 21</value>
   </data>
   <data name="tabErrorInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>772, 436</value>
+    <value>766, 436</value>
   </data>
   <data name="tabErrorInfo.Text" xml:space="preserve">
     <value>エラー情報</value>
@@ -1550,7 +1550,7 @@
     <value>ROMの用途</value>
   </data>
   <data name="tboxPurposeInError.Size" type="System.Drawing.Size, System.Drawing">
-    <value>181, 19</value>
+    <value>174, 19</value>
   </data>
   <data name="tboxGuideErrorInfo.Text" xml:space="preserve">
     <value>このタブには読み込んだROMデータの問題点と本プログラムでの入力ミスが列挙されます。&lt;newline&gt;赤文字の項目は、本プログラムで修正不可です。ROMデータ作成時の設定をご確認ください。&lt;newline&gt;青文字の項目は、ROMデータの問題点のうち、本プログラムで修正できるものです。&lt;newline&gt;黒文字の項目は、提出情報と会社情報の入力ミスおよび入力漏れです。</value>

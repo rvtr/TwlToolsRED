@@ -1493,7 +1493,7 @@
     <value>127, 16</value>
   </data>
   <data name="rPurposeCardKiosk.Text" xml:space="preserve">
-    <value>店頭体験版(単独型)</value>
+    <value>店頭試遊台(単独型)</value>
   </data>
   <data name="labProductNameLimit.Text" xml:space="preserve">
     <value>(100文字以内)</value>

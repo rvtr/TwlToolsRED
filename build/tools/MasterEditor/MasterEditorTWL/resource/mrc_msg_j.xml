@@ -1,6 +1,30 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
 
+<!-- 英訳依頼 ここから (ver.1.8 追加メッセージ その2) -->
+
+	<!-- TCL -->
+	<TclDeletePicture53>
+		<name>写真データベースアクセス</name>
+		<sentence>TwlSDK5.3 patch3以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TclDeletePicture53>
+
+	<TclDeletePicture52>
+		<name>写真データベースアクセス</name>
+		<sentence>TwlSDK5.2 patch4以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TclDeletePicture52>
+
+	<!-- DWC -->
+	<DwcDebug>
+		<name>DWCライブラリ</name>
+		<sentence>開発用サーバにアクセスするためのライブラリが使用されています。製品用サーバへアクセスするためのライブラリを使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DwcDebug>
+
+<!-- 英訳依頼 ここまで -->
+
 <!-- 英訳依頼 ここから (ver.1.8 追加メッセージ) -->
 
 	<!-- TWL Rom Info -->

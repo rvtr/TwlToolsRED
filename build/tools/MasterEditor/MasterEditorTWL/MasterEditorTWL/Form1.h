@@ -4582,7 +4582,7 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "TRIAL" );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
 		}
 
 		// SRLに登録されないROM仕様のフォーム入力を

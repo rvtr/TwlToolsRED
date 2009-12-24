@@ -323,9 +323,7 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		u32  allsize = this->hNandUsedSize->NandUsedSize;	// TMDやサブバナーのサイズを含める
 		if( allsize > METWL_ALLSIZE_MAX_NAND )
 		{
-			this->hErrorList->Add( this->makeMrcError(
-				RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
-				"UsedNandSizeLimit") );
+			this->hErrorList->Add( this->makeMrcError("UsedNandSizeLimit") );
 		}
 		if( (allsize > METWL_ALLSIZE_MAX_NAND_LIC) && this->IsAppUser )		// ユーザアプリのときのみ
 		{
@@ -500,6 +498,10 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		{
 			this->hErrorList->Add( this->makeMrcError("DebugBuild") );
 		}
+		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->StartsWith( "DEBUG DWC" ) )
+		{
+			this->hErrorList->Add( this->makeMrcError("DwcDebug") );
+		}
 	}
 
 	// 中韓版チェック
@@ -605,6 +607,39 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		(this->pRomHeader->s.access_control.game_card_nitro_mode != 0) )
 	{
 		this->hErrorList->Add( this->makeMrcError("CardAccess") );
+	}
+
+	// TCLライブラリを使用しているかどうかを調べる
+	System::Boolean useTcl = false;
+	for each( RCLicense ^lic in this->hLicenseList )
+	{
+		if( lic->Publisher->StartsWith("NINTENDO") && lic->Name->StartsWith("TCL") )
+		{
+			useTcl = true;
+		}
+	}
+
+	// TCL_DeletePicture() を使用してはいけないSDKを調べる(DEA-SUP参照)
+	bool prohibid = false;
+	if( useTcl && (this->pRomHeader->s.access_control.photo_access_write != 0)  )
+	{
+		for each( RCSDKVersion ^sdk in this->hSDKList )
+		{
+			if( sdk->IsStatic )
+			{
+				System::Byte   major   = (System::Byte)(0xff & (sdk->Code >> 24));
+				System::Byte   minor   = (System::Byte)(0xff & (sdk->Code >> 16));
+				System::UInt16 relstep = (System::UInt16)(0xffff & sdk->Code);
+				if( (major == 5) && (minor == 3) && (30000 <= relstep) && (relstep < 30003) )
+				{
+					this->hWarnList->Add( this->makeMrcError("TclDeletePicture53") );
+				}
+				else if( (major == 5) && (minor == 2) && (30000 <= relstep) && (relstep < 30004) )
+				{
+					this->hWarnList->Add( this->makeMrcError("TclDeletePicture52") );
+				}
+			}
+		}
 	}
 
 	if( !this->IsAppUser )	// システムアプリ
@@ -836,14 +871,6 @@ void RCSrl::mrcAccessControl(FILE *fp)
 		if( (this->pRomHeader->s.access_control.photo_access_read  != 0) ||
 			(this->pRomHeader->s.access_control.photo_access_write != 0) )
 		{
-			System::Boolean useTcl = false;
-			for each( RCLicense ^lic in this->hLicenseList )
-			{
-				if( lic->Publisher->StartsWith("NINTENDO") && lic->Name->StartsWith("TCL") )
-				{
-					useTcl = true;
-				}
-			}
 			if( !useTcl )
 			{
 				this->hErrorList->Add( this->makeMrcError("PhotoTclAccessUser") );
@@ -964,6 +991,7 @@ void RCSrl::mrcReservedArea(FILE *fp)
 		}
 		if( !bReserved )
 		{
+			// begin と end が mrc_msg.xml には記載されていないので呼び出し方が他とは異なる
 			this->hErrorList->Add( this->makeMrcError(begin, end, false, true, RCMrcError::PurposeType::Common, "ReservedArea") );
 		}
 	} //for each
@@ -1369,12 +1397,12 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	if( this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED )
 	{
 		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneLimited") );
-		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadLimited") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadLimited") );
 	}
 	if( filesize > (5 * 1024 * 1024 / 2) )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadRomSize") );
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::Zone, "ZoneRomSize") );
+		this->hWarnList->Add( this->makeMrcError(RCMrcError::PurposeType::DSDownload, "DSDownloadRomSize") );
 	}
 	if( !this->HasDSDLPlaySign )
 	{

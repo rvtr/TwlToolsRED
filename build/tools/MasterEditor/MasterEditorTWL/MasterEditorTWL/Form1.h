@@ -5229,6 +5229,15 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 			System::String ^prefix     = this->getSubmitFilePrefix();
 			System::String ^srlfile    = prefix + ".SRL";
 
+			if( this->rPurposeCardTouchTryDS->Checked )
+			{
+				srlfile = prefix + "_Trial.SRL";
+			}
+			//else if( this->rPurposeZone->Checked || this->rPurposeDSDownload->Checked )
+			//{
+			//	srlfile = prefix + "_Download.SRL";
+			//}
+
 			// ’ˆÓ‘‚«
 			this->sucMsg( "SaveRom_Name", srlfile );
 
@@ -5341,6 +5350,21 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 			System::String ^delivfile  = prefix + "_SHEET.XML";
 			System::String ^middlefile = prefix + "_MIDDLEWARE.XML";
 			System::String ^middlefilePrint = prefix + "_MIDDLEWARE.HTML";
+
+			if( this->rPurposeCardTouchTryDS->Checked )
+			{
+				srlfile = prefix + "_Trial.SRL";
+				delivfile  = prefix + "_Trial_SHEET.XML";
+				middlefile = prefix + "_Trial_MIDDLEWARE.XML";
+				middlefilePrint = prefix + "_Trial_MIDDLEWARE.HTML";
+			}
+			//else if( this->rPurposeZone->Checked || this->rPurposeDSDownload->Checked )
+			//{
+			//	srlfile = prefix + "_Download.SRL";
+			//	delivfile  = prefix + "_Download_SHEET.XML";
+			//	middlefile = prefix + "_Download_MIDDLEWARE.XML";
+			//	middlefilePrint = prefix + "_Download_MIDDLEWARE.HTML";
+			//}
 
 			// ’ˆÓ‘‚«
 			this->sucMsg( "SaveSet_Name", srlfile, delivfile, middlefile, middlefilePrint );

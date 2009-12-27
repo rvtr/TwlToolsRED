@@ -28,7 +28,7 @@ SRCS			=	main.c key.c font.c text.c mprintf.c logprintf.c \
 				myfilename.c menu_version.c \
 				sitedefs.c wcm_control.c netconnect.c mywlan.c \
 				myimport.c pre_install.c \
-				my_rsa_sign.c my_aes.c my_sha.c my_sign.c 
+				my_rsa_sign.c my_aes.c my_sha.c my_sign.c my_keys.c hatamotolib.cpp
 
 # my_rsa.c 
 
@@ -50,7 +50,7 @@ ES_ROOT			=	$(ES_LATEST)
 BSAFE_DIR	 = $(TWLSDK_ROOT)/build/libraries/crypto/common/mes
 
 
-LINCLUDES           = 	../common/src ../copy_dst/src \
+LINCLUDES           = 	../common/src \
 			$(TWLSDK_ROOT)/build/libraries/lcfg/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/nam/ARM9.TWL/include \
 			$(TWLSDK_ROOT)/build/libraries/ese/common/include \

@@ -851,6 +851,100 @@ BOOL pre_install_debug(FSFile *log_fd, BOOL development_version_flag )
   return TRUE;
 }
 
+
+BOOL pre_install_eticket_only_process( FSFile *log_fd, BOOL development_version_flag , 
+				       MY_USER_APP_TID **tid_buf, int *tid_count)
+{
+  BOOL ret_flag = TRUE;
+  char *tad_file_name;
+  PRE_INSTALL_FILE *temp_list;
+  u64 tid;
+  char game_code_buf[5];
+  int count = 0;
+  //  int i;
+  MY_USER_APP_TID *temp_tid;
+
+  if( development_version_flag ) {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_DEV_FILE_NAND, log_fd, FALSE);
+  }
+  else {
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_SD, log_fd, TRUE);
+    (void)pre_install_load_file(PRE_INSTALL_TABLE_FILE_NAND, log_fd, FALSE);
+  }
+
+  if( pre_install_file_list == NULL) {
+    goto end;
+  }
+
+  for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
+    count++;
+  }
+  *tid_count = count;
+  if( count > 0 ) {
+    temp_tid = (MY_USER_APP_TID *)OS_Alloc(count * sizeof(MY_USER_APP_TID));
+    *tid_buf = temp_tid;
+    if( *tid_buf == NULL) {
+      mprintf("alloc error.\n");
+      goto end;
+    }
+
+    for( temp_list = pre_install_file_list ; temp_list != NULL ; temp_list = temp_list->next ) {
+      tid = temp_list->tid;
+      (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+      mprintf(" TO %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf);
+      temp_tid->tid = tid;
+      temp_tid->is_personalized = 1;
+      temp_tid->version = 0;
+      temp_tid->common_and_download = 0;
+      temp_tid->install_success_flag = FALSE;
+
+      tad_file_name = temp_list->file_name;
+      if( tad_file_name ) {
+	if( !STD_StrNCmp( temp_list->file_name, "sdmc:" , STD_StrLen("sdmc:")) ) {
+	  ret_flag = my_NAM_ImportTadTicketOnly_sign( tad_file_name );
+	}
+	else {
+	  ret_flag = my_NAM_ImportTadTicketOnly( tad_file_name );
+	}
+      
+	if( FALSE == ret_flag ) {
+	  /* error チケットインストール失敗？ */
+	  miya_log_fprintf(log_fd, "NG.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+	  mprintf("NG.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  miya_log_fprintf(log_fd, "error: import tid=0x%08x%08x %s\n", 
+			   (u32)(tid >> 32) , (u32)(tid & 0xffffffff), tad_file_name);
+	  ret_flag = FALSE;
+	}
+	else {
+	  miya_log_fprintf(log_fd, "OK.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	  mprintf("OK.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	}
+      }
+      else {
+	/* error ＲＯＭにファイルがない */
+	miya_log_fprintf(log_fd, "NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_RED );	/* green  */
+	mprintf("NG.\n");
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	mprintf("No file\n");
+	miya_log_fprintf(log_fd, "error: no file\n"); 
+	ret_flag = FALSE;
+      }
+      temp_tid++;
+    }
+  }
+  end:
+
+  (void)pre_install_discard_list();
+  return ret_flag;
+}
+
+
 BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int title_id_count,
 			  MY_USER_ETICKET_TID *ticket_id_array,  int ticket_id_count, BOOL development_version_flag )
 {
@@ -968,7 +1062,7 @@ BOOL pre_install_process( FSFile *log_fd, MY_USER_APP_TID *title_id_buf_ptr, int
 	  }
 
 	  if( ret_flag == TRUE ) {
-	    title_id_buf_ptr[i].common_and_download = 1; /* あとでダウンロードするようにチェックをつける。 */
+	    title_id_buf_ptr[i].common_and_download = TRUE; /* あとでダウンロードするようにチェックをつける。 */
 	    miya_log_fprintf(log_fd, "OK.\n");
 	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
 	    mprintf("OK.\n");

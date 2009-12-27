@@ -138,6 +138,60 @@ static void ReportLastErrorPath(const char *path)
 static u8 my_nor_buf[NVRAM_PERSONAL_DATA_SIZE] ATTRIBUTE_ALIGN(32);
 static u8 work_content[NCFG_CHECKCONFIGEX_WORK_SIZE];
 
+
+BOOL nvram_get(u8 buf[0xa00])
+{
+  BOOL ret_flag = TRUE;
+  u32 offset;
+
+  if( TRUE !=  my_nvram_read( NVRAM_PERSONAL_DATA_OFFSET , sizeof(u16), (void* )&offset) ) {
+    OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+  }
+
+  if( offset == 0 ) {
+    OS_TPrintf( "nvram error: offset = 0x%02x\n", offset);
+    return FALSE;
+  }
+
+  offset *= 8;
+  offset -= 0xA00;
+
+  if( TRUE !=  my_nvram_read( offset , NVRAM_PERSONAL_DATA_SIZE, (void* )buf) ) {
+    OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+  }
+  return ret_flag;
+}
+
+BOOL nvram_set(u8 buf[0xa00])
+{
+  BOOL ret_flag = TRUE;
+  u32 offset;
+
+  if( TRUE !=  my_nvram_read( NVRAM_PERSONAL_DATA_OFFSET , sizeof(u16), (void* )&offset) ) {
+    OS_TPrintf( "nvram error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+    ret_flag = FALSE;
+  }
+  else {
+    OS_TPrintf( "nvram success: offset = 0x%02x\n", offset);
+  }
+ 
+  if( offset == 0 ) {
+    OS_TPrintf( "nvram error: offset = 0x%02x\n", offset);
+    return FALSE;
+  }
+
+  /* offsetのチェックは？ */
+  offset *= 8;
+  offset -= 0xA00;
+  if( TRUE !=  my_nvram_write( offset , /* size */ NVRAM_PERSONAL_DATA_SIZE, (void* )buf) ) {
+    ret_flag = FALSE;
+    OS_TPrintf( "nvram write error: %s %s %d\n",__FILE__,__FUNCTION__,__LINE__);
+  }
+  return ret_flag;
+}
+
+
 BOOL nvram_backup(char *path)
 {
   BOOL bSuccess;
@@ -215,6 +269,8 @@ typedef struct  tagDWCWiFiInfo {
   u16  pass;                 // パスワード
   u16  randomHistory;        // 乱数履歴
 } DWCWiFiInfo;
+
+
 
 BOOL nvram_restore(char *path)
 {

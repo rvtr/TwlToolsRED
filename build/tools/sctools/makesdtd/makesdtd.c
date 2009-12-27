@@ -5,15 +5,11 @@
  table_file.txt –¼‘OŒÅ’è
 
  makesdtd.exe -indir [inputdir] -odir sdtads
- makesdtd.exe -indir test-tad -odir sdtads
+ makesdtd.exe [-c] -indir test-tad -odir sdtads
 
+ openssl genrsa -out tad1024china.der 1024 -outform DER
 
-
-
- openssl genrsa -out tad1024miya.der 1024 -outform DER
-
-
- rsa_keysrcgen.exe -in tad1024miya.der
+ rsa_keysrcgen.exe -in tad1024china.der
 
 */
 
@@ -678,6 +674,7 @@ int main(int argc, char **argv)
   BOOL write_file_flag = FALSE;
   BOOL write_dir_flag = FALSE;
   BOOL dir_read_flag = FALSE;
+  BOOL china_flag = FALSE;
 
   char *prog;
   int badops = 0;
@@ -710,24 +707,7 @@ int main(int argc, char **argv)
   argv++;
 
 
-  //  printf("d = %s\n", prog);
-
   
-  //  strcpy(key_file_path, ".\\");
-  strcat(key_file_path, prog);
-
-  len = strlen(key_file_path);
-  for( pos = len - 1 ; pos > 0 ; pos--) {
-    if( key_file_path[pos] == '\\' ) {
-      strcpy( &(key_file_path[pos]), "\\tad1024.der");
-      break;
-    }
-  }
-
-
-  printf("key_file_path = %s\n",key_file_path );
-  
-
   while (argc >= 1) {
     if (strcmp(*argv,"-indir") == 0  && !dir_read_flag ) {
       if (--argc < 1) {
@@ -746,6 +726,9 @@ int main(int argc, char **argv)
     else if (strcmp(*argv,"-d") == 0 ) {
       debug_print_flag = TRUE;
     }
+    else if (strcmp(*argv,"-c") == 0 ) {
+      china_flag = TRUE;
+    }
     else if ( !read_file_flag ) {
       infile = *argv;
       read_file_flag = TRUE;
@@ -761,9 +744,28 @@ int main(int argc, char **argv)
 
   if (badops) {
   bad:
-    fprintf(stderr, "%s -indir dirname -odir dirname\n",prog);
+    fprintf(stderr, "%s [-c] -indir dirname -odir dirname\n",prog);
     goto end;
   }
+
+
+  //  printf("d = %s\n", prog);
+  //  strcpy(key_file_path, ".\\");
+  strcat(key_file_path, prog);
+  len = strlen(key_file_path);
+  for( pos = len - 1 ; pos > 0 ; pos--) {
+    if( key_file_path[pos] == '\\' ) {
+      if( china_flag == TRUE ) {
+	strcpy( &(key_file_path[pos]), "\\tad1024china.der");
+      }
+      else {
+	strcpy( &(key_file_path[pos]), "\\tad1024.der");
+      }
+      break;
+    }
+  }
+  printf("key_file_path = %s\n",key_file_path );
+    
 
 
     if( debug_print_flag ) {

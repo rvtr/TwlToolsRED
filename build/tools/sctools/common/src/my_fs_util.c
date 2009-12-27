@@ -981,6 +981,27 @@ static void AppErrorReport(const char *path, char *msg)
 }
 
 
+static void AppErrorReport2(const char *path, char *msg, char *msg2)
+{
+  char game_code[5];
+  char *dir_name1 = "nand:/shared2";
+  char *dir_name2 = "nand2:/photo";
+  if( !STD_StrNCmp( path, dir_name1 , STD_StrLen(dir_name1) ) ) {
+    (void)Error_Report_Printf(" Shared:%s %s\n", msg, msg2);
+  }
+  else if( !STD_StrNCmp( path, dir_name2 , STD_StrLen(dir_name2) ) ) {
+    (void)Error_Report_Printf(" Photo :%s %s\n", msg, msg2);
+  }
+  else if( TRUE == GetAppGameCode(path, game_code, NULL ) ) {
+    (void)Error_Report_Printf(" [%s]:%s %s\n", game_code, msg, msg2);
+  }
+  else {
+    (void)Error_Report_Printf(" [????]:%s %s\n   path=%s\n",msg, msg2, path);
+  }
+}
+
+
+
 static u64 GetTitleIdFromSrcPath(char path[])
 {
   u64 tid = 0;
@@ -1407,8 +1428,10 @@ BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int
   FSFile log_fd_real;
   FSFile *log_fd;
   BOOL log_active = FALSE;
-  
-
+#if 0
+  int slen;
+  char *sfile_name;
+#endif
 
   log_fd = &log_fd_real;
   log_active = Log_File_Open( log_fd, log_file_name );
@@ -1556,7 +1579,21 @@ BOOL RestoreDirEntryList( char *path , char *log_file_name, int *list_count, int
     /* ファイルでもディレクトリでもどっちでもここを通る */
     if(  copy_error_flag == FALSE ) {
       (*error_count)++;
+      // miya 20091113
+#if 0
+      slen = STD_StrLen(list_temp.src_path);
+      while( slen > 0 ) {
+	slen--;
+	if( list_temp.src_path[slen] == '/' ) {
+	  slen++;
+	  sfile_name = &(list_temp.src_path[slen]);
+	  break;
+	}
+      }
+      AppErrorReport2(list_temp.src_path, "copy file failed ",sfile_name);
+#else
       AppErrorReport(list_temp.src_path, "copy file failed");
+#endif
     }
     else {
       (*list_count)++;
@@ -1615,6 +1652,8 @@ BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_fil
   BOOL log_active = FALSE;
   u64 tid;
   char game_code_buf[5];
+  int slen;
+  char *sfile_name;
 
   log_fd = &log_fd_real;
   log_active = Log_File_Open( log_fd, log_file_name );
@@ -1726,6 +1765,7 @@ BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_fil
       if( !STD_StrCmp( list_temp.src_path, "nand:" ) ) {
 	/* nandのルートディレクトリはスルーする。 */
 	OS_TPrintf("nand: root detect \n");
+	
       }
       else {
 
@@ -1734,7 +1774,7 @@ BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_fil
 	    (TRUE == CheckInstallSuccessApp(list_temp.src_path, title_id_buf, title_id_count)) ) {
 
 	  /* 一応拡張子(*.sav)もチェックしといたほうがいいか？ */
-	  miya_log_fprintf(log_fd, "backup %s\n",list_temp.src_path);
+	  miya_log_fprintf(log_fd, "backup 1 %s\n",list_temp.src_path);
 
 	  tid = GetTitleIdFromSrcPath( list_temp.src_path );
 	  (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
@@ -1786,8 +1826,11 @@ BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_fil
 	  }
 	}
 	else {
+	  miya_log_fprintf(log_fd, "backup 2 %s\n",list_temp.src_path);
+
 	  /* インストール失敗アプリの場合。 */
 	  if( 2 == CheckInstallSuccessAppEx(list_temp.src_path, title_id_buf, title_id_count) ) {
+
 	    tid = GetTitleIdFromSrcPath( list_temp.src_path );
 	    (void)my_fs_Tid_To_GameCode(tid, game_code_buf);
 	    
@@ -1809,12 +1852,26 @@ BOOL RestoreDirEntryList_System_And_InstallSuccessApp(char *path , char *log_fil
 
     if( copy_error_flag == FALSE ) {
       (*error_count)++;
+      // miya 20091113
+#if 1
+      slen = STD_StrLen(list_temp.src_path);
+      while( slen > 0 ) {
+	slen--;
+	if( list_temp.src_path[slen] == '/' ) {
+	  slen++;
+	  sfile_name = &(list_temp.src_path[slen]);
+	  break;
+	}
+      }
+      AppErrorReport2(list_temp.src_path, "copy failed ",sfile_name);
+#else
       AppErrorReport(list_temp.src_path, "copy file failed");
+#endif
     }
   }
-
-  miya_log_fprintf(log_fd, "%s Read entry count %d error count %d\n",__FUNCTION__ , *list_count, *error_count );
-
+  
+  miya_log_fprintf(log_fd, "Read entry count %d error count %d\n", *list_count, *error_count );
+  
 #ifdef ATTRIBUTE_BACK
   /* add_entry_list( &readonly_list_head, &list_temp );
      でリストにしたエントリーのアトリビュートを逆順で元に戻す。*/
@@ -2636,7 +2693,46 @@ BOOL CheckShopRecord(FSFile *log_fd)
 }
 
 
-//static BOOL 
+BOOL CheckDevDotKP(FSFile *log_fd)
+{
+  FSFile f;
+  BOOL ret_flag = TRUE;
+  BOOL bSuccess;
+  char path[64];
+  s32 readSize = 0;
+  /* "nand:/sys/log/shop.log  */
+  miya_log_fprintf(log_fd, "%s START\n", __FUNCTION__);
+
+  FS_InitFile(&f);
+  STD_StrCpy(path, "nand:/sys/dev.kp");
+
+  /* 
+     shop.logは
+     本体設定初期化では消さない。
+     ショップの履歴消去では消す。
+     当然、ショップに再接続したら作られる。
+ */
+
+  bSuccess = FS_OpenFileEx(&f, path, (FS_FILEMODE_R));
+  if( ! bSuccess ) {
+    if( FS_RESULT_NO_ENTRY == FS_GetArchiveResultCode(path) ) {
+      /* キーペアファイルがない */
+      /* Shopログファイルがない */
+      ret_flag = FALSE;
+      //   miya_log_fprintf(log_fd, "No key pair file\n");
+      miya_log_fprintf(log_fd, "No shop log file\n");
+    }
+  }
+  else {
+    (void)FS_CloseFile(&f);
+  }
+
+
+  miya_log_fprintf(log_fd, "%s END\n\n", __FUNCTION__);
+
+  return ret_flag;
+}
+
 
 static BOOL myCleanDirectory(char *path, FSFile *log_fd, int level)
 {

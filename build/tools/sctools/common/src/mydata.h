@@ -2,8 +2,8 @@
 #define	_MY_DATA_H_
 
 
-#define MY_DATA_VERSION_MAJOR 1
-#define MY_DATA_VERSION_MINOR 9
+#define MY_DATA_VERSION_MAJOR 2
+#define MY_DATA_VERSION_MINOR 0
 
 typedef struct {
   u8 version_major;
@@ -18,7 +18,7 @@ typedef struct {
   BOOL wireless_lan_param_flag;
   BOOL user_settings_flag;
   BOOL shop_record_flag;
-  //  int num_of_user_download_app;
+  BOOL dev_dot_kp_flag;
   int num_of_user_app;
   int num_of_user_pre_installed_app;
   int num_of_user_pre_installed_eticket_only;
@@ -39,7 +39,7 @@ typedef struct {
   char bmsDeviceId[32];
   s32 volume;
   s32 backlight_brightness;
-  u32 reserve[256];
+  u32 reserve[128];
 } MyData;
 
 

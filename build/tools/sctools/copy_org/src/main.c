@@ -1105,6 +1105,7 @@ void TwlMain(void)
     OS_TPrintf("DeviceID: %s\n", mydata.bmsDeviceId);
   }
 
+  mydata.dev_dot_kp_flag = CheckDevDotKP( NULL );
 
   /* NAM ÇÃèâä˙âª */
   NAM_Init(&AllocForNAM, &FreeForNAM);

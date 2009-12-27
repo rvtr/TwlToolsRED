@@ -58,6 +58,7 @@
 #include        "myimport.h"
 #include        "pre_install.h"
 
+#include "wifi_cfg.h"
 
 #include <twl/ltdmain_begin.h>
 
@@ -71,6 +72,7 @@
 #define THREAD_COMMAND_WIFI_FUNCTION              2
 #define THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION 3
 #define THREAD_COMMAND_REBOOT_FUNCTION            4
+#define THREAD_COMMAND_RESTORE_SAVEDATA_FUNCTION  5
 
 
 #define FREE_REG_POWERON_REBOOT 0x00
@@ -80,6 +82,7 @@
 
 static BOOL only_wifi_config_data_trans_flag = FALSE;
 static BOOL user_and_wifi_config_data_trans_flag = FALSE;
+static BOOL only_restore_savedata_flag = FALSE;
 static BOOL no_network_flag = FALSE;
 static BOOL completed_flag = FALSE;
 static FSEventHook  sSDHook;
@@ -163,7 +166,7 @@ static int vram_num_sub = 0;
 static  LCFGTWLHWNormalInfo hwn_info;
 static  LCFGTWLHWSecureInfo hws_info;
 
-#define	MY_STACK_SIZE  (1024*64) /* でかいほうがいい */
+#define	MY_STACK_SIZE  (1024*128) /* でかいほうがいい */
 //#define	MY_THREAD_PRIO        20
 
 #define	MY_THREAD_PRIO        10
@@ -635,33 +638,21 @@ static BOOL RestoreFromSDCard6(void)
 }
 
 
-
+/* この関数は機能詰めすぎ。バラした方がいい。 */
 static BOOL RestoreFromSDCard7(void)
 {
-  int i;
-  ECError rv;
   BOOL ret_flag = TRUE;
-  FSFile *log_fd;
-  int ec_download_ret;
+  FSFile *log_fd = NULL;
+  u64 tid;
   char game_code_buf[5];
   int is_personalized;
-  u64 tid;
-  MY_USER_ETICKET_TID *eticket_only_id_buf = NULL;
-  int num_of_eticket_only_titles = 0;
+  int i;
 
   title_id_count = 0;
   if( title_id_buf_ptr != NULL ) {
     OS_Free( title_id_buf_ptr );
     title_id_buf_ptr = NULL;
   }
-
-  title_id_count = 0;
-  rv = EC_ERROR_OK;
-
-  /* hws_info.serialNoは戻せない */
-
-  log_fd = hatamotolib_log_start( MyFile_GetEcDownloadLogFileName() );
-
 
   if( mydata.num_of_user_app > 0 ) {
     miya_log_fprintf(log_fd,"User title list loading\n");
@@ -709,7 +700,88 @@ static BOOL RestoreFromSDCard7(void)
     miya_log_fprintf(log_fd,"Original user app. list saving failed\n");
     mprintf("Original user app. list saving failed\n");
   }
+  return ret_flag;
 
+}
+
+
+static BOOL RestoreFromSDCard8(void)
+{
+  ECError rv;
+  BOOL ret_flag = TRUE;
+  FSFile *log_fd;
+  int ec_download_ret;
+#if 0
+  char game_code_buf[5];
+  u64 tid;
+  int i;
+  int is_personalized;
+#endif
+  MY_USER_ETICKET_TID *eticket_only_id_buf = NULL;
+  int num_of_eticket_only_titles = 0;
+
+#if 0
+  title_id_count = 0;
+  if( title_id_buf_ptr != NULL ) {
+    OS_Free( title_id_buf_ptr );
+    title_id_buf_ptr = NULL;
+  }
+#endif
+
+  rv = EC_ERROR_OK;
+
+  /* hws_info.serialNoは戻せない */
+
+  log_fd = hatamotolib_log_start( MyFile_GetEcDownloadLogFileName() );
+
+#if 0
+  if( mydata.num_of_user_app > 0 ) {
+    miya_log_fprintf(log_fd,"User title list loading\n");
+    mprintf("User title list load         ");
+    if( TRUE == UserTitleIDLoad( MyFile_GetUserTitleIDFileName(), &title_id_buf_ptr, 
+			     &title_id_count, MyFile_GetUserTitleIDRestoreLogFileName()) ) {
+      
+      m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+      mprintf("OK.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+      for( i = 0; i < title_id_count ; i++ ) {
+	/* 
+	   インストール成功フラグの初期化
+	   とりあえず全部失敗状態にする。
+	*/
+	title_id_buf_ptr[i].install_success_flag = FALSE;
+	tid = title_id_buf_ptr[i].tid;
+	is_personalized = title_id_buf_ptr[i].is_personalized;
+	
+	(void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+	mprintf(" id %08X %08X [%s] ", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+	if( is_personalized == 1 ) {
+	  mprintf("Pre\n"); /* プリインストール物 */
+	}
+	else {
+	  mprintf("Dwn\n"); /* ダウンロード物 */
+	}
+	
+	miya_log_fprintf(log_fd," id %08X %08X [%s] %c\n", (u32)(tid >> 32), (u32)tid, game_code_buf, 
+			 (is_personalized == 1)? 'P':'D');
+      }
+    }
+    else {
+      ret_flag = FALSE;
+      m_set_palette(tc[0], M_TEXT_COLOR_RED );
+      mprintf("NG.\n");
+      m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+    }
+  }
+  else if( mydata.num_of_user_app == 0 ) {
+    miya_log_fprintf(log_fd,"Original device has no user app.\n");
+    mprintf("Original device has no user download app.\n");
+  }
+  else {
+    miya_log_fprintf(log_fd,"Original user app. list saving failed\n");
+    mprintf("Original user app. list saving failed\n");
+  }
+#endif
     
   /* miya 2009/5/8
      ここで書き込み側に入ってるプリンインストールものを全部消す！
@@ -783,9 +855,9 @@ static BOOL RestoreFromSDCard7(void)
     }
   }
 
-
   if( no_network_flag == TRUE ) {
     miya_log_fprintf(log_fd,"no network flag ON\n");
+
     goto network_connection_end;
   }
 
@@ -793,9 +865,10 @@ static BOOL RestoreFromSDCard7(void)
     /* ネットワークにつながなくていいか？ */
     miya_log_fprintf(log_fd,"no shop record \n");
     mprintf(" (--no shop record--)\n");
+
   }
   else {
-
+  network_connetion_start:
 
 
     miya_log_fprintf(log_fd,"EC download\n");
@@ -857,8 +930,6 @@ static BOOL RestoreFromSDCard7(void)
       // 不要：セーブデータ領域を作成
       // NAM_Init を忘れてた
 
-      //      SetupTitlesDataFile((NAMTitleId *)title_id_buf_ptr , (u32)title_id_count);
-
       SetupTitlesDataFile((MY_USER_APP_TID *)title_id_buf_ptr , (u32)title_id_count);
 
     end_ec_f:
@@ -919,7 +990,7 @@ static BOOL RestoreFromSDCard7(void)
 
 
 
-static BOOL RestoreFromSDCard8(void)
+static BOOL RestoreFromSDCard9(void)
 {
   int list_count;
   int error_count;
@@ -965,8 +1036,57 @@ static BOOL RestoreFromSDCard8(void)
   return ret_flag;
 }
 
+static BOOL RestoreFromSDCard10(void)
+{
+  int i;
+  BOOL first_check = FALSE;
+  u64 tid;
+  char game_code_buf[5];
+  BOOL ret_flag = TRUE;
 
-static BOOL RestoreFromSDCard9(void)
+  if( mydata.shop_record_flag == FALSE ) {
+    for( i = 0; i < title_id_count ; i++ ) {
+      if( title_id_buf_ptr[i].common_and_download == TRUE ) {
+	/* あとでダウンロードするようにチェックをつけたやつ */
+	if( first_check == FALSE ) {
+	  first_check = TRUE;
+	  mprintf("\n");
+	  if( mydata.dev_dot_kp_flag == TRUE ) {
+	    /* net.log はないけど、dev.kp はある。 */
+	    m_set_palette(tc[0], M_TEXT_COLOR_PINK );
+	    text_blink_current_line(tc[0]);
+	    mprintf("User network account\n");
+	    text_blink_current_line(tc[0]);
+	    mprintf(" has been deleted!\n");
+	    mprintf("\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+	    mprintf("Please update\n the following apps in the SD card\n");
+	    mprintf(" OR, download from the Internet.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  }
+	  else {
+	    m_set_palette(tc[0], M_TEXT_COLOR_YELLOW );
+	    mprintf("Please update\n the following apps in the SD card.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  }
+	}
+
+	tid = title_id_buf_ptr[i].tid;
+	(void)my_fs_Tid_To_GameCode(tid, game_code_buf);
+	mprintf(" id %08X %08X [%s]\n", (u32)(tid >> 32), (u32)tid, game_code_buf); 
+      }
+    }
+    if( first_check == TRUE) {
+      mprintf("\n");
+      ret_flag = FALSE;
+    }
+  }
+  return ret_flag;
+}
+
+
+
+static BOOL RestoreFromSDCard11(void)
 {
   if( title_id_buf_ptr != NULL ) {
     OS_Free( title_id_buf_ptr );
@@ -975,6 +1095,8 @@ static BOOL RestoreFromSDCard9(void)
   title_id_count = 0;
   return TRUE;
 }
+
+
 
 
 typedef BOOL (*function_ptr)(void);
@@ -990,10 +1112,13 @@ static function_ptr function_table[] =
   RestoreFromSDCard7,
   RestoreFromSDCard8,
   RestoreFromSDCard9,
+  RestoreFromSDCard10,
+  RestoreFromSDCard11,
 };
 
 static int function_table_max = sizeof(function_table) / sizeof(*function_table);
 static int function_counter = 0;
+static int current_function_table_max = sizeof(function_table) / sizeof(*function_table);
 
 
 static void MyThreadProc(void *arg)
@@ -1003,6 +1128,7 @@ static void MyThreadProc(void *arg)
   BOOL flag;
   BOOL twl_card_validation_flag;
   u32 command;
+  int i;
 
   m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 
@@ -1016,6 +1142,7 @@ static void MyThreadProc(void *arg)
     switch( command ) {
     case THREAD_COMMAND_FULL_FUNCTION:
 
+      current_function_table_max = function_table_max;
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       
       if( miya_debug_level == 1 || ( my_fs_get_print_debug_flag() == TRUE )) {
@@ -1035,7 +1162,7 @@ static void MyThreadProc(void *arg)
       }
       break;
     case THREAD_COMMAND_WIFI_FUNCTION:
-      function_table_max = 1;
+      current_function_table_max = 1;
       function_counter = 0;
       if( FALSE == RestoreFromSDCard3() ) {
 	flag = FALSE;
@@ -1043,7 +1170,7 @@ static void MyThreadProc(void *arg)
       function_counter++;
       break;
     case THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION:
-      function_table_max = 2;
+      current_function_table_max = 2;
       function_counter = 0;
       if( FALSE == RestoreFromSDCard4() ) {
 	flag = FALSE;
@@ -1061,8 +1188,31 @@ static void MyThreadProc(void *arg)
       PM_ReadyToExit();
       OS_Sleep(100000);
       break;
+    case THREAD_COMMAND_RESTORE_SAVEDATA_FUNCTION:
+      current_function_table_max = 3;
+      function_counter = 0;
+
+      if( FALSE == RestoreFromSDCard7() ) {
+	flag = FALSE;
+      }
+      function_counter++;
+
+      for( i = 0 ; i < title_id_count ; i++ ) {
+	title_id_buf_ptr[i].install_success_flag = TRUE;
+      }
+      if( FALSE == RestoreFromSDCard9() ) {
+	flag = FALSE;
+      }
+      function_counter++;
+
+      if( FALSE == RestoreFromSDCard11() ) {
+	flag = FALSE;
+      }
+      function_counter++;
+
+      break;
     default:
-      function_table_max = 0;
+      current_function_table_max = 0;
       function_counter = 0;
       flag = FALSE;
       mprintf("%s unknown command!\n",__FUNCTION__);
@@ -1198,9 +1348,7 @@ static void MyThreadProcNuc(void *arg)
 	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
       }
 
-
       RTC_NTP_SYNC();
-
 
       /* NSSL_Init()呼んではダメ！ */
       log_fd = my_nuc_log_start( MyFile_GetNupLogFileName() );
@@ -1314,11 +1462,25 @@ void TwlMain(void)
   u16 BatterylevelBuf = 0;
   BOOL isAcConnectedBuf = FALSE;
 
+  u32 IPADDR;
+  u32 NETMASK;
+  u32 GATEWAY;
+  u32 DNS1;
+  u32 DNS2;
+
 #ifdef CHINA_LIMITED
   BOOL isIgnoreKeyInput = FALSE;
+  static const char *isbn[4] = { "000-0-000000-00-0", "000-0000-000", "0000", "000" };
+  //  static const char *isbn[4] = { "978-7-900381-62-7", "025-2004-017", "2005", "065" };
 #endif
 
+#ifdef CHINA_LIMITED
+  OS_InitChina(isbn, OS_CHINA_ISBN_NO_DISP);
+#else
   OS_Init();
+#endif
+
+
   OS_InitThread();
 
   OS_InitTick();
@@ -1656,6 +1818,7 @@ void TwlMain(void)
   Gfx_Set_BG1_line_Color(1, 2, (u16)M_TEXT_COLOR_ORANGE);
 
 
+
   while( 1 ) {
     Gfx_Render( vram_num_main , vram_num_sub );
     OS_WaitVBlankIntr();
@@ -1715,7 +1878,7 @@ void TwlMain(void)
 		mydata.wireless_lan_param_flag = TRUE;
 		vram_num_sub = 0;
 		MydataLoadDecrypt_message_flag = TRUE;
-		MydataLoadDecrypt_dir_flag = TRUE;
+		// MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
 
 		start_my_thread( THREAD_COMMAND_WIFI_FUNCTION );
@@ -1726,10 +1889,18 @@ void TwlMain(void)
 		mydata.wireless_lan_param_flag = TRUE;
 		vram_num_sub = 0;
 		MydataLoadDecrypt_message_flag = TRUE;
-		MydataLoadDecrypt_dir_flag = TRUE;
+		// MydataLoadDecrypt_dir_flag = TRUE;
 		MydataLoadDecrypt_success_flag = TRUE;
 
 		start_my_thread( THREAD_COMMAND_USERDATA_AND_WIFI_FUNCTION );
+	      }
+	      else if( only_restore_savedata_flag == TRUE ) {
+		vram_num_sub = 0;
+		MydataLoadDecrypt_success_flag = MydataLoadDecrypt( MyFile_GetGlobalInformationFileName(), 
+								    &mydata, sizeof(MyData), NULL);
+		if(TRUE == MydataLoadDecrypt_success_flag ) {
+		  start_my_thread( THREAD_COMMAND_RESTORE_SAVEDATA_FUNCTION );
+		}
 	      }
 	      else {
 		mprintf("Personal data. restore       ");
@@ -1864,15 +2035,211 @@ void TwlMain(void)
       mprintf("debug level %d\n", miya_debug_level );
     }
     else if ( keyData & PAD_BUTTON_X ) {
-      if( TRUE == reboot_flag ) {
+      if( FALSE == reboot_flag ) {
+	//miya 20091116  
+	
+	int slot_no = 0;
+	char *ssid_str;
+	u8 key_bin_buf[0x40];
+	int key_bin_len;
+	int wlan_mode;
+
+	m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	mprintf("-wlan settings read          ");
+	if( TRUE == wifi_config_nvram_get() ) {
+	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	  mprintf("OK.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	}
+	else {
+	  m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	  mprintf("NG.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	}
+
+	
+	mprintf("-Wireless AP conf. load      ");
+	if( FALSE == LoadWlanConfigFile("sdmc:/wlan_cfg.txt") ) {
+	  m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	  mprintf("NG.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	}
+	else {
+	  m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	  mprintf("OK.\n");
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	  // wifi_config_print();
+	  if( FALSE == wifi_config_clear_slot(slot_no)  ) {
+	    OS_TPrintf("Error: wifi_config_clear_slot\n");
+	  }
+	
+
+	  m_set_palette(tc[0], M_TEXT_COLOR_BLUE );
+
+	  ssid_str = GetWlanSSID();
+	  if( ssid_str ) {
+	    mprintf("  ssid = %s\n",ssid_str);
+	  }
+
+	  if( FALSE == wifi_config_set_ssid(slot_no, ssid_str, STD_StrLen(ssid_str) ) ) {
+	    OS_TPrintf("Error: wifi_config_set_ssid\n");
+	  }
+	
+	  mprintf("  MODE = ");
+	  wlan_mode = GetWlanMode();
+	  switch( wlan_mode ) {
+	  case WCM_WEPMODE_NONE:
+	    mprintf("NONE\n");
+	    break;
+	  case WM_WEPMODE_40BIT:
+	    mprintf("WEP40\n");
+	    break;
+	  case WM_WEPMODE_104BIT:
+	    mprintf("WEP104\n");
+	    break;
+	  case WM_WEPMODE_128BIT:
+	    mprintf("WEP128\n");
+	    break;
+	  case WCM_WEPMODE_WPA_TKIP:
+	    mprintf("WPA-TKIP\n");
+	    break;
+	  case WCM_WEPMODE_WPA2_TKIP:
+	    mprintf("WPA2-TKIP\n");
+	    break;
+	  case WCM_WEPMODE_WPA_AES:
+	    mprintf("WPA-AES\n");
+	    break;
+	  case WCM_WEPMODE_WPA2_AES :
+	    mprintf("WPA2-AES\n");
+	    break;
+	  defalut:
+	    mprintf("Unknow mode..\n");
+	    break;
+	  }
+
+	  switch( wlan_mode ) {
+	  case WM_WEPMODE_40BIT:
+	  case WM_WEPMODE_104BIT:
+	  case WM_WEPMODE_128BIT:
+	    if( TRUE == GetKeyModeStr() ) {
+	      if( FALSE == wifi_config_set_wep_key_str(slot_no, wlan_mode, GetWlanKEYSTR() )) {
+		mprintf("Error: wifi_config_wep_key_str\n");
+	      }
+	      else {
+		mprintf("  key = %s\n", GetWlanKEYSTR());
+	      }
+	    }
+	    else {
+	      key_bin_len = GetWlanKEYBIN(key_bin_buf);
+	      if( FALSE == wifi_config_set_wep_key_bin(slot_no, wlan_mode, key_bin_buf, key_bin_len)){
+		mprintf("Error: wifi_config_wep_key_bin\n");
+	      }
+	    }
+	    break;
+	  case WCM_WEPMODE_WPA_TKIP:
+	  case WCM_WEPMODE_WPA2_TKIP:
+	  case WCM_WEPMODE_WPA_AES:
+	  case WCM_WEPMODE_WPA2_AES:
+	    if( TRUE == GetKeyModeStr() ) {
+	      if( FALSE == wifi_config_set_wpa_key_str(slot_no, wlan_mode, GetWlanKEYSTR() )) {
+		mprintf("Error: wifi_config_wpa_key_str\n");
+	      }
+	      else {
+		mprintf("  key = %s\n", GetWlanKEYSTR());
+	      }
+	    }
+	    else {
+	      key_bin_len = GetWlanKEYBIN(key_bin_buf);
+	      if( FALSE == wifi_config_set_wpa_key_bin(slot_no, wlan_mode, key_bin_buf, key_bin_len)){
+		mprintf("Error: wifi_config_wpa_key_bin\n");
+	      }
+	    }
+	    break;
+	  }
+
+	
+	  //      SSID:
+	  //      MODE:"WPA2-AES"
+	  //      KEY-STR:
+	  //      DHCP:"ON"
+	  //      DNS auto
+	  //      IP auto
+
+
+	  if( TRUE == GetDhcpMODE() ) {
+	    mprintf("  DHCP client\n");
+	  }
+	  else {
+	    IPADDR = GetIPAddr();
+	    NETMASK = GetNetmask();
+	    GATEWAY = GetGateway();
+
+	  
+	    if( FALSE == wifi_config_set_ip_addr(slot_no, IPADDR) ) {
+	    }
+	    else {
+	      mprintf("  IPADDR  %3d.%3d.%3d.%3d\n", (u32)((IPADDR >> 24) & 0xff),(u32)((IPADDR >> 16) & 0xff),
+		      (u32)((IPADDR >> 8) & 0xff),(u32)(IPADDR & 0xff) );
+	    }
+	    if( FALSE == wifi_config_set_netmask(slot_no, NETMASK) ) {
+	    }
+	    else {
+	      mprintf("  NETMASK %3d.%3d.%3d.%3d\n", (u32)((NETMASK >> 24) & 0xff),(u32)((NETMASK >> 16) & 0xff),
+		      (u32)((NETMASK >> 8) & 0xff),(u32)(NETMASK & 0xff) );
+	    }
+	    if( FALSE == wifi_config_set_gateway(slot_no, GATEWAY) ) {
+	    }
+	    else {
+	      mprintf("  GATEWAY %3d.%3d.%3d.%3d\n", (u32)((GATEWAY >> 24) & 0xff),(u32)((GATEWAY >> 16) & 0xff),
+		      (u32)((GATEWAY >> 8) & 0xff),(u32)(GATEWAY & 0xff) );
+	    }
+	  }
+
+	  DNS1 = GetDNS1();
+	  DNS2 = GetDNS2();
+
+	  if( FALSE == wifi_config_set_dns(slot_no, 0, DNS1) ) {
+	  }
+	  else {
+	    mprintf("  DNS1    %3d.%3d.%3d.%3d\n", (u32)((DNS1 >> 24) & 0xff),(u32)((DNS1 >> 16) & 0xff),
+		    (u32)((DNS1 >> 8) & 0xff),(u32)(DNS1 & 0xff) );
+	  }
+	  if( FALSE == wifi_config_set_dns(slot_no, 1, DNS2) ) {
+	  }
+	  else {
+	    mprintf("  DNS2    %3d.%3d.%3d.%3d\n", (u32)((DNS2 >> 24) & 0xff),(u32)((DNS2 >> 16) & 0xff),
+		    (u32)((DNS2 >> 8) & 0xff),(u32)(DNS2 & 0xff) );
+	  }
+      
+	  m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+
+	  //	wifi_config_print();
+
+	  mprintf("-wlan settings write         ");
+	  if( TRUE == wifi_config_nvram_set() ) {
+	    m_set_palette(tc[0], M_TEXT_COLOR_GREEN );	/* green  */
+	    mprintf("OK.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  }
+	  else {
+	    m_set_palette(tc[0], M_TEXT_COLOR_RED );
+	    mprintf("NG.\n");
+	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
+	  }
+	}
+      }
+      else {
 	no_network_flag = FALSE;
 	only_wifi_config_data_trans_flag = FALSE;
 	user_and_wifi_config_data_trans_flag = FALSE;
+	only_restore_savedata_flag = FALSE;
 	Miya_debug_OFF();
 	my_fs_print_debug_OFF();
-
+	  
 	select_mode++;
-	select_mode %= 6;
+	select_mode %= 7;
 	switch( select_mode ) {
 	case 0:
 	  /* restore mode : default */
@@ -1891,6 +2258,9 @@ void TwlMain(void)
 	  break;
 	case 5:
 	  my_fs_print_debug_ON();
+	  break;
+	case 6:
+	  only_restore_savedata_flag = TRUE;
 	  break;
 	default:
 	  break;
@@ -2059,7 +2429,8 @@ void TwlMain(void)
     }
 
     if( FALSE == reboot_flag ) {
-      mfprintf(tc[1], "press Y button to RESTORE mode\n");
+      mfprintf(tc[1], "press Y to RESTORE mode\n");
+      mfprintf(tc[1], "press X to OVERWRITE the Net setting\n");
     }
     else {
       switch( select_mode ) {
@@ -2087,6 +2458,10 @@ void TwlMain(void)
 	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW ); /* red  */
 	mfprintf(tc[1],"-- debug mode --\n");
 	break;
+      case 6:
+	m_set_palette(tc[1], M_TEXT_COLOR_YELLOW ); /* red  */
+	mfprintf(tc[1],"-- savedata restore mode --\n");
+	break;
       default:
 	break;  
       }
@@ -2095,7 +2470,7 @@ void TwlMain(void)
 
       mfprintf(tc[1],"\n");
 
-      mfprintf(tc[1], "function no.%d/%d\n", function_counter, function_table_max);
+      mfprintf(tc[1], "function no.%d/%d\n", function_counter, current_function_table_max);
 
       mfprintf(tc[2],"\f");
 

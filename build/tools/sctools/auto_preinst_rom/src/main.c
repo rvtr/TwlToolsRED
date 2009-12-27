@@ -32,6 +32,7 @@
 #include        "wcm_control.h"
 
 
+#define HATAMOTO_LIB 1
 
 #define THREAD_COMMAND_INSTALL_APP           1
 #define THREAD_COMMAND_INSTALL_TICKET        2
@@ -264,7 +265,7 @@ static BOOL LoadWlanConfig(void)
 
 void TwlMain(void)
 {
-  int i;
+  int i,n;
   void* newArenaLo;
   u8 macAddress[6];
   ESError es_error_code;
@@ -486,6 +487,27 @@ OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
     else if ( keyData & PAD_BUTTON_SELECT ) {
       (void)start_my_thread(THREAD_COMMAND_DOWNLOAD_APP);
     }
+    else if ( keyData & PAD_KEY_RIGHT ) {
+      n = m_get_display_offset_x(tc[0]);
+      n++;
+      m_set_display_offset_x(tc[0], n);
+    }
+    else if ( keyData & PAD_KEY_LEFT ) {
+      n = m_get_display_offset_x(tc[0]);
+      n--;
+      m_set_display_offset_x(tc[0], n);
+    }
+    else if ( keyData & PAD_KEY_UP ) {
+      n = m_get_display_offset_y(tc[0]);
+      n++;
+      m_set_display_offset_y(tc[0], n);
+    }
+    else if ( keyData & PAD_KEY_DOWN ) {
+      n = m_get_display_offset_y(tc[0]);
+      n--;
+      m_set_display_offset_y(tc[0], n);
+    }
+
 
     mfprintf(tc[1], "\fAuto Pre-install Tool\n");
 
@@ -592,7 +614,7 @@ OS_TPrintf("%s %s %d\n", __FILE__,__FUNCTION__,__LINE__ );
 }
 
 
-
+#if 0
 static MY_USER_APP_TID title_id_buf_ptr[] = {
   {0x000300044b47554a, 2, FALSE },
   {0x000300044b32444a, 2, FALSE },
@@ -610,6 +632,11 @@ static MY_USER_APP_TID title_id_buf_ptr[] = {
 };
 
 static int title_id_count = sizeof(title_id_buf_ptr)/sizeof(MY_USER_APP_TID);
+#else
+static MY_USER_APP_TID *title_id_buf_ptr;
+static int title_id_count = 0;
+#endif
+
 
 #ifdef HATAMOTO_LIB
 static void ec_download_func(void)
@@ -629,6 +656,7 @@ static void ec_download_func(void)
     mprintf("OK.\n");
     m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
     
+#if 0
     SetupShopTitleId(); /* エラーはない */
     
     // ？：ユーザ設定がされていないと接続できないので適当に設定
@@ -639,7 +667,7 @@ static void ec_download_func(void)
       ret_flag = FALSE;
       goto end_log_e;
     }
-    
+#endif    
     // 必須：ネットワークへの接続
     if( 0 != NcStart(SITEDEFS_DEFAULTCLASS) ) {
       mprintf("%s failed NcStart\n", __FUNCTION__);
@@ -660,6 +688,7 @@ static void ec_download_func(void)
       /******** NHTTP & NSSLにつないだ *************/
       // 必須：EC の初期化
     mprintf("-setup EC\n");
+
     if( FALSE == SetupEC() ) {
       ret_flag = FALSE;
       mprintf(" %s failed SetupEC\n", __FUNCTION__);
@@ -823,6 +852,13 @@ static void MyThreadProc(void *arg)
       break;
     case THREAD_COMMAND_DOWNLOAD_APP:
 #ifdef HATAMOTO_LIB
+      SetupShopTitleId(); /* エラーはない */
+      if( FALSE == SetupVerData() ) {
+	mprintf("%s failed SetupVerData\n", __FUNCTION__);
+      }
+      (void)SetupEC_pre();
+      pre_install_eticket_only_process( NULL, development_console_flag ,
+					&title_id_buf_ptr,&title_id_count);
       ec_download_func();
 #endif
       break;

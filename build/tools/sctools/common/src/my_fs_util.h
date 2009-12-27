@@ -67,6 +67,7 @@ void write_debug_data(void);
 BOOL SDCardValidation(void);
 BOOL TWLCardValidation(void);
 BOOL CheckShopRecord(FSFile *log_fd);
+BOOL CheckDevDotKP(FSFile *log_fd);
 
 BOOL CleanSDCardFiles(char *log_file_name);
 

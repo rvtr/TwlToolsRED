@@ -314,3 +314,13 @@ $maker $usr_nand $outdir/reserved_nand13.srl 3B4 -a 01 -f
 $maker $usr_nand $outdir/reserved_nand14.srl F7F -a 01 -f
 $maker $usr_nand $outdir/reserved_nand15.srl 1BC -a 01 -f
 $maker $usr_nand $outdir/reserved_nand16.srl 1BE -a 01 -f
+
+#
+# Touch!Try!DS
+#
+
+copy $usr_card $outdir/touch_try_ds_card02.srl
+$maker $usr_card $outdir/touch_try_ds_card03.srl 1D -e 0 -f
+$maker $usr_card $outdir/touch_try_ds_card04.srl 1D -e 1 -f
+$maker $usr_card $outdir/touch_try_ds_card05.srl 1B4 -4 -e 3 -f
+

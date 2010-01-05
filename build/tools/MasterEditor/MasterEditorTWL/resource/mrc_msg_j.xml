@@ -34,12 +34,6 @@
 		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
 	</RomStartAddress>
 
-	<DebugDwc>
-		<name>DWCライブラリ</name>
-		<sentence>開発用サーバにアクセスする関数が使用されています。</sentence>
-		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
-	</DebugDwc>
-
 	<DigestArea>
 		<name>ダイジェスト</name>
 		<sentence>ファイルサイズがダイジェストの対象範囲よりも小さくなっています。ROM末尾のパディングやROMの一部が削除されている可能性があります。</sentence>

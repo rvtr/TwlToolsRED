@@ -4508,6 +4508,10 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 		System::Boolean parseTmp( System::Xml::XmlElement ^root, System::String ^xpath, System::Windows::Forms::TextBox ^tbox );
 		System::Boolean parseTmp( System::Xml::XmlElement ^root, System::String ^xpath, System::Windows::Forms::DateTimePicker ^date );
 
+		// 会社情報の保存と読み出し
+		System::Void saveCompany( System::String ^filename );
+		System::Void loadCompany( System::String ^filename );
+
 	private:
 		// ----------------------------------------------
 		// フォームの設定変更
@@ -4904,6 +4908,11 @@ private: System::Windows::Forms::RadioButton^  rPurposeCardTouchTryDS;
 		System::String^ getRomInfoListXsl(void)
 		{
 			return (this->getResDir() + "rominfolist.xsl");
+		}
+		// 会社情報のXML
+		System::String^ getCompanyInfoFile(void)
+		{
+			return (this->getBinDir() + "company.xml");
 		}
 
 	private:

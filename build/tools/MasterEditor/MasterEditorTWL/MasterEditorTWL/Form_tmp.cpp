@@ -161,6 +161,7 @@ void Form1::loadTmp( System::String ^filename )
 	{
 		(void)ex;
 		this->errMsg( "E_LoadTemp" );
+		return;
 	}
 	System::Xml::XmlElement  ^root = doc->DocumentElement;
 	System::String ^text;
@@ -276,14 +277,6 @@ void Form1::loadTmp( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/Form/InputPerson2", this->cboxIsInputPerson2 );
 
 	this->gboxPerson2->Enabled   = false;
-	this->tboxCompany2->Enabled  = false;
-	this->tboxDepart2->Enabled   = false;
-	this->tboxPerson2->Enabled   = false;
-	this->tboxFurigana2->Enabled = false;
-	this->tboxTel2->Enabled      = false;
-	this->tboxFax2->Enabled      = false;
-	this->tboxMail2->Enabled     = false;
-	this->tboxNTSC2->Enabled     = false;
 	this->tboxCompany2->Clear();
 	this->tboxDepart2->Clear();
 	this->tboxPerson2->Clear();
@@ -295,14 +288,6 @@ void Form1::loadTmp( System::String ^filename )
 	if( this->cboxIsInputPerson2->Checked )
 	{
 		this->gboxPerson2->Enabled   = true;
-		this->tboxCompany2->Enabled  = true;
-		this->tboxDepart2->Enabled   = true;
-		this->tboxPerson2->Enabled   = true;
-		this->tboxFurigana2->Enabled = true;
-		this->tboxTel2->Enabled      = true;
-		this->tboxFax2->Enabled      = true;
-		this->tboxMail2->Enabled     = true;
-		this->tboxNTSC2->Enabled     = true;
 		this->parseTmp( root, "/MasterEditorTWL/Form/Company2", this->tboxCompany2 );
 		this->parseTmp( root, "/MasterEditorTWL/Form/Depart2", this->tboxDepart2 );
 		this->parseTmp( root, "/MasterEditorTWL/Form/Name2", this->tboxPerson2 );
@@ -348,6 +333,105 @@ void Form1::loadTmp( System::String ^filename )
 	this->maskPurposeForms();
 	//this->maskDLCategoryForms();
 } //loadTmp()
+
+// ----------------------------------------------
+// 会社情報の保存
+// ----------------------------------------------
+System::Void Form1::saveCompany( System::String ^filename )
+{
+	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument();
+
+	doc->AppendChild( doc->CreateXmlDeclaration("1.0","UTF-8",nullptr) );
+	System::Xml::XmlElement ^root = doc->CreateElement( "MasterEditorTWL" );
+	doc->AppendChild( root );
+
+	// フォーム
+	System::Xml::XmlElement ^form = doc->CreateElement( "CompanyInfo" );
+	root->AppendChild( form );
+
+	MasterEditorTWL::appendXmlTag( doc, form, "Company1", this->tboxCompany1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Depart1", this->tboxDepart1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Name1", this->tboxPerson1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Furigana1", this->tboxFurigana1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Tel1", this->tboxTel1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Fax1", this->tboxFax1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Mail1", this->tboxMail1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "NTSC1", this->tboxNTSC1->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "InputPerson2", (this->cboxIsInputPerson2->Checked)?"Y":"N" );
+	MasterEditorTWL::appendXmlTag( doc, form, "Company2", this->tboxCompany2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Depart2", this->tboxDepart2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Name2", this->tboxPerson2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Furigana2", this->tboxFurigana2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Tel2", this->tboxTel2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Fax2", this->tboxFax2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "Mail2", this->tboxMail2->Text );
+	MasterEditorTWL::appendXmlTag( doc, form, "NTSC2", this->tboxNTSC2->Text );
+
+	// バージョン
+	MasterEditorTWL::appendXmlTag( doc, root, "MasterEditorVersion", this->getVersion() );
+
+	try
+	{
+		doc->Save( filename );
+	}
+	catch( System::Exception ^ex )
+	{
+		(void)ex;
+		return;			// ファイルがないとき何もしない
+	}
+} //saveTmp()
+
+// ----------------------------------------------
+// 会社情報の読み込み
+// ----------------------------------------------
+void Form1::loadCompany( System::String ^filename )
+{
+	System::Xml::XmlDocument ^doc = gcnew System::Xml::XmlDocument;
+	try
+	{
+		doc->Load( filename );
+	}
+	catch( System::Exception ^ex )
+	{
+		(void)ex;
+		return;			// ファイルがないとき何もしない
+	}
+
+	System::Xml::XmlElement  ^root = doc->DocumentElement;
+
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Company1", this->tboxCompany1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Depart1", this->tboxDepart1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Name1", this->tboxPerson1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana1", this->tboxFurigana1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Tel1", this->tboxTel1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Fax1", this->tboxFax1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Mail1", this->tboxMail1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC1", this->tboxNTSC1 );
+	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/InputPerson2", this->cboxIsInputPerson2 );
+
+	this->gboxPerson2->Enabled   = false;
+	this->tboxCompany2->Clear();
+	this->tboxDepart2->Clear();
+	this->tboxPerson2->Clear();
+	this->tboxFurigana2->Clear();
+	this->tboxTel2->Clear();
+	this->tboxFax2->Clear();
+	this->tboxMail2->Clear();
+	this->tboxNTSC2->Clear();
+	if( this->cboxIsInputPerson2->Checked )
+	{
+		this->gboxPerson2->Enabled   = true;
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Company2", this->tboxCompany2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Depart2", this->tboxDepart2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Name2", this->tboxPerson2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana2", this->tboxFurigana2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Tel2", this->tboxTel2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Fax2", this->tboxFax2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Mail2", this->tboxMail2 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC2", this->tboxNTSC2 );
+	}
+} //loadCompany()
+
 
 // ----------------------------------------------
 // 一時保存情報をフォーム情報に変換

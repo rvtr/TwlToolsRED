@@ -119,6 +119,9 @@ void Form1::construct(void)
 	// 引数処理
 	this->handleArgs();
 	//System::Diagnostics::Debug::WriteLine( "constructed" );
+
+	// 会社情報の自動読み出し
+	this->loadCompany( this->getCompanyInfoFile() );
 }
 
 
@@ -127,6 +130,9 @@ void Form1::construct(void)
 // ----------------------------------------------
 void Form1::destruct(void)
 {
+	// 会社情報の自動保存
+	this->saveCompany( this->getCompanyInfoFile() );
+
 	// TAD読み出しの際に作成される一時SRLファイルを削除(書き出しをせずに終了したときに起こりうる)
 	System::String ^srlfile = this->getSplitTadTmpFile();
 	if( System::IO::File::Exists( srlfile ) )

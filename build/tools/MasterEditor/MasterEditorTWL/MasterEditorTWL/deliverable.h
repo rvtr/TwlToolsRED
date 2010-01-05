@@ -105,6 +105,9 @@ namespace MasterEditorTWL
 		property System::Boolean  IsUGC;
 		property System::Boolean  IsPhotoEx;
 
+		// Privateセーブデータの用途
+		property System::String ^hPrivateSaveDataPurpose;
+
 		// プログラムのバージョン
 		property System::String  ^hMasterEditorVersion;
 

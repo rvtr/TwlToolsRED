@@ -253,6 +253,22 @@ void Form1::setDeliverableProperties(void)
 	// SRL‚É‚Í“o˜^‚³‚ê‚È‚¢ROMd—l
 	this->hDeliv->IsUGC     = this->cboxIsUGC->Checked;
 	this->hDeliv->IsPhotoEx = this->cboxIsPhotoEx->Checked;
+
+	if( !this->tboxPrivateSaveDataPurpose->Enabled )
+	{
+		if( this->isJapanese() )
+		{
+			this->hDeliv->hPrivateSaveDataPurpose = "‚È‚µ";
+		}
+		else
+		{
+			this->hDeliv->hPrivateSaveDataPurpose = "None";
+		}
+	}
+	else
+	{
+		this->hDeliv->hPrivateSaveDataPurpose = this->tboxPrivateSaveDataPurpose->Text;
+	}
 }
 
 // ----------------------------------------------
@@ -373,6 +389,11 @@ System::Boolean Form1::checkDeliverableForms(void)
 	if( this->combBackup->SelectedIndex == (this->combBackup->Items->Count - 1) )
 	{
 		this->checkTextForm( this->tboxBackupOther->Text, "LabelBackup" );
+	}
+
+	if( this->tboxPrivateSaveDataPurpose->Enabled )
+	{
+		this->checkTextForm( this->tboxPrivateSaveDataPurpose->Text, "PrivateSaveDataPurposeTitle", "PrivateSaveDataPurposeMsg" );
 	}
 
 	// ‚Ğ‚Æ‚Æ‚¨‚èƒGƒ‰[“o˜^‚ğ‚µ‚½Œã‚Å

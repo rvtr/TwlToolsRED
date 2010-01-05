@@ -1085,7 +1085,7 @@
     <value>その他アプリ情報</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>245, 103</value>
+    <value>252, 103</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 12</value>
@@ -1266,6 +1266,15 @@
   </data>
   <data name="gboxNandSize.Text" xml:space="preserve">
     <value>DSiウェアによる本体NANDメモリの使用量</value>
+  </data>
+  <data name="labPrivateSaveDataPurpose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>144, 12</value>
+  </data>
+  <data name="labPrivateSaveDataPurpose.Text" xml:space="preserve">
+    <value>Privateセーブデータの用途</value>
+  </data>
+  <data name="tboxPrivateSaveDataPurpose.Size" type="System.Drawing.Size, System.Drawing">
+    <value>250, 19</value>
   </data>
   <data name="tboxSumSizeMB.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 19</value>

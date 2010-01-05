@@ -162,6 +162,24 @@ void Form1::setSrlForms(void)
 	//this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize, 2 );
 	this->tboxSumSizeMB->Text       = MasterEditorTWL::transSizeToStringMB( this->hSrl->hNandUsedSize->NandUsedSize );
 
+	// Privateセーブデータの用途
+	if( this->hSrl->IsMediaNand && (this->hSrl->hNandUsedSize->PrivateSaveSize != 0) )
+	{
+		this->tboxPrivateSaveDataPurpose->Enabled = true;
+	}
+	else
+	{
+		this->tboxPrivateSaveDataPurpose->Enabled = false;
+		if( this->isJapanese() )
+		{
+			this->tboxPrivateSaveDataPurpose->Text = "なし";
+		}
+		else
+		{
+			this->tboxPrivateSaveDataPurpose->Text = "None";
+		}
+	}
+
 	// アプリ種別
 	if( this->hSrl->IsMediaNand )
 	{

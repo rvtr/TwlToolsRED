@@ -36,6 +36,21 @@ System::Boolean Form1::checkTextForm( System::String ^formtext, System::String ^
 	}
 	return true;
 }
+System::Boolean Form1::checkTextForm( System::String ^formtext, System::String ^title_tag, System::String ^msg_tag )
+{
+	System::String ^tmp = formtext->Replace( " ", "" );		// スペースのみの文字列もエラー
+	if( (formtext == nullptr) || formtext->Equals("") || tmp->Equals("") )
+	{
+		System::String ^labelJ = this->hMsg->getMessage(title_tag,"J");
+		System::String ^labelE = this->hMsg->getMessage(title_tag,"E");
+		System::String ^msgJ = this->hMsg->getMessage(msg_tag, "J");
+		System::String ^msgE = this->hMsg->getMessage(msg_tag, "E");
+		this->hErrorList->Add( gcnew RCMrcError( labelJ, 0, 0, msgJ, labelE, msgE, true, false, RCMrcError::PurposeType::Common ) );
+		return false;
+	}
+	return true;
+}
+
 // 数値入力が正常かどうかチェック
 System::Boolean Form1::checkNumRange( System::Int32 val, System::Int32 min, System::Int32 max, System::String ^tag )
 {

@@ -129,4 +129,7 @@
 <RatingPendingSelect>{0}: 審査中であると指定されています。審査が決まりしだい、再提出してください。</RatingPendingSelect>
 <RatingUnnecessarySelect>レーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。</RatingUnnecessarySelect>
 
+<PrivateSaveDataPurposeTitle>Privateセーブデータの用途</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>Privateセーブデータを使用する場合には、用途欄に理由、用途を明記してください。</PrivateSaveDataPurposeMsg>
+
 </message>

@@ -492,6 +492,8 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->gboxPurposeNand, L"gboxPurposeNand");
 	resources->ApplyResources(this->gboxPurpose, L"gboxPurpose");
 	resources->ApplyResources(this->labPurposeInError, L"labPurposeInError");
+	resources->ApplyResources(this->labPrivateSaveDataPurpose, L"labPrivateSaveDataPurpose");
+	resources->ApplyResources(this->tboxWarningPrivateSaveDataPurpose, L"tboxWarningPrivateSaveDataPurpose");
 	resources->ApplyResources(this, L"$this");
 
 	// テキストボックスの表記を変更
@@ -526,6 +528,19 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 		this->unnecessaryRating( this->combPEGI_BBFC );
 		this->unnecessaryRating( this->combOFLC );
 		this->unnecessaryRating( this->combGRB );
+	}
+
+	// 「Privateセーブデータの用途」欄の表示切り替え
+	if( !this->tboxPrivateSaveDataPurpose->Enabled )
+	{
+		if( this->isJapanese() )
+		{
+			this->tboxPrivateSaveDataPurpose->Text = "なし";
+		}
+		else
+		{
+			this->tboxPrivateSaveDataPurpose->Text = "None";
+		}
 	}
 
 	// フォームのEnableやVisibleを切り替え

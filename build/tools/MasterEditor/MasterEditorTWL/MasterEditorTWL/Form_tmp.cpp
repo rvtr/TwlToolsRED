@@ -402,12 +402,15 @@ void Form1::loadCompany( System::String ^filename )
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Company1", this->tboxCompany1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Depart1", this->tboxDepart1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Name1", this->tboxPerson1 );
-	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana1", this->tboxFurigana1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Tel1", this->tboxTel1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Fax1", this->tboxFax1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Mail1", this->tboxMail1 );
-	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC1", this->tboxNTSC1 );
 	this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/InputPerson2", this->cboxIsInputPerson2 );
+	if( this->isJapanese() )
+	{
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana1", this->tboxFurigana1 );
+		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC1", this->tboxNTSC1 );
+	}
 
 	this->gboxPerson2->Enabled   = false;
 	this->tboxCompany2->Clear();
@@ -424,11 +427,14 @@ void Form1::loadCompany( System::String ^filename )
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Company2", this->tboxCompany2 );
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Depart2", this->tboxDepart2 );
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Name2", this->tboxPerson2 );
-		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana2", this->tboxFurigana2 );
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Tel2", this->tboxTel2 );
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Fax2", this->tboxFax2 );
 		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Mail2", this->tboxMail2 );
-		this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC2", this->tboxNTSC2 );
+		if( this->isJapanese() )
+		{
+			this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/Furigana2", this->tboxFurigana2 );
+			this->parseTmp( root, "/MasterEditorTWL/CompanyInfo/NTSC2", this->tboxNTSC2 );
+		}
 	}
 } //loadCompany()
 

@@ -2,22 +2,22 @@
 <MasterEditorTWL>
   <Lang>E</Lang>
   <Form>
-    <MasterEditorVersion>1.5</MasterEditorVersion>
+    <MasterEditorVersion>1.8</MasterEditorVersion>
     <ProductName>Sample Game Name</ProductName>
     <ProductCode1>P</ProductCode1>
-    <ProductCode2>KGUJ</ProductCode2>
+    <ProductCode2>TWLE</ProductCode2>
     <ProductNameForeign>Sample Game Name F</ProductNameForeign>
     <ProductCode1Foreign>P</ProductCode1Foreign>
-    <ProductCode2Foreign1>KGUE</ProductCode2Foreign1>
-    <ProductCode2Foreign2>KGUP</ProductCode2Foreign2>
-    <ProductCode2Foreign3>KGUU</ProductCode2Foreign3>
+    <ProductCode2Foreign1>TWLJ</ProductCode2Foreign1>
+    <ProductCode2Foreign2>TWLP</ProductCode2Foreign2>
+    <ProductCode2Foreign3>TWLU</ProductCode2Foreign3>
     <SubmitVersion>0</SubmitVersion>
-    <Backup>6</Backup>
+    <Backup>4</Backup>
     <ReleaseForeign>Y</ReleaseForeign>
     <SubmitWay>Hand</SubmitWay>
-    <Purpose>Sale</Purpose>
-    <ReleaseDate>2009/07/07 17:48:12</ReleaseDate>
-    <SubmitDate>2009/07/07 17:48:12</SubmitDate>
+    <Purpose>CardProduction</Purpose>
+    <ReleaseDate>2009/11/01 17:48:12</ReleaseDate>
+    <SubmitDate>2009/10/01 17:48:12</SubmitDate>
     <Company1>Nintendo Co., Ltd.</Company1>
     <Depart1>Research and Engineering Development Division</Depart1>
     <Name1>Ninten Taro</Name1>
@@ -40,7 +40,9 @@
     <RatingPEGI_PRT>-1</RatingPEGI_PRT>
     <RatingPEGI_BBFC>-1</RatingPEGI_BBFC>
     <RatingOFLC>-1</RatingOFLC>
+    <RatingGRB>-1</RatingGRB>
     <IsUGC>N</IsUGC>
     <IsPhotoEx>N</IsPhotoEx>
+    <PrivateSaveDataPurpose>Save the playlist.</PrivateSaveDataPurpose>
   </Form>
 </MasterEditorTWL>

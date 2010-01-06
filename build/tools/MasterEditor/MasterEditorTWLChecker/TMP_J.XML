@@ -2,22 +2,22 @@
 <MasterEditorTWL>
   <Lang>J</Lang>
   <Form>
-    <MasterEditorVersion>1.6</MasterEditorVersion>
+    <MasterEditorVersion>1.8</MasterEditorVersion>
     <ProductName>Sample Game Name</ProductName>
     <ProductCode1>P</ProductCode1>
-    <ProductCode2>KGUJ</ProductCode2>
+    <ProductCode2>TWLJ</ProductCode2>
     <ProductNameForeign>Sample Game Name F</ProductNameForeign>
     <ProductCode1Foreign>P</ProductCode1Foreign>
-    <ProductCode2Foreign1>KGUE</ProductCode2Foreign1>
-    <ProductCode2Foreign2>KGUP</ProductCode2Foreign2>
-    <ProductCode2Foreign3>KGUU</ProductCode2Foreign3>
+    <ProductCode2Foreign1>TWLE</ProductCode2Foreign1>
+    <ProductCode2Foreign2>TWLP</ProductCode2Foreign2>
+    <ProductCode2Foreign3>TWLU</ProductCode2Foreign3>
     <SubmitVersion>0</SubmitVersion>
     <Backup>4</Backup>
     <ReleaseForeign>Y</ReleaseForeign>
     <SubmitWay>Mail</SubmitWay>
-    <Purpose>Sale</Purpose>
-    <ReleaseDate>2009/07/07 17:45:40</ReleaseDate>
-    <SubmitDate>2009/07/07 17:45:40</SubmitDate>
+    <Purpose>CardProduction</Purpose>
+    <ReleaseDate>2009/11/01 17:45:40</ReleaseDate>
+    <SubmitDate>2009/10/01 17:45:40</SubmitDate>
     <Company1>任天堂株式会社</Company1>
     <Depart1>開発技術部</Depart1>
     <Name1>任天 太郎</Name1>
@@ -47,5 +47,6 @@
     <RatingGRB>-1</RatingGRB>
     <IsUGC>N</IsUGC>
     <IsPhotoEx>N</IsPhotoEx>
+    <PrivateSaveDataPurpose>プレイリストの保存</PrivateSaveDataPurpose>
   </Form>
 </MasterEditorTWL>

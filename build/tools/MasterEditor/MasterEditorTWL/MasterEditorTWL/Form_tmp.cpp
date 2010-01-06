@@ -136,6 +136,8 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "IsUGC", (this->cboxIsUGC->Checked)?"Y":"N" );
 	MasterEditorTWL::appendXmlTag( doc, form, "IsPhotoEx", (this->cboxIsPhotoEx->Checked)?"Y":"N" );
 
+	MasterEditorTWL::appendXmlTag( doc, form, "PrivateSaveDataPurpose", this->tboxPrivateSaveDataPurpose->Text );
+
 	try
 	{
 		doc->Save( filename );
@@ -311,6 +313,8 @@ void Form1::loadTmp( System::String ^filename )
 
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsUGC", this->cboxIsUGC );
 	this->parseTmp( root, "/MasterEditorTWL/Form/IsPhotoEx", this->cboxIsPhotoEx );
+
+	this->parseTmp( root, "/MasterEditorTWL/Form/PrivateSaveDataPurpose", this->tboxPrivateSaveDataPurpose );
 
 	// Œ¾Œê
 	text = MasterEditorTWL::getXPathText( root, "/MasterEditorTWL/Lang" );

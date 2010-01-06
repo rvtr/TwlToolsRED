@@ -345,6 +345,17 @@ ECDeliverableResult RCDeliverable::writeSpreadsheet(
 			{
 				node->FirstChild->Value = MasterEditorTWL::transSizeToString( hSrl->PrivateSize );
 			}
+			if( node->FirstChild->Value->Equals( "TagPrivateSaveDataPurpose" ) )
+			{
+				if( this->hPrivateSaveDataPurpose != nullptr )
+				{
+					node->FirstChild->Value = System::String::Copy( this->hPrivateSaveDataPurpose );
+				}
+				else
+				{
+					node->FirstChild->Value = "";
+				}
+			}
 			if( node->FirstChild->Value->Equals( "TagIsCodec" ) )
 			{
 				if( hSrl->IsCodecTWL )

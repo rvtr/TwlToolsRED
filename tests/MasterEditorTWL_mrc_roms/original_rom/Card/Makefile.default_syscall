@@ -26,7 +26,7 @@ TARGET_BIN	= default_syscall_card.srl
 SRCDIR		= ../common/src
 SRCS		= main.c
 
-ROM_SPEC	=	./ROM-TS.default_syscall.rsf
+ROM_SPEC	=	./ROM-TS.rsf
 
 #----------------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ do-build:	$(TARGETS)
 
 #----------------------------------------------------------------------------
 
-LIBSYSCALL			 = ../common/0CZA/libsyscall.a
+#LIBSYSCALL			 = ../common/0CZA/libsyscall.a
 
 include	$(TWLSDK_ROOT)/build/buildtools/modulerules
 

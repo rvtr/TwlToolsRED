@@ -3804,6 +3804,16 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 					this->changePurposeForms(this->rPurposeOther);
 				}
 			}
+			// 中韓リージョンでは"データ配信ROM"/"店頭試遊台(単独型)"をなくす
+			if( this->hSrl->IsRegionChina || this->hSrl->IsRegionKorea )
+			{
+				this->rPurposeCardDistribution->Enabled = false;
+				this->rPurposeCardKiosk->Enabled = false;
+				if( this->rPurposeCardDistribution->Checked || this->rPurposeCardKiosk->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);
+				}
+			}
 
 			// リージョンがコンボボックスで変更されている場合があるのでそちらを優先する
 
@@ -3831,6 +3841,29 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 				else
 				{
 					this->rPurposeCardTouchTryDS->Enabled = true;
+				}
+			}
+			// 中韓リージョンでは"データ配信ROM"/"店頭試遊台(単独型)"をなくす
+			if( this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown )
+			{
+				this->rPurposeCardDistribution->Enabled = false;
+				this->rPurposeCardKiosk->Enabled = false;
+				if( this->rPurposeCardDistribution->Checked || this->rPurposeCardKiosk->Checked )
+				{
+					this->changePurposeForms(this->rPurposeOther);
+				}
+			}
+			else
+			{
+				if( this->hSrl->IsAlreadyReadOnce && this->hSrl->IsMediaNand )
+				{
+					this->rPurposeCardDistribution->Enabled = false;
+					this->rPurposeCardKiosk->Enabled = false;
+				}
+				else
+				{
+					this->rPurposeCardDistribution->Enabled = true;
+					this->rPurposeCardKiosk->Enabled = true;
 				}
 			}
 		} //maskPurposeForms()

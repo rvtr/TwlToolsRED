@@ -148,6 +148,24 @@ System::Boolean Form1::loadSrl( System::String ^srlfile )
 	this->setGridError();
 	this->setGridWarn();
 
+	// 提出情報の用途を更新する
+	cli::array<System::Windows::Forms::RadioButton ^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
+	{
+		this->rPurposeCardProduction,
+		this->rPurposeCardTouchTryDS,
+		this->rPurposeCardDistribution,
+		this->rPurposeCardKiosk,
+		this->rPurposeDSiWare,
+		this->rPurposeOther
+	};
+	this->tboxPurposeInError->Text = "";
+	for each( System::Windows::Forms::RadioButton ^r in rbuts )
+	{
+		if( r->Checked )
+		{
+			this->tboxPurposeInError->Text = System::String::Copy( r->Text );
+		}
+	}
 	return true;
 } // loadSrl()
 

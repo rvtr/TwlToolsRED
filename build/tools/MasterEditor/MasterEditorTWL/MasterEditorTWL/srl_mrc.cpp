@@ -262,11 +262,11 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 				System::UInt16 relstep = (System::UInt16)(0xffff & sdk->Code);
 				if( (major == 5) && (minor == 3) && (30000 <= relstep) && (relstep < 30001) )
 				{
-					this->hWarnList->Add( this->makeMrcError("LimitedCard53") );
+					this->hErrorList->Add( this->makeMrcError("LimitedCard53") );
 				}
 				else if( (major == 5) && (minor == 2) && (30000 <= relstep) && (relstep < 30003) )
 				{
-					this->hWarnList->Add( this->makeMrcError("LimitedCard52") );
+					this->hErrorList->Add( this->makeMrcError("LimitedCard52") );
 				}
 			}
 		}

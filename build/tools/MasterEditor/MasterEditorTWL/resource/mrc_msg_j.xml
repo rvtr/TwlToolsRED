@@ -6,26 +6,26 @@
 	<!-- LIMITED Card -->
 	<LimitedCard53>
 		<name>カードアプリのLIMITED条件</name>
-		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK5.3 patch1以降を使用してください。</sentence>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK 5.3 patch 1 以降を使用してください。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</LimitedCard53>
 
 	<LimitedCard52>
 		<name>カードアプリのLIMITED条件</name>
-		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK5.2 patch3以降を使用してください。</sentence>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK 5.2 patch 3 以降を使用してください。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</LimitedCard52>
 
 	<!-- TCL -->
 	<TclDeletePicture53>
 		<name>写真データベースアクセス</name>
-		<sentence>TwlSDK5.3 patch3以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<sentence>TwlSDK 5.3 patch 3 以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</TclDeletePicture53>
 
 	<TclDeletePicture52>
 		<name>写真データベースアクセス</name>
-		<sentence>TwlSDK5.2 patch4以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<sentence>TwlSDK 5.2 patch 4 以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</TclDeletePicture52>
 

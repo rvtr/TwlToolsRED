@@ -250,6 +250,28 @@ ECSrlResult RCSrl::mrcTWL( FILE *fp )
 		this->hErrorList->Add( this->makeMrcError("DigestArea") );
 	}
 
+	// SDKのバージョンによってはLIMITEDのカードアプリを禁止する
+	if( !this->IsMediaNand && (this->pRomHeader->s.platform_code == PLATFORM_CODE_TWL_LIMITED) )
+	{
+		for each( RCSDKVersion ^sdk in this->hSDKList )
+		{
+			if( sdk->IsStatic )
+			{
+				System::Byte   major   = (System::Byte)(0xff & (sdk->Code >> 24));
+				System::Byte   minor   = (System::Byte)(0xff & (sdk->Code >> 16));
+				System::UInt16 relstep = (System::UInt16)(0xffff & sdk->Code);
+				if( (major == 5) && (minor == 3) && (30000 <= relstep) && (relstep < 30001) )
+				{
+					this->hWarnList->Add( this->makeMrcError("LimitedCard53") );
+				}
+				else if( (major == 5) && (minor == 2) && (30000 <= relstep) && (relstep < 30003) )
+				{
+					this->hWarnList->Add( this->makeMrcError("LimitedCard52") );
+				}
+			}
+		}
+	}
+
 	// NANDアプリがHYBRIDとなるのはクローンブートのときのみ
 	if( this->IsMediaNand )
 	{

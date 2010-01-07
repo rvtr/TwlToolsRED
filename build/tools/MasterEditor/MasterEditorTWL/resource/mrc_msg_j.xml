@@ -3,6 +3,19 @@
 
 <!-- 英訳依頼 ここから (ver.1.8 追加メッセージ その2) -->
 
+	<!-- LIMITED Card -->
+	<LimitedCard53>
+		<name>カードアプリのLIMITED条件</name>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK5.3 patch1以降を使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</LimitedCard53>
+
+	<LimitedCard52>
+		<name>カードアプリのLIMITED条件</name>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK5.2 patch3以降を使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</LimitedCard52>
+
 	<!-- TCL -->
 	<TclDeletePicture53>
 		<name>写真データベースアクセス</name>

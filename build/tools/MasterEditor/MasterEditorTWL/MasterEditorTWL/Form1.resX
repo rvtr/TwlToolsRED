@@ -4675,7 +4675,7 @@
     <value>True</value>
   </data>
   <data name="labMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>300, 103</value>
+    <value>300, 82</value>
   </data>
   <data name="labMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>40, 15</value>
@@ -4699,7 +4699,7 @@
     <value>1</value>
   </data>
   <data name="tboxMedia.Location" type="System.Drawing.Point, System.Drawing">
-    <value>346, 100</value>
+    <value>346, 79</value>
   </data>
   <data name="tboxMedia.Size" type="System.Drawing.Size, System.Drawing">
     <value>96, 21</value>
@@ -5248,13 +5248,13 @@
     <value>True</value>
   </data>
   <data name="tboxWarningPrivateSaveDataPurpose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>285, 40</value>
+    <value>285, 71</value>
   </data>
   <data name="tboxWarningPrivateSaveDataPurpose.TabIndex" type="System.Int32, mscorlib">
     <value>43</value>
   </data>
   <data name="tboxWarningPrivateSaveDataPurpose.Text" xml:space="preserve">
-    <value>Private セーブデータ領域は原則使用禁止であり、使用する場合には用途欄に理由、用途を明記してください。</value>
+    <value>In general, use of the private save data memory region is prohibited, but if you must use it, enter your intended use and reasons for use in the appropriate entry fields.</value>
   </data>
   <data name="&gt;&gt;tboxWarningPrivateSaveDataPurpose.Name" xml:space="preserve">
     <value>tboxWarningPrivateSaveDataPurpose</value>
@@ -5275,13 +5275,13 @@
     <value>432, 80</value>
   </data>
   <data name="labPrivateSaveDataPurpose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>166, 15</value>
+    <value>143, 15</value>
   </data>
   <data name="labPrivateSaveDataPurpose.TabIndex" type="System.Int32, mscorlib">
     <value>46</value>
   </data>
   <data name="labPrivateSaveDataPurpose.Text" xml:space="preserve">
-    <value>Purpose of Private Save Data</value>
+    <value>Private Save Data Usage</value>
   </data>
   <data name="&gt;&gt;labPrivateSaveDataPurpose.Name" xml:space="preserve">
     <value>labPrivateSaveDataPurpose</value>
@@ -5299,7 +5299,7 @@
     <value>435, 97</value>
   </data>
   <data name="tboxPrivateSaveDataPurpose.Size" type="System.Drawing.Size, System.Drawing">
-    <value>250, 21</value>
+    <value>285, 21</value>
   </data>
   <data name="tboxPrivateSaveDataPurpose.TabIndex" type="System.Int32, mscorlib">
     <value>45</value>
@@ -5326,7 +5326,7 @@
     <value>NoControl</value>
   </data>
   <data name="labBracketR.Location" type="System.Drawing.Point, System.Drawing">
-    <value>532, 188</value>
+    <value>532, 210</value>
   </data>
   <data name="labBracketR.Size" type="System.Drawing.Size, System.Drawing">
     <value>13, 16</value>
@@ -5356,7 +5356,7 @@
     <value>MS UI Gothic, 12pt</value>
   </data>
   <data name="labBracketL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>421, 188</value>
+    <value>421, 210</value>
   </data>
   <data name="labBracketL.Size" type="System.Drawing.Size, System.Drawing">
     <value>13, 16</value>
@@ -5380,7 +5380,7 @@
     <value>4</value>
   </data>
   <data name="tboxSumSizeMB.Location" type="System.Drawing.Point, System.Drawing">
-    <value>435, 186</value>
+    <value>435, 208</value>
   </data>
   <data name="tboxSumSizeMB.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 21</value>
@@ -5575,7 +5575,7 @@
     <value>11</value>
   </data>
   <data name="tboxSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>322, 186</value>
+    <value>322, 208</value>
   </data>
   <data name="tboxSumSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 21</value>
@@ -5854,7 +5854,7 @@
     <value>True</value>
   </data>
   <data name="labSumSize2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>156, 205</value>
+    <value>158, 227</value>
   </data>
   <data name="labSumSize2.Size" type="System.Drawing.Size, System.Drawing">
     <value>158, 15</value>
@@ -5881,7 +5881,7 @@
     <value>True</value>
   </data>
   <data name="labSumSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>201, 189</value>
+    <value>205, 212</value>
   </data>
   <data name="labSumSize.Size" type="System.Drawing.Size, System.Drawing">
     <value>60, 15</value>
@@ -5959,10 +5959,10 @@
     <value>30</value>
   </data>
   <data name="gboxNandSize.Location" type="System.Drawing.Point, System.Drawing">
-    <value>24, 137</value>
+    <value>24, 116</value>
   </data>
   <data name="gboxNandSize.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 238</value>
+    <value>730, 251</value>
   </data>
   <data name="gboxNandSize.TabIndex" type="System.Int32, mscorlib">
     <value>9</value>
@@ -7159,7 +7159,7 @@
     <value>True</value>
   </data>
   <data name="labFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 45</value>
+    <value>38, 45</value>
   </data>
   <data name="labFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>86, 15</value>

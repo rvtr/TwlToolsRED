@@ -129,7 +129,7 @@ Exception:{0}
 <RatingPendingSelect>{0}: A "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
 <RatingUnnecessarySelect>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</RatingUnnecessarySelect>
 
-<PrivateSaveDataPurposeTitle>Privateセーブデータの用途</PrivateSaveDataPurposeTitle>
-<PrivateSaveDataPurposeMsg>Privateセーブデータを使用する場合には、用途欄に理由、用途を明記してください。</PrivateSaveDataPurposeMsg>
+<PrivateSaveDataPurposeTitle>Private Save Data Usage</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>If you must use the private save data memory region, enter your intended use and reasons for use in the appropriate entry fields.</PrivateSaveDataPurposeMsg>
 
 </message>

@@ -1196,6 +1196,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 			this->tabNandSizeInfo = (gcnew System::Windows::Forms::TabPage());
 			this->tboxGuideNandSizeInfo = (gcnew System::Windows::Forms::TextBox());
 			this->gboxNandSize = (gcnew System::Windows::Forms::GroupBox());
+			this->tboxWarningPrivateSaveDataPurpose = (gcnew System::Windows::Forms::TextBox());
 			this->labPrivateSaveDataPurpose = (gcnew System::Windows::Forms::Label());
 			this->tboxPrivateSaveDataPurpose = (gcnew System::Windows::Forms::TextBox());
 			this->labBracketR = (gcnew System::Windows::Forms::Label());
@@ -1272,7 +1273,6 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 			this->colErrorCause = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->labFile = (gcnew System::Windows::Forms::Label());
 			this->labAssemblyVersion = (gcnew System::Windows::Forms::Label());
-			this->tboxWarningPrivateSaveDataPurpose = (gcnew System::Windows::Forms::TextBox());
 			this->gboxSrl->SuspendLayout();
 			this->gboxCRC->SuspendLayout();
 			this->gboxPerson2->SuspendLayout();
@@ -2744,6 +2744,13 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 			this->gboxNandSize->Name = L"gboxNandSize";
 			this->gboxNandSize->TabStop = false;
 			// 
+			// tboxWarningPrivateSaveDataPurpose
+			// 
+			this->tboxWarningPrivateSaveDataPurpose->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
+			resources->ApplyResources(this->tboxWarningPrivateSaveDataPurpose, L"tboxWarningPrivateSaveDataPurpose");
+			this->tboxWarningPrivateSaveDataPurpose->Name = L"tboxWarningPrivateSaveDataPurpose";
+			this->tboxWarningPrivateSaveDataPurpose->ReadOnly = true;
+			// 
 			// labPrivateSaveDataPurpose
 			// 
 			resources->ApplyResources(this->labPrivateSaveDataPurpose, L"labPrivateSaveDataPurpose");
@@ -3320,13 +3327,6 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 			resources->ApplyResources(this->labAssemblyVersion, L"labAssemblyVersion");
 			this->labAssemblyVersion->ForeColor = System::Drawing::SystemColors::ControlText;
 			this->labAssemblyVersion->Name = L"labAssemblyVersion";
-			// 
-			// tboxWarningPrivateSaveDataPurpose
-			// 
-			this->tboxWarningPrivateSaveDataPurpose->BackColor = System::Drawing::SystemColors::InactiveCaptionText;
-			resources->ApplyResources(this->tboxWarningPrivateSaveDataPurpose, L"tboxWarningPrivateSaveDataPurpose");
-			this->tboxWarningPrivateSaveDataPurpose->Name = L"tboxWarningPrivateSaveDataPurpose";
-			this->tboxWarningPrivateSaveDataPurpose->ReadOnly = true;
 			// 
 			// Form1
 			// 
@@ -5015,6 +5015,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 		{
 			this->changePurposeForms(this->rPurposeOther);
 		}
+
 
 }; // enf of ref class Form1
 

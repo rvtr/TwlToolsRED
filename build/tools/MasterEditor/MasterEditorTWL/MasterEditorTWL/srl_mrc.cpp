@@ -1352,17 +1352,26 @@ void RCSrl::mrcTrialApp(FILE *fp)
 	// •\¦‚·‚é‚Æ‚«‚ÉU‚è•ª‚¯‚ğ‚·‚é
 
 	// Touch!Try!DS
+	bool use_tis = false;
 	bool use_nis = false;
 	for each( RCLicense ^lic in this->hLicenseList )
 	{
+		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->StartsWith( "TIS_FOR_TWLSDK" ) )
+		{
+			use_tis = true;
+		}
 		if( lic->Publisher->Equals( "NINTENDO" ) && lic->Name->StartsWith( "NIS_FOR_TWLSDK" ) )
 		{
 			use_nis = true;
 		}
 	}
-	if( !use_nis )
+	if( !use_tis )
 	{
-		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSLib") );
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSLibTis") );
+	}
+	if( use_nis )
+	{
+		this->hErrorList->Add( this->makeMrcError(RCMrcError::PurposeType::TouchTryDS, "TouchTryDSLibNis") );
 	}
 	if( this->IsMediaNand )
 	{

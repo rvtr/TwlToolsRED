@@ -61,11 +61,17 @@
 	</ChinaAllRatingFree>
 
 	<!-- For Touch Try DS -->
-	<TouchTryDSLib>
+	<TouchTryDSLibTis>
 		<name>Touch!Try!DS体験版対応</name>
-		<sentence>Touch!Try!DS体験版ではNISライブラリを使用する必要があります。</sentence>
+		<sentence>Touch!Try!DS体験版ではTISライブラリを使用する必要があります。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</TouchTryDSLib>
+	</TouchTryDSLibTis>
+
+	<TouchTryDSLibNis>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版ではNISライブラリを使用してはいけません。TISライブラリを使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSLibNis>
 
 	<TouchTryDSMedia>
 		<name>Touch!Try!DS体験版対応</name>

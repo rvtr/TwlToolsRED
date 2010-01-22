@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
+
+<!-- 英訳依頼 ver1.7 追加メッセージ ここから -->
+<E_JapaneseFont>ＭＳ Ｐゴシック (MS PGothic) フォントがインストールされていないPCでの日本語表示には対応していません。</E_JapaneseFont>
+<!-- 英訳依頼 ver1.7 追加メッセージ ここまで -->
+
 <!-- common -->
 <OverWrite>{0} はすでに存在します。上書きしますか?</OverWrite>
 
@@ -97,12 +102,13 @@
 <TextBoxInput>入力漏れ: 入力してください。</TextBoxInput>
 <NumRangeInput>入力漏れ: 値が不正です。</NumRangeInput>
 <ComboBoxInput>入力漏れ: 選択してください。</ComboBoxInput>
+<RadioButtonInput>入力漏れ: 選択してください。</RadioButtonInput>
 <LabelProductName>製品名</LabelProductName>
 <LabelProductCode>製品コード</LabelProductCode>
 <LabelCountryCode>製品コード(仕向地仕様コード)</LabelCountryCode>
 <LabelProductNameForeign>製品名(海外版)</LabelProductNameForeign>
 <LabelProductCodeForeign>製品コード(海外版)</LabelProductCodeForeign>
-<LabelUsage>目的</LabelUsage>
+<LabelUsage>用途</LabelUsage>
 <LabelBackup>バックアップメモリ</LabelBackup>
 <LabelPerson1>ご氏名(担当者1)</LabelPerson1>
 <LabelFurigana1>ふりがな(担当者1)</LabelFurigana1>
@@ -122,5 +128,8 @@
 <RatingInput>{0}: 選択してください。</RatingInput>
 <RatingPendingSelect>{0}: 審査中であると指定されています。審査が決まりしだい、再提出してください。</RatingPendingSelect>
 <RatingUnnecessarySelect>レーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。</RatingUnnecessarySelect>
+
+<PrivateSaveDataPurposeTitle>Privateセーブデータの用途</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>Privateセーブデータを使用する場合には、用途欄に理由、用途を明記してください。</PrivateSaveDataPurposeMsg>
 
 </message>

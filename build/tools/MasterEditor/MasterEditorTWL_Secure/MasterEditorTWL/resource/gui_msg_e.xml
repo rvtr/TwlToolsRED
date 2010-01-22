@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
+
+<!-- Begin messages appended in ver1.7-->
+<E_JapaneseFont>Japanese text display is only supported on PCs that have the MS PGothic Japanese font installed.</E_JapaneseFont>
+<!-- End messages appended in ver1.7-->
+
 <!-- common -->
 <OverWrite>{0} already exists. Overwrite data?</OverWrite>
 
@@ -67,7 +72,7 @@ Exception:{0}
 </E_SaveRom_FileDefault>
 <E_SaveRom_Exception>Failed to create Master ROM.
 
-例外:{0}
+Exception:{0}
 {1}</E_SaveRom_Exception>
 <SaveRom_Success>Succeeded in creating Master ROM.</SaveRom_Success>
 <E_SaveRom_CRC>Failed to calculate CRC.</E_SaveRom_CRC>
@@ -97,12 +102,13 @@ Exception:{0}
 <TextBoxInput>Insufficient input: Input data.</TextBoxInput>
 <NumRangeInput>Insufficient input: Illegal value.</NumRangeInput>
 <ComboBoxInput>Insufficient input: Select data.</ComboBoxInput>
+<RadioButtonInput>Insufficient input: Select data.</RadioButtonInput>
 <LabelProductName>Product Name</LabelProductName>
 <LabelProductCode>Product Code</LabelProductCode>
 <LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
 <LabelProductNameForeign>Product Name(Foreign Version)</LabelProductNameForeign>
 <LabelProductCodeForeign>Product Code(Foreign Version)</LabelProductCodeForeign>
-<LabelUsage>Usage</LabelUsage>
+<LabelUsage>Purpose</LabelUsage>
 <LabelBackup>Backup Memory</LabelBackup>
 <LabelPerson1>Contact1</LabelPerson1>
 <LabelFurigana1>Furigana</LabelFurigana1>
@@ -122,5 +128,8 @@ Exception:{0}
 <RatingInput>{0}: Select data.</RatingInput>
 <RatingPendingSelect>{0}: A "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
 <RatingUnnecessarySelect>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</RatingUnnecessarySelect>
+
+<PrivateSaveDataPurposeTitle>Private Save Data Usage</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>If you must use the private save data memory region, enter your intended use and reasons for use in the appropriate entry fields.</PrivateSaveDataPurposeMsg>
 
 </message>

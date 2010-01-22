@@ -1,7 +1,203 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <message>
 
-<!-- 英訳依頼 ここから (ver.1.6 追加メッセージ) -->
+<!-- 英訳依頼 ここから (ver.1.8 追加メッセージ その2) -->
+
+	<!-- LIMITED Card -->
+	<LimitedCard53>
+		<name>カードアプリのLIMITED条件</name>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK 5.3 patch 1 以降を使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</LimitedCard53>
+
+	<LimitedCard52>
+		<name>カードアプリのLIMITED条件</name>
+		<sentence>カードアプリをLIMITED版として作成する場合には、TwlSDK 5.2 patch 3 以降を使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</LimitedCard52>
+
+	<!-- TCL -->
+	<TclDeletePicture53>
+		<name>写真データベースアクセス</name>
+		<sentence>TwlSDK 5.3 patch 3 以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TclDeletePicture53>
+
+	<TclDeletePicture52>
+		<name>写真データベースアクセス</name>
+		<sentence>TwlSDK 5.2 patch 4 以前のSDKを使用して作成されたソフトでは、TCL_DeletePicture()関数の使用は禁止されています。ソフト内でTCL_DeletePicture()関数を使用していないかを確認してください。もし上記の関数を使用していない場合、本警告を無視していただいて結構です。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TclDeletePicture52>
+
+	<!-- DWC -->
+	<DwcDebug>
+		<name>DWCライブラリ</name>
+		<sentence>開発用サーバにアクセスするためのライブラリが使用されています。製品用サーバへアクセスするためのライブラリを使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DwcDebug>
+
+<!-- 英訳依頼 ここまで -->
+
+<!-- 英訳依頼 ここから (ver.1.8 追加メッセージ) -->
+
+	<!-- TWL Rom Info -->
+	<RomStartAddress>
+		<name>ロード先アドレス</name>
+		<sentence>プログラムのロード先アドレスは、0x02004000以降でなければなりません。LSFファイルの "ADDRESS_STATIC" の値、もしくは CodeWarrior for DSi の設定を確認してください。</sentence>
+		<begin>28</begin><end>2b</end><modify>False</modify><affect>True</affect>
+	</RomStartAddress>
+
+	<DigestArea>
+		<name>ダイジェスト</name>
+		<sentence>ファイルサイズがダイジェストの対象範囲よりも小さくなっています。ROM末尾のパディングやROMの一部が削除されている可能性があります。</sentence>
+		<begin>1e0</begin><end>1ef</end><modify>False</modify><affect>True</affect>
+	</DigestArea>
+
+	<!-- For China -->
+	<ChinaAllRatingFree>
+		<name>レーティング(中国版対応)</name>
+		<sentence>中国にはレーティング審査団体が存在しませんので、中国向けソフトに対しては、各審査団体のレーティング値を設定する必要はありません。(自動的にマスターエディタが値をセットしますので、本警告を無視していただいてかまいません。)</sentence>
+		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
+	</ChinaAllRatingFree>
+
+	<!-- For Touch Try DS -->
+	<TouchTryDSLibTis>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版ではTISライブラリを使用する必要があります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSLibTis>
+
+	<TouchTryDSLibNis>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版ではNISライブラリを使用してはいけません。TISライブラリを使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSLibNis>
+
+	<TouchTryDSMedia>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>NANDアプリとして作成されています。Touch!Try!DS体験版を作成する際には、カードアプリとして作成する必要があります。</sentence>
+		<begin>234</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSMedia>
+
+	<TouchTryDSNormalJump>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版でのアプリケーションジャンプは禁止されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSNormalJump>
+
+	<TouchTryDSTmpJump>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版でのtmpジャンプは禁止されています。</sentence>
+		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSTmpJump>
+
+	<TouchTryDSSDCard>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版でのSDカード使用は禁止されています。</sentence>
+		<begin>1b4</begin><end>1b7</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSSDCard>
+
+	<TouchTryDSSyscall>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版では、SDK付属のシステムコールライブラリを使用せず、弊社より体験版専用に提供されたライブラリを使用してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSSyscall>
+
+	<TouchTryDSRomSize>
+		<name>Touch!Try!DS体験版対応</name>
+		<sentence>Touch!Try!DS体験版のファイルサイズは96MByte以下である必要があります。サイズオーバーしたROMを提出する場合、弊社窓口にご連絡ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</TouchTryDSRomSize>
+
+	<!-- For Nintendo Zone -->
+	<ZoneHybrid>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo ZoneソフトをHYBRID版として作成することは許可されていません。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneHybrid>
+
+	<ZoneLimited>
+		<name>Nintendo Zone対応</name>
+		<sentence>このソフトはNintendo Zoneでのみ配信可能です。みんなのニンテンドーチャンネルやDSダウンロードプレイのしくみを使用して配信することはできませんのでご注意ください。(ROMに問題があるわけではありませんので、本警告を無視していただいて結構です。)</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</ZoneLimited>
+
+	<ZoneRomSize>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo Zoneソフトのファイルサイズは2.5MByte以下である必要があります。サイズオーバーしたROMを提出する場合、弊社窓口にご連絡ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneRomSize>
+
+	<ZoneCardAccess>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo ZoneソフトからDSカードへのアクセスは許可されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneCardAccess>
+
+	<ZoneSyscall>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo ZoneソフトではSDK付属のシステムコールライブラリを使用する必要があります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneSyscall>
+
+	<ZoneMedia>
+		<name>Nintendo Zone対応</name>
+		<sentence>カードアプリとして作成されています。Nintendo Zoneソフトを作成する際には、NANDアプリとして作成する必要があります。</sentence>
+		<begin>234</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</ZoneMedia>
+
+	<ZoneTmpJump>
+		<name>Nintendo Zone対応</name>
+		<sentence>Nintendo Zoneソフトではtmpジャンプを指定する必要があります。RSFファイルのPermitLandingTmpJumpプロパティをTRUEに設定してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</ZoneTmpJump>
+
+	<!-- For DS Download Service and Nintendo Channel -->
+	<DSDownloadLimited>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトをLIMITED版として作成することはできません。HYBRID版として作成してください。</sentence>
+		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
+	</DSDownloadLimited>
+
+	<DSDownloadRomSize>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトのファイルサイズは2.5MByte以下である必要があります。サイズオーバーしたROMを提出する場合、弊社窓口にご連絡ください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSDownloadRomSize>
+
+	<DSDownloadCloneBoot>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>認証コードが付加されていません。DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトを配信するためには、認証コードを付加する必要があります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSDownloadCloneBoot>
+
+	<DSDownloadCardAccess>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトからDSカードへのアクセスは許可されていません。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSDownloadCardAccess>
+
+	<DSDownloadSyscall>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトではSDK付属のシステムコールライブラリを使用する必要があります。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSDownloadSyscall>
+
+	<DSDownloadMedia>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>カードアプリとして作成されています。DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトを作成する際には、NANDアプリとして作成する必要があります。</sentence>
+		<begin>234</begin><end>237</end><modify>False</modify><affect>True</affect>
+	</DSDownloadMedia>
+
+	<DSDownloadTmpJump>
+		<name>DSダウンロードサービス/ニンテンドーチャンネル対応</name>
+		<sentence>DSダウンロードサービスもしくはみんなのニンテンドーチャンネル向けソフトではtmpジャンプを指定する必要があります。RSFファイルのPermitLandingTmpJumpプロパティをTRUEに設定してください。</sentence>
+		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
+	</DSDownloadTmpJump>
+
+<!-- 英訳依頼 ここまで -->
+
+<!-- (ver.1.6 追加メッセージ ここから) -->
 
 	<!-- Clone Boot -->
 	<NandHybridBefore51PR>
@@ -65,49 +261,6 @@
 		<sentence>中国版のバナー文字として不正な文字セットが使用されています。</sentence>
 		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
 	</ChinaBannerCharSet>
-	<ChinaAllRatingFree>
-		<name>レーティング(中国版対応)</name>
-		<sentence>仕向地が中国である場合、すべての団体のレーティングを「全年齢」に設定する必要があります。(マスターROMを作成する際に、マスターエディタによって自動的に設定されますので、ROMを再ビルドする必要はありません。)</sentence>
-		<begin>2f0</begin><end>2ff</end><modify>True</modify><affect>True</affect>
-	</ChinaAllRatingFree>
-
-	<!-- For DS Station -->
-	<DSStationTmpJump>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版ではtmpジャンプは許可されていません。</sentence>
-		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
-	</DSStationTmpJump>
-
-	<DSStationRomSize>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版のROMサイズは768Mbit以下でなければなりません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSStationRomSize>
-
-	<DSStationLib>
-		<name>店頭試遊版対応</name>
-		<sentence>店頭試遊版ライブラリが使用されていません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</DSStationLib>
-
-	<!-- For Nintendo Zone -->
-	<ZoneTmpJump>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMでは、tmpジャンプを許可する必要があります。RSFファイルのPermitLandingTmpJumpプロパティを設定してください。</sentence>
-		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
-	</ZoneTmpJump>
-
-	<ZoneHybrid>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用アプリをHYBRID版として作成することは許可されていません。</sentence>
-		<begin>12</begin><end>12</end><modify>False</modify><affect>True</affect>
-	</ZoneHybrid>
-
-	<ZoneRomSize>
-		<name>ダウンロードサービス対応</name>
-		<sentence>ダウンロードサービス用のROMサイズは2.5MByte以下でなければなりません。</sentence>
-		<begin>0</begin><end>0</end><modify>False</modify><affect>True</affect>
-	</ZoneRomSize>
 
 	<!-- SDK Version -->
 	<SDKVersionExModuleTwlOld>
@@ -158,7 +311,7 @@
 		<begin>1d</begin><end>1d</end><modify>False</modify><affect>True</affect>
 	</NormalJumpAndTmpJump>
 
-<!-- 英訳依頼 ここまで -->
+<!-- (ver.1.6追加メッセージ ここまで) -->
 
 	<!-- NTR Compatible Area -->
 	<TitleNameAscii>

@@ -420,7 +420,8 @@ System::Boolean Form1::checkSrlForms(void)
 			bKorea = true;
 			this->hWarnList->Add( gcnew RCMrcError( 
 			"リージョン", 0x1b0, 0x1b3, "全リージョンが設定されています。仕向地別に設定する必要がないかご確認ください。",
-			"Region", "All Region is set. Please check necessity for setting each region individually.", true, true ) );
+			"Region", "All Region is set. Please check necessity for setting each region individually.", true, true,
+			RCMrcError::PurposeType::Common ) );
 		break;
 #endif
 		default:

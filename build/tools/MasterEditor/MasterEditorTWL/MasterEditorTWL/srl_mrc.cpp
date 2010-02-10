@@ -810,7 +810,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 					RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
 					"SDReadAccessUser") );
 			}
-			if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+			if( this->pRomHeader->s.access_control.sdmc_access_write != 0 )
 			{
 				this->hErrorList->Add( this->makeMrcError(
 					RCMrcError::PurposeType::Production | RCMrcError::PurposeType::CardKiosk | RCMrcError::PurposeType::CardDistribution,
@@ -835,7 +835,7 @@ void RCSrl::mrcAccessControl(FILE *fp)
 						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,
 						"SDReadAccessUser") );
 				}
-				if( this->pRomHeader->s.access_control.sdmc_access_read != 0 )
+				if( this->pRomHeader->s.access_control.sdmc_access_write != 0 )
 				{
 					this->hErrorList->Add( this->makeMrcError(
 						RCMrcError::PurposeType::Production | RCMrcError::PurposeType::DSiShop,

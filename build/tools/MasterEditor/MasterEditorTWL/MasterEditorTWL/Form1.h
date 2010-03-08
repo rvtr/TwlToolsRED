@@ -3618,7 +3618,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 		{
 			System::Reflection::Assembly ^ass = System::Reflection::Assembly::GetEntryAssembly();
 			System::Version ^ver =  ass->GetName()->Version;
-			return ( ver->Major.ToString() + "." + ver->Minor.ToString() );
+			return ( ver->Major.ToString() + "." + ver->Minor.ToString() + "A" );
 		}
 
 		// SRLに登録されないROM仕様のフォーム入力を

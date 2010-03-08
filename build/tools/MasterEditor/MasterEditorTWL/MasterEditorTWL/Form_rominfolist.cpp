@@ -90,7 +90,12 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labRomType->Text, this->tboxRomLatency->Text, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labRomSize->Text, this->tboxRomSize->Text, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labRemasterVer->Text, this->tboxRemasterVer->Text, nullptr) );
-		tag->AppendChild( CreateRomInfoListElement(doc, this->labCaptionEx->Text, this->tboxCaptionEx->Text, nullptr) );
+        if( withError && !isCurrent )   // ver.1.8A ‚Å‘Î‰ž (ROM“Ç‚Ýž‚ÝŽž‚Ì‚Æ‚«CRC‚ðo—Í)
+        {
+            tag->AppendChild( CreateRomInfoListElement(doc, this->labHeaderCRC->Text, this->tboxHeaderCRC->Text, nullptr) );
+            tag->AppendChild( CreateRomInfoListElement(doc, this->labRomCRC->Text, this->tboxWholeCRC->Text, nullptr) );
+        }
+        tag->AppendChild( CreateRomInfoListElement(doc, this->labCaptionEx->Text, this->tboxCaptionEx->Text, nullptr) );
 		section->AppendChild(tag);
 	}
 	root->AppendChild(section);

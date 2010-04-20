@@ -357,8 +357,8 @@ BOOL MiyaRestoreTWLSettings(const char *path)
 
 
 #if 1
-  // 国が選択されていないなら適当に設定
-  if( LCFG_TSD_GetCountry() == LCFG_TWL_COUNTRY_UNDEFINED ) {
+  if( cfg_data.country == LCFG_TWL_COUNTRY_UNDEFINED ) {
+    // 国が選択されていないなら適当に設定
     switch( LCFG_THW_GetRegion() ) {
     case OS_TWL_REGION_JAPAN:
       cfg_data.country = LCFG_TWL_COUNTRY_JAPAN;

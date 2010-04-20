@@ -157,13 +157,16 @@ int MFILER_ReadDir(MY_ENTRY_LIST **headp, const char *path_src)
   while( FS_ReadDirectory(&f_src, &entry_src) ) {
 
     if( STD_StrCmp(entry_src.longname, ".") == 0 ) {
-
     }
     else if( STD_StrCmp(entry_src.longname, "..") == 0 ) {
     }
     else if( STD_StrCmp(entry_src.longname, "wlan_cfg.txt") == 0 ) {
     }
     else if( STD_StrCmp(entry_src.longname, "nup_log.txt") == 0 ) {
+    }
+    else if( STD_StrCmp(entry_src.longname, "sdtads") == 0 ) {
+    }
+    else if( STD_StrCmp(entry_src.longname, "sdtaddevs") == 0 ) {
     }
     else if( entry_src.attributes & FS_ATTRIBUTE_DOS_VOLUME ) {
     }

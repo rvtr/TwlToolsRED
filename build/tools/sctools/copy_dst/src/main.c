@@ -533,10 +533,10 @@ static BOOL RestoreFromSDCard3(void)
 
 static BOOL RestoreFromSDCard4(void)
 {
-  // static BOOL SDBackupToSDCard3(void)
   if( mydata.user_settings_flag == TRUE ) {
     mprintf("User setting param. restore  ");
     if( TRUE == MiyaRestoreTWLSettings( MyFile_GetUserSettingsFileName() ) ) {
+      /*   çëê›íËäÆóπ LCFG_TSD_SetCountry( (LCFGTWLCountryCode)cfg_data.country ) */
       m_set_palette(tc[0], M_TEXT_COLOR_GREEN );
       mprintf("OK.\n");
       m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
@@ -557,7 +557,6 @@ static BOOL RestoreFromSDCard4(void)
 
 static BOOL RestoreFromSDCard5(void)
 {
-  // static BOOL SDBackupToSDCard4(void)
   int list_count;
   int error_count;
   BOOL ret_flag = TRUE;

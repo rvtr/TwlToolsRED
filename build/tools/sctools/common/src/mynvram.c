@@ -349,10 +349,11 @@ BOOL nvram_restore(char *path)
     #define NVRAM_PERSONAL_DATA_SIZE 0x0A00
     #define NVRAM_INTERNAL_BUF_SIZE 0x100
     
+
+    2008/12/17 (水) 19:30 ネ開の上村君より-----------------
     
     ・NORの0x20から2byteを読み出し、8倍する（だいたい0x1fe00ぐらいになる）
     ・そこから-0x400した値（だいたい0x1fa00）がWi-Fiユーザー情報の先頭となる
-    
     
     そして、本IDが有るか、無いかの確認は
     Wi-Fiユーザー情報の0xf0から14byteがWi-FiコネクションID情報になります。

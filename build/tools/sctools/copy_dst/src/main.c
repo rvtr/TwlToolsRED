@@ -2035,6 +2035,8 @@ void TwlMain(void)
     }
     else if ( keyData & PAD_BUTTON_X ) {
       if( FALSE == reboot_flag ) {
+// nishimura 20100422
+#if 0
 	//miya 20091116  
 	
 	int slot_no = 0;
@@ -2228,6 +2230,7 @@ void TwlMain(void)
 	    m_set_palette(tc[0], M_TEXT_COLOR_WHITE );
 	  }
 	}
+#endif
       }
       else {
 	no_network_flag = FALSE;
@@ -2429,7 +2432,10 @@ void TwlMain(void)
 
     if( FALSE == reboot_flag ) {
       mfprintf(tc[1], "press Y to RESTORE mode\n");
+// nishimura 20100422
+#if 0
       mfprintf(tc[1], "press X to OVERWRITE the Net setting\n");
+#endif
     }
     else {
       switch( select_mode ) {

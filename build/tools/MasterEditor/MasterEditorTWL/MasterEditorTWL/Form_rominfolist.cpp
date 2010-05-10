@@ -13,6 +13,8 @@ using namespace System::Data;
 using namespace System::Drawing;
 using namespace MasterEditorTWL;
 
+static int s_NodeCount = 0;
+
 // ======================================================
 // XMLの一要素を作成
 // ======================================================
@@ -20,6 +22,7 @@ static System::Xml::XmlElement^ CreateRomInfoListElement(System::Xml::XmlDocumen
 														 System::String ^label, System::String ^val, System::String ^type)
 {
 	System::Xml::XmlElement ^tag = doc->CreateElement("info");
+    tag->SetAttribute( "num", ( s_NodeCount++ ).ToString() );
 	MasterEditorTWL::appendXmlTag( doc, tag, "label",  label );
 	MasterEditorTWL::appendXmlTag( doc, tag, "value", val );
 	if( type )
@@ -33,6 +36,7 @@ static System::Xml::XmlElement^ CreateRomInfoListElement(System::Xml::XmlDocumen
 														 System::String ^label, System::Boolean isCheck, System::String ^type)
 {
 	System::Xml::XmlElement ^tag = doc->CreateElement("info");
+    tag->SetAttribute( "num", ( s_NodeCount++ ).ToString() );
 	MasterEditorTWL::appendXmlTag( doc, tag, "label",  label );
 	MasterEditorTWL::appendXmlTag( doc, tag, "value", (isCheck)?"Yes":"No" );
 	if( type )
@@ -46,6 +50,7 @@ static System::Xml::XmlElement^ CreateSDKVersionListElement(System::Xml::XmlDocu
 															System::String ^version, System::Boolean isStatic)
 {
 	System::Xml::XmlElement ^tag = doc->CreateElement("sdk-version");
+    tag->SetAttribute( "num", ( s_NodeCount++ ).ToString() );
 	MasterEditorTWL::appendXmlTag( doc, tag, "version",  version );
 	MasterEditorTWL::appendXmlTag( doc, tag, "is-static", (isStatic)?"Main SDK":"" );
 	return tag;
@@ -73,7 +78,34 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	// ゲーム情報
 	root->AppendChild( this->makeGameInfoXmlElement(doc) );
 
-	//
+    // ファイルパス
+    MasterEditorTWL::appendXmlTag( doc, root, "path", this->tboxFile->Text );
+
+    // 作成日時
+    System::Xml::XmlElement ^time = doc->CreateElement( "time-info" );
+    System::DateTime ^ datetime = System::DateTime::Now;
+    time->SetAttribute( "year",  datetime->Year.ToString() );
+    switch( datetime->Month )
+    {
+    case  1: time->SetAttribute( "month", "January" );   break;
+    case  2: time->SetAttribute( "month", "February" );  break;
+    case  3: time->SetAttribute( "month", "March" );     break;
+    case  4: time->SetAttribute( "month", "April" );     break;
+    case  5: time->SetAttribute( "month", "May" );       break;
+    case  6: time->SetAttribute( "month", "June" );      break;
+    case  7: time->SetAttribute( "month", "July" );      break;
+    case  8: time->SetAttribute( "month", "August" );    break;
+    case  9: time->SetAttribute( "month", "September" ); break;
+    case 10: time->SetAttribute( "month", "October" );   break;
+    case 11: time->SetAttribute( "month", "November" );  break;
+    case 12: time->SetAttribute( "month", "December" );  break;
+    default: time->SetAttribute( "month", datetime->Month.ToString() ); break;
+    }
+    time->SetAttribute( "day",   datetime->Day.ToString() );
+    time->SetAttribute( "time",  datetime->Hour.ToString("D2") + ":" + datetime->Minute.ToString("D2") );
+    root->AppendChild( time );
+
+    //
 	// 各タブごとに情報をまとめる
 	//
 	System::Xml::XmlElement ^section;
@@ -82,7 +114,8 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	section = doc->CreateElement("basic-rom-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"ROM基本情報":"Basic ROM Info" );
 	{
-		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
+        s_NodeCount = 0;
+        System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labTitleName->Text, this->tboxTitleName->Text, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labGameCode->Text, this->tboxGameCode->Text, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labMakerCode->Text, this->tboxMakerCode->Text, nullptr) );
@@ -104,6 +137,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	section = doc->CreateElement("twl-extended-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"TWL拡張情報":"TWL Extended Info" );
 	{
+        s_NodeCount = 0;
 		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labTitleIDLo->Text, this->tboxTitleIDLo->Text, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labTitleIDHi->Text, this->tboxTitleIDHi->Text, nullptr) );
@@ -125,6 +159,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	section = doc->CreateElement("access-control-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"アクセスコントロール情報":"Access Control" );
 	{
+        s_NodeCount = 0;
 		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 		tag->AppendChild( CreateRomInfoListElement(doc, this->cboxIsSD->Text, this->cboxIsSD->Checked, nullptr) );
 		tag->AppendChild( CreateRomInfoListElement(doc, this->cboxIsNAND->Text, this->cboxIsNAND->Checked, nullptr) );
@@ -139,6 +174,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	section = doc->CreateElement("dsi-ware-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"DSiウェア情報":"DSiWare Info" );
 	{
+        s_NodeCount = 0;
 		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 		tag->AppendChild( CreateRomInfoListElement(doc, this->labMedia->Text, this->tboxMedia->Text, nullptr) );
 		if( this->hSrl->IsNAND )	// カードアプリでは不要な情報
@@ -161,7 +197,9 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	{
 		System::Xml::XmlElement ^tag = doc->CreateElement("info-list");
 
-		// リージョン
+        s_NodeCount = 0;
+
+        // リージョン
 		System::String ^region = "";
 		if( this->combRegion->DropDownStyle == System::Windows::Forms::ComboBoxStyle::DropDown )
 		{
@@ -211,6 +249,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	section = doc->CreateElement("sdk-version-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"SDKバージョン":"SDK Version" );
 	{
+        s_NodeCount = 0;
 		System::Xml::XmlElement ^tag = doc->CreateElement("sdk-version-list");
 		for each( RCSDKVersion ^sdk in this->hSrl->hSDKList )
 		{
@@ -225,7 +264,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 	//
 	section = doc->CreateElement("middleware-info");
 	MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"使用ライブラリ":"Libraries" );
-	section->AppendChild( this->makeMiddlewareListXmlElement(doc) );
+	section->AppendChild( this->makeMiddlewareListXmlElement(doc, true) );
 	root->AppendChild(section);
 
 	//
@@ -243,6 +282,13 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 		MasterEditorTWL::appendXmlTag( doc, section, "index", this->isJapanese()?"警告":"Warning" );
 		section->AppendChild( this->makeWarningListXmlElement(doc, isCurrent) );
 		section->AppendChild( this->makeErrorListCaptionXmlElement(doc) );
+		root->AppendChild(section);
+
+        section = doc->CreateElement("error-num-info");
+        section->SetAttribute( "error-title", this->isJapanese()?"エラー":"Error" );
+        section->SetAttribute( "error-num", this->countErrorListXmlElement( isCurrent ).ToString() );
+        section->SetAttribute( "warning-title", this->isJapanese()?"警告":"Warning" );
+        section->SetAttribute( "warning-num", this->countWarningListXmlElement( isCurrent ).ToString() );
 		root->AppendChild(section);
 	}
 

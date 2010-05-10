@@ -46,14 +46,20 @@ System::Xml::XmlElement^ Form1::makeGameInfoXmlElement(System::Xml::XmlDocument 
 // ----------------------------------------------
 // XML形式のリストの本体となるミドルウェアリストの作成(他でも使うので独立させる)
 // ----------------------------------------------
-System::Xml::XmlElement^ Form1::makeMiddlewareListXmlElement(System::Xml::XmlDocument ^doc)
+System::Xml::XmlElement^ Form1::makeMiddlewareListXmlElement(System::Xml::XmlDocument ^doc, bool isCount)
 {
+    int NodeCount = 0;
+
 	System::Xml::XmlElement ^midlist = doc->CreateElement( "middleware-list" );
 	if( this->hSrl->hLicenseList != nullptr )
 	{
 		for each( RCLicense ^lic in this->hSrl->hLicenseList )
 		{
 			System::Xml::XmlElement ^mid = doc->CreateElement( "middleware" );
+            if( isCount )
+            {
+                mid->SetAttribute( "num", ( NodeCount++ ).ToString() );
+            }
 			MasterEditorTWL::appendXmlTag( doc, mid, "publisher", lic->Publisher );
 			MasterEditorTWL::appendXmlTag( doc, mid, "name", lic->Name );
 			System::String ^note = "";
@@ -90,7 +96,7 @@ System::Void Form1::makeMiddlewareListXml(System::Xml::XmlDocument^ doc)
 	root->AppendChild( this->makeGameInfoXmlElement(doc) );
 
 	// ミドルウェアリスト
-	root->AppendChild( this->makeMiddlewareListXmlElement(doc) );
+	root->AppendChild( this->makeMiddlewareListXmlElement(doc, false) );
 }
 
 // ----------------------------------------------

@@ -209,7 +209,7 @@
     <value>リマスターバージョン</value>
   </data>
   <data name="tboxTitleName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 19</value>
+    <value>145, 19</value>
   </data>
   <data name="gboxSrl.Text" xml:space="preserve">
     <value>ROMデータ情報</value>

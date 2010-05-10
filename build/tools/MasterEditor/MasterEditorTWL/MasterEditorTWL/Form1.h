@@ -3284,7 +3284,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
             this->gridSDK->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(1) {this->dataSDKVer});
             dataGridViewCellStyle1->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
             dataGridViewCellStyle1->BackColor = System::Drawing::SystemColors::Window;
-            dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"Arial", 9));
+            dataGridViewCellStyle1->Font = (gcnew System::Drawing::Font(L"ＭＳ Ｐゴシック", 9));
             dataGridViewCellStyle1->ForeColor = System::Drawing::SystemColors::ControlText;
             dataGridViewCellStyle1->SelectionBackColor = System::Drawing::SystemColors::Highlight;
             dataGridViewCellStyle1->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
@@ -3317,7 +3317,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
                 this->colLibName});
             dataGridViewCellStyle2->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
             dataGridViewCellStyle2->BackColor = System::Drawing::SystemColors::Window;
-            dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"Arial", 9));
+            dataGridViewCellStyle2->Font = (gcnew System::Drawing::Font(L"ＭＳ Ｐゴシック", 9));
             dataGridViewCellStyle2->ForeColor = System::Drawing::SystemColors::ControlText;
             dataGridViewCellStyle2->SelectionBackColor = System::Drawing::SystemColors::Highlight;
             dataGridViewCellStyle2->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
@@ -4223,7 +4223,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
                 this->colWarnBegin, this->colWarnEnd, this->colWarnCause});
             dataGridViewCellStyle3->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
             dataGridViewCellStyle3->BackColor = System::Drawing::SystemColors::Window;
-            dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"Arial", 9));
+            dataGridViewCellStyle3->Font = (gcnew System::Drawing::Font(L"ＭＳ Ｐゴシック", 9));
             dataGridViewCellStyle3->ForeColor = System::Drawing::SystemColors::ControlText;
             dataGridViewCellStyle3->SelectionBackColor = System::Drawing::SystemColors::Highlight;
             dataGridViewCellStyle3->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
@@ -4276,7 +4276,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
                 this->colErrorBegin, this->colErrorEnd, this->colErrorCause});
             dataGridViewCellStyle5->Alignment = System::Windows::Forms::DataGridViewContentAlignment::MiddleLeft;
             dataGridViewCellStyle5->BackColor = System::Drawing::SystemColors::Window;
-            dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"Arial", 9));
+            dataGridViewCellStyle5->Font = (gcnew System::Drawing::Font(L"ＭＳ Ｐゴシック", 9));
             dataGridViewCellStyle5->ForeColor = System::Drawing::SystemColors::ControlText;
             dataGridViewCellStyle5->SelectionBackColor = System::Drawing::SystemColors::Highlight;
             dataGridViewCellStyle5->SelectionForeColor = System::Drawing::SystemColors::HighlightText;
@@ -4486,7 +4486,7 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 		System::Xml::XmlElement^ makeGameInfoXmlElement(System::Xml::XmlDocument^ doc);
 
 		// XML形式のリストの本体となるミドルウェアリストの作成(他でも使うので独立させる)
-		System::Xml::XmlElement^ makeMiddlewareListXmlElement(System::Xml::XmlDocument^ doc);
+		System::Xml::XmlElement^ makeMiddlewareListXmlElement(System::Xml::XmlDocument^ doc, bool isCount);
 
 		// XML形式のリストを作成
 		System::Void makeMiddlewareListXml(System::Xml::XmlDocument^ doc);
@@ -4509,6 +4509,10 @@ private: System::Windows::Forms::TextBox^  tboxWarningPrivateSaveDataPurpose;
 		System::Xml::XmlElement^ makeErrorListXmlElement(System::Xml::XmlDocument ^doc, System::Boolean isCurrent);
 		System::Xml::XmlElement^ makeWarningListXmlElement(System::Xml::XmlDocument ^doc, System::Boolean isCurrent);
 		System::Xml::XmlElement^ makeErrorListCaptionXmlElement(System::Xml::XmlDocument ^doc);
+
+        // XML形式のエラーリストの要素数のカウント
+        int countErrorListXmlElement( System::Boolean isCurrent );
+        int countWarningListXmlElement( System::Boolean isCurrent );
 
 		// XML形式のリストを作成
 		System::Void makeErrorListXml(System::Xml::XmlDocument^ doc, System::Boolean isCurrent);

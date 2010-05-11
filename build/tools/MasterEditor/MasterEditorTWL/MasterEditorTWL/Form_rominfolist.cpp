@@ -46,6 +46,20 @@ static System::Xml::XmlElement^ CreateRomInfoListElement(System::Xml::XmlDocumen
 	return tag;
 }
 
+static System::Xml::XmlElement^ CreateSpecialRomInfoListElement(System::Xml::XmlDocument ^doc, 
+														     System::String ^label, System::String ^val, System::String ^type)
+{
+	System::Xml::XmlElement ^tag = doc->CreateElement("sp-info");    // “Á•Ê‚È’l
+    tag->SetAttribute( "num", ( s_NodeCount++ ).ToString() );
+	MasterEditorTWL::appendXmlTag( doc, tag, "label",  label );
+	MasterEditorTWL::appendXmlTag( doc, tag, "value", val );
+	if( type )
+	{
+		MasterEditorTWL::appendXmlTag( doc, tag, "type",  type );
+	}
+	return tag;
+}
+
 static System::Xml::XmlElement^ CreateSDKVersionListElement(System::Xml::XmlDocument ^doc,
 															System::String ^version, System::Boolean isStatic)
 {
@@ -128,7 +142,7 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
             tag->AppendChild( CreateRomInfoListElement(doc, this->labHeaderCRC->Text, this->tboxHeaderCRC->Text, nullptr) );
             tag->AppendChild( CreateRomInfoListElement(doc, this->labRomCRC->Text, this->tboxWholeCRC->Text, nullptr) );
         }
-        tag->AppendChild( CreateRomInfoListElement(doc, this->labCaptionEx->Text, this->tboxCaptionEx->Text, nullptr) );
+        tag->AppendChild( CreateSpecialRomInfoListElement(doc, this->labCaptionEx->Text, this->tboxCaptionEx->Text, nullptr) );
 		section->AppendChild(tag);
 	}
 	root->AppendChild(section);
@@ -184,8 +198,8 @@ void Form1::makeRomInfoListXml(System::Xml::XmlDocument ^doc, System::Boolean wi
 			tag->AppendChild( CreateRomInfoListElement(doc, this->labPrivateSize->Text, this->tboxPrivateSizeFS->Text, nullptr) );
 			tag->AppendChild( CreateRomInfoListElement(doc, this->labSubBannerSize->Text, this->tboxSubBannerSizeFS->Text, nullptr) );
 			tag->AppendChild( CreateRomInfoListElement(doc, this->labTmdSize->Text, this->tboxTmdSizeFS->Text, nullptr) );
-			tag->AppendChild( CreateRomInfoListElement(doc, this->labSumSize->Text + " " + this->labSumSize2->Text,
-														this->tboxSumSize->Text + " (" + this->tboxSumSizeMB->Text + ")", nullptr) );
+            tag->AppendChild( CreateRomInfoListElement(doc, this->labSumSize->Text + " " + this->labSumSize2->Text,
+                                                            this->tboxSumSize->Text + " (" + this->tboxSumSizeMB->Text->Replace( ',', '.' ) + ")", nullptr) );
 		}
 		section->AppendChild(tag);
 	}

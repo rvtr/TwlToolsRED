@@ -70,8 +70,8 @@
 			}
 	        th {
 	          font-size: 12px;
-			  background-color: #D6D3CE;
-			  color: black;
+			  background-color: #000000;
+			  color: #dddddd;
 			  padding-top: 2px;
 			  padding-bottom: 2px;
 	        }
@@ -122,6 +122,10 @@
 			}
 			td.value {
 			  width: 300px;
+			}
+			td.sp-value {
+			  width: 300px;
+			  color: #0000FF;
 			}
 			td.type {
 			  width: 300px;
@@ -174,13 +178,21 @@
 	</div>
 	<hr />
 	<xsl:apply-templates select="basic-rom-info" />
+	<hr />
 	<xsl:apply-templates select="twl-extended-info" />
+	<hr />
 	<xsl:apply-templates select="access-control-info" />
+	<hr />
 	<xsl:apply-templates select="dsi-ware-info" />
+	<hr />
 	<xsl:apply-templates select="market-and-rating-info" />
+	<hr />
 	<xsl:apply-templates select="sdk-version-info" />
+	<hr />
 	<xsl:apply-templates select="middleware-info" />
+	<hr />
 	<xsl:apply-templates select="error-info" />
+	<hr />
 	<xsl:apply-templates select="warning-info" />
 	<hr />
 	<div class="footer">
@@ -327,6 +339,23 @@
 	<tr class="even">
 		<td class="name"><xsl:value-of select="label" /></td>
 		<td class="value"><xsl:value-of select="value" /></td>
+		<td class="type"><xsl:value-of select="type" /></td>
+	</tr>
+</xsl:if>
+</xsl:template>
+
+<xsl:template match="sp-info">
+<xsl:if test="(@num mod 2)=1">
+	<tr class="odd">
+		<td class="name"><xsl:value-of select="label" /></td>
+		<td class="sp-value"><xsl:value-of select="value" /></td>
+		<td class="type"><xsl:value-of select="type" /></td>
+	</tr>
+</xsl:if>
+<xsl:if test="(@num mod 2)=0">
+	<tr class="even">
+		<td class="name"><xsl:value-of select="label" /></td>
+		<td class="sp-value"><xsl:value-of select="value" /></td>
 		<td class="type"><xsl:value-of select="type" /></td>
 	</tr>
 </xsl:if>

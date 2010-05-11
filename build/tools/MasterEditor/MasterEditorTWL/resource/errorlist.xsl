@@ -69,8 +69,8 @@
 			}
 	        th {
 	          font-size: 12px;
-			  background-color: #D6D3CE;
-			  color: black;
+			  background-color: #000000;
+			  color: #dddddd;
 			  padding-top: 2px;
 			  padding-bottom: 2px;
 	        }
@@ -171,6 +171,7 @@
 	</div>
 	<hr />
 	<xsl:apply-templates select="error-info" />
+	<hr />
 	<xsl:apply-templates select="warning-info" />
 	<hr />
 	<xsl:apply-templates select="error-caption-list" />

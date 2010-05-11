@@ -171,9 +171,7 @@
 	</div>
 	<hr />
 	<xsl:apply-templates select="error-info" />
-	<hr />
 	<xsl:apply-templates select="warning-info" />
-	<hr />
 	<xsl:apply-templates select="error-caption-list" />
 	<hr />
 	<div class="footer">
@@ -199,6 +197,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="error-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="warning-info">
@@ -206,6 +205,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="warning-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="error-num-info">

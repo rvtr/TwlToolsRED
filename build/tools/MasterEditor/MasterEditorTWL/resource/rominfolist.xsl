@@ -178,23 +178,14 @@
 	</div>
 	<hr />
 	<xsl:apply-templates select="basic-rom-info" />
-	<hr />
 	<xsl:apply-templates select="twl-extended-info" />
-	<hr />
 	<xsl:apply-templates select="access-control-info" />
-	<hr />
 	<xsl:apply-templates select="dsi-ware-info" />
-	<hr />
 	<xsl:apply-templates select="market-and-rating-info" />
-	<hr />
 	<xsl:apply-templates select="sdk-version-info" />
-	<hr />
 	<xsl:apply-templates select="middleware-info" />
-	<hr />
 	<xsl:apply-templates select="error-info" />
-	<hr />
 	<xsl:apply-templates select="warning-info" />
-	<hr />
 	<div class="footer">
 		generated on <xsl:apply-templates select="time-info" /> by MasterEditorTWL ver. <xsl:value-of select="@version" />
 	</div>
@@ -218,6 +209,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="info-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="twl-extended-info">
@@ -225,6 +217,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="info-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="access-control-info">
@@ -232,6 +225,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="info-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="dsi-ware-info">
@@ -239,6 +233,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="info-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="market-and-rating-info">
@@ -246,6 +241,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="info-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="sdk-version-info">
@@ -253,6 +249,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="sdk-version-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="middleware-info">
@@ -260,6 +257,7 @@
 	<div class="index"><xsl:value-of select="index" /></div>
 
 	<xsl:apply-templates select="middleware-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="error-info">
@@ -269,6 +267,7 @@
 	<xsl:apply-templates select="error-list" />
 	<hr />
 	<xsl:apply-templates select="error-caption-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="warning-info">
@@ -278,6 +277,7 @@
 	<xsl:apply-templates select="warning-list" />
 	<hr />
 	<xsl:apply-templates select="error-caption-list" />
+	<hr />
 </xsl:template>
 
 <xsl:template match="error-num-info">

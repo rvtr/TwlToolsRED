@@ -69,8 +69,8 @@
 			}
 	        th {
 	          font-size: 12px;
-			  background-color: #000000;
-			  color: #dddddd;
+			  background-color: #999999;
+			  color: #000000;
 			  padding-top: 2px;
 			  padding-bottom: 2px;
 	        }

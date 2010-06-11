@@ -18,15 +18,19 @@
 #include <twl.h>
 #include <nitro/os/ARM9/argument.h>
 #include <twl/os/common/format_rom.h>
+#include <twl/os/common/banner.h>
 #include "misc_simple.h"
 #include "NitroArm7VerChecker.h"
 #include "revision.h"
+#include    <../build/libraries/mb/common/include/mb_fileinfo.h>
 
 // define data------------------------------------------
 
 //#define MENU_ELEMENT_NUM			5						// メニューの項目数
 
-#define ARM7_INFO_NUM			6
+#define ARM7_INFO_NUM			7
+
+#define TEST_BUFFER_SIZE        10
 
 typedef struct Arm7Info
 {
@@ -77,7 +81,7 @@ static const Arm7Info s_info[ ARM7_INFO_NUM ] =
 	  0x31, 0xA0, 0x63, 0xE6, 0xF5, 0x4F, 0xED, 0xC4, 0xC7, 0xAE }
     },
     {
-	"NitroSDK 2.0 RC4 plus 3",
+	"NitroSDK 2.0 RC4 plus 1",
 	{ 0x83, 0x1E, 0x93, 0x52, 0x58, 0x9A, 0xF5, 0x11, 0x62, 0x06,
 	  0x63, 0x7F, 0x79, 0x57, 0xDD, 0xB2, 0x24, 0x3B, 0x95, 0x33 }
     },
@@ -89,15 +93,21 @@ static const Arm7Info s_info[ ARM7_INFO_NUM ] =
     {
 	"NitroSDK 3.1 RELEASE",
     { 0x1e, 0x62, 0x0f, 0x41, 0xe9, 0x83, 0x96, 0xbf, 0x21, 0x4c,
-      0x45, 0x40, 0x87, 0x32, 0x94, 0x12, 0x72, 0x1b, 0xf2, 0xcf, }
+      0x45, 0x40, 0x87, 0x32, 0x94, 0x12, 0x72, 0x1b, 0xf2, 0xcf,}
     },
     {
 	"NitroSDK 3.1 RELEASE plus 4",
     { 0x46, 0x10, 0x64, 0xdf, 0xad, 0xcc, 0xfe, 0x3a, 0x39, 0xa1,
-      0x49, 0xb8, 0x71, 0x9a, 0x11, 0x94, 0x9a, 0x7d, 0x9d, 0x86,  }
+      0x49, 0xb8, 0x71, 0x9a, 0x11, 0x94, 0x9a, 0x7d, 0x9d, 0x86,}
     },
-
+    {
+	"NitroSDK 2.2 RELEASE plus 2",
+    { 0xb8, 0xa6, 0xd1, 0x67, 0xc3, 0x67, 0xa6, 0xf7, 0x70, 0xa3,
+      0xc6, 0x4a, 0xc0, 0x6d, 0x8f, 0x2e, 0xc9, 0x1b, 0xc9, 0xf3,}
+    },
 };
+
+u32 testbuf[TEST_BUFFER_SIZE];
 
 /*
 static const char *s_pStrMenu[ MENU_ELEMENT_NUM ] = 
@@ -185,7 +195,12 @@ static void DrawMainScene( void )
 {
 	//int l;
 	myDp_Printf( 0, 0, TXT_COLOR_BLUE, MAIN_SCREEN, "Component SDK Version Identifier");
-	
+
+    myDp_Printf( 5, 10, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[0]);
+    myDp_Printf( 5, 11, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[1]);
+    myDp_Printf( 5, 12, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[2]);
+    myDp_Printf( 5, 13, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[3]);
+    
 	if( s_mode == 0 )
 	{
 		// 結果表示モード
@@ -254,8 +269,25 @@ static void CheckCard( void )
 
 	OS_SetMainArenaLo( (void *)((u32)sp_arm7flx + sp_header->sub_size) ); // アリーナLo修正
 
+    // ARM9のSecure除いた部分を空読み出し
+    if( (sp_header->main_rom_offset + sp_header->main_size) > 0x8000 )
+    {
+        u32 auth_offset   = sp_header->rom_valid_size ? sp_header->rom_valid_size : 0x01000000;
+        u32 page_offset   = auth_offset & 0xFFFFFE00;
+        
+        // バナーデータ分
+        CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->banner_offset, sp_arm7flx, sizeof(TWLBannerFile) );
+
+        //
+        CARD_ReadRom( MI_DMA_NOT_USE, (void *)page_offset, sp_arm7flx, MB_AUTHCODE_SIZE );
+        
+        // Game領域のARM9常駐モジュール分
+        CARD_ReadRom( MI_DMA_NOT_USE, (void *)0x8000, sp_arm7flx, (sp_header->main_size - (0x8000 - sp_header->main_rom_offset)) );
+    }
 	CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->sub_rom_offset, sp_arm7flx, sp_header->sub_size );
-	
+
+    MI_CpuCopy8( sp_arm7flx , testbuf, sizeof(testbuf) );
+    
 	CARD_UnlockRom( 0x03 );
 	
 	// Arm7FLX のハッシュ計算
@@ -313,6 +345,7 @@ void NitroArm7VerCheckerInit( void )
 	// 表示
 	DrawMainScene();
 
+    OS_Printf("*** TWLBannerFile size : 0x%08x\n", sizeof(TWLBannerFile) );
 }
 
 #define PAD_SECRET ( PAD_BUTTON_START | PAD_BUTTON_X | PAD_BUTTON_Y )

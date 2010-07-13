@@ -28,9 +28,15 @@
 
 //#define MENU_ELEMENT_NUM			5						// メニューの項目数
 
+//#define DEBUG_MODE
+
 #define ARM7_INFO_NUM			7
 
-#define TEST_BUFFER_SIZE        10
+#ifdef DEBUG_MODE
+#define KEY_REPEAT_START        10  // キーリピート開始までのフレーム数
+#define KEY_REPEAT_SPAN         1   // キーリピートの間隔フレーム数
+#define DUMP_SIZE               0x80
+#endif
 
 typedef struct Arm7Info
 {
@@ -49,11 +55,24 @@ typedef enum DetectError
 }
 DetectError;
 
+#ifdef DEBUG_MODE
+typedef struct KeyInfo
+{
+    u16 cnt;    // 未加工入力値
+    u16 trg;    // 押しトリガ入力
+    u16 up;     // 離しトリガ入力
+    u16 rep;    // 押し維持リピート入力
+} KeyInfo;
+#endif
+
 // extern data------------------------------------------
 
 // function's prototype declaration---------------------
 
 static void MenuScene( void );
+#ifdef DEBUG_MODE
+void ReadKey(KeyInfo* pKey);
+#endif
 
 // global variable -------------------------------------
 
@@ -64,6 +83,11 @@ static BOOL s_secret = FALSE;
 static u8 s_error = 0;
 static u8 s_digest[MATH_SHA1_DIGEST_SIZE];
 static u8 s_hit = 0;
+#ifdef DEBUG_MODE
+static KeyInfo  gKey;
+static u32 gIndex;
+static void *data_buf;
+#endif
 
 // const data  -----------------------------------------
 
@@ -107,7 +131,6 @@ static const Arm7Info s_info[ ARM7_INFO_NUM ] =
     },
 };
 
-u32 testbuf[TEST_BUFFER_SIZE];
 
 /*
 static const char *s_pStrMenu[ MENU_ELEMENT_NUM ] = 
@@ -193,13 +216,28 @@ static BOOL HOTSW_IsCardAccessible(void)
 // 描画まとめ
 static void DrawMainScene( void )
 {
+#ifdef DEBUG_MODE
+    int i,j,idx;
+    u8 *buf = (u8 *)data_buf + gIndex*DUMP_SIZE;
+    
+    myDp_Printf( 2, 1, TXT_COLOR_BLUE, SUB_SCREEN, "sub_rom_offset : 0x%08x", sp_header->sub_rom_offset);
+    myDp_Printf( 2, 2, TXT_COLOR_BLUE, SUB_SCREEN, "banner_offset  : 0x%08x", sp_header->banner_offset);
+    myDp_Printf( 2, 3, TXT_COLOR_BLUE, SUB_SCREEN, "dump adr index : 0x%08x", DUMP_SIZE * gIndex );
+    
+    idx = 0;
+    for ( i=0; i<0x10; i++ )
+    {
+        for ( j=0; j<8; j++ )
+        {
+            myDp_Printf(       2, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x #", i*0x8);
+            myDp_Printf( 7 + j*3, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x", buf[idx]);
+            idx++;
+        }
+    }
+#endif
+    
 	//int l;
 	myDp_Printf( 0, 0, TXT_COLOR_BLUE, MAIN_SCREEN, "Component SDK Version Identifier");
-
-    myDp_Printf( 5, 10, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[0]);
-    myDp_Printf( 5, 11, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[1]);
-    myDp_Printf( 5, 12, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[2]);
-    myDp_Printf( 5, 13, TXT_COLOR_BLUE, MAIN_SCREEN, "0x%08x", testbuf[3]);
     
 	if( s_mode == 0 )
 	{
@@ -244,14 +282,14 @@ static void CheckCard( void )
 	void *sp_arm7flx;
 	void *old_lo;
 	int m;
-	
-	CARD_Enable( TRUE );
-	
+
+    CARD_Enable( TRUE );
+
 	// 読み込みバッファはアリーナLoからHiまでの間を適当に使ってアリーナLoを移動させよう
 	old_lo = OS_GetMainArenaLo();
 	sp_arm7flx = (void *)( MATH_ROUNDUP32( (int)OS_GetMainArenaLo() ) );
 	OS_SetMainArenaLo( OS_GetMainArenaHi() ); // 念のため一旦端っこに寄せておく
-	
+
 	CARD_LockRom( 0x03 ); // ID は適当
 	
 	// ヘッダのチェック（やるなら）
@@ -269,25 +307,29 @@ static void CheckCard( void )
 
 	OS_SetMainArenaLo( (void *)((u32)sp_arm7flx + sp_header->sub_size) ); // アリーナLo修正
 
+#ifdef DEBUG_MODE
+    data_buf = sp_arm7flx;
+#endif
+
     // ARM9のSecure除いた部分を空読み出し
     if( (sp_header->main_rom_offset + sp_header->main_size) > 0x8000 )
     {
+#ifdef DEBUG_MODE
         u32 auth_offset   = sp_header->rom_valid_size ? sp_header->rom_valid_size : 0x01000000;
         u32 page_offset   = auth_offset & 0xFFFFFE00;
         
-        // バナーデータ分
-        CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->banner_offset, sp_arm7flx, sizeof(TWLBannerFile) );
+        // バナーデータ分  ※ DEBUG_MODE有効時、ここの部分が実行時エラーになるかもしれないので、コメントアウトしておく。
+//        CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->banner_offset, sp_arm7flx, sizeof(TWLBannerFile) );
 
-        //
-        CARD_ReadRom( MI_DMA_NOT_USE, (void *)page_offset, sp_arm7flx, MB_AUTHCODE_SIZE );
-        
+        // 認証コード分  ※ DEBUG_MODE有効時、ここの部分が実行時エラーになるかもしれないので、コメントアウトしておく。
+//        CARD_ReadRom( MI_DMA_NOT_USE, (void *)page_offset, sp_arm7flx, MB_AUTHCODE_SIZE );
+#endif
+
         // Game領域のARM9常駐モジュール分
         CARD_ReadRom( MI_DMA_NOT_USE, (void *)0x8000, sp_arm7flx, (sp_header->main_size - (0x8000 - sp_header->main_rom_offset)) );
     }
 	CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->sub_rom_offset, sp_arm7flx, sp_header->sub_size );
 
-    MI_CpuCopy8( sp_arm7flx , testbuf, sizeof(testbuf) );
-    
 	CARD_UnlockRom( 0x03 );
 	
 	// Arm7FLX のハッシュ計算
@@ -308,10 +350,12 @@ static void CheckCard( void )
 		//s_hit = 0;
 		return;
 	}
-	
+
+#ifndef DEBUG_MODE
 	// もうバッファいらない
 	OS_SetMainArenaLo( old_lo );
-	
+#endif
+    
 	s_error = 0;
 	return;
 }
@@ -371,6 +415,39 @@ void NitroArm7VerCheckerMain(void)
 	//myDp_Printf( 1, 16, TXT_COLOR_BLUE, MAIN_SCREEN, "slotmode : %d", HOTSW_IsCardAccessible());
 	//myDp_Printf( 1, 17, TXT_COLOR_BLUE, MAIN_SCREEN, "exist      : %d", HOTSW_IsCardExist());
 
+#ifdef DEBUG_MODE
+    ReadKey(&gKey);
+
+    if (gKey.rep & PAD_KEY_DOWN || gKey.trg & PAD_KEY_DOWN)
+    {
+        if( (gIndex + 1) * DUMP_SIZE < sp_header->sub_size )
+        {
+            gIndex++;
+        }
+    }
+    if (gKey.rep & PAD_KEY_UP || gKey.trg & PAD_KEY_UP)
+    {
+        if( gIndex >= 1 )
+        {
+            gIndex--;
+        }
+    }
+    if (gKey.rep & PAD_BUTTON_R || gKey.trg & PAD_BUTTON_R)
+    {
+        if( (gIndex + 0x100) * DUMP_SIZE < sp_header->sub_size )
+        {
+            gIndex+=0x100;
+        }
+    }
+    if (gKey.rep & PAD_BUTTON_L || gKey.trg & PAD_BUTTON_L)
+    {
+        if( gIndex >= 0x100 )
+        {
+            gIndex-=0x100;
+        }
+    }
+#endif
+    
 	// 再表示
 	DrawMainScene();
 	
@@ -393,3 +470,60 @@ void NitroArm7VerCheckerMain(void)
 	
 }
 
+
+/*---------------------------------------------------------------------------*
+  Name:         ReadKey
+
+  Description:  キー入力情報を取得し、入力情報構造体を編集する。
+                押しトリガ、離しトリガ、押し継続リピートトリガ を検出する。
+
+  Arguments:    pKey  - 編集するキー入力情報構造体を指定する。
+
+  Returns:      None.
+ *---------------------------------------------------------------------------*/
+#ifdef DEBUG_MODE
+void ReadKey(KeyInfo* pKey)
+{
+    static u16  repeat_count[12];
+    int         i;
+    u16         r;
+
+    r = PAD_Read();
+    pKey->trg = 0x0000;
+    pKey->up = 0x0000;
+    pKey->rep = 0x0000;
+
+    for (i = 0; i < 12; i++)
+    {
+        if (r & (0x0001 << i))
+        {
+            if (!(pKey->cnt & (0x0001 << i)))
+            {
+                pKey->trg |= (0x0001 << i);     // 押しトリガ
+                repeat_count[i] = 1;
+            }
+            else
+            {
+                if (repeat_count[i] > KEY_REPEAT_START)
+                {
+                    pKey->rep |= (0x0001 << i); // 押し継続リピート
+                    repeat_count[i] = (u16) (KEY_REPEAT_START - KEY_REPEAT_SPAN);
+                }
+                else
+                {
+                    repeat_count[i]++;
+                }
+            }
+        }
+        else
+        {
+            if (pKey->cnt & (0x0001 << i))
+            {
+                pKey->up |= (0x0001 << i);      // 離しトリガ
+            }
+        }
+    }
+
+    pKey->cnt = r;  // 未加工キー入力
+}
+#endif

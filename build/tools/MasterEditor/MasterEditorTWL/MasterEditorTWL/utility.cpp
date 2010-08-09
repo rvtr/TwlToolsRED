@@ -251,7 +251,7 @@ System::String^ MasterEditorTWL::getOgnName( int ogn )
 	}
 	else if( ogn == OS_TWL_PCTL_OGN_AGCB )
 	{
-		name = gcnew System::String("OFLC");
+		name = gcnew System::String("COB");
 	}
 	else if( ogn == OS_TWL_PCTL_OGN_GRB )
 	{

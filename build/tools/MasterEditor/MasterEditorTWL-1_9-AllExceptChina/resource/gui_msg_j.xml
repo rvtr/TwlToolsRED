@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<message>
+
+<!-- 英訳依頼 ver1.7 追加メッセージ ここから -->
+<E_JapaneseFont>ＭＳ Ｐゴシック (MS PGothic) フォントがインストールされていないPCでの日本語表示には対応していません。</E_JapaneseFont>
+<!-- 英訳依頼 ver1.7 追加メッセージ ここまで -->
+
+<!-- common -->
+<OverWrite>{0} はすでに存在します。上書きしますか?</OverWrite>
+
+<!-- Start Up -->
+<E_Start_InitExist>設定ファイルが見つかりません。</E_Start_InitExist>
+<E_Start_InitOpen>設定ファイルを開くことができませんでした。</E_Start_InitOpen>
+<E_Start_TmpExist>本プログラムで作成する一時ファイルと同名のファイルが存在します。このファイルを削除します。</E_Start_TmpExist>
+<E_Start_AppendExist>追加設定ファイルが見つかりません。</E_Start_AppendExist>
+<E_Start_AppendOpen>追加設定ファイルを開くことができませんでした。</E_Start_AppendOpen>
+<E_Start_SDK>設定ファイル中のSDKバージョンが読み込めませんでした。バージョンは0とみなされます。</E_Start_SDK>
+
+<!-- Load Rom -->
+<E_LoadRom_Sign>不正なROMデータです。TWL対応/専用ROMでないかROMデータが改ざんされている可能性があります。</E_LoadRom_Sign>
+<E_LoadRom_Platform>本ツールはTWL用です。NTR専用ROMなどのTWL非対応ROMを読み込むことはできません。</E_LoadRom_Platform>
+<E_LoadRom_Default>ROMデータファイルの読み込みに失敗しました。再度ROMデータを読み込ませてください。</E_LoadRom_Default>
+<E_LoadRom_CRC>ROMデータのCRC計算に失敗しました。ROMデータの読み込みはキャンセルされました。</E_LoadRom_CRC>
+<E_LoadRom_Exist>ファイルが存在しないので読み込むことができません。</E_LoadRom_Exist>
+<E_LoadRom_Tad>TADファイルの読み込みに失敗しました。</E_LoadRom_Tad>
+
+<!-- Create Submission Set -->
+<E_SaveSet_Empty>ROMデータファイルが読み込まれていません。</E_SaveSet_Empty>
+<E_SaveSet_Setting>不正な設定があるため提出データを作成できません。</E_SaveSet_Setting>
+<E_SaveSet_Input>入力情報に不足があるため提出データを作成できません。</E_SaveSet_Input>
+<SaveSet_Name>以下の提出ファイルが一度に作成されます。
+
+{0} (マスターROM)
+{1} (マスターROM提出確認書)
+{2} (ミドルウェア一覧)
+{3} (ミドルウェア一覧 印刷用)
+</SaveSet_Name>
+<SaveSet_Folder>保存先フォルダを選択してください。</SaveSet_Folder>
+<E_SaveSet_FolderCancel>フォルダの選択がキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_FolderCancel>
+<E_SaveSet_OWCancel>ファイルの上書きがキャンセルされましたので提出データ一式は作成されません。</E_SaveSet_OWCancel>
+<E_SaveSet_FileDefault>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。
+
+</E_SaveSet_FileDefault>
+<E_SaveSet_FileOpen>原因:出力ファイルのオープンに失敗しました。</E_SaveSet_FileOpen>
+<E_SaveSet_FileRead>原因:ファイルの読み込みに失敗しました。</E_SaveSet_FileRead>
+<E_SaveSet_FileWrite>原因:出力ファイルへの書き出しに失敗しました。</E_SaveSet_FileWrite>
+<E_SaveSet_FileCopy>原因:入力ROMデータファイルのコピーに失敗しました。</E_SaveSet_FileCopy>
+<E_SaveSet_FileExist>原因:入力ROMデータファイルが元のフォルダに存在しないとき出力ファイルを作成できません。</E_SaveSet_FileExist>
+<E_SaveSet_FileSign>原因:出力ファイルのディジタル署名の計算に失敗しました。</E_SaveSet_FileSign>
+<E_SaveSet_CRC>CRCの計算に失敗しました。作成を中止するため一部のファイルは作成されません。</E_SaveSet_CRC>
+<E_SaveSet_MWList>ミドルウェアのリストが作成できませんでした。作成を中止するため一部のファイルは作成されません。</E_SaveSet_MWList>
+<E_SaveSet_Exception>マスターROMの作成に失敗しました。作成を中止するため一部のファイルは作成されません。
+
+例外:{0}
+{1}</E_SaveSet_Exception>
+<E_SaveSet_SheetTemplate>提出確認書のテンプレートが開けなかったため、提出確認書の作成に失敗しました。</E_SaveSet_SheetTemplate>
+<E_SaveSet_SheetOpen>提出確認書にデータを書き込みできませんでした。同名ファイルがすでに開かれていないかご確認ください。</E_SaveSet_SheetOpen>
+<E_SaveSet_SheetDefault>提出確認書の作成に失敗しました。</E_SaveSet_SheetDefault>
+<SaveSet_Success>提出データ一式の作成に成功しました。</SaveSet_Success>
+
+<!-- Create Master Rom -->
+<E_SaveRom_Empty>ROMデータファイルが読み込まれていませんので、マスターROMの作成ができません。</E_SaveRom_Empty>
+<E_SaveRom_Setting>不正な設定があるためマスターROMの作成ができません。</E_SaveRom_Setting>
+<SaveRom_Name>以下のファイルが作成されます。
+
+{0} (マスターROM)</SaveRom_Name>
+<SaveRom_Folder>保存先フォルダを選択してください。</SaveRom_Folder>
+<E_SaveRom_FolderCancel>フォルダの選択がキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_FolderCancel>
+<E_SaveRom_OWCancel>ファイルの上書きがキャンセルされましたのでマスターROMは作成されません。</E_SaveRom_OWCancel>
+<E_SaveRom_FileDefault>マスターROMの作成に失敗しました。
+
+</E_SaveRom_FileDefault>
+<E_SaveRom_Exception>マスターROMの作成に失敗しました。
+
+例外:{0}
+{1}</E_SaveRom_Exception>
+<SaveRom_Success>マスターROMの作成に成功しました。</SaveRom_Success>
+<E_SaveRom_CRC>CRCの計算に失敗しました。</E_SaveRom_CRC>
+
+<!-- Create MiddleWare List -->
+<E_MWList_Empty>ROMデータファイルが読み込まれていません。</E_MWList_Empty>
+<E_MWList_Default>ミドルウェアリストの作成に失敗しました。</E_MWList_Default>
+<MWList_Success>ミドルウェアリストの作成に成功しました。</MWList_Success>
+
+<!-- Export Error List -->
+<E_ErrList_Empty>ROMデータファイルが読み込まれていません。</E_ErrList_Empty>
+<E_ErrList_Default>エラーリストの作成に失敗しました。</E_ErrList_Default>
+<ErrList_Success>エラーリストの作成に成功しました。</ErrList_Success>
+
+<!-- ROM Info List -->
+<E_RomInfoList_Empty>ROMデータファイルが読み込まれていません。</E_RomInfoList_Empty>
+<E_RomInfoList_Default>ROM情報リストの作成に失敗しました。</E_RomInfoList_Default>
+<RomInfoList_Success>ROM情報リストの作成に成功しました。</RomInfoList_Success>
+
+<!-- Save Temp File -->
+<E_SaveTemp>一時情報の保存に失敗しました。</E_SaveTemp>
+
+<!-- Load Temp File -->
+<E_LoadTemp>一時情報の読み込みに失敗しました。</E_LoadTemp>
+
+<!-- Check -->
+<TextBoxInput>入力漏れ: 入力してください。</TextBoxInput>
+<NumRangeInput>入力漏れ: 値が不正です。</NumRangeInput>
+<ComboBoxInput>入力漏れ: 選択してください。</ComboBoxInput>
+<RadioButtonInput>入力漏れ: 選択してください。</RadioButtonInput>
+<LabelProductName>製品名</LabelProductName>
+<LabelProductCode>製品コード</LabelProductCode>
+<LabelCountryCode>製品コード(仕向地仕様コード)</LabelCountryCode>
+<LabelProductNameForeign>製品名(海外版)</LabelProductNameForeign>
+<LabelProductCodeForeign>製品コード(海外版)</LabelProductCodeForeign>
+<LabelUsage>用途</LabelUsage>
+<LabelBackup>バックアップメモリ</LabelBackup>
+<LabelPerson1>ご氏名(担当者1)</LabelPerson1>
+<LabelFurigana1>ふりがな(担当者1)</LabelFurigana1>
+<LabelCompany1>貴社名(担当者1)</LabelCompany1>
+<LabelDepart1>部署名(担当者1)</LabelDepart1>
+<LabelTel1>TEL(担当者1)</LabelTel1>
+<LabelMail1>e-mail(担当者1)</LabelMail1>
+<LabelPerson2>ご氏名(担当者2)</LabelPerson2>
+<LabelFurigana2>ふりがな(担当者2)</LabelFurigana2>
+<LabelCompany2>貴社名(担当者2)</LabelCompany2>
+<LabelDepart2>部署名(担当者2)</LabelDepart2>
+<LabelTel2>TEL(担当者2)</LabelTel2>
+<LabelMail2>e-mail(担当者2)</LabelMail2>
+
+<LabelRegion>リージョン</LabelRegion>
+<LabelRating>レーティング</LabelRating>
+<RatingInput>{0}: 選択してください。</RatingInput>
+<RatingPendingSelect>{0}: 審査中であると指定されています。審査が決まりしだい、再提出してください。</RatingPendingSelect>
+<RatingUnnecessarySelect>レーティング表示が不要であると設定されています。この指定は、ソフトがゲームでないツール類のときのみ選択可能です。レーティング表示が不要であるかどうかは弊社窓口にご相談ください。</RatingUnnecessarySelect>
+
+<PrivateSaveDataPurposeTitle>Privateセーブデータの用途</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>Privateセーブデータを使用する場合には、用途欄に理由、用途を明記してください。</PrivateSaveDataPurposeMsg>
+
+</message>

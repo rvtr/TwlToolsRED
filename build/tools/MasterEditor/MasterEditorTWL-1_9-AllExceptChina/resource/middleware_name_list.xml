@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<middleware-name-list>
+	<version>1.6</version>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>libASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS</note-j>
+		<note-e>Voice Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>ASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS</note-j>
+		<note-e>Voice Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>ASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS</note-j>
+		<note-e>Voice Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>libASR</code>
+		<note-j>音声認識エンジン for NINTENDO DS</note-j>
+		<note-e>Voice Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Actimagine</publisher>
+		<code>VX</code>
+		<note-j>VX MiddleWare for NINTENDO DS</note-j>
+		<note-e>VX MiddleWare</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>DWC</code>
+		<note-j>TWL-DWC</note-j>
+		<note-e>TWL-DWC</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>WiFi</code>
+		<note-j>TWL-WiFi</note-j>
+		<note-e>TWL Wi-Fi Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>MEI</publisher>
+		<code>libHWR_FULL</code>
+		<note-j>手書き認識ライブラリ</note-j>
+		<note-e>HandWrite Recognition</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Panasonic</publisher>
+		<code>libHWR_FULL</code>
+		<note-j>手書き認識ライブラリ</note-j>
+		<note-e>HandWrite Recognition</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>DLTLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ日本語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library Japanese</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>SCRLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ英語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Zi Corporation</publisher>
+		<code>MCRLIB</code>
+		<note-j>Decuma手書文字認識ライブラリ英語版 for NINTENDO DS</note-j>
+		<note-e>Handwriting Recognition Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>JUSTSYSTEM</publisher>
+		<code>ATOK</code>
+		<note-j>DS用ATOKライブラリ</note-j>
+		<note-e>ATOK Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Abiosso</publisher>
+		<code>VoiceChat</code>
+		<note-j>VoiceChatライブラリ for NINTENDO DS</note-j>
+		<note-e>VoiceChat Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>SHARP</publisher>
+		<code>SHTTS</code>
+		<note-j>SHARP音声合成ライブラリ</note-j>
+		<note-e>Voice Synthesis Library</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>ACCESS</publisher>
+		<code>NFC</code>
+		<note-j>NetFront ブラウザコンポーネント HTTP/HTTPSプロトコル</note-j>
+		<note-e>NetFront Browser for DS HTTP/HTTPS</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>ACCESS</publisher>
+		<code>NFB</code>
+		<note-j>NetFront ブラウザコンポーネント</note-j>
+		<note-e>NetFront Browser for DS</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>TMC</publisher>
+		<code>MP3Decoder_</code>
+		<note-j>MP3コーデックライブラリ</note-j>
+		<note-e>MP3 Decoder</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>Actimagine</publisher>
+		<code>Mobiclip</code>
+		<note-j>Mobiclip Middleware for NINTENDO DS</note-j>
+		<note-e>Mobiclip Middleware</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>OKI</publisher>
+		<code>FSE</code>
+		<note-j>TWL用 顔認識ライブラリ</note-j>
+		<note-e>Face Recognition</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>TOSHIBA</publisher>
+		<code>SPConv</code>
+		<note-j>スピーチコンバータ for DS</note-j>
+		<note-e>Sound Playback Speed Conversion</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>M4A</code>
+		<note-j>MPEG4Systems Demux ライブラリ</note-j>
+		<note-e>MPEG 4 Demux</note-e>
+	</middleware>
+
+	<middleware>
+		<publisher>NINTENDO</publisher>
+		<code>AAC-LC</code>
+		<note-j>AAC-LC Decoder ライブラリ</note-j>
+		<note-e>AAC Decoder</note-e>
+	</middleware>
+</middleware-name-list>

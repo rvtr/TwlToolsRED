@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<message>
+
+<!-- Begin messages appended in ver1.7-->
+<E_JapaneseFont>Japanese text display is only supported on PCs that have the MS PGothic Japanese font installed.</E_JapaneseFont>
+<!-- End messages appended in ver1.7-->
+
+<!-- common -->
+<OverWrite>{0} already exists. Overwrite data?</OverWrite>
+
+<!-- Start Up -->
+<E_Start_InitExist>Cannot find the configuration file.</E_Start_InitExist>
+<E_Start_InitOpen>Cannot open the configuration file.</E_Start_InitOpen>
+<E_Start_TmpExist>Temporary file already exists. Delete this data.</E_Start_TmpExist>
+<E_Start_AppendExist>Cannot find the extended configuration file.</E_Start_AppendExist>
+<E_Start_AppendOpen>Cannot open the extended configuration file</E_Start_AppendOpen>
+<E_Start_SDK>Cannot read the SDK version in the configuration file. </E_Start_SDK>
+
+<!-- Load Rom -->
+<E_LoadRom_Sign>Illegal ROM data. Either this is not TWL-compatible or TWL-exclusive ROM data, or the ROM data may have been modified.</E_LoadRom_Sign>
+<E_LoadRom_Platform>This tool is for TWL-compatible ROMs only. Cannot read a ROM that does not support TWL, such as a NTR-only ROM.</E_LoadRom_Platform>
+<E_LoadRom_Default>Failed to read ROM data file. Read ROM data again.</E_LoadRom_Default>
+<E_LoadRom_CRC>ROM data CRC calculation failed. ROM data read canceled.</E_LoadRom_CRC>
+<E_LoadRom_Exist>Cannot read because the ROM data file does not exist.</E_LoadRom_Exist>
+<E_LoadRom_Tad>The reading of the TAD file has failed.</E_LoadRom_Tad>
+
+<!-- Create Submission Set -->
+<E_SaveSet_Empty>ROM data file has not been read.</E_SaveSet_Empty>
+<E_SaveSet_Setting>Submission data cannot be created due to illegal settings.</E_SaveSet_Setting>
+<E_SaveSet_Input>Submission data cannot be created due to insufficient input information.</E_SaveSet_Input>
+<SaveSet_Name>The following submission files are all created at one time. 
+
+{0} (Master ROM)
+{1} (Master ROM submission checklist)
+{2} (List of middleware)
+{3} (Print version of list of middleware)
+</SaveSet_Name>
+<SaveSet_Folder>Select a save-to folder.</SaveSet_Folder>
+<E_SaveSet_FolderCancel>Submission data is not created because folder selection has been canceled.</E_SaveSet_FolderCancel>
+<E_SaveSet_OWCancel>Submission data is not created because file overwrite has been canceled.</E_SaveSet_OWCancel>
+<E_SaveSet_FileDefault>Failed to create Master ROM. Halted during creation, so some files were not created.
+
+</E_SaveSet_FileDefault>
+<E_SaveSet_FileOpen>Master ROM file not created due to failure to open the output file.</E_SaveSet_FileOpen>
+<E_SaveSet_FileRead>Master ROM file not created due to failure to read the file.</E_SaveSet_FileRead>
+<E_SaveSet_FileWrite>Master ROM file not created due to failure to write to the output file.</E_SaveSet_FileWrite>
+<E_SaveSet_FileCopy>Master ROM file not created due to failure to copy the input ROM data file.</E_SaveSet_FileCopy>
+<E_SaveSet_FileExist>Master ROM file not created because the output file cannot be created if the input ROM data file does not exist in the source folder.</E_SaveSet_FileExist>
+<E_SaveSet_FileSign>Master ROM file not created due to failure to calculate the digital signature of the output file.</E_SaveSet_FileSign>
+<E_SaveSet_CRC>Failed to calculate CRC. Halted during creation, so some files were not created.</E_SaveSet_CRC>
+<E_SaveSet_MWList>Could not create middleware list. Halted during creation, so some files were not created.</E_SaveSet_MWList>
+<E_SaveSet_Exception>Failed to create Master ROM. Halted during creation, so some files were not created.
+
+Exception:{0}
+{1}</E_SaveSet_Exception>
+<E_SaveSet_SheetTemplate>Failed to create submission checklist because submission checklist template could not be opened.</E_SaveSet_SheetTemplate>
+<E_SaveSet_SheetOpen>Could not write data to submission checklist. Check that a file of the same name is not already open.</E_SaveSet_SheetOpen>
+<E_SaveSet_SheetDefault>Failed to create submission checklist.</E_SaveSet_SheetDefault>
+<SaveSet_Success>Succeeded in creating submission data.</SaveSet_Success>
+
+<!-- Create Master Rom -->
+<E_SaveRom_Empty>Could not create Master ROM because the ROM data file has not been read.</E_SaveRom_Empty>
+<E_SaveRom_Setting>Could not create Master ROM due to illegal settings.</E_SaveRom_Setting>
+<SaveRom_Name>This procedure creates the following files.
+
+{0} (Master ROM)</SaveRom_Name>
+<SaveRom_Folder>Select a save-to folder.</SaveRom_Folder>
+<E_SaveRom_FolderCancel>The Master ROM was not created because folder selection has been canceled.</E_SaveRom_FolderCancel>
+<E_SaveRom_OWCancel>Creation of Master ROM was canceled.</E_SaveRom_OWCancel>
+<E_SaveRom_FileDefault>Failed to create Master ROM.
+
+</E_SaveRom_FileDefault>
+<E_SaveRom_Exception>Failed to create Master ROM.
+
+Exception:{0}
+{1}</E_SaveRom_Exception>
+<SaveRom_Success>Succeeded in creating Master ROM.</SaveRom_Success>
+<E_SaveRom_CRC>Failed to calculate CRC.</E_SaveRom_CRC>
+
+<!-- Create MiddleWare List -->
+<E_MWList_Empty>ROM data file has not been read.</E_MWList_Empty>
+<E_MWList_Default>Failed to create the middleware list.</E_MWList_Default>
+<MWList_Success>Succeeded in creating middleware list.</MWList_Success>
+
+<!-- Export Error List -->
+<E_ErrList_Empty>ROM data file has not been read.</E_ErrList_Empty>
+<E_ErrList_Default>Failed to create the error list.</E_ErrList_Default>
+<ErrList_Success>Succeeded in creating error list.</ErrList_Success>
+
+<!-- ROM Info List -->
+<E_RomInfoList_Empty>ROM data file has not been read.</E_RomInfoList_Empty>
+<E_RomInfoList_Default>Failed to create the ROM info list.</E_RomInfoList_Default>
+<RomInfoList_Success>Succeeded in creating ROM info list.</RomInfoList_Success>
+
+<!-- Save Temp File -->
+<E_SaveTemp>Failed to save temporary information.</E_SaveTemp>
+
+<!-- Load Temp File -->
+<E_LoadTemp>Failed to read temporary information.</E_LoadTemp>
+
+<!-- Check -->
+<TextBoxInput>Insufficient input: Input data.</TextBoxInput>
+<NumRangeInput>Insufficient input: Illegal value.</NumRangeInput>
+<ComboBoxInput>Insufficient input: Select data.</ComboBoxInput>
+<RadioButtonInput>Insufficient input: Select data.</RadioButtonInput>
+<LabelProductName>Product Name</LabelProductName>
+<LabelProductCode>Product Code</LabelProductCode>
+<LabelCountryCode>Product Code(Region Code)</LabelCountryCode>
+<LabelProductNameForeign>Product Name(Foreign Version)</LabelProductNameForeign>
+<LabelProductCodeForeign>Product Code(Foreign Version)</LabelProductCodeForeign>
+<LabelUsage>Purpose</LabelUsage>
+<LabelBackup>Backup Memory</LabelBackup>
+<LabelPerson1>Contact1</LabelPerson1>
+<LabelFurigana1>Furigana</LabelFurigana1>
+<LabelCompany1>Company(Contact1)</LabelCompany1>
+<LabelDepart1>Dept.(Contact1)</LabelDepart1>
+<LabelTel1>TEL(Contact1)</LabelTel1>
+<LabelMail1>e-mail(Contact1)</LabelMail1>
+<LabelPerson2>Contact2</LabelPerson2>
+<LabelFurigana2>Furigana</LabelFurigana2>
+<LabelCompany2>Company(Contact2)</LabelCompany2>
+<LabelDepart2>Dept.(Contact2)</LabelDepart2>
+<LabelTel2>TEL(Contact2)</LabelTel2>
+<LabelMail2>e-mail(Contact2)</LabelMail2>
+
+<LabelRegion>Market</LabelRegion>
+<LabelRating>Rating</LabelRating>
+<RatingInput>{0}: Select data.</RatingInput>
+<RatingPendingSelect>{0}: A "Rating Pending" has been specified. Re-submit when examination is finished.</RatingPendingSelect>
+<RatingUnnecessarySelect>Selected if rating does not need to be shown. This choice can only be selected when the software is a kind of tool and not a game. Contact support@noa.com to determine if the rating does not need to be displayed.</RatingUnnecessarySelect>
+
+<PrivateSaveDataPurposeTitle>Private Save Data Usage</PrivateSaveDataPurposeTitle>
+<PrivateSaveDataPurposeMsg>If you must use the private save data memory region, enter your intended use and reasons for use in the appropriate entry fields.</PrivateSaveDataPurposeMsg>
+
+</message>

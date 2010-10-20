@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3FAFC0EA93834713A3E278CA9AF27128"
+        "OwnerKey" = "8:_52DF0E54E18243EC949CEEEB288CDAAD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_450932A0FF6842D68977626BA6866783"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,7 +63,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_4E53291669A94A01BEB1B14679DF85E0"
+        "MsmKey" = "8:_52DF0E54E18243EC949CEEEB288CDAAD"
         "OwnerKey" = "8:_7746D2D347F0423FB46FA2300F6158A4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -83,12 +89,6 @@
         {
         "MsmKey" = "8:_8455999AD79146CD868F19064410E073"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_899760908357496CB0912065D65DDBDA"
-        "OwnerKey" = "8:_4E53291669A94A01BEB1B14679DF85E0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -147,7 +147,7 @@
         "DisplayName" = "8:Debug"
         "IsDebugOnly" = "11:TRUE"
         "IsReleaseOnly" = "11:FALSE"
-        "OutputFilename" = "8:..\\..\\..\\bin\\MasterEditorTWLSetup.msi"
+        "OutputFilename" = "8:..\\..\\..\\bin\\MasterEditorTWL_AllExceptChinaSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -184,7 +184,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:..\\..\\..\\bin\\MasterEditorTWLSetup.msi"
+        "OutputFilename" = "8:..\\..\\..\\bin\\MasterEditorTWL_AllExceptChinaSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -408,7 +408,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.8.3664.28542, Culture=en, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.9.3945.38656, Culture=en, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -494,7 +494,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.8.3664.28542, Culture=ja, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:MasterEditorTWL.resources, Version=1.9.3945.38656, Culture=ja, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                 }
@@ -655,10 +655,10 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:MasterEditorTWL"
-        "ProductCode" = "8:{B12B5AFF-26D1-47B5-85B6-1E2A7B5106F5}"
-        "PackageCode" = "8:{1047076B-0F2A-4B45-8FB6-12E43381C4B5}"
-        "UpgradeCode" = "8:{CE22C209-7AE1-4F58-8F6B-6D044BA2A118}"
+        "ProductName" = "8:MasterEditorTWL_AllExceptChina"
+        "ProductCode" = "8:{EB7EB697-7210-47A8-8B7B-8AFD0020030F}"
+        "PackageCode" = "8:{0AC32A57-5847-40F6-9E99-637FDB044DB9}"
+        "UpgradeCode" = "8:{2D8AC4C1-A8D7-4932-8BEA-3DB94891C400}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
@@ -667,7 +667,7 @@
         "Manufacturer" = "8:nintendo"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:MasterEditorTWLSetup"
+        "Title" = "8:MasterEditorTWL_AllExceptChinaSetup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:nintendo"
         "Keywords" = "8:"
@@ -778,7 +778,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_1E9C816FBE5C44DC8A2649DF40760892"
             {
-            "Name" = "8:MasterEditorTWL"
+            "Name" = "8:MasterEditorTWL_AllExceptChina"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1186,11 +1186,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_4E53291669A94A01BEB1B14679DF85E0"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_3FAFC0EA93834713A3E278CA9AF27128"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -1200,11 +1200,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_899760908357496CB0912065D65DDBDA"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_52DF0E54E18243EC949CEEEB288CDAAD"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -1219,7 +1219,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_7746D2D347F0423FB46FA2300F6158A4"
             {
-            "SourcePath" = "8:..\\Debug\\MasterEditorTWL.exe"
+            "SourcePath" = "8:..\\Release\\MasterEditorTWL.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1494B8B199184797B9C812877A4DFB7F"

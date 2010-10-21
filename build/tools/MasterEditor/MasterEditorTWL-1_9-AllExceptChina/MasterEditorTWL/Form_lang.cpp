@@ -473,6 +473,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->gridWarn, L"gridWarn");
 	resources->ApplyResources(this->gridError, L"gridError");
 	resources->ApplyResources(this->labFile, L"labFile");
+    resources->ApplyResources(this->labelAllExceptChina, L"labelAllExceptChina");
 	resources->ApplyResources(this->labAssemblyVersion, L"labAssemblyVersion");
 	resources->ApplyResources(this->colErrorName, L"colErrorName");
 	resources->ApplyResources(this->colErrorBegin, L"colErrorBegin");

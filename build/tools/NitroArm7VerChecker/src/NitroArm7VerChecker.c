@@ -30,7 +30,7 @@
 
 //#define DEBUG_MODE
 
-#define ARM7_INFO_NUM			7
+#define ARM7_INFO_NUM			8
 
 #ifdef DEBUG_MODE
 #define KEY_REPEAT_START        10  // キーリピート開始までのフレーム数

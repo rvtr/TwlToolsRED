@@ -40,7 +40,8 @@
 
 typedef struct Arm7Info
 {
-    char name[32];
+    char name[33];
+    char version;
     unsigned char hash[MATH_SHA1_DIGEST_SIZE];
 }
 Arm7Info;
@@ -95,44 +96,52 @@ static const ROM_Header_Short *sp_header = (ROM_Header_Short *)HW_CARD_ROM_HEADE
 static const Arm7Info s_info[ ARM7_INFO_NUM ] =
 {
     {
-	"NitroSDK 2.2 RELEASE plus 3",
-	{ 0xB4, 0x6C, 0xD3, 0x35, 0x5D, 0xB1, 0x6E, 0xC9, 0xEC, 0x5F,
-	  0xC4, 0x82, 0x23, 0x23, 0xA1, 0x90, 0xD9, 0x8D, 0xBA, 0xC4 }
-    },
-    {
-	"NitroSDK 4.0 RELEASE plus 1",
-	{ 0x77, 0xA5, 0xC0, 0x89, 0x83, 0x66, 0xC1, 0x0D, 0x0A, 0x3B,
-	  0x31, 0xA0, 0x63, 0xE6, 0xF5, 0x4F, 0xED, 0xC4, 0xC7, 0xAE }
-    },
-    {
-	"NitroSDK 2.0 RC4 plus 1",
+	"NitroSDK 2.0 RC4 plus3",
+    'A',
 	{ 0x83, 0x1E, 0x93, 0x52, 0x58, 0x9A, 0xF5, 0x11, 0x62, 0x06,
 	  0x63, 0x7F, 0x79, 0x57, 0xDD, 0xB2, 0x24, 0x3B, 0x95, 0x33 }
     },
     {
-	"NitroSDK 4.2 RELEASE plus 1",
+	"NitroSDK 2.2 RELEASE plus3",
+    'B',
+	{ 0xB4, 0x6C, 0xD3, 0x35, 0x5D, 0xB1, 0x6E, 0xC9, 0xEC, 0x5F,
+	  0xC4, 0x82, 0x23, 0x23, 0xA1, 0x90, 0xD9, 0x8D, 0xBA, 0xC4 }
+    },
+    {
+	"NitroSDK 4.0 RELEASE plus1",
+    'C',
+	{ 0x77, 0xA5, 0xC0, 0x89, 0x83, 0x66, 0xC1, 0x0D, 0x0A, 0x3B,
+	  0x31, 0xA0, 0x63, 0xE6, 0xF5, 0x4F, 0xED, 0xC4, 0xC7, 0xAE }
+    },
+    {
+	"NitroSDK 4.2 RELEASE plus1",
+    'D',
     { 0x82, 0x7d, 0xa0, 0x82, 0xd0, 0x56, 0xb3, 0x5a, 0x57, 0x19,
       0xca, 0xea, 0x1b, 0xd4, 0xa2, 0xda, 0x3e, 0xdc, 0xab, 0xbc }
     },
     {
+	"NitroSDK 3.0 RELEASE plus1/2/2CN",
+    'E',
+    { 0x94, 0xd4, 0x64, 0x45, 0xb6, 0xa0, 0x8a, 0xef, 0xa9, 0x4f,
+      0x72, 0x23, 0xc8, 0x6a, 0x6d, 0x63, 0x00, 0xb0, 0x6e, 0x4a,}
+    },
+    {
 	"NitroSDK 3.1 RELEASE",
+    'F',
     { 0x1e, 0x62, 0x0f, 0x41, 0xe9, 0x83, 0x96, 0xbf, 0x21, 0x4c,
       0x45, 0x40, 0x87, 0x32, 0x94, 0x12, 0x72, 0x1b, 0xf2, 0xcf,}
     },
     {
-	"NitroSDK 3.1 RELEASE",
+	"NitroSDK 3.1 RELEASE plus2/3/4",
+    'G',
     { 0x46, 0x10, 0x64, 0xdf, 0xad, 0xcc, 0xfe, 0x3a, 0x39, 0xa1,
       0x49, 0xb8, 0x71, 0x9a, 0x11, 0x94, 0x9a, 0x7d, 0x9d, 0x86,}
     },
     {
-	"NitroSDK 2.2 RELEASE plus 2",
+	"NitroSDK 2.2 RELEASE plus2",
+    'H',
     { 0xb8, 0xa6, 0xd1, 0x67, 0xc3, 0x67, 0xa6, 0xf7, 0x70, 0xa3,
       0xc6, 0x4a, 0xc0, 0x6d, 0x8f, 0x2e, 0xc9, 0x1b, 0xc9, 0xf3,}
-    },
-    {
-	"NitroSDK 3.0 RELEASE plus 1",
-    { 0x94, 0xd4, 0x64, 0x45, 0xb6, 0xa0, 0x8a, 0xef, 0xa9, 0x4f,
-      0x72, 0x23, 0xc8, 0x6a, 0x6d, 0x63, 0x00, 0xb0, 0x6e, 0x4a,}
     },
 };
 
@@ -223,43 +232,53 @@ static void DrawMainScene( void )
 #ifdef DEBUG_MODE
     int i,j,idx;
     u8 *buf = (u8 *)data_buf + gIndex*DUMP_SIZE;
-    
-    myDp_Printf( 2, 1, TXT_COLOR_BLUE, SUB_SCREEN, "sub_rom_offset : 0x%08x", sp_header->sub_rom_offset);
-    myDp_Printf( 2, 2, TXT_COLOR_BLUE, SUB_SCREEN, "banner_offset  : 0x%08x", sp_header->banner_offset);
-    myDp_Printf( 2, 3, TXT_COLOR_BLUE, SUB_SCREEN, "dump adr index : 0x%08x", DUMP_SIZE * gIndex );
-    
-    idx = 0;
-    for ( i=0; i<0x10; i++ )
+
+    if( s_mode == 0 )
     {
-        for ( j=0; j<8; j++ )
+        myDp_Printf( 2, 1, TXT_COLOR_BLUE, SUB_SCREEN, "sub_rom_offset : 0x%08x", sp_header->sub_rom_offset);
+        myDp_Printf( 2, 2, TXT_COLOR_BLUE, SUB_SCREEN, "banner_offset  : 0x%08x", sp_header->banner_offset);
+        myDp_Printf( 2, 3, TXT_COLOR_BLUE, SUB_SCREEN, "dump adr index : 0x%08x", DUMP_SIZE * gIndex );
+        
+        idx = 0;
+        for ( i=0; i<0x10; i++ )
         {
-            myDp_Printf(       2, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x #", i*0x8);
-            myDp_Printf( 7 + j*3, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x", buf[idx]);
-            idx++;
+            for ( j=0; j<8; j++ )
+            {
+                myDp_Printf(       2, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x #", i*0x8);
+                myDp_Printf( 7 + j*3, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x", buf[idx]);
+                idx++;
+            }
         }
     }
 #endif
     
 	//int l;
-	myDp_Printf( 0, 0, TXT_COLOR_BLUE, MAIN_SCREEN, "Component SDK Version Identifier");
-    
+	myDp_Printf( 0, 1, TXT_COLOR_BLACK, MAIN_SCREEN, "Component SDK Version Identifier");
+#ifdef DEBUG_MODE
+    if( 1 )
+#else
 	if( s_mode == 0 )
+#endif
 	{
 		// 結果表示モード
 		if( s_error != DETECT_ERROR_NONE )
 		{
 			// エラー表示
-			myDp_Printf( 1, 3, TXT_COLOR_RED, MAIN_SCREEN, "Registered ARM7 component");
-			myDp_Printf( 1, 4, TXT_COLOR_RED, MAIN_SCREEN, "was not detected.");
-			myDp_Printf( 1, 6, TXT_COLOR_RED, MAIN_SCREEN, "Error : %d", s_error);
+			myDp_Printf( 1, 5, TXT_COLOR_RED, MAIN_SCREEN, "Registered ARM7 component");
+			myDp_Printf( 1, 6, TXT_COLOR_RED, MAIN_SCREEN, "was not detected.");
+			myDp_Printf( 1,10, TXT_COLOR_RED, MAIN_SCREEN, "Error : %d", s_error);
 		}else
 		{
 			// 通常結果表示
-			myDp_Printf( 1, 3, TXT_COLOR_BLACK, MAIN_SCREEN, "Registered ARM7 component");
-			myDp_Printf( 1, 4, TXT_COLOR_BLACK, MAIN_SCREEN, "was detected.");
-			myDp_Printf( 1, 6, TXT_COLOR_BLACK, MAIN_SCREEN, "Same as");
-			myDp_Printf( 1, 7, TXT_COLOR_BLUE, MAIN_SCREEN, "%s", s_info[s_hit].name);
-			myDp_Printf( 1, 9, TXT_COLOR_BLUE, MAIN_SCREEN, "GameCode        : %c%c%c%c", sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
+			myDp_Printf( 1, 5, TXT_COLOR_DARKGREEN, MAIN_SCREEN, "Registered ARM7 component");
+			myDp_Printf( 1, 6, TXT_COLOR_DARKGREEN, MAIN_SCREEN, "was detected.");
+            myDp_Printf( 0,10, TXT_COLOR_BLACK, MAIN_SCREEN, "Customs Reference :");
+            myDp_Printf(20,10, TXT_COLOR_BLUE,  MAIN_SCREEN, "Version %c", s_info[s_hit].version);
+			myDp_Printf( 0,12, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", s_info[s_hit].name);
+			myDp_Printf( 0,14, TXT_COLOR_BLACK, MAIN_SCREEN, "GameCode  :");
+            myDp_Printf(12,14, TXT_COLOR_BLUE,  MAIN_SCREEN, "%c%c%c%c", sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
+            myDp_Printf( 0,16, TXT_COLOR_BLACK, MAIN_SCREEN, "TitleName :");
+            myDp_Printf(12,16, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", sp_header->title_name);
 			/*
 			myDp_Printf( 1, 10, TXT_COLOR_BLUE, MAIN_SCREEN, "Arm7FLXDigest   :");
 			for(l=0;l<MATH_SHA1_DIGEST_SIZE;l++)
@@ -271,7 +290,7 @@ static void DrawMainScene( void )
 	}else
 	{
 		// カード無しモード
-		myDp_Printf( 1, 3, TXT_COLOR_BLACK, MAIN_SCREEN, "Please insert DS game card.");
+		myDp_Printf( 1, 5, TXT_COLOR_BLACK, MAIN_SCREEN, "Please insert DS game card.");
 	}
 	
 	// 隠し ID 表示
@@ -448,6 +467,33 @@ void NitroArm7VerCheckerMain(void)
         if( gIndex >= 0x100 )
         {
             gIndex-=0x100;
+        }
+    }
+
+    if (gKey.rep & PAD_KEY_LEFT || gKey.trg & PAD_KEY_LEFT)
+    {
+        if( s_hit - 1 >= 0 )
+        {
+            s_hit--;
+        }
+    }
+    if (gKey.rep & PAD_KEY_RIGHT || gKey.trg & PAD_KEY_RIGHT)
+    {
+        if( s_hit + 1 < ARM7_INFO_NUM )
+        {
+            s_hit++;
+        }
+    }
+    
+    if (gKey.trg & PAD_BUTTON_B)
+    {
+        if(s_error < DETECT_ERROR_MAX)
+        {
+            s_error++;
+        }
+        else
+        {
+            s_error=0;
         }
     }
 #endif

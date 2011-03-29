@@ -57,7 +57,6 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "BackupOther", this->tboxBackupOther->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ReleaseForeign", (this->cboxReleaseForeign->Checked)?"Y":"N" );
 	MasterEditorTWL::appendXmlTag( doc, form, "Remarks", this->tboxCaption->Text );
-	MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "None" );
 
 	// —p“r
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>

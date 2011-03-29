@@ -79,18 +79,7 @@ void Form1::setDeliverableProperties(void)
 		this->hDeliv->hSDK = gcnew System::String( "" );
 	}
 	// ’ño•û–@
-	if( this->rSubmitInternet->Checked == true )
-	{
-		this->hDeliv->hSubmitWay = this->rSubmitInternet->Text;
-	}
-	else if( this->rSubmitPost->Checked == true )
-	{
-		this->hDeliv->hSubmitWay = this->rSubmitPost->Text;
-	}
-	else
-	{
-		this->hDeliv->hSubmitWay = this->rSubmitHand->Text;
-	}
+    this->hDeliv->hSubmitWay = gcnew System::String( "" );
 
 	// —p“r
 	cli::array<System::Windows::Forms::RadioButton ^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>

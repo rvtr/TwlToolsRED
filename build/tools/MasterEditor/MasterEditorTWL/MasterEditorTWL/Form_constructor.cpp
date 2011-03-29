@@ -96,10 +96,6 @@ void Form1::construct(void)
 		this->stripItemJapanese->Checked = true;
 		this->stripItemEnglish->Checked  = false;
 		this->changeFormInput("ja");
-
-		// —p“r‚Ì"Internet"‚ð‘I‘ð•s‰Â‚É‚·‚é
-		this->rSubmitInternet->Enabled = false;
-		this->rSubmitInternet->Visible = false;
 	}
 	else
 	{

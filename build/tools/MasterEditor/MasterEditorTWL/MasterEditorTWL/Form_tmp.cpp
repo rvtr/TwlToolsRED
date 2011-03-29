@@ -57,18 +57,7 @@ System::Void Form1::saveTmp( System::String ^filename )
 	MasterEditorTWL::appendXmlTag( doc, form, "BackupOther", this->tboxBackupOther->Text );
 	MasterEditorTWL::appendXmlTag( doc, form, "ReleaseForeign", (this->cboxReleaseForeign->Checked)?"Y":"N" );
 	MasterEditorTWL::appendXmlTag( doc, form, "Remarks", this->tboxCaption->Text );
-	if( this->rSubmitInternet->Checked )
-	{
-		MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "Internet" );
-	}
-	else if( this->rSubmitHand->Checked )
-	{
-		MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "Hand" );
-	}
-	else
-	{
-		MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "Mail" );
-	}
+	MasterEditorTWL::appendXmlTag( doc, form, "SubmitWay", "None" );
 
 	// —p“r
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>
@@ -211,10 +200,6 @@ void Form1::loadTmp( System::String ^filename )
 
 	cli::array<System::Windows::Forms::RadioButton^> ^rbuts;
 	cli::array<System::String^> ^strs;
-
-	rbuts = gcnew cli::array<System::Windows::Forms::RadioButton^>{this->rSubmitHand, this->rSubmitPost, this->rSubmitInternet};
-	strs  = gcnew cli::array<System::String^>{"Hand","Mail","Internet"};
-	this->parseTmp( root, "/MasterEditorTWL/Form/SubmitWay", rbuts, strs );
 
 	// —p“r
 	rbuts = gcnew cli::array<System::Windows::Forms::RadioButton ^>

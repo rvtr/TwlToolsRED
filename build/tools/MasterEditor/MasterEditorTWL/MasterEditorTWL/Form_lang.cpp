@@ -323,9 +323,6 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labProductCode1, L"labProductCode1");
 	resources->ApplyResources(this->dateSubmit, L"dateSubmit");
 	resources->ApplyResources(this->dateRelease, L"dateRelease");
-	resources->ApplyResources(this->gboxSubmitWay, L"gboxSubmitWay");
-	resources->ApplyResources(this->rSubmitHand, L"rSubmitHand");
-	resources->ApplyResources(this->rSubmitPost, L"rSubmitPost");
 	resources->ApplyResources(this->labSubmiteDate, L"labSubmiteDate");
 	resources->ApplyResources(this->labReleaseDate, L"labReleaseDate");
 	resources->ApplyResources(this->labProductCode, L"labProductCode");

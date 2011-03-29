@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_3832EB2ACDAD42848756988E9BDD8CF3"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_49C040AE0F5A48FD851350336101118A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -88,12 +94,6 @@
         "Entry"
         {
         "MsmKey" = "8:_78C4AD0B07E9470EA344D5A9FFE61E99"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_7E39D12E1A2B4502A644DD4F0AD9FB72"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -153,6 +153,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_C3DDF8C005E840B78529BA1F1C53E582"
+        "OwnerKey" = "8:_D801C614827E469C83652433008165FD"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_CA2D37D0D1D9498183292FE6A4A78C18"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -177,6 +183,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D801C614827E469C83652433008165FD"
+        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DB1EEF0F1C564E03B4AD772D73F6718E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -185,6 +197,12 @@
         {
         "MsmKey" = "8:_F8DA46C7E2424049B36FFB2BD2C74C9B"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_97CE56BC91094FBFB083E119975EE3CE"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -372,6 +390,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3832EB2ACDAD42848756988E9BDD8CF3"
+            {
+            "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\デバッグ項目_MRC.xls"
+            "TargetName" = "8:デバッグ項目_MRC.xls"
+            "Tag" = "8:"
+            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49C040AE0F5A48FD851350336101118A"
             {
             "SourcePath" = "8:..\\TMP_J.XML"
@@ -538,26 +576,6 @@
             "TargetName" = "8:TMP_ERROR2.XML"
             "Tag" = "8:"
             "Folder" = "8:_FBFB7C5A8213459CA2C0A3BBC932AE3C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7E39D12E1A2B4502A644DD4F0AD9FB72"
-            {
-            "SourcePath" = "8:D:\\TwlToolsRED\\tests\\MasterEditorTWL_mrc_roms\\デバッグ項目_MRC.xls"
-            "TargetName" = "8:デバッグ項目_MRC.xls"
-            "Tag" = "8:"
-            "Folder" = "8:_ED54FB5333F541509640FA1C786BC369"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1468,6 +1486,34 @@
         }
         "MergeModule"
         {
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C3DDF8C005E840B78529BA1F1C53E582"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_D801C614827E469C83652433008165FD"
+            {
+            "UseDynamicProperties" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+                "Properties"
+                {
+                }
+            "LanguageId" = "3:0"
+            "Exclude" = "11:FALSE"
+            "Folder" = "8:"
+            "Feature" = "8:"
+            "IsolateTo" = "8:"
+            }
         }
         "ProjectOutput"
         {

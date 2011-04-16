@@ -445,6 +445,7 @@ void MasterEditorTWL::Form1::changeLanguage( System::String ^langname )
 	resources->ApplyResources(this->labSubBannerSize, L"labSubBannerSize");
 	resources->ApplyResources(this->labTmdSize, L"labTmdSize");
 	resources->ApplyResources(this->tabRomEditInfo, L"tabRomEditInfo");
+    resources->ApplyResources(this->tboxWarningCERO, L"tboxWarningCERO");
 	resources->ApplyResources(this->gboxOtherSpec, L"gboxOtherSpec");
 	resources->ApplyResources(this->cboxIsUGC, L"cboxIsUGC");
 	resources->ApplyResources(this->cboxIsPhotoEx, L"cboxIsPhotoEx");

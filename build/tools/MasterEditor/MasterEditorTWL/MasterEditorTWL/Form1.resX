@@ -5914,7 +5914,7 @@
     <value>43</value>
   </data>
   <data name="tboxWarningCERO.Text" xml:space="preserve">
-    <value>In case that CERO rating is "education/database", select "A (All ages)" in drop-down box, and describe spetial note that CERO rating is "education/database."</value>
+    <value>If the CERO rating is "Educational/Database", choose "A (All ages)" from the drop-down list and write "The CERO rating is Educational/Database" in the Comments field.</value>
   </data>
   <data name="&gt;&gt;tboxWarningCERO.Name" xml:space="preserve">
     <value>tboxWarningCERO</value>

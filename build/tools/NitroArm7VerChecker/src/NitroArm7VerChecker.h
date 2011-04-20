@@ -25,8 +25,13 @@ extern "C" {
 
 #include <twl.h>
 
-// define data----------------------------------------------------------
+// äàê¸ë}î≤Ç©ÇÁÇÃÉpÉNÇË
+#define SLOT_STATUS_MODE_10                                0x08
+#define REG_MC1_OFFSET                                     0x4010
+#define REG_MC1_ADDR                                       (HW_REG_BASE + REG_MC1_OFFSET)
+#define reg_MI_MC1                                         (*( REGType32v *) REG_MC1_ADDR)
 
+// define data----------------------------------------------------------
 void NitroArm7VerCheckerInit( void );
 void NitroArm7VerCheckerMain( void );
 

@@ -15,6 +15,15 @@
   $Author$
  *---------------------------------------------------------------------------*/
 
+// ----- ビルドモードの切り替え -----
+// 通常版・特殊版の切り替えはここの定義で行う
+#define NORMAL_CHECK_TOOL
+
+// デバッグビルド切り替え(有効にする場合はどちらか片方に)
+//#define DEBUG_MEM_DUMP // 現在使用禁止
+//#define DEBUG_SHOW_SDK_INFO
+
+
 #include <twl.h>
 #include <nitro/os/ARM9/argument.h>
 #include <twl/os/common/format_rom.h>
@@ -22,29 +31,24 @@
 #include "misc_simple.h"
 #include "NitroArm7VerChecker.h"
 #include "revision.h"
-#include    <../build/libraries/mb/common/include/mb_fileinfo.h>
+#include <../build/libraries/mb/common/include/mb_fileinfo.h>
+#include <string.h>
+
+#ifdef NORMAL_CHECK_TOOL
+#include "SdkInfoData_normal.h"
+#else
+#include "SdkInfoData_special.h"
+#endif
 
 // define data------------------------------------------
+#define SHOW_SDK_INFO_NUM       20
+#define SHOW_SDK_INFO_SIZE      50
 
-//#define MENU_ELEMENT_NUM			5						// メニューの項目数
-
-//#define DEBUG_MODE
-
-#define ARM7_INFO_NUM			8
-
-#ifdef DEBUG_MODE
+#ifdef DEBUG_SHOW_SDK_INFO
 #define KEY_REPEAT_START        10  // キーリピート開始までのフレーム数
 #define KEY_REPEAT_SPAN         1   // キーリピートの間隔フレーム数
 #define DUMP_SIZE               0x80
 #endif
-
-typedef struct Arm7Info
-{
-    char name[33];
-    char version;
-    unsigned char hash[MATH_SHA1_DIGEST_SIZE];
-}
-Arm7Info;
 
 typedef enum DetectError
 {
@@ -56,7 +60,7 @@ typedef enum DetectError
 }
 DetectError;
 
-#ifdef DEBUG_MODE
+#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
 typedef struct KeyInfo
 {
     u16 cnt;    // 未加工入力値
@@ -71,7 +75,8 @@ typedef struct KeyInfo
 // function's prototype declaration---------------------
 
 static void MenuScene( void );
-#ifdef DEBUG_MODE
+static void SplitToken(void);
+#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
 void ReadKey(KeyInfo* pKey);
 #endif
 
@@ -81,10 +86,13 @@ void ReadKey(KeyInfo* pKey);
 
 static char s_mode = 0;
 static BOOL s_secret = FALSE;
+static BOOL s_show_error = FALSE;
 static u8 s_error = 0;
 static u8 s_digest[MATH_SHA1_DIGEST_SIZE];
-static u8 s_hit = 0;
-#ifdef DEBUG_MODE
+static u32 s_hit = 0;
+static char s_sdk_name[SHOW_SDK_INFO_NUM][SHOW_SDK_INFO_SIZE];
+static int s_same_sdk_num;
+#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
 static KeyInfo  gKey;
 static u32 gIndex;
 static void *data_buf;
@@ -93,92 +101,6 @@ static void *data_buf;
 // const data  -----------------------------------------
 
 static const ROM_Header_Short *sp_header = (ROM_Header_Short *)HW_CARD_ROM_HEADER;
-static const Arm7Info s_info[ ARM7_INFO_NUM ] =
-{
-    {
-	"NitroSDK 2.0 RC4 plus3",
-    'A',
-	{ 0x83, 0x1E, 0x93, 0x52, 0x58, 0x9A, 0xF5, 0x11, 0x62, 0x06,
-	  0x63, 0x7F, 0x79, 0x57, 0xDD, 0xB2, 0x24, 0x3B, 0x95, 0x33 }
-    },
-    {
-	"NitroSDK 2.2 RELEASE plus3",
-    'B',
-	{ 0xB4, 0x6C, 0xD3, 0x35, 0x5D, 0xB1, 0x6E, 0xC9, 0xEC, 0x5F,
-	  0xC4, 0x82, 0x23, 0x23, 0xA1, 0x90, 0xD9, 0x8D, 0xBA, 0xC4 }
-    },
-    {
-	"NitroSDK 4.0 RELEASE plus1",
-    'C',
-	{ 0x77, 0xA5, 0xC0, 0x89, 0x83, 0x66, 0xC1, 0x0D, 0x0A, 0x3B,
-	  0x31, 0xA0, 0x63, 0xE6, 0xF5, 0x4F, 0xED, 0xC4, 0xC7, 0xAE }
-    },
-    {
-	"NitroSDK 4.2 RELEASE plus1",
-    'D',
-    { 0x82, 0x7d, 0xa0, 0x82, 0xd0, 0x56, 0xb3, 0x5a, 0x57, 0x19,
-      0xca, 0xea, 0x1b, 0xd4, 0xa2, 0xda, 0x3e, 0xdc, 0xab, 0xbc }
-    },
-    {
-	"NitroSDK 3.0 RELEASE plus1/2/2CN",
-    'E',
-    { 0x94, 0xd4, 0x64, 0x45, 0xb6, 0xa0, 0x8a, 0xef, 0xa9, 0x4f,
-      0x72, 0x23, 0xc8, 0x6a, 0x6d, 0x63, 0x00, 0xb0, 0x6e, 0x4a,}
-    },
-    {
-	"NitroSDK 3.1 RELEASE",
-    'F',
-    { 0x1e, 0x62, 0x0f, 0x41, 0xe9, 0x83, 0x96, 0xbf, 0x21, 0x4c,
-      0x45, 0x40, 0x87, 0x32, 0x94, 0x12, 0x72, 0x1b, 0xf2, 0xcf,}
-    },
-    {
-	"NitroSDK 3.1 RELEASE plus2/3/4",
-    'G',
-    { 0x46, 0x10, 0x64, 0xdf, 0xad, 0xcc, 0xfe, 0x3a, 0x39, 0xa1,
-      0x49, 0xb8, 0x71, 0x9a, 0x11, 0x94, 0x9a, 0x7d, 0x9d, 0x86,}
-    },
-    {
-	"NitroSDK 2.2 RELEASE plus2",
-    'H',
-    { 0xb8, 0xa6, 0xd1, 0x67, 0xc3, 0x67, 0xa6, 0xf7, 0x70, 0xa3,
-      0xc6, 0x4a, 0xc0, 0x6d, 0x8f, 0x2e, 0xc9, 0x1b, 0xc9, 0xf3,}
-    },
-};
-
-/*
-static const char *s_pStrMenu[ MENU_ELEMENT_NUM ] = 
-{
-	"AAA",
-	"BBB",
-	"CCC",
-	"DDD",
-	"EEE",
-};
-
-static MenuPos s_menuPos[] = {
-	{ TRUE,  3,   6 },
-	{ TRUE,  3,   8 },
-	{ TRUE,  3,  10 },
-	{ TRUE, 3,  12 },
-	{ TRUE, 3,  14 },
-};
-
-static const MenuParam s_menuParam = {
-	MENU_ELEMENT_NUM,
-	TXT_COLOR_BLACK,
-	TXT_COLOR_GREEN,
-	TXT_COLOR_RED,
-	&s_menuPos[ 0 ],
-	(const char **)&s_pStrMenu,
-};
-*/
-
-// 活線挿抜からのパクり
-
-#define SLOT_STATUS_MODE_10                                0x08
-#define REG_MC1_OFFSET                                     0x4010
-#define REG_MC1_ADDR                                       (HW_REG_BASE + REG_MC1_OFFSET)
-#define reg_MI_MC1                                         (*( REGType32v *) REG_MC1_ADDR)
 
 /*---------------------------------------------------------------------------*
   Name:         HOTSW_IsCardExist
@@ -221,15 +143,17 @@ static BOOL HOTSW_IsCardAccessible(void)
 }
 
 
-
 //======================================================
 // ARM7コンポーネントに使われているSDKバージョンのチェックプログラム
 //======================================================
+/*---------------------------------------------------------------------------*
+  Name:         DrawMainScene
 
-// 描画まとめ
+  Description:  描画まとめ
+ *---------------------------------------------------------------------------*/
 static void DrawMainScene( void )
 {
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MEM_DUMP
     int i,j,idx;
     u8 *buf = (u8 *)data_buf + gIndex*DUMP_SIZE;
 
@@ -253,8 +177,34 @@ static void DrawMainScene( void )
 #endif
     
 	//int l;
-	myDp_Printf( 0, 1, TXT_COLOR_BLACK, MAIN_SCREEN, "Component SDK Version Identifier");
-#ifdef DEBUG_MODE
+	myDp_Printf( 0, 7, TXT_COLOR_BLACK, SUB_SCREEN, "Component SDK Version Identifier");
+
+
+#ifdef DEBUG_SHOW_SDK_INFO
+    myDp_Printf( 0, 1, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_same_sdk_num : %d", s_same_sdk_num);
+    myDp_Printf( 0, 2, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_hit : %d", s_hit);
+    {
+        int i;
+        for( i = 0; i < s_same_sdk_num; i++ )
+        {
+            if( s_sdk_name[i][0] == '2' || s_sdk_name[i][0] == '3' || s_sdk_name[i][0] == '4' || s_sdk_name[i][0] == '5' )
+            {
+                myDp_Printf( 1, 5+i, TXT_COLOR_BLUE,  MAIN_SCREEN, "SDK %s", s_sdk_name[i]);
+            }
+            else
+            {
+                myDp_Printf( 5, 5+i, TXT_COLOR_BLACK,  MAIN_SCREEN, "[%s", s_sdk_name[i]);
+            }
+        }
+        if( s_show_error )
+        {
+            myDp_Printf( 1, 23, TXT_COLOR_RED,  MAIN_SCREEN, "Error : Can Not Show SDK Info");
+        }
+    }
+#endif
+
+
+#ifdef DEBUG_MEM_DUMP
     if( 1 )
 #else
 	if( s_mode == 0 )
@@ -264,21 +214,40 @@ static void DrawMainScene( void )
 		if( s_error != DETECT_ERROR_NONE )
 		{
 			// エラー表示
-			myDp_Printf( 1, 5, TXT_COLOR_RED, MAIN_SCREEN, "Registered ARM7 component");
-			myDp_Printf( 1, 6, TXT_COLOR_RED, MAIN_SCREEN, "was not detected.");
-			myDp_Printf( 1,10, TXT_COLOR_RED, MAIN_SCREEN, "Error : %d", s_error);
-		}else
+			myDp_Printf( 1,10, TXT_COLOR_RED, SUB_SCREEN, "Registered ARM7 component");
+			myDp_Printf( 1,11, TXT_COLOR_RED, SUB_SCREEN, "was not detected.");
+			myDp_Printf( 1,13, TXT_COLOR_RED, SUB_SCREEN, "Error : %d", s_error);
+		}
+        else
 		{
 			// 通常結果表示
-			myDp_Printf( 1, 5, TXT_COLOR_DARKGREEN, MAIN_SCREEN, "Registered ARM7 component");
-			myDp_Printf( 1, 6, TXT_COLOR_DARKGREEN, MAIN_SCREEN, "was detected.");
-            myDp_Printf( 0,10, TXT_COLOR_BLACK, MAIN_SCREEN, "Customs Reference :");
-            myDp_Printf(20,10, TXT_COLOR_BLUE,  MAIN_SCREEN, "Version %c", s_info[s_hit].version);
-			myDp_Printf( 0,12, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", s_info[s_hit].name);
-			myDp_Printf( 0,14, TXT_COLOR_BLACK, MAIN_SCREEN, "GameCode  :");
-            myDp_Printf(12,14, TXT_COLOR_BLUE,  MAIN_SCREEN, "%c%c%c%c", sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
-            myDp_Printf( 0,16, TXT_COLOR_BLACK, MAIN_SCREEN, "TitleName :");
-            myDp_Printf(12,16, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", sp_header->title_name);
+			myDp_Printf( 1,10, TXT_COLOR_DARKGREEN, SUB_SCREEN, "Registered ARM7 component");
+			myDp_Printf( 1,11, TXT_COLOR_DARKGREEN, SUB_SCREEN, "was detected.");
+            
+			myDp_Printf( 1, 1, TXT_COLOR_BLACK, MAIN_SCREEN, "GameCode  :");
+            myDp_Printf(13, 1, TXT_COLOR_BLUE,  MAIN_SCREEN, "%c%c%c%c", sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
+            myDp_Printf( 1, 3, TXT_COLOR_BLACK, MAIN_SCREEN, "TitleName :");
+            myDp_Printf(13, 3, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", sp_header->title_name);
+
+            
+            {
+                int i;
+                for( i = 0; i < s_same_sdk_num; i++ )
+                {
+                    if( s_sdk_name[i][0] == '2' || s_sdk_name[i][0] == '3' || s_sdk_name[i][0] == '4' || s_sdk_name[i][0] == '5' )
+                    {
+                        myDp_Printf( 1, 5+i, TXT_COLOR_BLUE,  MAIN_SCREEN, "SDK %s", s_sdk_name[i]);
+                    }
+                    else
+                    {
+                        myDp_Printf( 5, 5+i, TXT_COLOR_BLACK,  MAIN_SCREEN, "[%s", s_sdk_name[i]);
+                    }
+                }
+                if( s_show_error )
+                {
+                    myDp_Printf( 1, 23, TXT_COLOR_RED,  MAIN_SCREEN, "Error : Can Not Show SDK Info");
+                }
+            }
 			/*
 			myDp_Printf( 1, 10, TXT_COLOR_BLUE, MAIN_SCREEN, "Arm7FLXDigest   :");
 			for(l=0;l<MATH_SHA1_DIGEST_SIZE;l++)
@@ -290,16 +259,22 @@ static void DrawMainScene( void )
 	}else
 	{
 		// カード無しモード
-		myDp_Printf( 1, 5, TXT_COLOR_BLACK, MAIN_SCREEN, "Please insert DS game card.");
+		myDp_Printf( 1,11, TXT_COLOR_BLACK, SUB_SCREEN, "Please insert DS game card.");
 	}
 	
 	// 隠し ID 表示
 	if ( s_secret )
 	{
-		myDp_Printf( 1, 20, TXT_COLOR_BLUE, MAIN_SCREEN, "ID : %d", ID_NUM);
+		myDp_Printf( 1, 20, TXT_COLOR_BLUE, SUB_SCREEN, "ID : %d", ID_NUM);
 	}
 }
 
+
+/*---------------------------------------------------------------------------*
+  Name:         CheckCard
+
+  Description:  
+ *---------------------------------------------------------------------------*/
 static void CheckCard( void )
 {
 	void *sp_arm7flx;
@@ -330,14 +305,13 @@ static void CheckCard( void )
 
 	OS_SetMainArenaLo( (void *)((u32)sp_arm7flx + sp_header->sub_size) ); // アリーナLo修正
 
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MEM_DUMP
     data_buf = sp_arm7flx;
 #endif
-
     // ARM9のSecure除いた部分を空読み出し
     if( (sp_header->main_rom_offset + sp_header->main_size) > 0x8000 )
     {
-#ifdef DEBUG_MODE
+#ifdef DEBUG_MEM_DUMP
         u32 auth_offset   = sp_header->rom_valid_size ? sp_header->rom_valid_size : 0x01000000;
         u32 page_offset   = auth_offset & 0xFFFFFE00;
         
@@ -352,29 +326,33 @@ static void CheckCard( void )
         CARD_ReadRom( MI_DMA_NOT_USE, (void *)0x8000, sp_arm7flx, (sp_header->main_size - (0x8000 - sp_header->main_rom_offset)) );
     }
 	CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->sub_rom_offset, sp_arm7flx, sp_header->sub_size );
-
 	CARD_UnlockRom( 0x03 );
-	
+    
 	// Arm7FLX のハッシュ計算
 	MATH_CalcSHA1( s_digest, sp_arm7flx, sp_header->sub_size );
-
+    
 	// 該当する SDK を検索
-	for( s_hit=0;s_hit<ARM7_INFO_NUM;s_hit++ )
+	for( s_hit=0;s_hit<SDK_INFO_NUM;s_hit++ )
 	{
 		for( m=0;m<MATH_SHA1_DIGEST_SIZE;m++ )
 		{
-			if( s_info[s_hit].hash[m] != s_digest[m] ) break;
+			if( s_sdk_info[s_hit].hash[m] != s_digest[m] ) break;
 		}
 		if( m == MATH_SHA1_DIGEST_SIZE ) break;
 	}
-	if( s_hit == ARM7_INFO_NUM )
+    
+	if( s_hit == SDK_INFO_NUM )
 	{
 		s_error = DETECT_ERROR_NO_HIT;
 		//s_hit = 0;
 		return;
 	}
+    else
+    {
+        SplitToken();
+    }
 
-#ifndef DEBUG_MODE
+#ifndef DEBUG_MEM_DUMP
 	// もうバッファいらない
 	OS_SetMainArenaLo( old_lo );
 #endif
@@ -384,7 +362,53 @@ static void CheckCard( void )
 }
 
 
-// 初期化
+/*---------------------------------------------------------------------------*
+  Name:         SplitToken
+
+  Description:  表示用のSDK情報作成
+ *---------------------------------------------------------------------------*/
+static void SplitToken(void)
+{
+    char *pos;
+    Arm7Info temp;
+
+    s_same_sdk_num = 0;
+    s_show_error = FALSE;
+
+    // strtok が 元の配列を壊してしまう(tokenをnullで書き換えてしまう)ので、tempで作業する
+    memcpy( &temp, &s_sdk_info[s_hit], sizeof(Arm7Info));
+    pos = strtok( temp.name, "/[" );
+
+    while( pos != NULL )
+    {
+        if( strlen(pos) < SHOW_SDK_INFO_SIZE )
+        {
+            strcpy( s_sdk_name[s_same_sdk_num], pos);
+        }
+        else
+        {
+            s_show_error = TRUE;
+            break;
+        }
+        
+        s_same_sdk_num++;
+
+        if( s_same_sdk_num >= SHOW_SDK_INFO_NUM )
+        {
+            s_show_error = TRUE;
+            break;
+        }
+        
+        pos = strtok(NULL, "/[");
+    }
+}
+
+
+/*---------------------------------------------------------------------------*
+  Name:         NitroArm7VerCheckerInit
+
+  Description:  初期化
+ *---------------------------------------------------------------------------*/
 void NitroArm7VerCheckerInit( void )
 {
 	GX_DispOff();
@@ -398,6 +422,8 @@ void NitroArm7VerCheckerInit( void )
 	GXS_DispOn();
 	
 	FS_Init(3);
+
+    OS_InitTick();
 
 	// この時点でカードが存在していたらカードチェック開始
 	if( HOTSW_IsCardExist() && HOTSW_IsCardAccessible() )
@@ -417,7 +443,12 @@ void NitroArm7VerCheckerInit( void )
 
 #define PAD_SECRET ( PAD_BUTTON_START | PAD_BUTTON_X | PAD_BUTTON_Y )
 
-// メインループ
+
+/*---------------------------------------------------------------------------*
+  Name:         NitroArm7VerCheckerMain
+
+  Description:  メインループ
+ *---------------------------------------------------------------------------*/
 void NitroArm7VerCheckerMain(void)
 {
 	//--------------------------------------
@@ -438,7 +469,46 @@ void NitroArm7VerCheckerMain(void)
 	//myDp_Printf( 1, 16, TXT_COLOR_BLUE, MAIN_SCREEN, "slotmode : %d", HOTSW_IsCardAccessible());
 	//myDp_Printf( 1, 17, TXT_COLOR_BLUE, MAIN_SCREEN, "exist      : %d", HOTSW_IsCardExist());
 
-#ifdef DEBUG_MODE
+#ifdef DEBUG_SHOW_SDK_INFO
+    {
+        BOOL change = FALSE;
+        ReadKey(&gKey);
+
+        if (gKey.rep & PAD_KEY_UP || gKey.trg & PAD_KEY_UP)
+        {
+            if( s_hit < SDK_INFO_NUM )
+            {
+                s_hit++;
+                change = TRUE;
+            }
+            else if( s_hit == SDK_INFO_NUM )
+            {
+                s_hit = 0;
+                change = TRUE;
+            }
+        }
+        if (gKey.rep & PAD_KEY_DOWN || gKey.trg & PAD_KEY_DOWN)
+        {
+            if( s_hit > 0 )
+            {
+                s_hit--;
+                change = TRUE;
+            }
+            else if( s_hit == 0 )
+            {
+                s_hit = SDK_INFO_NUM;
+                change = TRUE;
+            }
+        }
+
+        if( change == TRUE )
+        {
+            SplitToken();
+        }
+    }
+#endif
+    
+#ifdef DEBUG_MEM_DUMP
     ReadKey(&gKey);
 
     if (gKey.rep & PAD_KEY_DOWN || gKey.trg & PAD_KEY_DOWN)
@@ -479,7 +549,7 @@ void NitroArm7VerCheckerMain(void)
     }
     if (gKey.rep & PAD_KEY_RIGHT || gKey.trg & PAD_KEY_RIGHT)
     {
-        if( s_hit + 1 < ARM7_INFO_NUM )
+        if( s_hit + 1 < SDK_INFO_NUM )
         {
             s_hit++;
         }
@@ -531,7 +601,7 @@ void NitroArm7VerCheckerMain(void)
 
   Returns:      None.
  *---------------------------------------------------------------------------*/
-#ifdef DEBUG_MODE
+#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
 void ReadKey(KeyInfo* pKey)
 {
     static u16  repeat_count[12];

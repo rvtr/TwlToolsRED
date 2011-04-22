@@ -16,34 +16,27 @@
 # $Author$
 #----------------------------------------------------------------------------
 
-include $(TWL_IPL_RED_ROOT)/build/buildtools/commondefs
+TARGET_PLATFORM	 = TWL
 
-ICON_DIR			= ./icon
+include $(TWLSDK_ROOT)/build/buildtools/commondefs
 
-BANNER_ICON			= $(ICON_DIR)/gameIcon.bmp
-BANNER_SPEC			= banner_v3.bsf
+BANNER_ICON		 = icon/gameIcon.bmp
+BANNER_SPEC		 = banner.bsf
 
-TARGETS				= banner.bnr
-INSTALL_DIR			= ./
-INSTALL_TARGETS		= $(TARGETS)
+TARGETS			 = $(BANNER_SPEC:.bsf=.bnr)
 
-BANNER_ICON_NAME	= $(basename $(BANNER_ICON))
+BANNER_ICON_NAME = $(basename $(BANNER_ICON))
+BANNER_ICON_MIDDLE	= $(addprefix $(BANNER_ICON_NAME), .nbfs .nbfc .nbfp)
+MAKEBANNER_FLAGS	= -N $(BANNER_ICON_NAME)
 
-LDIRT_CLEAN			= $(TARGETS) \
-					  $(BANNER_ICON_NAME).nbfs \
-					  $(BANNER_ICON_NAME).nbfc \
-					  $(BANNER_ICON_NAME).nbfp \
-					  $(TARGETS:.bnr=.srl)
-
-include $(TWL_IPL_RED_ROOT)/build/buildtools/modulerules
+LDIRT_CLEAN		 = $(TARGETS) \
+				   $(BANNER_ICON_MIDDLE) \
 
 #----------------------------------------------------------------------------
-#  build
-#----------------------------------------------------------------------------
-do-build:		$(TARGETS)
 
-$(TARGETS):		$(BANNER_SPEC) $(BANNER_ICON)
-				$(NTEXCONV) -no -bg -bgb -bgnc $(BANNER_ICON) >/dev/null && \
-				$(MAKEBANNER) -N $(BANNER_ICON_NAME) $(BANNER_SPEC) $(TARGETS)
+do-build:		$(BANNER_ICON_MIDDLE) $(TARGETS)
+
+#----------------------------------------------------------------------------
+include $(TWLSDK_ROOT)/build/buildtools/modulerules
 
 #

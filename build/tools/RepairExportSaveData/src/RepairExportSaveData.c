@@ -166,7 +166,7 @@ static void DrawMainScene( void )
     
     PutMainScreen( 2, 2, s_font_color, "+--------------------------+");
     PutMainScreen( 2, 3, s_font_color, "+                          +");
-	PutMainScreen( 2, 4, s_font_color, "+ Repair Exported SaveData +");
+	PutMainScreen( 2, 4, s_font_color, "+  Repair Export SaveData  +");
     PutMainScreen( 2, 5, s_font_color, "+                          +");
     PutMainScreen( 2, 6, s_font_color, "+--------------------------+");
 

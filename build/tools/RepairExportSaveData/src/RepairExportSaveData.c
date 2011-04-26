@@ -21,15 +21,18 @@
 #include "screen.h"
 
 // define data------------------------------------------
-typedef enum DetectError
+#define THREAD_PRIO 17
+#define STACK_SIZE  0x2000
+
+typedef enum RepairResult
 {
-	DETECT_ERROR_NONE = 0,
-	DETECT_ERROR_DIR_OPEN = 1,
-	DETECT_ERROR_RESCUE_DATA = 2,
-	DETECT_ERROR_VERIFY_DATA = 3,
-	DETECT_ERROR_MAX
+	REPAIR_RESULT_SUCCESS = 0,
+	REPAIR_RESULT_DIR_OPEN = 1,
+	REPAIR_RESULT_RESCUE_DATA = 2,
+	REPAIR_RESULT_VERIFY_DATA = 3,
+	REPAIR_RESULT_MAX
 }
-DetectError;
+RepairResult;
 
 typedef enum RunningMode
 {
@@ -53,14 +56,14 @@ SDStat;
 
 // function's prototype declaration---------------------
 static void MenuScene( void );
-DetectError ResucuSDSaveData( void );
+static void ResucuSDSaveData( void *arg );
 static void* AllocForNAM(u32 size);
 static void FreeForNAM(void* ptr);
 
 // global variable -------------------------------------
 
 // static variable -------------------------------------
-static DetectError s_result;
+static RepairResult s_result;
 
 static char s_mode = 0;
 static s32 s_SDCheck = 0;
@@ -68,17 +71,21 @@ static BOOL s_protected = FALSE;
 static BOOL s_protect_checked = FALSE;
 static FSEventHook s_hook;
 
-static s32 s_debug = 0;
-
+static s32 s_error_code = 0;
 static KeyInfo  gKey;
 
+static OSThread s_thread;
+static u64 s_stack[ STACK_SIZE / sizeof(u64) ];
+
+static u8 s_font_color = 0xff;
+
 // const data  -----------------------------------------
-static const char *s_result_message[ DETECT_ERROR_MAX ] =
+static const char *s_result_message[ REPAIR_RESULT_MAX ] =
 {
 	"Success",
 	"Directory Access Error",
-	"Rescue Save Data Error",
-	"Verify Save Data Error"
+	"Rescue SaveData Error",
+	"Verify SaveData Error"
 };
 
 
@@ -137,6 +144,7 @@ static BOOL IsCardRemoved( void )
 	return FALSE;
 }
 
+
 /*---------------------------------------------------------------------------*
   Name:         DrawMainScene
 
@@ -149,13 +157,18 @@ static BOOL IsCardRemoved( void )
   0xf9, // くすんだ青 	0xfa, // くすんだ黄色	0xfb, // 紫
   0xfc, // うすい青		0xfd, // 灰色			0xfe, // 濃い灰色
  *---------------------------------------------------------------------------*/
+#define CHANGE_INTERVAL       5
+#define PROC_MARK_BASE_X     27
+#define PROC_MARK_BASE_Y     20
 static void DrawMainScene( void )
 {
-    PutMainScreen( 2, 2, 0xff, "+--------------------------+");
-    PutMainScreen( 2, 3, 0xff, "+                          +");
-	PutMainScreen( 2, 4, 0xff, "+ Repair Exported SaveData +");
-    PutMainScreen( 2, 5, 0xff, "+                          +");
-    PutMainScreen( 2, 6, 0xff, "+--------------------------+");
+    static u8 count = 0;
+    
+    PutMainScreen( 2, 2, s_font_color, "+--------------------------+");
+    PutMainScreen( 2, 3, s_font_color, "+                          +");
+	PutMainScreen( 2, 4, s_font_color, "+ Repair Exported SaveData +");
+    PutMainScreen( 2, 5, s_font_color, "+                          +");
+    PutMainScreen( 2, 6, s_font_color, "+--------------------------+");
 
 	// モードごとの描画処理
 	switch( s_mode )
@@ -176,34 +189,77 @@ static void DrawMainScene( void )
 			}
 			break;
 		case MODE_PROC:
+            count++;
+
+            if( count >= 0 && count < CHANGE_INTERVAL )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "+++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, "++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "+");
+            }
+            else if( count >= CHANGE_INTERVAL && count < CHANGE_INTERVAL*2 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "+++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, "+++");
+            }
+            else if( count >= CHANGE_INTERVAL*2 && count < CHANGE_INTERVAL*3 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "+++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, " ++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "  +");
+            }
+            else if( count >= CHANGE_INTERVAL*3 && count < CHANGE_INTERVAL*4 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, " ++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, " ++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, " ++");
+            }
+            else if( count >= CHANGE_INTERVAL*4 && count < CHANGE_INTERVAL*5 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "  +");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, " ++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "+++");
+            }
+            else if( count >= CHANGE_INTERVAL*5 && count < CHANGE_INTERVAL*6 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, "+++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "+++");
+            }
+            else if( count >= CHANGE_INTERVAL*6 && count < CHANGE_INTERVAL*7 )
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "+");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, "++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "+++");
+            }
+            else if( count >= CHANGE_INTERVAL*7 && count < CHANGE_INTERVAL*8)
+            {
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , 0xfc, "++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, 0xfc, "++");
+                PutMainScreen( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, 0xfc, "++");
+            }
+            if( count == CHANGE_INTERVAL*8 - 1 )
+            {
+                count = 0;
+            }
             PutMainScreen( 3, 12, 0xf4, "Now Accessing SD card");
             PutMainScreen( 3, 14, 0xf4, "Please Do not Touch SD card");
 			break;
         case MODE_RESULT:
-                if( s_result == DETECT_ERROR_NONE )
+                if( s_result == REPAIR_RESULT_SUCCESS )
                 {
-                    PutMainScreen( 5, 12, 0xf2, "%s", s_result_message[s_result]);
+                    PutMainScreen( 4, 12, s_font_color, "%s!", s_result_message[s_result]);
+                    PutMainScreen( 4, 14, s_font_color, "Repair SaveData Completed");
+                    PutMainScreen( 4, 16, s_font_color, "Please Turn Off Power");
                 }
                 else
                 {
-                    PutMainScreen( 6, 12, 0xf1, "%s", s_result_message[s_result]);
-                    PutMainScreen( 7, 14, 0xf1, "Error Code : %d", s_debug);
+                    PutMainScreen( 4, 12, s_font_color, "%s", s_result_message[s_result]);
+                    PutMainScreen( 4, 14, s_font_color, "Error Code : %d", s_error_code);
                 }
             break;
 		default:
 			break;
 	}
-}
-
-
-/*---------------------------------------------------------------------------*
-  Name:         CheckCard
-
-  Description:  
- *---------------------------------------------------------------------------*/
-static void CheckCard( void )
-{
-	return;
 }
 
 
@@ -265,8 +321,6 @@ void RepairSaveDataMain(void)
     
 	// SD カードが刺さったら一回だけプロテクトチェックする
 	// 再び刺さるまでチェックしない
-
-	// 割り込み禁止
 	intrmode = OS_DisableInterrupts();
 	if( !s_protect_checked )
 	{
@@ -296,8 +350,8 @@ void RepairSaveDataMain(void)
 			// キー入力があれば読み込みスレッド起動してライティングモードへ
 			if( gKey.trg == PAD_BUTTON_A )
 			{
-				//OS_CreateThread( &readwrite_thread, SaveCardToSD, NULL, stack+STACK_SIZE/sizeof(u64), STACK_SIZE, THREAD_PRIO );
-				//OS_WakeupThreadDirect( &readwrite_thread );
+				OS_CreateThread( &s_thread, ResucuSDSaveData, NULL, s_stack+STACK_SIZE/sizeof(u64), STACK_SIZE, THREAD_PRIO );
+				OS_WakeupThreadDirect( &s_thread );
 				s_mode = MODE_PROC;
 				break;
 			}
@@ -321,33 +375,24 @@ void RepairSaveDataMain(void)
 
         // 処理モード
 		case MODE_PROC:
-            s_result = ResucuSDSaveData();
-
             // SDカード抜け検出
 			if ( IsCardRemoved() == TRUE )
 			{
 				// とりあえず読み込みスレッド終了を待ってから終わる
 				// そうしないと読み込み用スレッド並立してしまう可能性
-				//while( !OS_IsThreadTerminated( &readwrite_thread ) ){}
+				while( !OS_IsThreadTerminated( &s_thread ) ){}
 				break;
 			}
 			
 			// 読み込みスレッドが終了したらライト可モードへ
-			/*if( OS_IsThreadTerminated( &readwrite_thread ) )
+			if( OS_IsThreadTerminated( &s_thread ) )
 			{
-				s_mode = MODE_WRITABLE;
-				s_read_count = 0; // 読み込みスレッド終わってからでないとかっこわるい
+				s_mode = MODE_RESULT;
+                s_font_color = (s_result == REPAIR_RESULT_SUCCESS) ? (u8)0xf2 : (u8)0xf1;
 				break;
-			}*/
+			}
 
-        /*
-            if( gKey.trg == PAD_BUTTON_A )
-            {
-                s_mode = MODE_RESULT;
-            }
-          */
-            s_mode = MODE_RESULT;
-			break;
+            break;
         
         // 結果モード
 		case MODE_RESULT:
@@ -363,11 +408,12 @@ void RepairSaveDataMain(void)
 
   Description:  SDカードに退避されたアプリのセーブデータの署名を付け替える
  *---------------------------------------------------------------------------*/
-DetectError ResucuSDSaveData( void )
+static void ResucuSDSaveData(  void *arg  )
 {
+#pragma unused( arg )
     FSFile file;
     FSDirectoryEntryInfo dir;
-    DetectError retval = DETECT_ERROR_NONE;
+    RepairResult result = REPAIR_RESULT_SUCCESS;
     
     FS_InitFile(&file);
     
@@ -405,21 +451,21 @@ DetectError ResucuSDSaveData( void )
                     FS_CloseFile(&tempFile);
                 }
 
-                s_debug = NAM_RescueBkp( path_buf );
+                s_error_code = NAM_RescueBkp( path_buf );
 
                 // セーブデータの救済処置
-                if(s_debug == NAM_OK)
+                if(s_error_code == NAM_OK)
                 {
                     // 処理が成功したらベリファイ
                     if(NAM_VerifyBkpStrict( path_buf ) != NAM_OK)
                     {
-                        retval = DETECT_ERROR_VERIFY_DATA;
+                        result = REPAIR_RESULT_VERIFY_DATA;
                         break;
                     }
                 }
                 else
                 {
-                    retval = DETECT_ERROR_RESCUE_DATA;
+                    result = REPAIR_RESULT_RESCUE_DATA;
                     break;
                 }
             }
@@ -428,10 +474,15 @@ DetectError ResucuSDSaveData( void )
     
     FS_CloseDirectory(&file);
 
-    return retval;
+    s_result = result;
 }
 
 
+/*---------------------------------------------------------------------------*
+  Name:         AllocForNAM
+
+  Description:  
+ *---------------------------------------------------------------------------*/
 static void* AllocForNAM(u32 size)
 {
 	void* ptr;
@@ -446,6 +497,12 @@ static void* AllocForNAM(u32 size)
 	
 }
 
+
+/*---------------------------------------------------------------------------*
+  Name:         FreeForNAM
+
+  Description:  
+ *---------------------------------------------------------------------------*/
 static void FreeForNAM(void* ptr)
 {
 	OS_FreeToMain(ptr);

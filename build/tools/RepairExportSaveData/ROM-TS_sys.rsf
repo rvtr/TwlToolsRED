@@ -57,7 +57,7 @@ Property
 	#
 	# TITLE NAME: Your product name within 12bytes
 	#
-	#TitleName		"MY APP NAME"
+	TitleName		"RprExtSvDt"
 
 	#
 	# MAKER CODE: Your company ID# in 2 ascii words
@@ -86,11 +86,6 @@ Property
 	#RomFootPadding 	TRUE
 
 	#
-	# ROM HEADER TEMPLATE: Provided to every product by NINTENDO
-	#
-	#RomHeaderTemplate	./resource/rom_header_0tca.template.sbin
-
-	#
 	# BANNER FILE: generated from Banner Spec File
 	#
 	BannerFile	"banner/banner.bnr"
@@ -108,6 +103,11 @@ Property
 	###
 	### Setting for TWL
 	###
+
+	#
+	# ROM HEADER TEMPLATE: Provided to every product by NINTENDO
+	#
+	RomHeaderTemplate	./header/rom_header_0hga.template.sbin
 
 	#
 	# ROM HEADER Ltd: Provided to every product by NINTENDO
@@ -226,7 +226,7 @@ AppendProperty
 	#
 	# GameCode for TitleID : Your GameCode in 4 ascii words
 	#
-	#GameCode				0TCA
+	GameCode				0HGA
 
 	#
 	# Public save data size: [0K/16K/32K/64K/128K/256K/512K/1M/2M/4M]

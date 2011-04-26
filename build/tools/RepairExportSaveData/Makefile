@@ -34,9 +34,9 @@ LLIBRARIES		=	liblcfg$(TWL_LIBSUFFIX).a \
 					libsea$(TWL_LIBSUFFIX).a	\
 					libna$(TWL_LIBSUFFIX).a
 
-# libnamut$(TWL_LIBSUFFIX).a\
+LIBSYSCALL		=	header/libsyscall.a
 
-ROM_SPEC		 =	./ROM-TS_sys.rsf
+ROM_SPEC		=	./ROM-TS_sys.rsf
 
 COMPONENT_NAME		=	armadillo_SYSMENU
 MAKEROM_ARM7_BASE   =   $(TWL_COMPONENTSDIR)/$(COMPONENT_NAME)/$(TWL_BUILDTYPE_ARM7)/$(COMPONENT_NAME)

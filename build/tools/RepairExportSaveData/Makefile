@@ -15,6 +15,8 @@
 # $Rev: 
 # $Author: 
 #----------------------------------------------------------------------------
+SUBDIRS					    =	banner
+
 override TARGET_PLATFORM	=	TWL
 
 TARGET_BIN		=	RepairExportSaveData.srl

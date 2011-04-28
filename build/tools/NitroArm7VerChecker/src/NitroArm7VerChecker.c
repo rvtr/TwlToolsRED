@@ -19,7 +19,7 @@
 // 通常版・特殊版の切り替えはここの定義で行う
 #define NORMAL_CHECK_TOOL
 
-// デバッグビルド切り替え(有効にする場合はどちらか片方に)
+// デバッグビルド
 //#define DEBUG_SHOW_SDK_INFO
 
 
@@ -175,29 +175,6 @@ static void DrawMainScene( void )
     
 	myDp_Printf( 0, 7, TXT_COLOR_BLACK, SUB_SCREEN, "Component SDK Version Identifier");
 
-#ifdef DEBUG_SHOW_SDK_INFO
-    myDp_Printf( 0, 1, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_same_sdk_num : %d", s_same_sdk_num);
-    myDp_Printf( 0, 2, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_hit : %d", s_hit);
-    {
-        int i;
-        for( i = 0; i < s_same_sdk_num; i++ )
-        {
-            if( s_sdk_name[i][0] == '2' || s_sdk_name[i][0] == '3' || s_sdk_name[i][0] == '4' || s_sdk_name[i][0] == '5' )
-            {
-                myDp_Printf( 1, 5+i, TXT_COLOR_BLUE,  MAIN_SCREEN, "SDK %s", s_sdk_name[i]);
-            }
-            else
-            {
-                myDp_Printf( 5, 5+i, TXT_COLOR_BLACK,  MAIN_SCREEN, "[%s", s_sdk_name[i]);
-            }
-        }
-        if( s_show_error )
-        {
-            myDp_Printf( 1, 23, TXT_COLOR_RED,  MAIN_SCREEN, "Error : Can Not Show SDK Info");
-        }
-    }
-#endif
-
     switch( s_mode )
     {
         // カードなし状態
@@ -312,6 +289,29 @@ static void DrawMainScene( void )
 	{
 		myDp_Printf( 1, 20, TXT_COLOR_BLUE, SUB_SCREEN, "ID : %d", ID_NUM);
 	}
+
+#ifdef DEBUG_SHOW_SDK_INFO
+    myDp_Printf( 0, 1, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_same_sdk_num : %d", s_same_sdk_num);
+    myDp_Printf( 0, 2, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_hit : %d", s_hit);
+    {
+        int i;
+        for( i = 0; i < s_same_sdk_num; i++ )
+        {
+            if( s_sdk_name[i][0] == '2' || s_sdk_name[i][0] == '3' || s_sdk_name[i][0] == '4' || s_sdk_name[i][0] == '5' )
+            {
+                myDp_Printf( 1, 5+i, TXT_COLOR_BLUE,  MAIN_SCREEN, "SDK %s", s_sdk_name[i]);
+            }
+            else
+            {
+                myDp_Printf( 5, 5+i, TXT_COLOR_BLACK,  MAIN_SCREEN, "[%s", s_sdk_name[i]);
+            }
+        }
+        if( s_show_error )
+        {
+            myDp_Printf( 1, 23, TXT_COLOR_RED,  MAIN_SCREEN, "Error : Can Not Show SDK Info");
+        }
+    }
+#endif
 }
 
 

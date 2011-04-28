@@ -20,7 +20,6 @@
 #define NORMAL_CHECK_TOOL
 
 // デバッグビルド切り替え(有効にする場合はどちらか片方に)
-//#define DEBUG_MEM_DUMP // 現在使用禁止
 //#define DEBUG_SHOW_SDK_INFO
 
 
@@ -50,6 +49,9 @@
 #define DUMP_SIZE               0x80
 #endif
 
+#define THREAD_PRIO 17
+#define STACK_SIZE  0x2000
+
 typedef enum DetectError
 {
 	DETECT_ERROR_NONE = 0,
@@ -60,7 +62,16 @@ typedef enum DetectError
 }
 DetectError;
 
-#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
+typedef enum RunningMode
+{
+	MODE_NOCARD = 0,
+	MODE_PROC = 1,
+    MODE_RESULT = 2,
+	MODE_MAX
+}
+RunningMode;
+
+#ifdef DEBUG_SHOW_SDK_INFO
 typedef struct KeyInfo
 {
     u16 cnt;    // 未加工入力値
@@ -76,15 +87,15 @@ typedef struct KeyInfo
 
 static void MenuScene( void );
 static void SplitToken(void);
-#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
+static void CheckCard( void *arg );
+#ifdef DEBUG_SHOW_SDK_INFO
 void ReadKey(KeyInfo* pKey);
 #endif
 
 // global variable -------------------------------------
 
 // static variable -------------------------------------
-
-static char s_mode = 0;
+static char s_mode;
 static BOOL s_secret = FALSE;
 static BOOL s_show_error = FALSE;
 static u8 s_error = 0;
@@ -92,7 +103,11 @@ static u8 s_digest[MATH_SHA1_DIGEST_SIZE];
 static u32 s_hit = 0;
 static char s_sdk_name[SHOW_SDK_INFO_NUM][SHOW_SDK_INFO_SIZE];
 static int s_same_sdk_num;
-#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
+
+static OSThread s_thread;
+static u64 s_stack[ STACK_SIZE / sizeof(u64) ];
+
+#ifdef DEBUG_SHOW_SDK_INFO
 static KeyInfo  gKey;
 static u32 gIndex;
 static void *data_buf;
@@ -151,34 +166,14 @@ static BOOL HOTSW_IsCardAccessible(void)
 
   Description:  描画まとめ
  *---------------------------------------------------------------------------*/
+#define CHANGE_INTERVAL       3
+#define PROC_MARK_BASE_X     27
+#define PROC_MARK_BASE_Y     20
 static void DrawMainScene( void )
 {
-#ifdef DEBUG_MEM_DUMP
-    int i,j,idx;
-    u8 *buf = (u8 *)data_buf + gIndex*DUMP_SIZE;
-
-    if( s_mode == 0 )
-    {
-        myDp_Printf( 2, 1, TXT_COLOR_BLUE, SUB_SCREEN, "sub_rom_offset : 0x%08x", sp_header->sub_rom_offset);
-        myDp_Printf( 2, 2, TXT_COLOR_BLUE, SUB_SCREEN, "banner_offset  : 0x%08x", sp_header->banner_offset);
-        myDp_Printf( 2, 3, TXT_COLOR_BLUE, SUB_SCREEN, "dump adr index : 0x%08x", DUMP_SIZE * gIndex );
-        
-        idx = 0;
-        for ( i=0; i<0x10; i++ )
-        {
-            for ( j=0; j<8; j++ )
-            {
-                myDp_Printf(       2, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x #", i*0x8);
-                myDp_Printf( 7 + j*3, 7 + i*1, TXT_COLOR_BLUE, SUB_SCREEN, "%02x", buf[idx]);
-                idx++;
-            }
-        }
-    }
-#endif
+    static u8 count = 0;
     
-	//int l;
 	myDp_Printf( 0, 7, TXT_COLOR_BLACK, SUB_SCREEN, "Component SDK Version Identifier");
-
 
 #ifdef DEBUG_SHOW_SDK_INFO
     myDp_Printf( 0, 1, TXT_COLOR_BLUE,  MAIN_SCREEN, "s_same_sdk_num : %d", s_same_sdk_num);
@@ -203,15 +198,73 @@ static void DrawMainScene( void )
     }
 #endif
 
+    switch( s_mode )
+    {
+        // カードなし状態
+      case MODE_NOCARD:
+		// カード無しモード
+        myDp_Printf( 1,11, TXT_COLOR_BLACK, SUB_SCREEN, "Please insert DS game card.");
+        break;
 
-#ifdef DEBUG_MEM_DUMP
-    if( 1 )
-#else
-	if( s_mode == 0 )
-#endif
-	{
-		// 結果表示モード
-		if( s_error != DETECT_ERROR_NONE )
+        // 処理中状態
+      case MODE_PROC:
+        count++;
+
+        if( count >= 0 && count < CHANGE_INTERVAL )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+");
+        }
+        else if( count >= CHANGE_INTERVAL && count < CHANGE_INTERVAL*2 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+        }
+        else if( count >= CHANGE_INTERVAL*2 && count < CHANGE_INTERVAL*3 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, " ++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "  +");
+        }
+        else if( count >= CHANGE_INTERVAL*3 && count < CHANGE_INTERVAL*4 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, " ++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, " ++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, " ++");
+        }
+        else if( count >= CHANGE_INTERVAL*4 && count < CHANGE_INTERVAL*5 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "  +");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, " ++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+        }
+        else if( count >= CHANGE_INTERVAL*5 && count < CHANGE_INTERVAL*6 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+        }
+        else if( count >= CHANGE_INTERVAL*6 && count < CHANGE_INTERVAL*7 )
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "+++");
+        }
+        else if( count >= CHANGE_INTERVAL*7 && count < CHANGE_INTERVAL*8)
+        {
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y  , TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+1, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "++");
+            myDp_Printf( PROC_MARK_BASE_X, PROC_MARK_BASE_Y+2, TXT_COLOR_LIGHTBLUE, SUB_SCREEN, "++");
+        }
+        if( count == CHANGE_INTERVAL*8 - 1 )
+        {
+            count = 0;
+        }
+        break;
+        
+        // 結果表示状態
+      case MODE_RESULT:
+        if( s_error != DETECT_ERROR_NONE )
 		{
 			// エラー表示
 			myDp_Printf( 1,10, TXT_COLOR_RED, SUB_SCREEN, "Registered ARM7 component");
@@ -229,7 +282,6 @@ static void DrawMainScene( void )
             myDp_Printf( 1, 3, TXT_COLOR_BLACK, MAIN_SCREEN, "TitleName :");
             myDp_Printf(13, 3, TXT_COLOR_BLUE,  MAIN_SCREEN, "%s", sp_header->title_name);
 
-            
             {
                 int i;
                 for( i = 0; i < s_same_sdk_num; i++ )
@@ -248,21 +300,14 @@ static void DrawMainScene( void )
                     myDp_Printf( 1, 23, TXT_COLOR_RED,  MAIN_SCREEN, "Error : Can Not Show SDK Info");
                 }
             }
-			/*
-			myDp_Printf( 1, 10, TXT_COLOR_BLUE, MAIN_SCREEN, "Arm7FLXDigest   :");
-			for(l=0;l<MATH_SHA1_DIGEST_SIZE;l++)
-			{
-				myDp_Printf( 2+3*(l%10), 11+l/10, TXT_COLOR_BLUE, MAIN_SCREEN, "%02x ", s_digest[l]);
-			}
-			*/
 		}
-	}else
-	{
-		// カード無しモード
-		myDp_Printf( 1,11, TXT_COLOR_BLACK, SUB_SCREEN, "Please insert DS game card.");
-	}
-	
-	// 隠し ID 表示
+        break;
+
+      default:
+        break;
+    }
+
+    // 隠し ID 表示
 	if ( s_secret )
 	{
 		myDp_Printf( 1, 20, TXT_COLOR_BLUE, SUB_SCREEN, "ID : %d", ID_NUM);
@@ -275,8 +320,10 @@ static void DrawMainScene( void )
 
   Description:  
  *---------------------------------------------------------------------------*/
-static void CheckCard( void )
+static void CheckCard(  void *arg  )
 {
+#pragma unused( arg )
+    
 	void *sp_arm7flx;
 	void *old_lo;
 	int m;
@@ -305,23 +352,9 @@ static void CheckCard( void )
 
 	OS_SetMainArenaLo( (void *)((u32)sp_arm7flx + sp_header->sub_size) ); // アリーナLo修正
 
-#ifdef DEBUG_MEM_DUMP
-    data_buf = sp_arm7flx;
-#endif
     // ARM9のSecure除いた部分を空読み出し
     if( (sp_header->main_rom_offset + sp_header->main_size) > 0x8000 )
     {
-#ifdef DEBUG_MEM_DUMP
-        u32 auth_offset   = sp_header->rom_valid_size ? sp_header->rom_valid_size : 0x01000000;
-        u32 page_offset   = auth_offset & 0xFFFFFE00;
-        
-        // バナーデータ分  ※ DEBUG_MODE有効時、ここの部分が実行時エラーになるかもしれないので、コメントアウトしておく。
-//        CARD_ReadRom( MI_DMA_NOT_USE, (void *)sp_header->banner_offset, sp_arm7flx, sizeof(TWLBannerFile) );
-
-        // 認証コード分  ※ DEBUG_MODE有効時、ここの部分が実行時エラーになるかもしれないので、コメントアウトしておく。
-//        CARD_ReadRom( MI_DMA_NOT_USE, (void *)page_offset, sp_arm7flx, MB_AUTHCODE_SIZE );
-#endif
-
         // Game領域のARM9常駐モジュール分
         CARD_ReadRom( MI_DMA_NOT_USE, (void *)0x8000, sp_arm7flx, (sp_header->main_size - (0x8000 - sp_header->main_rom_offset)) );
     }
@@ -352,10 +385,8 @@ static void CheckCard( void )
         SplitToken();
     }
 
-#ifndef DEBUG_MEM_DUMP
 	// もうバッファいらない
 	OS_SetMainArenaLo( old_lo );
-#endif
     
 	s_error = 0;
 	return;
@@ -413,32 +444,28 @@ void NitroArm7VerCheckerInit( void )
 {
 	GX_DispOff();
 	GXS_DispOff();
-	
-	myDp_Printf( 0, 0, TXT_COLOR_BLUE, MAIN_SCREEN, "Component SDK Version Identifier");
-	
-	GXS_SetVisiblePlane( GX_PLANEMASK_BG0 );
+
+    GXS_SetVisiblePlane( GX_PLANEMASK_BG0 );
 	
 	GX_DispOn();
 	GXS_DispOn();
 	
 	FS_Init(3);
-
     OS_InitTick();
 
+    s_mode = MODE_NOCARD;
+    
 	// この時点でカードが存在していたらカードチェック開始
 	if( HOTSW_IsCardExist() && HOTSW_IsCardAccessible() )
 	{
-		s_mode = 0;
-		CheckCard();
-	}else
-	{
-		s_mode = 1;
+        OS_TPrintf("Card Exist\n");
+        OS_CreateThread( &s_thread, CheckCard, NULL, s_stack+STACK_SIZE/sizeof(u64), STACK_SIZE, THREAD_PRIO );
+        OS_WakeupThreadDirect( &s_thread );
+		s_mode = MODE_PROC;
 	}
-	
+
 	// 表示
 	DrawMainScene();
-
-    OS_Printf("*** TWLBannerFile size : 0x%08x\n", sizeof(TWLBannerFile) );
 }
 
 #define PAD_SECRET ( PAD_BUTTON_START | PAD_BUTTON_X | PAD_BUTTON_Y )
@@ -454,7 +481,6 @@ void NitroArm7VerCheckerMain(void)
 	//--------------------------------------
 	//  キー入力処理
 	//--------------------------------------
-
 	// SLEEP + X + Y + START で隠し ID 表示
 	if( PAD_DetectFold() && 
 		( gKeyWork.press == PAD_SECRET )
@@ -466,8 +492,6 @@ void NitroArm7VerCheckerMain(void)
 		s_secret = FALSE;
 	}
 
-	//myDp_Printf( 1, 16, TXT_COLOR_BLUE, MAIN_SCREEN, "slotmode : %d", HOTSW_IsCardAccessible());
-	//myDp_Printf( 1, 17, TXT_COLOR_BLUE, MAIN_SCREEN, "exist      : %d", HOTSW_IsCardExist());
 
 #ifdef DEBUG_SHOW_SDK_INFO
     {
@@ -508,86 +532,39 @@ void NitroArm7VerCheckerMain(void)
     }
 #endif
     
-#ifdef DEBUG_MEM_DUMP
-    ReadKey(&gKey);
-
-    if (gKey.rep & PAD_KEY_DOWN || gKey.trg & PAD_KEY_DOWN)
-    {
-        if( (gIndex + 1) * DUMP_SIZE < sp_header->sub_size )
-        {
-            gIndex++;
-        }
-    }
-    if (gKey.rep & PAD_KEY_UP || gKey.trg & PAD_KEY_UP)
-    {
-        if( gIndex >= 1 )
-        {
-            gIndex--;
-        }
-    }
-    if (gKey.rep & PAD_BUTTON_R || gKey.trg & PAD_BUTTON_R)
-    {
-        if( (gIndex + 0x100) * DUMP_SIZE < sp_header->sub_size )
-        {
-            gIndex+=0x100;
-        }
-    }
-    if (gKey.rep & PAD_BUTTON_L || gKey.trg & PAD_BUTTON_L)
-    {
-        if( gIndex >= 0x100 )
-        {
-            gIndex-=0x100;
-        }
-    }
-
-    if (gKey.rep & PAD_KEY_LEFT || gKey.trg & PAD_KEY_LEFT)
-    {
-        if( s_hit - 1 >= 0 )
-        {
-            s_hit--;
-        }
-    }
-    if (gKey.rep & PAD_KEY_RIGHT || gKey.trg & PAD_KEY_RIGHT)
-    {
-        if( s_hit + 1 < SDK_INFO_NUM )
-        {
-            s_hit++;
-        }
-    }
-    
-    if (gKey.trg & PAD_BUTTON_B)
-    {
-        if(s_error < DETECT_ERROR_MAX)
-        {
-            s_error++;
-        }
-        else
-        {
-            s_error=0;
-        }
-    }
-#endif
-    
 	// 再表示
 	DrawMainScene();
-	
-	if( s_mode == 0)
-	{
-		// 結果表示モード
-		// カードが抜けたのを検出したらカード無しモードへ
-		if( HOTSW_IsCardExist() == FALSE )
-		{
-			s_mode = 1;
-		}
-	}else
-	{
-		// カード無しモード
-		// カードが刺さったのを検出したら再起動
+
+    switch( s_mode )
+    {
+        // カードなしモード
+      case MODE_NOCARD:
+        // カードが刺さったのを検出したら再起動
 		if( HOTSW_IsCardExist() == TRUE ) {
 			OS_DoApplicationJump( OS_GetTitleId(), OS_APP_JUMP_NORMAL );
 		}
-	}
-	
+        break;
+
+        // 処理中モード
+      case MODE_PROC:
+        if( OS_IsThreadTerminated( &s_thread ) )
+        {
+            s_mode = MODE_RESULT;
+        }
+        break;
+
+        // 結果表示モード
+      case MODE_RESULT:
+		// カードが抜けたのを検出したらカード無しモードへ
+		if( HOTSW_IsCardExist() == FALSE )
+		{
+			s_mode = MODE_NOCARD;
+		}
+        break;
+
+      default:
+        break;
+    }
 }
 
 
@@ -601,7 +578,7 @@ void NitroArm7VerCheckerMain(void)
 
   Returns:      None.
  *---------------------------------------------------------------------------*/
-#ifdef DEBUG_SHOW_SDK_INFO | DEBUG_MEM_DUMP
+#ifdef DEBUG_SHOW_SDK_INFO
 void ReadKey(KeyInfo* pKey)
 {
     static u16  repeat_count[12];

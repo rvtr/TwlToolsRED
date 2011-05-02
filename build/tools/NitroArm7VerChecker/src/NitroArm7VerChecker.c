@@ -40,7 +40,7 @@
 #endif
 
 // define data------------------------------------------
-#define SHOW_SDK_INFO_NUM       20
+#define SHOW_SDK_INFO_NUM       40
 #define SHOW_SDK_INFO_SIZE      50
 
 #ifdef DEBUG_SHOW_SDK_INFO
@@ -498,7 +498,7 @@ void NitroArm7VerCheckerMain(void)
         BOOL change = FALSE;
         ReadKey(&gKey);
 
-        if (gKey.rep & PAD_KEY_UP || gKey.trg & PAD_KEY_UP)
+        if (gKey.rep & PAD_BUTTON_R || gKey.trg & PAD_BUTTON_R)
         {
             if( s_hit < SDK_INFO_NUM )
             {
@@ -511,7 +511,7 @@ void NitroArm7VerCheckerMain(void)
                 change = TRUE;
             }
         }
-        if (gKey.rep & PAD_KEY_DOWN || gKey.trg & PAD_KEY_DOWN)
+        if (gKey.rep & PAD_BUTTON_L || gKey.trg & PAD_BUTTON_L)
         {
             if( s_hit > 0 )
             {

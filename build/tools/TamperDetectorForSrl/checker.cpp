@@ -391,6 +391,7 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
     {
         MyDirEntry *currentEntry = gEntry->dirEntry;
         MyDirEntry *hisEntry;
+        bool       isExistAll = true;
         
         printf( "------- directory check -------\n");
         while( currentEntry)
@@ -405,13 +406,20 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
             else
             {
                 printf( " --->（存在していない）\n");
+                isExistAll = false;
             }
         
             currentEntry = (MyDirEntry*)(currentEntry->next);
         }
-    
+
+        if( isExistAll)
+        {
+            printf( "\n");
+            printf( "（以上の ディレクトリは 全て マジコン側にも存在している）\n");
+        }    
     }
     
+    printf( "\n\n");
     MyFileEntry *currentEntry = gEntry->fileEntry;
     MyFileEntry *hisEntry;
     printf( "------- file check -------\n");

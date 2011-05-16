@@ -51,8 +51,8 @@ class Checker
     void AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf);
 
     /* FNT と FAT を解析して、各ファイルに対して Diff をかける */
-    void AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
-    void FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable);
+    bool AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
+    bool FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable);
     void FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
 
     void CheckAllEntries( Entry* gEntry, Entry* mEntry);

@@ -140,12 +140,12 @@ int main (int argc, char *argv[])
         gEntry.FollowParent();
         gEntry.AutoSetFullPath();
 
-        checker.AnalyzeFNT( &mHeaderBuf, mfp, &mEntry, PRINT_LEVEL_0);
-        mEntry.FollowParent();
-        mEntry.AutoSetFullPath();
-
-        checker.CheckAllEntries( &gEntry, &mEntry);
-
+        if( checker.AnalyzeFNT( &mHeaderBuf, mfp, &mEntry, PRINT_LEVEL_0))
+        {
+            mEntry.FollowParent();
+            mEntry.AutoSetFullPath();
+            checker.CheckAllEntries( &gEntry, &mEntry);
+        }
         checker.ExportGenuineBmpFiles( &gEntry, PRINT_LEVEL_0);
 /*        
         gEntry.PrintAllDirEntry();

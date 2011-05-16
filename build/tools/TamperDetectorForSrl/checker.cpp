@@ -202,7 +202,7 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
 }
 
 
-void Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable)
+bool Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable)
 {
     int i;
     ROM_FNTDir     currentDir;
@@ -213,6 +213,12 @@ void Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLev
     fseek( fp, (u32)(headerBuf->fnt_offset), SEEK_SET);
     fread( &currentDir, sizeof(ROM_FNTDir), 1, fp);
 
+    if( (currentDir.parent_id) >= 4096)
+    {
+        printf( "invalid FNT! directory count over 4096.\n");
+        return false;
+    }
+    
     // ディレクトリテーブル全体を読む
     fseek( fp, (u32)(headerBuf->fnt_offset), SEEK_SET);
     fread( &fntBuf, sizeof(ROM_FNTDir) * currentDir.parent_id, 1, fp);
@@ -235,6 +241,11 @@ void Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLev
             }
             tmpDirEntry.self_id = (0xF000 + i);
             tmpDirEntry.parent_id = fntBuf[i].parent_id;
+            if( fntBuf[i].parent_id < 0xF000)
+            {
+                printf( "invalid FNT! illegal parent-directory-id.\n");
+                return false;
+            }
         }
         if( !entry->FindDirEntry( tmpDirEntry.self_id))
         {   // 見つからなかったら追加
@@ -243,14 +254,18 @@ void Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLev
             entry->addDirEntry( pDirEntry);
         }
         
-        FindEntry( fntBuf[i].entry_start,
-                   fntBuf[i].entry_file_id,
-                   headerBuf, fp, entry, tmpDirEntry.self_id,
-                   print_enable);
+        if( !FindEntry( fntBuf[i].entry_start,
+                        fntBuf[i].entry_file_id,
+                        headerBuf, fp, entry, tmpDirEntry.self_id,
+                        print_enable))
+            {
+                return false;
+            }
     }
+    return true;
 }
 
-void Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable)
+bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable)
 {
     EntryInfo entryInfo;
     char      entryNames[FILE_NAME_LENGTH];
@@ -272,6 +287,11 @@ void Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
         {
             if( print_enable) {
                 printf( "- %s(file_id:0x%d)\n", entryNames, entry_id);
+            }
+            if( entry_id >= 61440)
+            {
+                printf( "invalid FNT! file count over 61440.\n");
+                return false;
             }
             /* パス解析用 */
             fileEntry = (MyFileEntry*)malloc( sizeof(MyFileEntry));
@@ -303,6 +323,7 @@ void Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
             entry->SetName( dirEntry, entryNames, entryInfo.entry_name_length);
         }
     }
+    return true;
 }
 
 void Checker::FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable)

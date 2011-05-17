@@ -21,12 +21,14 @@
 char*  output_fname = NULL;
 char*  genuine_fname = NULL;
 char*  magicon_fname = NULL;
+char*  log_fname = NULL;
 
 
 void SA_Usage( void)
 {
     fprintf( stderr, "Analyzing Tool\n");
     fprintf( stderr, "Usage: makelst [-o output-file] [--g genuine-srl-file] [--m magicon-srl-file]\n\n");
+    fprintf( stderr, "Usage: makelst [-o output-file] [--g genuine-srl-file] [--l access-log-file]\n\n");
     exit( 1);
 }
 
@@ -38,6 +40,7 @@ void SA_searchopt( int argc, char* argv[])
     struct option optionInfo[] = {
         { "genuine", required_argument, NULL, 'g'},
         { "magicon", required_argument, NULL, 'm'},
+        { "log",     required_argument, NULL, 'l'},
         { NULL, 0, NULL, 0}
     };
 
@@ -72,6 +75,13 @@ void SA_searchopt( int argc, char* argv[])
               SA_Usage();
           }
           magicon_fname = optarg;
+          break;
+        case 'l': // "--log"
+          if( log_fname != NULL) {
+              fprintf( stderr, "ERROR! redefined log filename.\n");
+              SA_Usage();
+          }
+          log_fname = optarg;
           break;
         case 'h':
           SA_Usage();

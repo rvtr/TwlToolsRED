@@ -21,10 +21,10 @@ void Checker::Initialize( FILE* myGfp, FILE* myMfp, void* myGbuf, void* myMbuf, 
 bool Checker::LoadHeader( void* gHeaderBuf, void* mHeaderBuf)
 {
     size_t readed;
-    
+
     fseek( gfp, 0, SEEK_SET);
     readed = fread( gHeaderBuf, sizeof(RomHeader), 1, gfp);
-    if( readed == 1)
+    if( (readed == 1)&&(mHeaderBuf))
     {
         fseek( mfp, 0, SEEK_SET);
         readed = fread( mHeaderBuf, sizeof(RomHeader), 1, mfp);
@@ -46,7 +46,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
 
     check_size = (g_size < m_size)? g_size : m_size;
     rest_size = check_size;
-    
+
     if( !isDataOnly)
     {
         /* 指定アドレスとサイズのチェック */
@@ -63,7 +63,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
                 printf( "  offset:0x%x ---> offset:0x%x（改竄されている）\n", g_offset, m_offset);
             }
         }
-    
+
         if( g_size == m_size)
         {
             if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
@@ -82,7 +82,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     bool filled = true;
     int  totalResult = 0;
     int  j;
-    
+
     nowgfp = ftell( gfp);
     nowmfp = ftell( mfp);
     /* メモリ内容のチェック（サイズが異なる場合は小さいサイズで） */
@@ -194,7 +194,7 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
     {
         printf( "  invalid banner version!\n");
         return;
-    }            
+    }
     printf( "------- Banner Body -------\n");
     Diff( (u32)(gHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[gBannerHeader.version],
           (u32)(mHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[mBannerHeader.version],
@@ -218,11 +218,10 @@ bool Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLev
         printf( "invalid FNT! directory count over 4096.\n");
         return false;
     }
-    
+
     // ディレクトリテーブル全体を読む
     fseek( fp, (u32)(headerBuf->fnt_offset), SEEK_SET);
     fread( &fntBuf, sizeof(ROM_FNTDir) * currentDir.parent_id, 1, fp);
-
     // ルートディレクトリのparent_idは総ディレクトリ数を表す
     for( i=0; i<currentDir.parent_id; i++)
     {
@@ -253,7 +252,7 @@ bool Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLev
             entry->CopyEntry( pDirEntry, &tmpDirEntry);
             entry->addDirEntry( pDirEntry);
         }
-        
+
         if( !FindEntry( fntBuf[i].entry_start,
                         fntBuf[i].entry_file_id,
                         headerBuf, fp, entry, tmpDirEntry.self_id,
@@ -272,7 +271,7 @@ bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
     u16       dir_id;
     MyDirEntry* dirEntry;
     MyFileEntry* fileEntry;
-    
+
     fseek( fp, (u32)(headerBuf->fnt_offset) + fnt_offset, SEEK_SET);
     while( 1)
     {
@@ -300,7 +299,7 @@ bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
             fileEntry->parent_id = parent_id;
             entry->SetName( fileEntry, entryNames, entryInfo.entry_name_length);
             entry->addFileEntry( fileEntry);
-            
+
             FindAllocation( entry_id, headerBuf, fp, entry, print_enable);
             entry_id++;
         }
@@ -337,9 +336,9 @@ void Checker::FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entr
            SEEK_SET);
     fread( &currentRomFat, sizeof(ROM_FAT), 1, fp);
     if( print_enable) {
-        printf( "  fat top:0x%x, bottom:0x%x, len:0x%x\n",
+        printf( "  fat top:0x%lx, bottom:0x%lx, len:0x%lx\n",
                 (u32)(currentRomFat.top), (u32)(currentRomFat.bottom),
-                (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top));
+                (u32)((u32)(currentRomFat.bottom) - (u32)(currentRomFat.top)));
     }
     Diff( (u32)(currentRomFat.top), (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top),
           (u32)(currentRomFat.top), (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top),
@@ -349,7 +348,7 @@ void Checker::FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entr
     MyFileEntry* fileEntry = entry->FindFileEntry( entry_id);
     fileEntry->top = (u32)(currentRomFat.top);
     fileEntry->bottom = (u32)(currentRomFat.bottom);
-    
+
     // ファイルポインタを戻す
     fseek( fp, nowfp, SEEK_SET);
 }
@@ -362,12 +361,11 @@ void Checker::ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable)
 {
     int i;
     MyFileEntry *currentEntry = gEntry->fileEntry;
-    MyFileEntry *hisEntry;
 //    u32* tmpBuf = (u32*)malloc( BMP_BUFFER_SIZE);
     u32  file_size, rest_size;
     int  loop_num;
     FILE* fp;
-    
+
     while( currentEntry)
     {
         if( currentEntry->name_length > 4)
@@ -376,10 +374,10 @@ void Checker::ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable)
             {
                 file_size = (currentEntry->bottom - currentEntry->top);
                 rest_size = file_size;
-        
+
                 loop_num = file_size / BMP_BUFFER_SIZE;
                 fp = fopen( currentEntry->name, "w");
-               
+
                 fseek( gfp, currentEntry->top, SEEK_SET);
                 if( rest_size > BMP_BUFFER_SIZE)
                 {
@@ -413,12 +411,12 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
         MyDirEntry *currentEntry = gEntry->dirEntry;
         MyDirEntry *hisEntry;
         bool       isExistAll = true;
-        
+
         printf( "------- directory check -------\n");
         while( currentEntry)
         {
             printf( "- %s", currentEntry->full_path_name);
-        
+
             hisEntry = mEntry->FindDirEntry( currentEntry->full_path_name);
             if( hisEntry)
             {
@@ -429,7 +427,7 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
                 printf( " --->（存在していない）\n");
                 isExistAll = false;
             }
-        
+
             currentEntry = (MyDirEntry*)(currentEntry->next);
         }
 
@@ -437,9 +435,9 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
         {
             printf( "\n");
             printf( "（以上の ディレクトリは 全て マジコン側にも存在している）\n");
-        }    
+        }
     }
-    
+
     printf( "\n\n");
     MyFileEntry *currentEntry = gEntry->fileEntry;
     MyFileEntry *hisEntry;
@@ -447,7 +445,7 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
     while( currentEntry)
     {
         printf( "- %s", currentEntry->full_path_name);
-        
+
         hisEntry = mEntry->FindFileEntry( currentEntry->full_path_name);
         if( hisEntry)
         {
@@ -463,11 +461,71 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
         {
             printf( " --->（存在していない）\n");
         }
-        
+
         currentEntry = (MyFileEntry*)(currentEntry->next);
     }
 }
 
+
+u32 Checker::GetOctValue( char* hex_char)
+{
+    u8 num = (u32)(*(u8*)hex_char);
+
+    if( (num >= '0')&&(num <= '9'))
+    {
+        return num - 0x30;
+    }
+    else if( (num >= 'a')&&(num <= 'f'))
+    {
+        return (num - 0x61) + 10;
+    }
+    else if( (num >= 'A')&&(num <= 'F'))
+    {
+        return (num - 0x41) + 10;
+    }
+    return 0;
+}
+
+char logBuf[0x46];
+void Checker::FindAccessLogFile( Entry* entry, FILE* lfp)
+{
+    int i = 0;
+    u32 log_start_adr, log_end_adr;
+
+    while( fread( logBuf, 6, 1, lfp))
+    {
+        if( memcmp( logBuf, "Read: ", 4) == 0)
+        {
+            fread( logBuf, 0x25, 1, lfp);
+            log_start_adr = (GetOctValue(&logBuf[0x9]) +
+                             (GetOctValue(&logBuf[0x8]) * 0x10) +
+                             (GetOctValue(&logBuf[0x7]) * 0x100) +
+                             (GetOctValue(&logBuf[0x6]) * 0x1000) +
+                             (GetOctValue(&logBuf[0x5]) * 0x10000) +
+                             (GetOctValue(&logBuf[0x4]) * 0x100000) +
+                             (GetOctValue(&logBuf[0x3]) * 0x1000000) +
+                             (GetOctValue(&logBuf[0x2]) * 0x10000000));
+                
+            log_end_adr = (GetOctValue(&logBuf[0x14]) +
+                           (GetOctValue(&logBuf[0x13]) * 0x10) +
+                           (GetOctValue(&logBuf[0x12]) * 0x100) +
+                           (GetOctValue(&logBuf[0x11]) * 0x1000) +
+                           (GetOctValue(&logBuf[0x10]) * 0x10000) +
+                           (GetOctValue(&logBuf[0x0F]) * 0x100000) +
+                           (GetOctValue(&logBuf[0x0E]) * 0x1000000) +
+                           (GetOctValue(&logBuf[0x0D]) * 0x10000000));
+            printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
+            
+            entry->FindFileLocation( log_start_adr, log_end_adr);
+        }
+        else
+        {
+            printf( "<<other access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
+        i++;
+    };
+}
 
 void Checker::Finalize( void)
 {

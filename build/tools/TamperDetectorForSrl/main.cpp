@@ -10,6 +10,7 @@
 extern char*  output_fname;
 extern char*  genuine_fname;
 extern char*  magicon_fname;
+extern char*  log_fname;
 
 #define BUFFER_SIZE (0x4000)
 
@@ -67,7 +68,14 @@ int main (int argc, char *argv[])
     printf("[output_fname]%s\n", output_fname);
     printf("[genuine_fname]%s\n", genuine_fname);
     printf("[magicon_fname]%s\n", magicon_fname);
+    printf("[log_fname]%s\n", log_fname);
 
+    if( !genuine_fname)
+    {
+        SA_Usage();
+    }
+
+    if( magicon_fname)
     {
         FILE* gfp;
         FILE* mfp;
@@ -159,8 +167,18 @@ int main (int argc, char *argv[])
         
 //        AnalyzeFNT( mHeaderBuf, mfp);
 
-    fclose( gfp);
-    fclose( mfp);
+        if( log_fname)
+        {
+            FILE* lfp;
+        
+            lfp = fopen( log_fname, "r");
+            printf( "\n\n\nACCESS LOG\n");
+            checker.FindAccessLogFile( &gEntry, lfp);
+            printf( "------------------\n");
+        }
+
+        fclose( gfp);
+        fclose( mfp);
     }
 
     return 0;

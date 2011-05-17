@@ -63,6 +63,10 @@ class Entry
     MyDirEntry* FindDirEntry( char* my_full_path_name);
     MyFileEntry* FindFileEntry( char* my_full_path_name);
 
+    /* アドレスの範囲に該当するファイルを表示する */
+    MyFileEntry* FindFileLocation( u32 start_adr, u32 end_adr);
+
+
     /* parent リンクを繋げる */
     void FollowParent( void);
 

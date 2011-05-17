@@ -59,6 +59,12 @@ class Checker
 
     /* ROM内のBMPファイルを全て切り出して出力する */
     void ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable);
+
+
+
+    u32 GetOctValue( char* hex_char);
+    void FindAccessLogFile( Entry* entry, FILE* lfp);
+    
 };
 
 #endif

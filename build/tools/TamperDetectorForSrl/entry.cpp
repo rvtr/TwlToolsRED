@@ -155,6 +155,24 @@ MyFileEntry* Entry::FindFileEntry( char* my_full_path_name)
 }
 
 
+/* アドレスの範囲に該当するファイルを表示する */
+MyFileEntry* Entry::FindFileLocation( u32 start_adr, u32 end_adr)
+{
+    MyFileEntry *currentEntry = fileEntry;
+    while( currentEntry)
+    {
+        if( ((currentEntry->top <= start_adr)&&(currentEntry->bottom >= start_adr)) ||
+            ((currentEntry->top <= end_adr)&&(currentEntry->bottom >= end_adr)))
+        {
+            printf( " %s,", currentEntry->full_path_name);
+        }
+        currentEntry = (MyFileEntry*)(currentEntry->next);
+    }
+    printf( "\n");
+    return NULL;
+}
+
+
 void Entry::AutoSetFullPath( void)
 {
     MyDirEntry *currentDirEntry = dirEntry;

@@ -15,7 +15,7 @@
 #define __SEARCH_ARG__
 
 
-
+void SA_Usage( void);
 
 /*ˆø”‚ğ‰ğÍ‚·‚é*/
 void SA_searchopt( int argc, char* argv[]);

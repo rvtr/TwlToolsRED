@@ -139,7 +139,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     }
 
     /* メモリ内容チェック結果 */
-    if( result == 0)
+    if( totalResult == 0)
     {
         if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
             printf( "  data:（改竄されていない）\n");

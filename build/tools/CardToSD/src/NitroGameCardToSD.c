@@ -409,9 +409,22 @@ static void SaveCardToSD( void *arg )
 		CARD_ReadRom( MI_DMA_NOT_USE, (void *)s_read_count, p_buf, read_size );
 		if( s_read_count == 0 )
 		{
-			// ç≈èâÇÃàÍâÒÇæÇØèàóùÇµÇ»ÇØÇÍÇŒÇ»ÇÁÇ»Ç¢óÃàÊ
+            u32 src, size;
+
+            if( sp_header->platform_code & PLATFORM_CODE_FLAG_TWL )
+            {
+                src  = HW_TWL_CARD_ROM_HEADER_BUF;
+                size = HW_TWL_CARD_ROM_HEADER_BUF_SIZE;
+            }
+            else
+            {
+                src  = HW_CARD_ROM_HEADER;
+                size = HW_CARD_ROM_HEADER_SIZE;
+            }
+
+            // ç≈èâÇÃàÍâÒÇæÇØèàóùÇµÇ»ÇØÇÍÇŒÇ»ÇÁÇ»Ç¢óÃàÊ
 			MI_CpuClear32( p_buf, 0x8000 );
-			MI_CpuCopy32( sp_header, p_buf, HW_CARD_ROM_HEADER_SIZE );
+			MI_CpuCopy32( (void *)src, p_buf, size );
 		}
 		if ( -1 == FS_WriteFile( &dest, (void *)p_buf, (s32)read_size ) )
 		{

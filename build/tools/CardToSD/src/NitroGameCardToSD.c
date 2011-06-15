@@ -65,6 +65,17 @@ typedef enum SDStat
 }
 SDStat;
 
+typedef enum JoinResult
+{
+    JOIN_RESULT_SUCCESS = 0,
+    JOIN_RESULT_NO_ENTRY,
+    JOIN_RESULT_OPEN_FILE_ERROR,
+    JOIN_RESULT_READ_FILE_ERROR,
+    JOIN_RESULT_WRITE_FILE_ERROR,
+    JOIN_RESULT_MAX
+}
+JoinResult;
+
 // extern data------------------------------------------
 
 // function's prototype declaration---------------------
@@ -87,6 +98,8 @@ static FSEventHook s_hook;
 static u32 s_read_count = 0;
 static BOOL s_complete = FALSE;
 
+static JoinResult s_result = JOIN_RESULT_SUCCESS;
+static u8 s_Buffer[0x4000] ATTRIBUTE_ALIGN(32); // 32byteアラインとらないと読み込むサイズによってデータアボートする
 
 // const data  -----------------------------------------
 
@@ -118,6 +131,16 @@ static const char *s_error_message[ DETECT_ERROR_MAX ] =
 	"ERROR_FILE_WRITE",
 	"DETECT_ERROR_GAMECARD_REMOVED"
 };
+
+static const char *s_join_error_message[JOIN_RESULT_MAX] =
+{
+    "Attach Success!",
+    "File Not Found",
+    "Open File Error...",
+    "Read File Error...",
+    "Write File Error..."
+};
+
 
 /*
 static const char *s_pStrMenu[ MENU_ELEMENT_NUM ] = 
@@ -267,7 +290,8 @@ static void DrawMainScene( void )
 			myDp_Printf( 1, 4, TXT_COLOR_BLACK, MAIN_SCREEN, "GameCode        : %c%c%c%c", sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
 			if( s_complete )
 			{
-				myDp_Printf( 1, 6, TXT_COLOR_BLUE, MAIN_SCREEN, "Complete.");
+                myDp_Printf( 1, 8, TXT_COLOR_BLUE, MAIN_SCREEN, "Complete.");
+                myDp_Printf( 1,10, TXT_COLOR_BLUE, MAIN_SCREEN, "Secure File : %s", s_join_error_message[s_result]);
 			}
 			break;
 		case MODE_NOSD:
@@ -317,6 +341,49 @@ static void DrawMainScene( void )
 			break;
 	}
 }
+
+
+static JoinResult JoinSecureDataFromSD( FSFile *out_file, char *filename, s32 join_adr )
+{
+    FSFile file;
+
+    FS_InitFile( &file );
+
+    if( !FS_OpenFileEx( &file, filename, FS_FILEMODE_R ) )
+    {
+        if( FS_GetResultCode( &file ) == FS_RESULT_NO_ENTRY )
+        {
+            OS_TPrintf("File Not Found...\n", FS_GetResultCode(&file));
+            return JOIN_RESULT_NO_ENTRY;
+        }
+        else
+        {
+            OS_TPrintf("Open Error...(Error Code : %d)\n", FS_GetResultCode(&file));
+            return JOIN_RESULT_OPEN_FILE_ERROR;
+        }
+    }
+
+    if( FS_ReadFile( &file, s_Buffer, sizeof(s_Buffer) ) != sizeof(s_Buffer) )
+    {
+        OS_TPrintf("Read Error...\n");
+        FS_CloseFile( &file );
+        return JOIN_RESULT_READ_FILE_ERROR;
+    }
+
+    FS_SeekFile( out_file, join_adr, FS_SEEK_SET);
+
+    if ( FS_WriteFile( out_file, (void *)s_Buffer, (s32)sizeof(s_Buffer) ) != sizeof(s_Buffer) )
+    {
+        OS_TPrintf("Read Error...\n");
+        FS_CloseFile( &file );
+        return JOIN_RESULT_WRITE_FILE_ERROR;
+    }
+
+    FS_CloseFile( &file );
+
+    return JOIN_RESULT_SUCCESS;
+}
+
 
 #define SIZE_512K (512 * 1024)
 
@@ -436,12 +503,35 @@ static void SaveCardToSD( void *arg )
 		
 		s_read_count += read_size;
 	}
-	
-	// ファイルクローズ
+
+    // ファイルクローズ
 	FS_CloseFile( &dest );
-	
+
 	CARD_UnlockRom( (u16)lock_id );
 	OS_ReleaseLockID( (u16)lock_id );
+    
+    if( FS_OpenFileEx( &dest, filename, FS_FILEMODE_RWL ))
+    {
+        // Secure領域のデータがSDカードにあれば、読み込んでくっつける
+        char fname[64];
+        
+        STD_TSNPrintf( fname, 64, "sdmc:/%c%c%c%c_secure1.dmp",
+                       sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
+
+        s_result = JoinSecureDataFromSD( &dest, fname, 0x4000);
+
+        if( sp_header->platform_code & PLATFORM_CODE_FLAG_TWL )
+        {
+            s32 join_adr = sp_header->twl_card_keytable_area_rom_offset * 0x80000 + 0x3000;
+            STD_TSNPrintf( fname, 64, "sdmc:/%c%c%c%c_secure2.dmp",
+                           sp_header->game_code[0],sp_header->game_code[1],sp_header->game_code[2],sp_header->game_code[3]);
+            
+            s_result = JoinSecureDataFromSD( &dest, fname, join_adr);
+        }
+
+        // ファイルクローズ
+        FS_CloseFile( &dest );
+    }
 	
 	// もうバッファいらない
 	OS_SetMainArenaLo( old_lo );

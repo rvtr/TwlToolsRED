@@ -201,6 +201,73 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
           false, PRINT_LEVEL_1);
 }
 
+void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
+{
+    int     i;
+    int     g_ovt_entries, m_ovt_entries;
+    long    nowgfp, nowmfp;
+    ROM_OVT g_ovtBuf, m_ovtBuf;
+    ROM_FAT g_fatBuf, m_fatBuf;
+
+    nowgfp = ftell( gfp);
+    nowmfp = ftell( mfp);
+    
+    // ARM9 Overlay
+    printf( "------- ARM9 Overlay -------\n");
+    g_ovt_entries = (gHeaderBuf->main_ovt_size) / sizeof(ROM_OVT);
+    m_ovt_entries = (mHeaderBuf->main_ovt_size) / sizeof(ROM_OVT);
+
+    for( i=0; i<g_ovt_entries; i++)
+    {
+        // file-id を読み出す
+        fseek( gfp, ((u32)(gHeaderBuf->main_ovt_offset) + (sizeof(ROM_OVT) * i)), SEEK_SET);
+        fseek( mfp, ((u32)(mHeaderBuf->main_ovt_offset) + (sizeof(ROM_OVT) * i)), SEEK_SET);
+        fread( &g_ovtBuf, sizeof(ROM_OVT), 1, gfp);
+        fread( &m_ovtBuf, sizeof(ROM_OVT), 1, mfp);
+
+        // FAT を読み出す
+        fseek( gfp, ((u32)(gHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * g_ovtBuf.file_id)), SEEK_SET);
+        fseek( mfp, ((u32)(mHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * m_ovtBuf.file_id)), SEEK_SET);
+        fread( &g_fatBuf, sizeof(ROM_FAT), 1, gfp);
+        fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
+        
+        printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
+        Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
+              (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
+              false, PRINT_LEVEL_1);
+    }
+
+    // ARM7 Overlay
+    printf( "\n");
+    printf( "------- ARM7 Overlay -------\n");
+    g_ovt_entries = (gHeaderBuf->sub_ovt_size) / sizeof(ROM_OVT);
+    m_ovt_entries = (mHeaderBuf->sub_ovt_size) / sizeof(ROM_OVT);
+
+    for( i=0; i<g_ovt_entries; i++)
+    {
+        // file-id を読み出す
+        fseek( gfp, ((u32)(gHeaderBuf->sub_ovt_offset) + (sizeof(ROM_OVT) * i)), SEEK_SET);
+        fseek( mfp, ((u32)(mHeaderBuf->sub_ovt_offset) + (sizeof(ROM_OVT) * i)), SEEK_SET);
+        fread( &g_ovtBuf, sizeof(ROM_OVT), 1, gfp);
+        fread( &m_ovtBuf, sizeof(ROM_OVT), 1, mfp);
+
+        // FAT を読み出す
+        fseek( gfp, ((u32)(gHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * g_ovtBuf.file_id)), SEEK_SET);
+        fseek( mfp, ((u32)(mHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * m_ovtBuf.file_id)), SEEK_SET);
+        fread( &g_fatBuf, sizeof(ROM_FAT), 1, gfp);
+        fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
+        
+        printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
+        Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
+              (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
+              false, PRINT_LEVEL_1);
+    }
+    
+    // ファイルポインタを戻す
+    fseek( gfp, nowgfp, SEEK_SET);
+    fseek( mfp, nowmfp, SEEK_SET);
+}
+
 
 bool Checker::AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable)
 {
@@ -445,6 +512,7 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
     while( currentEntry)
     {
         printf( "- %s", currentEntry->full_path_name);
+        printf( "\n  file-id : 0x%x", currentEntry->self_id);
 
         hisEntry = mEntry->FindFileEntry( currentEntry->full_path_name);
         if( hisEntry)

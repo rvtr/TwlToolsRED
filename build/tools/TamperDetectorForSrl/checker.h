@@ -50,6 +50,9 @@ class Checker
     /* ROMのバナー領域に対して Diff をかける */
     void AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf);
 
+    /* Overlayテーブルに登録されている各ファイルに対して Diff をかける */
+    void AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf);
+
     /* FNT と FAT を解析して、各ファイルに対して Diff をかける */
     bool AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
     bool FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable);

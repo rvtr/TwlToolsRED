@@ -143,6 +143,9 @@ int main (int argc, char *argv[])
         printf( "\nBanner\n");
         checker.AnalyzeBanner( &gHeaderBuf, &mHeaderBuf);
         
+        printf( "\nOverlay\n");
+        checker.AnalyzeOverlay( &gHeaderBuf, &mHeaderBuf);
+        
         printf( "\nFNT & FAT\n");
         checker.AnalyzeFNT( &gHeaderBuf, gfp, &gEntry, PRINT_LEVEL_0);
         gEntry.FollowParent();

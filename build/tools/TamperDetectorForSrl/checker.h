@@ -47,11 +47,14 @@ class Checker
     
     void Finalize( void);
 
+    /* ROMヘッダの各領域を管理リストに登録する */
+    void AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry);
+
     /* ROMのバナー領域に対して Diff をかける */
-    void AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf);
+    void AnalyzeBanner( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry);
 
     /* Overlayテーブルに登録されている各ファイルに対して Diff をかける */
-    void AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf);
+    void AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry);
 
     /* FNT と FAT を解析して、各ファイルに対して Diff をかける */
     bool AnalyzeFNT( RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);

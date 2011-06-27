@@ -58,7 +58,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         else
         {
-            function_result = false;
+            function_result = false; // ‰όβ‚ƒtƒ‰ƒO
             if( print_enable) {
                 printf( "  offset:0x%x ---> offset:0x%xi‰όβ‚‚³‚κ‚Δ‚Ά‚ιj\n", g_offset, m_offset);
             }
@@ -72,7 +72,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         else
         {
-            function_result = false;
+            function_result = false; // ‰όβ‚ƒtƒ‰ƒO
             if( print_enable) {
                 printf( "  size:0x%x ---> size:0x%xi‰όβ‚‚³‚κ‚Δ‚Ά‚ιj\n", g_size, m_size);
             }
@@ -147,7 +147,6 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     }
     else
     {
-        function_result = false;
         if( filled)
         {
             if( print_enable) {
@@ -156,6 +155,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         else
         {
+            function_result = false; // ‰όβ‚ƒtƒ‰ƒO
             if( print_enable) {
                 printf( "  data:i‰όβ‚‚³‚κ‚Δ‚Ά‚ιj\n");
             }
@@ -169,8 +169,102 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
 }
 
 
-void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
+void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
 {
+    MyAreaEntry     *tmpAreaEntry;
+
+    // genuine —Μζ‚π“o^
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"A9-Static", 9);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->arm9.romAddr);
+    tmpAreaEntry->bottom = (u32)(gHeaderBuf->arm9.romAddr + gHeaderBuf->arm9.romSize);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"A7-Static", 9);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->arm7.romAddr);
+    tmpAreaEntry->bottom = (u32)(gHeaderBuf->arm7.romAddr + gHeaderBuf->arm7.romSize);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"FNT", 3);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->fnt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(gHeaderBuf->fnt_offset) + gHeaderBuf->fnt_size);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"FAT", 3);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->fat_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(gHeaderBuf->fat_offset) + gHeaderBuf->fat_size);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"A9-OVT", 6);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->main_ovt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(gHeaderBuf->main_ovt_offset) + gHeaderBuf->main_ovt_size);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"A7-OVT", 6);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->sub_ovt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(gHeaderBuf->sub_ovt_offset) + gHeaderBuf->sub_ovt_size);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+
+    // magicon —Μζ‚π“o^
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"A9-Static", 9);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->arm9.romAddr);
+    tmpAreaEntry->bottom = (u32)(mHeaderBuf->arm9.romAddr + mHeaderBuf->arm9.romSize);
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"A7-Static", 9);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->arm7.romAddr);
+    tmpAreaEntry->bottom = (u32)(mHeaderBuf->arm7.romAddr + mHeaderBuf->arm7.romSize);
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"FNT", 3);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->fnt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->fnt_offset) + mHeaderBuf->fnt_size);
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"FAT", 3);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->fat_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->fat_offset) + mHeaderBuf->fat_size);
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"A9-OVT", 6);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->main_ovt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->main_ovt_offset) + mHeaderBuf->main_ovt_size);
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"A7-OVT", 6);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->sub_ovt_offset);
+    tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->sub_ovt_offset) + mHeaderBuf->sub_ovt_size);
+    mEntry->addAreaEntry( tmpAreaEntry);
+}
+
+
+void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
+{
+    MyAreaEntry  *tmpAreaEntry;
     BannerHeader gBannerHeader;
     BannerHeader mBannerHeader;
     u32 banner_size[3] = {
@@ -199,15 +293,46 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
     Diff( (u32)(gHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[gBannerHeader.version],
           (u32)(mHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[mBannerHeader.version],
           false, PRINT_LEVEL_1);
+
+    /* —Μζ‚π“o^ */
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"BannerHeader", 12);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->banner_offset);
+    tmpAreaEntry->bottom = (u32)(gHeaderBuf->banner_offset + sizeof(BannerHeader));
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    gEntry->InitializeEntry( tmpAreaEntry);
+    gEntry->SetName( tmpAreaEntry, (char*)"BannerBody", 10);
+    tmpAreaEntry->top = (u32)(gHeaderBuf->banner_offset + sizeof(BannerHeader));
+    tmpAreaEntry->bottom = (u32)(tmpAreaEntry->top + banner_size[gBannerHeader.version]);
+    gEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"BannerHeader", 12);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->banner_offset);
+    tmpAreaEntry->bottom = (u32)(mHeaderBuf->banner_offset + sizeof(BannerHeader));
+    mEntry->addAreaEntry( tmpAreaEntry);
+
+    tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+    mEntry->InitializeEntry( tmpAreaEntry);
+    mEntry->SetName( tmpAreaEntry, (char*)"BannerBody", 10);
+    tmpAreaEntry->top = (u32)(mHeaderBuf->banner_offset + sizeof(BannerHeader));
+    tmpAreaEntry->bottom = (u32)(tmpAreaEntry->top + banner_size[mBannerHeader.version]);
+    mEntry->addAreaEntry( tmpAreaEntry);
 }
 
-void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
+void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
 {
     int     i;
     int     g_ovt_entries, m_ovt_entries;
     long    nowgfp, nowmfp;
     ROM_OVT g_ovtBuf, m_ovtBuf;
     ROM_FAT g_fatBuf, m_fatBuf;
+    MyAreaEntry  *tmpAreaEntry;
+    char    areaStr[32];
 
     nowgfp = ftell( gfp);
     nowmfp = ftell( mfp);
@@ -235,6 +360,23 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
         Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
               false, PRINT_LEVEL_1);
+
+        // —Μζ‚π“o^
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        sprintf( areaStr, "Arm9Overlay%d", i);
+        gEntry->SetName( tmpAreaEntry, areaStr, 11+((i/10)+1));
+        tmpAreaEntry->top = (u32)(g_fatBuf.top);
+        tmpAreaEntry->bottom = (u32)(g_fatBuf.bottom);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        sprintf( areaStr, "Arm9Overlay%d", i);
+        mEntry->SetName( tmpAreaEntry, areaStr, 11+((i/10)+1));
+        tmpAreaEntry->top = (u32)(m_fatBuf.top);
+        tmpAreaEntry->bottom = (u32)(m_fatBuf.bottom);
+        mEntry->addAreaEntry( tmpAreaEntry);
     }
 
     // ARM7 Overlay
@@ -261,6 +403,23 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, RomHeader* mHeaderBuf)
         Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
               false, PRINT_LEVEL_1);
+
+        // —Μζ‚π“o^
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        sprintf( areaStr, "Arm7Overlay%d", i);
+        gEntry->SetName( tmpAreaEntry, areaStr, 11+((i/10)+1));
+        tmpAreaEntry->top = (u32)(g_fatBuf.top);
+        tmpAreaEntry->bottom = (u32)(g_fatBuf.bottom);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        sprintf( areaStr, "Arm7Overlay%d", i);
+        mEntry->SetName( tmpAreaEntry, areaStr, 11+((i/10)+1));
+        tmpAreaEntry->top = (u32)(m_fatBuf.top);
+        tmpAreaEntry->bottom = (u32)(m_fatBuf.bottom);
+        mEntry->addAreaEntry( tmpAreaEntry);
     }
     
     // ƒtƒ@ƒCƒ‹ƒ|ƒCƒ“ƒ^‚π–ί‚·
@@ -522,6 +681,7 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
                       hisEntry->top, (hisEntry->bottom - hisEntry->top),
                       false, PRINT_LEVEL_1) == false)
             {
+                currentEntry->modified = true; // ‰όβ‚ƒtƒ‰ƒO
                 printf( "\n");
             }
         }
@@ -584,7 +744,11 @@ void Checker::FindAccessLogFile( Entry* entry, FILE* lfp)
                            (GetOctValue(&logBuf[0x0D]) * 0x10000000));
             printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
             
-            entry->FindFileLocation( log_start_adr, log_end_adr);
+            if( !(entry->FindFileLocation( log_start_adr, log_end_adr)))
+            {
+                entry->FindAreaLocation( log_start_adr, log_end_adr);
+            }
+            printf( "\n");
         }
         else
         {

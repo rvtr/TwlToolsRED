@@ -8,6 +8,7 @@ void Entry::Initialize( void)
 {
     dirEntry = NULL;
     fileEntry = NULL;
+    areaEntry = NULL;
 }
 
 void Entry::InitializeEntry( MyDirEntry* myDirEntry)
@@ -30,10 +31,21 @@ void Entry::InitializeEntry( MyFileEntry* myFileEntry)
     myFileEntry->full_path_name_length = 0;
     myFileEntry->top = 0;
     myFileEntry->bottom = 0;
+    myFileEntry->modified = false;
     myFileEntry->self_id = 0xFFFF;
     myFileEntry->parent_id = 0;
     myFileEntry->parent = NULL;
     myFileEntry->next = NULL;
+}
+
+void Entry::InitializeEntry( MyAreaEntry* myAreaEntry)
+{
+    myAreaEntry->name = NULL;
+    myAreaEntry->name_length = 0;
+    myAreaEntry->top = 0;
+    myAreaEntry->bottom = 0;
+    myAreaEntry->modified = false;
+    myAreaEntry->next = NULL;
 }
 
 void Entry::CopyEntry( MyDirEntry* dest, MyDirEntry* src)
@@ -43,7 +55,7 @@ void Entry::CopyEntry( MyDirEntry* dest, MyDirEntry* src)
 
 void Entry::SetName( MyDirEntry* myDirEntry, char* fname, u16 len)
 {
-    myDirEntry->name = (char*)malloc( sizeof(MyDirEntry));
+    myDirEntry->name = (char*)malloc( FILE_NAME_LENGTH);
     memset( myDirEntry->name, 0, len+1);
     memcpy( myDirEntry->name, fname, len);
 
@@ -57,6 +69,15 @@ void Entry::SetName( MyFileEntry* myFileEntry, char* fname, u16 len)
     memcpy( myFileEntry->name, fname, len);
     
     myFileEntry->name_length = len;
+}
+
+void Entry::SetName( MyAreaEntry* myAreaEntry, char* fname, u16 len)
+{
+    myAreaEntry->name = (char*)malloc( FILE_NAME_LENGTH);
+    memset( myAreaEntry->name, 0, len+1);
+    memcpy( myAreaEntry->name, fname, len);
+    
+    myAreaEntry->name_length = len;
 }
 
 void Entry::addDirEntry( MyDirEntry* myDirEntry)
@@ -90,6 +111,23 @@ void Entry::addFileEntry( MyFileEntry* myFileEntry)
     }
     currentEntry->next = myFileEntry;
     myFileEntry->next = NULL;
+}
+
+void Entry::addAreaEntry( MyAreaEntry* myAreaEntry)
+{
+    MyAreaEntry *currentEntry = areaEntry;
+//    printf( "%s, 0x%lx, 0x%lx\n", myAreaEntry->name, myAreaEntry->top, myAreaEntry->bottom);
+    if( !currentEntry)
+    {
+        areaEntry = myAreaEntry;
+        return;
+    }
+    while( currentEntry->next)
+    {
+        currentEntry = (MyAreaEntry*)(currentEntry->next);
+    }
+    currentEntry->next = myAreaEntry;
+    myAreaEntry->next = NULL;
 }
 
 
@@ -161,14 +199,35 @@ MyFileEntry* Entry::FindFileLocation( u32 start_adr, u32 end_adr)
     MyFileEntry *currentEntry = fileEntry;
     while( currentEntry)
     {
-        if( ((currentEntry->top <= start_adr)&&(currentEntry->bottom >= start_adr)) ||
-            ((currentEntry->top <= end_adr)&&(currentEntry->bottom >= end_adr)))
+        if( ((currentEntry->top <= start_adr)&&(currentEntry->bottom > start_adr)) ||
+            ((currentEntry->top <= end_adr)&&(currentEntry->bottom > end_adr)))
         {
-            printf( " %s,", currentEntry->full_path_name);
+            if( currentEntry->modified)
+            {   // 改竄されているファイルの識別表示
+                printf( " %s(*),", currentEntry->full_path_name);
+            }else{
+                printf( " %s,", currentEntry->full_path_name);
+            }
         }
         currentEntry = (MyFileEntry*)(currentEntry->next);
     }
-    printf( "\n");
+    return NULL;
+}
+
+
+/* アドレスの範囲に該当するエリアを表示する */
+MyAreaEntry* Entry::FindAreaLocation( u32 start_adr, u32 end_adr)
+{
+    MyAreaEntry *currentEntry = areaEntry;
+    while( currentEntry)
+    {
+        if( ((currentEntry->top <= start_adr)&&(currentEntry->bottom > start_adr)) ||
+            ((currentEntry->top <= end_adr)&&(currentEntry->bottom > end_adr)))
+        {
+            printf( " %s,", currentEntry->name);
+        }
+        currentEntry = (MyAreaEntry*)(currentEntry->next);
+    }
     return NULL;
 }
 

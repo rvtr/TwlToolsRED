@@ -86,6 +86,8 @@ int main (int argc, char *argv[])
 
         checker.Initialize( gfp, mfp, gBuf, mBuf, BUFFER_SIZE);
         checker.LoadHeader( &gHeaderBuf, &mHeaderBuf);
+        
+        checker.AnalyzeHeader( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);
 
         printf( "------------------\n");
         printf( "Nitro Rom Header\n");
@@ -141,10 +143,10 @@ int main (int argc, char *argv[])
         printf( "------------------\n");
 
         printf( "\nBanner\n");
-        checker.AnalyzeBanner( &gHeaderBuf, &mHeaderBuf);
+        checker.AnalyzeBanner( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);
         
         printf( "\nOverlay\n");
-        checker.AnalyzeOverlay( &gHeaderBuf, &mHeaderBuf);
+        checker.AnalyzeOverlay( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);
         
         printf( "\nFNT & FAT\n");
         checker.AnalyzeFNT( &gHeaderBuf, gfp, &gEntry, PRINT_LEVEL_0);

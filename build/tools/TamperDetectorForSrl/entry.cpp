@@ -1,6 +1,7 @@
 #include <string.h>
 #include "entry.h"
-#include "nitro_romheader.h"
+//#include "nitro_romheader.h"
+#include "twl_format_rom.h"
 
 
 //void Entry::Initialize( void)

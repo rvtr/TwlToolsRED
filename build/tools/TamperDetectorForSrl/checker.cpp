@@ -1,7 +1,8 @@
 
 #include <string.h>
 #include "checker.h"
-#include "nitro_romheader.h"
+//#include "nitro_romheader.h"
+#include "twl_format_rom.h"
 
 extern Entry gEntry;
 extern Entry mEntry;
@@ -41,7 +42,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     long nowgfp, nowmfp;
     int result = 0;
     u32 check_size, rest_size;
-    int i, loop_num;
+    u32 i, loop_num;
     bool function_result = true;
 
     check_size = (g_size < m_size)? g_size : m_size;
@@ -53,35 +54,35 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         if( g_offset == m_offset)
         {
             if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
-                printf( "  offset:0x%x（改竄されていない）\n", g_offset);
+                printf( "  offset:0x%lx（改竄されていない）\n", g_offset);
             }
         }
         else
         {
             function_result = false; // 改竄フラグ
             if( print_enable) {
-                printf( "  offset:0x%x ---> offset:0x%x（改竄されている）\n", g_offset, m_offset);
+                printf( "  offset:0x%lx ---> offset:0x%lx（改竄されている）\n", g_offset, m_offset);
             }
         }
 
         if( g_size == m_size)
         {
             if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
-                printf( "  size:0x%x（改竄されていない）\n", g_size);
+                printf( "  size:0x%lx（改竄されていない）\n", g_size);
             }
         }
         else
         {
             function_result = false; // 改竄フラグ
             if( print_enable) {
-                printf( "  size:0x%x ---> size:0x%x（改竄されている）\n", g_size, m_size);
+                printf( "  size:0x%lx ---> size:0x%lx（改竄されている）\n", g_size, m_size);
             }
         }
     }
 
     bool filled = true;
     int  totalResult = 0;
-    int  j;
+    u32  j;
 
     nowgfp = ftell( gfp);
     nowmfp = ftell( mfp);
@@ -127,7 +128,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         if( filled) // FILLチェック
         {
-            for( j=0; j<(int)rest_size; j++)
+            for( j=0; j<rest_size; j++)
             {
                 if( *((u8*)mBuf + j) != *((u8*)mBuf))
                 {
@@ -172,6 +173,120 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
 void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
 {
     MyAreaEntry     *tmpAreaEntry;
+
+        if( gHeaderBuf->platform_code & 0x03)
+        {   // TWL-ROMヘッダの範囲をチェック
+            Diff( 0, sizeof(RomHeader), 0, sizeof(RomHeader), false, PRINT_LEVEL_1);
+            printf( "[support TWL]\n");
+        }
+        else
+        {   // NITRO-ROMヘッダの範囲だけチェック
+            Diff( 0, 0x180, 0, 0x180, false, PRINT_LEVEL_1);
+        }
+        printf( "------------------\n");
+
+        printf( "ARM9 Static Module\n");
+        Diff( (u32)(gHeaderBuf->arm9.romAddr),
+                      (u32)(gHeaderBuf->arm9.romSize),
+                      (u32)(mHeaderBuf->arm9.romAddr),
+                      (u32)(mHeaderBuf->arm9.romSize),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+        
+        printf( "ARM7 Static Module\n");
+        Diff( (u32)(gHeaderBuf->arm7.romAddr),
+                      (u32)(gHeaderBuf->arm7.romSize),
+                      (u32)(mHeaderBuf->arm7.romAddr),
+                      (u32)(mHeaderBuf->arm7.romSize),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+
+        printf( "File Name Table\n");
+        Diff( (u32)(gHeaderBuf->fnt_offset),
+                      (u32)(gHeaderBuf->fnt_size),
+                      (u32)(mHeaderBuf->fnt_offset),
+                      (u32)(mHeaderBuf->fnt_size),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+
+        printf( "File Allocation Table\n");
+        Diff( (u32)(gHeaderBuf->fat_offset),
+                      (u32)(gHeaderBuf->fat_size),
+                      (u32)(mHeaderBuf->fat_offset),
+                      (u32)(mHeaderBuf->fat_size),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+        
+        printf( "ARM9 Overlay Table\n");
+        Diff( (u32)(gHeaderBuf->main_ovt_offset),
+                      (u32)(gHeaderBuf->main_ovt_size),
+                      (u32)(mHeaderBuf->main_ovt_offset),
+                      (u32)(mHeaderBuf->main_ovt_size),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+
+        printf( "ARM7 Overlay Table\n");
+        Diff( (u32)(gHeaderBuf->sub_ovt_offset),
+                      (u32)(gHeaderBuf->sub_ovt_size),
+                      (u32)(mHeaderBuf->sub_ovt_offset),
+                      (u32)(mHeaderBuf->sub_ovt_size),
+                      false, PRINT_LEVEL_1);
+        printf( "------------------\n");
+
+    
+        printf( "------------------\n");
+        printf( "TWL Rom Header\n");
+        if( gHeaderBuf->platform_code & 0x03)
+        {
+            /* TWL専用部分 */
+            printf( "ARM9 Ltd Static Module\n");
+            Diff( (u32)(gHeaderBuf->ltd_arm9.romAddr),
+                  (u32)(gHeaderBuf->ltd_arm9.romSize),
+                  (u32)(mHeaderBuf->ltd_arm9.romAddr),
+                  (u32)(mHeaderBuf->ltd_arm9.romSize),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+    
+            printf( "ARM7 Ltd Static Module\n");
+            Diff( (u32)(gHeaderBuf->ltd_arm7.romAddr),
+                  (u32)(gHeaderBuf->ltd_arm7.romSize),
+                  (u32)(mHeaderBuf->ltd_arm7.romAddr),
+                  (u32)(mHeaderBuf->ltd_arm7.romSize),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+
+            printf( "(NITRO Digest Area)\n");
+            Diff( (u32)(gHeaderBuf->nitro_digest_area_rom_offset),
+                  (u32)(gHeaderBuf->nitro_digest_area_size),
+                  (u32)(mHeaderBuf->nitro_digest_area_rom_offset),
+                  (u32)(mHeaderBuf->nitro_digest_area_size),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+
+            printf( "(TWL Digest Area)\n");
+            Diff( (u32)(gHeaderBuf->twl_digest_area_rom_offset),
+                  (u32)(gHeaderBuf->twl_digest_area_size),
+                  (u32)(mHeaderBuf->twl_digest_area_rom_offset),
+                  (u32)(mHeaderBuf->twl_digest_area_size),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+
+            printf( "Digest1 Table\n");
+            Diff( (u32)(gHeaderBuf->digest1_table_offset),
+                  (u32)(gHeaderBuf->digest1_table_size),
+                  (u32)(mHeaderBuf->digest1_table_offset),
+                  (u32)(mHeaderBuf->digest1_table_size),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+
+            printf( "Digest2 Table\n");
+            Diff( (u32)(gHeaderBuf->digest2_table_offset),
+                  (u32)(gHeaderBuf->digest2_table_size),
+                  (u32)(mHeaderBuf->digest2_table_offset),
+                  (u32)(mHeaderBuf->digest2_table_size),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
+        };
 
     // genuine 領域を登録
     tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
@@ -259,6 +374,96 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
     tmpAreaEntry->top = (u32)(mHeaderBuf->sub_ovt_offset);
     tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->sub_ovt_offset) + mHeaderBuf->sub_ovt_size);
     mEntry->addAreaEntry( tmpAreaEntry);
+
+    
+    if( gHeaderBuf->platform_code & 0x03)
+    {
+        // genuine 領域を登録
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"A9-Ltd-Static", 13);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->ltd_arm9.romAddr);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->ltd_arm9.romAddr + gHeaderBuf->ltd_arm9.romSize);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"A7-Ltd-Static", 13);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->ltd_arm7.romAddr);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->ltd_arm7.romAddr + gHeaderBuf->ltd_arm7.romSize);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"(NTR-Digest Area)", 17);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->nitro_digest_area_rom_offset);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->nitro_digest_area_rom_offset + gHeaderBuf->nitro_digest_area_size);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"(TWL-Digest Area)", 17);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->twl_digest_area_rom_offset);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->twl_digest_area_rom_offset + gHeaderBuf->twl_digest_area_size);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"Digest1-Table", 13);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->digest1_table_offset);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->digest1_table_offset + gHeaderBuf->digest1_table_size);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        gEntry->InitializeEntry( tmpAreaEntry);
+        gEntry->SetName( tmpAreaEntry, (char*)"Digest2-Table", 13);
+        tmpAreaEntry->top = (u32)(gHeaderBuf->digest2_table_offset);
+        tmpAreaEntry->bottom = (u32)(gHeaderBuf->digest2_table_offset + gHeaderBuf->digest2_table_size);
+        gEntry->addAreaEntry( tmpAreaEntry);
+
+        // magicon 領域を登録
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"A9-Ltd-Static", 13);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->ltd_arm9.romAddr);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->ltd_arm9.romAddr + mHeaderBuf->ltd_arm9.romSize);
+        mEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"A7-Ltd-Static", 13);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->ltd_arm7.romAddr);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->ltd_arm7.romAddr + mHeaderBuf->ltd_arm7.romSize);
+        mEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"(NTR-Digest Area)", 17);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->nitro_digest_area_rom_offset);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->nitro_digest_area_rom_offset + mHeaderBuf->nitro_digest_area_size);
+        mEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"(TWL-Digest Area)", 17);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->twl_digest_area_rom_offset);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->twl_digest_area_rom_offset + mHeaderBuf->twl_digest_area_size);
+        mEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"Digest1-Table", 13);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->digest1_table_offset);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->digest1_table_offset + mHeaderBuf->digest1_table_size);
+        mEntry->addAreaEntry( tmpAreaEntry);
+
+        tmpAreaEntry = (MyAreaEntry*)malloc( sizeof(MyAreaEntry));
+        mEntry->InitializeEntry( tmpAreaEntry);
+        mEntry->SetName( tmpAreaEntry, (char*)"Digest2-Table", 13);
+        tmpAreaEntry->top = (u32)(mHeaderBuf->digest2_table_offset);
+        tmpAreaEntry->bottom = (u32)(mHeaderBuf->digest2_table_offset + mHeaderBuf->digest2_table_size);
+        mEntry->addAreaEntry( tmpAreaEntry);
+    }
 }
 
 

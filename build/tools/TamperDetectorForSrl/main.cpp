@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include "types.h"
 #include "searcharg.h"
-#include "nitro_romheader.h"
+//#include "nitro_romheader.h"
+#include "twl_format_rom.h"
 #include "checker.h"
 
 
@@ -27,8 +28,8 @@ char mBuf[BUFFER_SIZE];
 bool int_bits(void)
 {
     int	 count  = 0;
-    unsigned short usi = ~0U;
-    unsigned long  uli = ~0U;
+    unsigned short usi = (unsigned short)(~0U);
+    unsigned long  uli = (unsigned long)(~0U);
 
     while (uli) {
         if (uli & 1U) count++;
@@ -87,60 +88,9 @@ int main (int argc, char *argv[])
         checker.Initialize( gfp, mfp, gBuf, mBuf, BUFFER_SIZE);
         checker.LoadHeader( &gHeaderBuf, &mHeaderBuf);
         
-        checker.AnalyzeHeader( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);
-
         printf( "------------------\n");
         printf( "Nitro Rom Header\n");
-        checker.Diff( 0, sizeof(RomHeader), 0, sizeof(RomHeader), false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-
-        printf( "ARM9 Static Module\n");
-        checker.Diff( (u32)(gHeaderBuf.arm9.romAddr),
-                      (u32)(gHeaderBuf.arm9.romSize),
-                      (u32)(mHeaderBuf.arm9.romAddr),
-                      (u32)(mHeaderBuf.arm9.romSize),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-        
-        printf( "ARM7 Static Module\n");
-        checker.Diff( (u32)(gHeaderBuf.arm7.romAddr),
-                      (u32)(gHeaderBuf.arm7.romSize),
-                      (u32)(mHeaderBuf.arm7.romAddr),
-                      (u32)(mHeaderBuf.arm7.romSize),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-
-        printf( "File Name Table\n");
-        checker.Diff( (u32)(gHeaderBuf.fnt_offset),
-                      (u32)(gHeaderBuf.fnt_size),
-                      (u32)(mHeaderBuf.fnt_offset),
-                      (u32)(mHeaderBuf.fnt_size),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-
-        printf( "File Allocation Table\n");
-        checker.Diff( (u32)(gHeaderBuf.fat_offset),
-                      (u32)(gHeaderBuf.fat_size),
-                      (u32)(mHeaderBuf.fat_offset),
-                      (u32)(mHeaderBuf.fat_size),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-        
-        printf( "ARM9 Overlay Table\n");
-        checker.Diff( (u32)(gHeaderBuf.main_ovt_offset),
-                      (u32)(gHeaderBuf.main_ovt_size),
-                      (u32)(mHeaderBuf.main_ovt_offset),
-                      (u32)(mHeaderBuf.main_ovt_size),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
-
-        printf( "ARM7 Overlay Table\n");
-        checker.Diff( (u32)(gHeaderBuf.sub_ovt_offset),
-                      (u32)(gHeaderBuf.sub_ovt_size),
-                      (u32)(mHeaderBuf.sub_ovt_offset),
-                      (u32)(mHeaderBuf.sub_ovt_size),
-                      false, PRINT_LEVEL_1);
-        printf( "------------------\n");
+        checker.AnalyzeHeader( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);
 
         printf( "\nBanner\n");
         checker.AnalyzeBanner( &gHeaderBuf, &gEntry, &mHeaderBuf, &mEntry);

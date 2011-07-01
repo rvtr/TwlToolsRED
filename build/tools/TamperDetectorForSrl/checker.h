@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "types.h"
-#include "nitro_romheader.h"
+//#include "nitro_romheader.h"
+#include "twl_format_rom.h"
 #include "banner.h"
 #include "entry.h"
 

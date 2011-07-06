@@ -286,6 +286,14 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
                   (u32)(mHeaderBuf->digest2_table_size),
                   false, PRINT_LEVEL_1);
             printf( "------------------\n");
+
+            printf( "AES TARGET\n");
+            Diff( (u32)(gHeaderBuf->aes_target_rom_offset),
+                  (u32)(gHeaderBuf->aes_target_size),
+                  (u32)(mHeaderBuf->aes_target_rom_offset),
+                  (u32)(mHeaderBuf->aes_target_size),
+                  false, PRINT_LEVEL_1);
+            printf( "------------------\n");
         };
 
     // genuine —Ìˆæ‚ð“o˜^

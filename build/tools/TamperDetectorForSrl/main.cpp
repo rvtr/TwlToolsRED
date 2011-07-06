@@ -6,6 +6,7 @@
 //#include "nitro_romheader.h"
 #include "twl_format_rom.h"
 #include "checker.h"
+#include "card_hash.h"
 
 
 extern char*  output_fname;
@@ -87,6 +88,14 @@ int main (int argc, char *argv[])
 
         checker.Initialize( gfp, mfp, gBuf, mBuf, BUFFER_SIZE);
         checker.LoadHeader( &gHeaderBuf, &mHeaderBuf);
+
+        // ダイジェスト検証(digest1, digest2)
+        {
+            CARDRomHashContext context;
+            
+            CARDi_Init( &context, &mHeaderBuf);
+            CARD_CheckHash( &context, &mHeaderBuf, mfp);
+        }
         
         printf( "------------------\n");
         printf( "Nitro Rom Header\n");

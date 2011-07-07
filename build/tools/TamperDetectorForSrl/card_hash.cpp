@@ -4,6 +4,7 @@
 #include <openssl/hmac.h> /* libcrypto.a */
 #include "twl_format_rom.h"
 #include "card_hash.h"
+#include "entry.h"
 
 
 #define MATH_SHA1_DIGEST_SIZE   (160/8)
@@ -100,16 +101,10 @@ void CARDi_Init( CARDRomHashContext *context, RomHeader* header)
     // rom image
     context->buffer = (u8*)malloc( header->digest1_block_size);
 
-    // rom size
-    {
-        int i;
-        u32 rom_size;
-        for( i=0; i<header->rom_size; i++)
-        {
-            rom_size *= 2;
-        }
-        context->rom_size = (rom_size * 1024 / 8 * 1024);
-    }
+    // 検証OK/NG記録
+    context->hash_correct = (u8*)malloc( header->digest1_table_size / CARD_ROM_HASH_SIZE);
+    context->master_hash_correct = (u8*)malloc( header->digest1_table_size / header->digest2_covered_digest1_num / CARD_ROM_HASH_SIZE);
+    
 }
 
 
@@ -142,9 +137,6 @@ u32 CARDi_GetHashSectorIndex(const CARDRomHashContext *context, u32 offset)
     return offset / context->bytes_per_sector;
 }
 
-//static CARDRomHashBlock* CARDi_TouchRomHashBlock(CARDRomHashContext *context, u32 sector)
-//{
-//}
 
 void CARDi_CheckHash(CARDRomHashContext *context, FILE* fp, u32 start, u32 size, RomHeader* header)
 {
@@ -213,8 +205,10 @@ bool Digest1Check(CARDRomHashContext *context, FILE* fp, RomHeader* header, u32 
             /* ROMデータのHashをDigest1と比較 */
             if( !CARDi_CompareHash( context->hash, context->buffer, context->bytes_per_sector))
             {
+                context->hash_correct[digest1_index] = 0; // 結果記録
                 ret = false;
             }
+            context->hash_correct[digest1_index] = 1; // 結果記録
         }
 
         rest -= context->bytes_per_sector;
@@ -227,6 +221,7 @@ bool Digest1Check(CARDRomHashContext *context, FILE* fp, RomHeader* header, u32 
 bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header)
 {
     bool ret = true;
+    int digest2_index;
     int i, j;
     int digest1_index_num = (header->digest1_table_size / header->digest1_block_size);
     
@@ -238,11 +233,14 @@ bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header)
             fread( &(context->hash[j * CARD_ROM_HASH_SIZE]), CARD_ROM_HASH_SIZE, 1, fp);
         }
         /* Digest1をDigest2と比較 */
-        if( !CARDi_CompareHash( &(context->master_hash[(i/context->sectors_per_block) * CARD_ROM_HASH_SIZE]),
+        digest2_index = (i/context->sectors_per_block);
+        if( !CARDi_CompareHash( &(context->master_hash[digest2_index * CARD_ROM_HASH_SIZE]),
                                 context->hash, (CARD_ROM_HASH_SIZE * context->sectors_per_block)))
         {
+            context->master_hash_correct[digest2_index] = 0;
             ret = false;
         }
+        context->master_hash_correct[digest2_index] = 1;
         
         i+= header->digest2_covered_digest1_num;
     }
@@ -285,184 +283,26 @@ void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp)
     printf( "-----------------------\n\n");
 }
 
-/*
-static void CARDi_ReadRomHashImageDirect(CARDRomHashContext *context, void *buffer, u32 offset, u32 length)
+
+/* 特定のファイルに対応するダイジェストテーブルが正しいか検証する */
+void CARD_CheckFileDigest(CARDRomHashContext *context, MyFileEntry* file_entry, u8* ret_digest1, u8* ret_digest2)
 {
-    const u32   sectunit = context->bytes_per_sector;
-    const u32   blckunit = context->sectors_per_block;
-    u32         position = offset;
-    u32         end = length + offset;
-    u32         sector = CARDi_GetHashSectorIndex(context, position);
-    long nowgfp;
-    FILE* gfp;
-    
-    while (position < end)
+    u32 i;
+    u32 digest1_index_begin = CARDi_GetHashSectorIndex( context, file_entry->top);
+    u32 digest1_index_end   = CARDi_GetHashSectorIndex( context, file_entry->bottom);
+    *ret_digest1 = 1;
+    *ret_digest2 = 1;
+
+    for( i=digest1_index_begin; i<=digest1_index_end; i++)
     {
-        // 今回取得可能な最小単位のイメージを同期読み込み。
-        nowgfp = ftell( gfp);
-        fseek( gfp, position, SEEK_SET);
-        u32     available = fread( buffer, end - position, 1, gfp);
-        // 今回の検証中に必要となりそうなブロックを前もってアクセス。
-//        (void)CARDi_TouchRomHashBlock(context, sector);
-        // 取得したイメージの正当性を検証。
-        while (available >= sectunit)
+        if( !context->hash_correct[i])
         {
-            CARDRomHashBlock   *block = CARDi_TouchRomHashBlock(context, sector);
-            u32                 slot = sector - block->index * blckunit;
-            while ((slot < blckunit) && (available >= sectunit))
-            {
-                // 必要ならここでブロック単位のハッシュテーブルを検証。
-                if (block != context->valid_block)
-                {
-                    OSIntrMode  bak_cpsr = OS_DisableInterrupts();
-                    while (context->loading_block)
-                    {
-                        OS_SleepThread(NULL);
-                    }
-                    if (block == context->loaded_block)
-                    {
-                        context->loaded_block = block->next;
-                    }
-                    (void)OS_RestoreInterrupts(bak_cpsr);
-                    CARDi_CompareHash(&context->master_hash[block->index * CARD_ROM_HASH_SIZE],
-                                      block->hash, CARD_ROM_HASH_SIZE * blckunit);
-                    block->next = context->valid_block;
-                    context->valid_block = block;
-                }
-                // イメージのハッシュを計算。
-                CARDi_CompareHash(&block->hash[slot * CARD_ROM_HASH_SIZE], buffer, sectunit);
-                position += sectunit;
-                available -= sectunit;
-                buffer = ((u8 *)buffer) + sectunit;
-                slot += 1;
-                sector += 1;
-            }
+            *ret_digest1 = 0;
         }
-    }
-}
-*/
-
-#if 0
-/*---------------------------------------------------------------------------*
-  Name:         CARDi_ReadRomHashImageDirect
-
-  Description:  ハッシュコンテキストへキャッシュせずに転送先へ直接コピー。
-
-  Arguments:    context : CARDRomHashContext構造体。
-                buffer  : 転送先バッファ。(4バイト整合されている必要がある)
-                offset  : アクセスするROMオフセット。
-                length  : 転送サイズ。
-
-  Returns:      None.
- *---------------------------------------------------------------------------*/
-static void CARDi_ReadRomHashImageDirect(CARDRomHashContext *context, void *buffer, u32 offset, u32 length)
-{
-    const u32   sectunit = context->bytes_per_sector;
-    const u32   blckunit = context->sectors_per_block;
-    u32         position = offset;
-    u32         end = length + offset;
-    u32         sector = CARDi_GetHashSectorIndex(context, position);
-    while (position < end)
-    {
-        // 今回取得可能な最小単位のイメージを同期読み込み。
-        u32     available = (u32)(*context->ReadSync)(context->userdata, buffer, position, end - position);
-        // 今回の検証中に必要となりそうなブロックを前もってアクセス。
-        (void)CARDi_TouchRomHashBlock(context, sector);
-        // 次回に必要となる分の読み込み準備を要求。
-        if (context->ReadAsync && (position + available < end))
+        if( !context->master_hash_correct[i/context->sectors_per_block])
         {
-            (void)(*context->ReadAsync)(context->userdata, NULL, position + available, end - (position + available));
-        }
-        // 取得したイメージの正当性を検証。
-        while (available >= sectunit)
-        {
-            CARDRomHashBlock   *block = CARDi_TouchRomHashBlock(context, sector);
-            u32                 slot = sector - block->index * blckunit;
-            while ((slot < blckunit) && (available >= sectunit))
-            {
-                // 必要ならここでブロック単位のハッシュテーブルを検証。
-                if (block != context->valid_block)
-                {
-                    OSIntrMode  bak_cpsr = OS_DisableInterrupts();
-                    while (context->loading_block)
-                    {
-                        OS_SleepThread(NULL);
-                    }
-                    if (block == context->loaded_block)
-                    {
-                        context->loaded_block = block->next;
-                    }
-                    (void)OS_RestoreInterrupts(bak_cpsr);
-                    CARDi_CompareHash(&context->master_hash[block->index * CARD_ROM_HASH_SIZE],
-                                      block->hash, CARD_ROM_HASH_SIZE * blckunit);
-                    block->next = context->valid_block;
-                    context->valid_block = block;
-                }
-                // イメージのハッシュを計算。
-                CARDi_CompareHash(&block->hash[slot * CARD_ROM_HASH_SIZE], buffer, sectunit);
-                position += sectunit;
-                available -= sectunit;
-                buffer = ((u8 *)buffer) + sectunit;
-                slot += 1;
-                sector += 1;
-            }
+            *ret_digest2 = 0;
         }
     }
 }
 
-/*---------------------------------------------------------------------------*
-  Name:         MATH_CalcHMACSHA1
-
-  Description:  HMAC-SHA-1 を計算する。
-  
-  Arguments:    digest  HMAC-SHA-1 値を格納する場所へのポインタ
-                data    入力データのポインタ
-                dataLength  入力データ長
-                key     鍵のポインタ
-                keyLength   鍵の長さ
-  
-  Returns:      None.
- *---------------------------------------------------------------------------*/
-void MATH_CalcHMACSHA1(void *digest, const void *bin_ptr, u32 bin_len, const void *key_ptr, u32 key_len) 
-{
-    MATHSHA1Context context;
-    unsigned char   hash_buf[ MATH_SHA1_DIGEST_SIZE ]; /* ハッシュ関数から得るハッシュ値 */
-    
-    MATHiHMACFuncs hash2funcs = {
-        MATH_SHA1_DIGEST_SIZE,
-        (512/8),
-    };
-    
-    hash2funcs.context       = &context;
-    hash2funcs.hash_buf      = hash_buf;
-    hash2funcs.HashReset     = (void (*)(void*))                   MATH_SHA1Init;
-    hash2funcs.HashSetSource = (void (*)(void*, const void*, u32)) MATH_SHA1Update;
-    hash2funcs.HashGetDigest = (void (*)(void*, void*))            MATH_SHA1GetHash;
-    
-    MATHi_CalcHMAC(digest, bin_ptr, bin_len, key_ptr, key_len, &hash2funcs);
-}
-
-
-/*---------------------------------------------------------------------------*
-  Name:         CARDi_CompareHash
-
-  Description:  ハッシュによる正当性チェック。(HMAC-SHA1)
-
-  Arguments:    hash : 比較基準となるハッシュ値
-                src  : チェック対象のイメージ
-                len　: チェック対象のサイズ
-
-  Returns:      None.
- *---------------------------------------------------------------------------*/
-static void CARDi_CompareHash(const void *hash, void *buffer, u32 length)
-{
-    u8      tmphash[CARD_ROM_HASH_SIZE];
-
-    MATH_CalcHMACSHA1(tmphash, buffer, length, CARDiHmacKey, sizeof(CARDiHmacKey));
-    
-    if (MI_CpuComp8(hash, tmphash, sizeof(tmphash)) != 0)
-    {
-        printf("ROM-hash comparation error!\n");
-    }
-}
-#endif

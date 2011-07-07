@@ -2,6 +2,8 @@
 #ifndef CARD_HASH_H_
 #define CARD_HASH_H_
 
+#include "entry.h"
+
 
 // 現時点でCARDライブラリが妥当と判断した定数。
 // パフォーマンス計測の結果によって適宜変更してもよい。
@@ -39,7 +41,6 @@ CARDRomRegion;
 //       セクタも別途リスト構造として管理する必要がある。
 typedef struct CARDRomHashContext
 {
-    u32 rom_size;
     // ROMヘッダから取得する基本設定
     CARDRomRegion       area_ntr;
     CARDRomRegion       area_ltd;
@@ -77,6 +78,9 @@ typedef struct CARDRomHashContext
     */
     u8                 *buffer;
     u8                 *hash;
+
+    u8 *master_hash_correct;
+    u8 *hash_correct;
 }
 CARDRomHashContext;
 
@@ -85,6 +89,7 @@ void CARDi_Init( CARDRomHashContext *context, RomHeader* header);
 void CARDi_CheckHash(CARDRomHashContext *context, FILE* fp, u32 sect, u32 size, RomHeader* header);
 bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header);
 void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp);
+void CARD_CheckFileDigest(CARDRomHashContext *context, MyFileEntry* file_entry, u8* ret_digest1, u8* ret_digest2);
 
 
 #endif //CARD_HASH_H_

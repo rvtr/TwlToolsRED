@@ -3,6 +3,7 @@
 #include "checker.h"
 //#include "nitro_romheader.h"
 #include "twl_format_rom.h"
+#include "card_hash.h"
 
 extern Entry gEntry;
 extern Entry mEntry;
@@ -844,7 +845,7 @@ void Checker::ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable)
 }
 
 /* ディレクトリとファイルをチェックする */
-void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
+void Checker::CheckAllEntries( CARDRomHashContext *context, Entry* gEntry, Entry* mEntry)
 {
     {
         MyDirEntry *currentEntry = gEntry->dirEntry;
@@ -895,6 +896,26 @@ void Checker::CheckAllEntries( Entry* gEntry, Entry* mEntry)
                       false, PRINT_LEVEL_1) == false)
             {
                 currentEntry->modified = true; // 改竄フラグ
+            }
+            {
+                u8 d1, d2;
+                CARD_CheckFileDigest( context, hisEntry, &d1, &d2);
+                if( d1)
+                {
+                    printf( "（ファイル - digest1 検証はOK）\n");
+                }
+                else
+                {
+                    printf( "（ファイル - digest1 検証はNG）\n");
+                }
+                if( d2)
+                {
+                    printf( "（digest1 - digest2 検証はOK）\n");
+                }
+                else
+                {
+                    printf( "（digest1 - digest2 検証はNG）\n");
+                }
                 printf( "\n");
             }
         }

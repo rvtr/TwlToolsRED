@@ -10,6 +10,7 @@
 #include "twl_format_rom.h"
 #include "banner.h"
 #include "entry.h"
+#include "card_hash.h"
 
 typedef struct
 {
@@ -62,7 +63,7 @@ class Checker
     bool FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable);
     void FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
 
-    void CheckAllEntries( Entry* gEntry, Entry* mEntry);
+    void CheckAllEntries( CARDRomHashContext *context, Entry* gEntry, Entry* mEntry);
 
     /* ROM内のBMPファイルを全て切り出して出力する */
     void ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable);

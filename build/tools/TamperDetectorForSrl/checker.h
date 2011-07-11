@@ -71,7 +71,7 @@ class Checker
 
 
     u32 GetOctValue( char* hex_char);
-    void FindAccessLogFile( Entry* entry, FILE* lfp);
+    void FindAccessLogFile( Entry* entry, FILE* lfp, CARDRomHashContext *context);
     
 };
 

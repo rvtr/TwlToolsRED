@@ -52,7 +52,7 @@ static bool CARDi_CompareHash(const void *hash, void *buffer, u32 length)
     if (memcmp(hash, tmphash, sizeof(tmphash)) != 0)
     {
         ret = false;
-        printf("ROM-hash comparation error!\n");
+//        printf("ROM-hash comparation error!\n");
     }
     else
     {
@@ -105,6 +105,9 @@ void CARDi_Init( CARDRomHashContext *context, RomHeader* header)
     context->hash_correct = (u8*)malloc( header->digest1_table_size / CARD_ROM_HASH_SIZE);
     context->master_hash_correct = (u8*)malloc( header->digest1_table_size / header->digest2_covered_digest1_num / CARD_ROM_HASH_SIZE);
     
+    // 改竄Yes/No記録
+    context->hash_original = (u8*)malloc( header->digest1_table_size / CARD_ROM_HASH_SIZE);
+    context->master_hash_original = (u8*)malloc( header->digest1_table_size / header->digest2_covered_digest1_num / CARD_ROM_HASH_SIZE);
 }
 
 
@@ -205,10 +208,14 @@ bool Digest1Check(CARDRomHashContext *context, FILE* fp, RomHeader* header, u32 
             /* ROMデータのHashをDigest1と比較 */
             if( !CARDi_CompareHash( context->hash, context->buffer, context->bytes_per_sector))
             {
+//                printf( "digest1[%d] err\n", digest1_index);
                 context->hash_correct[digest1_index] = 0; // 結果記録
                 ret = false;
             }
-            context->hash_correct[digest1_index] = 1; // 結果記録
+            else
+            {
+                context->hash_correct[digest1_index] = 1; // 結果記録
+            }
         }
 
         rest -= context->bytes_per_sector;
@@ -223,7 +230,7 @@ bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header)
     bool ret = true;
     int digest2_index;
     int i, j;
-    int digest1_index_num = (header->digest1_table_size / header->digest1_block_size);
+    int digest1_index_num = (header->digest1_table_size / CARD_ROM_HASH_SIZE);
     
     for( i=0; i<digest1_index_num; )
     {
@@ -237,10 +244,14 @@ bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header)
         if( !CARDi_CompareHash( &(context->master_hash[digest2_index * CARD_ROM_HASH_SIZE]),
                                 context->hash, (CARD_ROM_HASH_SIZE * context->sectors_per_block)))
         {
+//            printf( "digest2[%d] err\n", digest2_index);
             context->master_hash_correct[digest2_index] = 0;
             ret = false;
         }
-        context->master_hash_correct[digest2_index] = 1;
+        else
+        {
+            context->master_hash_correct[digest2_index] = 1;
+        }
         
         i+= header->digest2_covered_digest1_num;
     }
@@ -263,6 +274,10 @@ void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp)
     {
         printf( "（検証OK.）\n");
     }
+    else
+    {
+        printf( "（検証NG.）\n");
+    }
     printf( "-----------------------\n\n");
 
     printf( "twl digest area check\n");
@@ -272,6 +287,10 @@ void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp)
     {
         printf( "（検証OK.）\n");
     }
+    else
+    {
+        printf( "（検証NG.）\n");
+    }
     printf( "-----------------------\n\n");
 
     printf( "digest2 check\n");
@@ -280,7 +299,74 @@ void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp)
     {
         printf( "（検証OK.）\n");
     }
+    else
+    {
+        printf( "（検証NG.）\n");
+    }
     printf( "-----------------------\n\n");
+}
+
+/* ダイジェストテーブル1の各インデックス毎の改竄状況をチェック */
+void CARD_DiffDigest1(CARDRomHashContext *context, RomHeader* gHeader, FILE* gfp, RomHeader* mHeader, FILE* mfp)
+{
+    u32 i;
+    u8 gBuf[CARD_ROM_HASH_SIZE];
+    u8 mBuf[CARD_ROM_HASH_SIZE];
+    u32 gNum = (gHeader->digest1_table_size / CARD_ROM_HASH_SIZE);
+    u32 mNum = (mHeader->digest1_table_size / CARD_ROM_HASH_SIZE);
+    u32 num = (gNum <= mNum)? gNum : mNum;
+
+    for( i=0; i<num; i++)
+    {
+        fseek( gfp, gHeader->digest1_table_offset + (i * CARD_ROM_HASH_SIZE), SEEK_SET);
+        fread( gBuf, CARD_ROM_HASH_SIZE, 1, gfp);
+        fseek( mfp, mHeader->digest1_table_offset + (i * CARD_ROM_HASH_SIZE), SEEK_SET);
+        fread( mBuf, CARD_ROM_HASH_SIZE, 1, mfp);
+
+        if( memcmp( gBuf, mBuf, CARD_ROM_HASH_SIZE) == 0)
+        {
+            context->hash_original[i] = 1;
+        }
+        else
+        {
+            context->hash_original[i] = 0;
+        }            
+    }
+}
+
+/* ダイジェストテーブル2の各インデックス毎の改竄状況をチェック */
+void CARD_DiffDigest2(CARDRomHashContext *context, RomHeader* gHeader, FILE* gfp, RomHeader* mHeader, FILE* mfp)
+{
+    u32 i;
+    u8 gBuf[CARD_ROM_HASH_SIZE];
+    u8 mBuf[CARD_ROM_HASH_SIZE];
+    u32 gNum = (gHeader->digest2_table_size / CARD_ROM_HASH_SIZE);
+    u32 mNum = (mHeader->digest2_table_size / CARD_ROM_HASH_SIZE);
+    u32 num = (gNum <= mNum)? gNum : mNum;
+
+    for( i=0; i<num; i++)
+    {
+        fseek( gfp, gHeader->digest2_table_offset + (i * CARD_ROM_HASH_SIZE), SEEK_SET);
+        fread( gBuf, CARD_ROM_HASH_SIZE, 1, gfp);
+        fseek( mfp, mHeader->digest2_table_offset + (i * CARD_ROM_HASH_SIZE), SEEK_SET);
+        fread( mBuf, CARD_ROM_HASH_SIZE, 1, mfp);
+
+        if( memcmp( gBuf, mBuf, CARD_ROM_HASH_SIZE) == 0)
+        {
+            context->master_hash_original[i] = 1;
+        }
+        else
+        {
+            context->master_hash_original[i] = 0;
+        }            
+    }
+}
+
+/* ダイジェストテーブルの各インデックス毎の改竄状況をチェック */
+void CARD_DiffDigest(CARDRomHashContext *context, RomHeader* gHeader, FILE* gfp, RomHeader* mHeader, FILE* mfp)
+{
+    CARD_DiffDigest1( context, gHeader, gfp, mHeader, mfp);
+    CARD_DiffDigest2( context, gHeader, gfp, mHeader, mfp);
 }
 
 
@@ -295,13 +381,60 @@ void CARD_CheckFileDigest(CARDRomHashContext *context, MyFileEntry* file_entry, 
 
     for( i=digest1_index_begin; i<=digest1_index_end; i++)
     {
-        if( !context->hash_correct[i])
+        if( context->hash_original[i])
         {
-            *ret_digest1 = 0;
+            printf( "  digest1[%ld]", i);
         }
-        if( !context->master_hash_correct[i/context->sectors_per_block])
+        else
         {
+            printf( "  digest1[%ld](*)", i);
+        }
+        if( context->hash_correct[i] == 0)
+        {
+            printf( "...ng");
+            *ret_digest1 = 0;
+        }else{
+            printf( "...ok");
+        }
+
+        if( context->master_hash_original[i/context->sectors_per_block])
+        {
+            printf( " (digest2[%ld]", i/context->sectors_per_block);
+        }
+        else
+        {
+            printf( " (digest2[%ld](*)", i/context->sectors_per_block);
+        }
+        if( context->master_hash_correct[i/context->sectors_per_block] == 0)
+        {
+            printf( "...ng)\n");
             *ret_digest2 = 0;
+        }else{
+            printf( "...ok)\n");
+        }
+    }
+}
+
+/* アドレスの範囲に該当するダイジェスト検証の合否を表示する */
+void GetDigestResult( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u8* d1, u8* d2)
+{
+    u32 offset;
+    u32 digest1_index, digest2_index;
+    *d1 = 1;
+    *d2 = 1;
+
+    for( offset = start_adr; offset < end_adr; offset+=context->bytes_per_sector)
+    {
+        digest1_index = CARDi_GetHashSectorIndex( context, offset);
+        if( !context->hash_correct[digest1_index])
+        {
+            *d1 = 0;
+        }
+
+        digest2_index = (digest1_index / context->sectors_per_block);
+        if( !context->master_hash_correct[digest2_index])
+        {
+            *d2 = 0;
         }
     }
 }

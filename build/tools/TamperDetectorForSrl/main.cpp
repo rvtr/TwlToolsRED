@@ -59,7 +59,7 @@ bool int_bits(void)
 
 int main (int argc, char *argv[])
 {
-    CARDRomHashContext context;
+    static CARDRomHashContext context;
     
     // 処理系の unsignedビット数が想定外ならエラー終了（types.hを変更してビルドし直してください）
     if( !int_bits())
@@ -94,6 +94,7 @@ int main (int argc, char *argv[])
         // ダイジェスト検証(digest1, digest2)
         {
             CARDi_Init( &context, &mHeaderBuf);
+            CARD_DiffDigest( &context, &gHeaderBuf, gfp, &mHeaderBuf, mfp);
             CARD_CheckHash( &context, &mHeaderBuf, mfp);
         }
         
@@ -137,7 +138,7 @@ int main (int argc, char *argv[])
         
             lfp = fopen( log_fname, "r");
             printf( "\n\n\nACCESS LOG\n");
-            checker.FindAccessLogFile( &gEntry, lfp);
+            checker.FindAccessLogFile( &gEntry, lfp, &context);
             printf( "------------------\n");
         }
 

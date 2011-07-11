@@ -949,9 +949,10 @@ u32 Checker::GetOctValue( char* hex_char)
 }
 
 char logBuf[0x46];
-void Checker::FindAccessLogFile( Entry* entry, FILE* lfp)
+void Checker::FindAccessLogFile( Entry* entry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
+    u8 d1, d2;
     u32 log_start_adr, log_end_adr;
 
     while( fread( logBuf, 6, 1, lfp))
@@ -978,10 +979,13 @@ void Checker::FindAccessLogFile( Entry* entry, FILE* lfp)
                            (GetOctValue(&logBuf[0x0D]) * 0x10000000));
             printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
             
-            if( !(entry->FindFileLocation( log_start_adr, log_end_adr)))
+            if( entry->FindFileLocation( log_start_adr, log_end_adr))
             {
-                entry->FindAreaLocation( log_start_adr, log_end_adr);
+                GetDigestResult( context, log_start_adr, log_end_adr, &d1, &d2);
+                if( d1) { printf( "[d1:OK]");} else { printf( "[d1:NG]");};
+                if( d2) { printf( "[d2:OK]");} else { printf( "[d2:NG]");};
             }
+            entry->FindAreaLocation( log_start_adr, log_end_adr);
             printf( "\n");
         }
         else

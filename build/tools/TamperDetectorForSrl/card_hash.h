@@ -79,8 +79,13 @@ typedef struct CARDRomHashContext
     u8                 *buffer;
     u8                 *hash;
 
+    /* ダイジェスト検証が通るかどうかのフラグ */
     u8 *master_hash_correct;
     u8 *hash_correct;
+
+    /* 改竄されているかどうかのフラグ */
+    u8* master_hash_original;
+    u8* hash_original;
 }
 CARDRomHashContext;
 
@@ -88,8 +93,11 @@ CARDRomHashContext;
 void CARDi_Init( CARDRomHashContext *context, RomHeader* header);
 void CARDi_CheckHash(CARDRomHashContext *context, FILE* fp, u32 sect, u32 size, RomHeader* header);
 bool Digest2Check(CARDRomHashContext *context, FILE* fp, RomHeader* header);
+void CARD_DiffDigest(CARDRomHashContext *context, RomHeader* gHeader, FILE* gfp, RomHeader* mHeader, FILE* mfp);
 void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp);
 void CARD_CheckFileDigest(CARDRomHashContext *context, MyFileEntry* file_entry, u8* ret_digest1, u8* ret_digest2);
+/* アドレスの範囲に該当するダイジェスト検証の合否を表示する */
+void GetDigestResult( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u8* d1, u8* d2);
 
 
 #endif //CARD_HASH_H_

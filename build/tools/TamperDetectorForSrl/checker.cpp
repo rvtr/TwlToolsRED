@@ -55,7 +55,8 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         if( g_offset == m_offset)
         {
             if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
-                printf( "  offset:0x%lx（改竄されていない）\n", g_offset);
+                printf( "  offset:0x%lx\n", g_offset);
+//                printf( "  offset:0x%lx（改竄されていない）\n", g_offset);
             }
         }
         else
@@ -69,7 +70,8 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         if( g_size == m_size)
         {
             if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
-                printf( "  size:0x%lx（改竄されていない）\n", g_size);
+                printf( "  size:0x%lx\n", g_size);
+//                printf( "  size:0x%lx（改竄されていない）\n", g_size);
             }
         }
         else
@@ -144,7 +146,8 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     if( totalResult == 0)
     {
         if( (print_enable)&&(print_enable < PRINT_LEVEL_2)) {
-            printf( "  data:（改竄されていない）\n");
+            printf( "  data:\n");
+//            printf( "  data:（改竄されていない）\n");
         }
     }
     else
@@ -953,7 +956,7 @@ char logBuf[0x46];
 void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
-    u8 d1, d2;
+    u8 d1, d2, dm1, dm2;
     u32 log_start_adr, log_end_adr;
 
     while( fread( logBuf, 6, 1, lfp))
@@ -986,19 +989,48 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp,
                           log_start_adr, (log_end_adr - log_start_adr),
                           true, PRINT_LEVEL_0))
                 {
-                    printf( "[data:OK]");
+                    printf( "[data]");
                 }else{
-                    printf( "[data:NG]");
+                    printf( "[data(*)]");
                 }
                 
                 if( gHeaderBuf->platform_code & 0x03)
                 {
                     GetDigestResult( context, log_start_adr, log_end_adr, &d1, &d2);
-                    if( d1) { printf( "[d1:OK]");} else { printf( "[d1:NG]");};
-                    if( d2) { printf( "[d2:OK]");} else { printf( "[d2:NG]");};
+                    IsDigestModified( context, log_start_adr, log_end_adr, &dm1, &dm2);
+                    if( dm1)
+                    {
+                        if( d1) { printf( "[d1:OK]");} else { printf( "[d1:NG]");};
+                    }
+                    else
+                    {
+                        if( d1) { printf( "[d1(*):OK]");} else { printf( "[d1(*):NG]");};
+                    }
+                    if( dm2)
+                    {
+                        if( d2) { printf( "[d2:OK]");} else { printf( "[d2:NG]");};
+                    }
+                    else
+                    {
+                        if( d2) { printf( "[d2(*):OK]");} else { printf( "[d2(*):NG]");};
+                    }                        
                 }
+                // 領域名も表示
+                entry->FindAreaLocation( log_start_adr, log_end_adr);
             }
-            entry->FindAreaLocation( log_start_adr, log_end_adr);
+            else
+            {   // ファイルが該当しなかったら領域名の表示と内容比較
+                entry->FindAreaLocation( log_start_adr, log_end_adr);
+                // TODO:genuine側の対応アドレスはgenuineファイルエントリの先頭から計算し直す
+                if( Diff( log_start_adr, (log_end_adr - log_start_adr),
+                          log_start_adr, (log_end_adr - log_start_adr),
+                          true, PRINT_LEVEL_0))
+                {
+                    printf( "[data]");
+                }else{
+                    printf( "[data(*)]");
+                }                
+            }
             printf( "\n");
         }
         else

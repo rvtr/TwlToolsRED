@@ -98,6 +98,8 @@ void CARD_CheckHash(CARDRomHashContext *context, RomHeader* header, FILE* fp);
 void CARD_CheckFileDigest(CARDRomHashContext *context, MyFileEntry* file_entry, u8* ret_digest1, u8* ret_digest2);
 /* アドレスの範囲に該当するダイジェスト検証の合否を表示する */
 void GetDigestResult( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u8* d1, u8* d2);
+/* アドレスの範囲に該当するダイジェストテーブルの改竄有無を表示する */
+void IsDigestModified( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u8* d1, u8* d2);
 
 
 #endif //CARD_HASH_H_

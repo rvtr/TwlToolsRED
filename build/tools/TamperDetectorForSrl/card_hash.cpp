@@ -439,3 +439,27 @@ void GetDigestResult( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u
     }
 }
 
+/* アドレスの範囲に該当するダイジェストテーブルの改竄有無を表示する */
+void IsDigestModified( CARDRomHashContext *context, u32 start_adr, u32 end_adr, u8* d1, u8* d2)
+{
+    u32 offset;
+    u32 digest1_index, digest2_index;
+    *d1 = 1;
+    *d2 = 1;
+
+    for( offset = start_adr; offset < end_adr; offset+=context->bytes_per_sector)
+    {
+        digest1_index = CARDi_GetHashSectorIndex( context, offset);
+        if( !context->hash_original[digest1_index])
+        {
+            *d1 = 0;
+        }
+
+        digest2_index = (digest1_index / context->sectors_per_block);
+        if( !context->master_hash_original[digest2_index])
+        {
+            *d2 = 0;
+        }
+    }
+}
+

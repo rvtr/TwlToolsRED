@@ -92,6 +92,7 @@ int main (int argc, char *argv[])
         checker.LoadHeader( &gHeaderBuf, &mHeaderBuf);
 
         // ダイジェスト検証(digest1, digest2)
+        if( gHeaderBuf.platform_code & 0x03)
         {
             CARDi_Init( &context, &mHeaderBuf);
             CARD_DiffDigest( &context, &gHeaderBuf, gfp, &mHeaderBuf, mfp);
@@ -117,7 +118,7 @@ int main (int argc, char *argv[])
         {
             mEntry.FollowParent();
             mEntry.AutoSetFullPath();
-            checker.CheckAllEntries( &context, &gEntry, &mEntry);
+            checker.CheckAllEntries( &mHeaderBuf, &context, &gEntry, &mEntry);
         }
         checker.ExportGenuineBmpFiles( &gEntry, PRINT_LEVEL_0);
 /*        
@@ -138,7 +139,7 @@ int main (int argc, char *argv[])
         
             lfp = fopen( log_fname, "r");
             printf( "\n\n\nACCESS LOG\n");
-            checker.FindAccessLogFile( &gEntry, lfp, &context);
+            checker.FindAccessLogFile( &gHeaderBuf, &gEntry, lfp, &context);
             printf( "------------------\n");
         }
 

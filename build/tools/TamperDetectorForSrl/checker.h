@@ -63,7 +63,7 @@ class Checker
     bool FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, u16 parent_id, PrintLevel print_enable);
     void FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable);
 
-    void CheckAllEntries( CARDRomHashContext *context, Entry* gEntry, Entry* mEntry);
+    void CheckAllEntries( RomHeader* mHeaderBuf, CARDRomHashContext *context, Entry* gEntry, Entry* mEntry);
 
     /* ROM内のBMPファイルを全て切り出して出力する */
     void ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable);
@@ -71,7 +71,7 @@ class Checker
 
 
     u32 GetOctValue( char* hex_char);
-    void FindAccessLogFile( Entry* entry, FILE* lfp, CARDRomHashContext *context);
+    void FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp, CARDRomHashContext *context);
     
 };
 

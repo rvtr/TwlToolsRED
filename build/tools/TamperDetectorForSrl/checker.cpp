@@ -845,7 +845,7 @@ void Checker::ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable)
 }
 
 /* ディレクトリとファイルをチェックする */
-void Checker::CheckAllEntries( CARDRomHashContext *context, Entry* gEntry, Entry* mEntry)
+void Checker::CheckAllEntries( RomHeader* mHeaderBuf, CARDRomHashContext *context, Entry* gEntry, Entry* mEntry)
 {
     {
         MyDirEntry *currentEntry = gEntry->dirEntry;
@@ -897,6 +897,7 @@ void Checker::CheckAllEntries( CARDRomHashContext *context, Entry* gEntry, Entry
             {
                 currentEntry->modified = true; // 改竄フラグ
             }
+            if( mHeaderBuf->platform_code & 0x03) // TWL対応アプリなら
             {
                 u8 d1, d2;
                 CARD_CheckFileDigest( context, hisEntry, &d1, &d2);
@@ -949,7 +950,7 @@ u32 Checker::GetOctValue( char* hex_char)
 }
 
 char logBuf[0x46];
-void Checker::FindAccessLogFile( Entry* entry, FILE* lfp, CARDRomHashContext *context)
+void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
     u8 d1, d2;
@@ -980,10 +981,22 @@ void Checker::FindAccessLogFile( Entry* entry, FILE* lfp, CARDRomHashContext *co
             printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
             
             if( entry->FindFileLocation( log_start_adr, log_end_adr))
-            {
-                GetDigestResult( context, log_start_adr, log_end_adr, &d1, &d2);
-                if( d1) { printf( "[d1:OK]");} else { printf( "[d1:NG]");};
-                if( d2) { printf( "[d2:OK]");} else { printf( "[d2:NG]");};
+            {   // TODO:genuine側の対応アドレスはgenuineファイルエントリの先頭から計算し直す
+                if( Diff( log_start_adr, (log_end_adr - log_start_adr),
+                          log_start_adr, (log_end_adr - log_start_adr),
+                          true, PRINT_LEVEL_0))
+                {
+                    printf( "[data:OK]");
+                }else{
+                    printf( "[data:NG]");
+                }
+                
+                if( gHeaderBuf->platform_code & 0x03)
+                {
+                    GetDigestResult( context, log_start_adr, log_end_adr, &d1, &d2);
+                    if( d1) { printf( "[d1:OK]");} else { printf( "[d1:NG]");};
+                    if( d2) { printf( "[d2:OK]");} else { printf( "[d2:NG]");};
+                }
             }
             entry->FindAreaLocation( log_start_adr, log_end_adr);
             printf( "\n");

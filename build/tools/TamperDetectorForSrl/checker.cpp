@@ -196,7 +196,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
                       (u32)(mHeaderBuf->arm9.romSize),
                       false, PRINT_LEVEL_1);
         printf( "------------------\n");
-        
+
         printf( "ARM7 Static Module\n");
         Diff( (u32)(gHeaderBuf->arm7.romAddr),
                       (u32)(gHeaderBuf->arm7.romSize),
@@ -220,7 +220,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
                       (u32)(mHeaderBuf->fat_size),
                       false, PRINT_LEVEL_1);
         printf( "------------------\n");
-        
+
         printf( "ARM9 Overlay Table\n");
         Diff( (u32)(gHeaderBuf->main_ovt_offset),
                       (u32)(gHeaderBuf->main_ovt_size),
@@ -237,7 +237,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
                       false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
-    
+
         printf( "------------------\n");
         printf( "TWL Rom Header\n");
         if( gHeaderBuf->platform_code & 0x03)
@@ -250,7 +250,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
                   (u32)(mHeaderBuf->ltd_arm9.romSize),
                   false, PRINT_LEVEL_1);
             printf( "------------------\n");
-    
+
             printf( "ARM7 Ltd Static Module\n");
             Diff( (u32)(gHeaderBuf->ltd_arm7.romAddr),
                   (u32)(gHeaderBuf->ltd_arm7.romSize),
@@ -387,7 +387,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
     tmpAreaEntry->bottom = (u32)((u32)(mHeaderBuf->sub_ovt_offset) + mHeaderBuf->sub_ovt_size);
     mEntry->addAreaEntry( tmpAreaEntry);
 
-    
+
     if( gHeaderBuf->platform_code & 0x03)
     {
         // genuine 領域を登録
@@ -553,7 +553,7 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
 
     nowgfp = ftell( gfp);
     nowmfp = ftell( mfp);
-    
+
     // ARM9 Overlay
     printf( "------- ARM9 Overlay -------\n");
     g_ovt_entries = (gHeaderBuf->main_ovt_size) / sizeof(ROM_OVT);
@@ -572,7 +572,7 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
         fseek( mfp, ((u32)(mHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * m_ovtBuf.file_id)), SEEK_SET);
         fread( &g_fatBuf, sizeof(ROM_FAT), 1, gfp);
         fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
-        
+
         printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
         Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
@@ -615,7 +615,7 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
         fseek( mfp, ((u32)(mHeaderBuf->fat_offset) + (sizeof(ROM_FAT) * m_ovtBuf.file_id)), SEEK_SET);
         fread( &g_fatBuf, sizeof(ROM_FAT), 1, gfp);
         fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
-        
+
         printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
         Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
@@ -638,7 +638,7 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
         tmpAreaEntry->bottom = (u32)(m_fatBuf.bottom);
         mEntry->addAreaEntry( tmpAreaEntry);
     }
-    
+
     // ファイルポインタを戻す
     fseek( gfp, nowgfp, SEEK_SET);
     fseek( mfp, nowmfp, SEEK_SET);
@@ -953,11 +953,14 @@ u32 Checker::GetOctValue( char* hex_char)
 }
 
 char logBuf[0x46];
-void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp, CARDRomHashContext *context)
+void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* entry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
     u8 d1, d2, dm1, dm2;
     u32 log_start_adr, log_end_adr;
+    u32 m_log_start_adr, m_log_end_adr;
+    MyFileEntry* gFileEntry;
+    MyFileEntry* mFileEntry;
 
     while( fread( logBuf, 6, 1, lfp))
     {
@@ -972,7 +975,7 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp,
                              (GetOctValue(&logBuf[0x4]) * 0x100000) +
                              (GetOctValue(&logBuf[0x3]) * 0x1000000) +
                              (GetOctValue(&logBuf[0x2]) * 0x10000000));
-                
+
             log_end_adr = (GetOctValue(&logBuf[0x14]) +
                            (GetOctValue(&logBuf[0x13]) * 0x10) +
                            (GetOctValue(&logBuf[0x12]) * 0x100) +
@@ -982,18 +985,35 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp,
                            (GetOctValue(&logBuf[0x0E]) * 0x1000000) +
                            (GetOctValue(&logBuf[0x0D]) * 0x10000000));
             printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
-            
-            if( entry->FindFileLocation( log_start_adr, log_end_adr))
-            {   // TODO:genuine側の対応アドレスはgenuineファイルエントリの先頭から計算し直す
+
+            gFileEntry = entry->FindFileLocation( log_start_adr, log_end_adr);
+            if( gFileEntry)
+            {   // 当該ファイルのアクセスログをマジコン側に変換（ファイルの位置が改竄されている場合のため）
+                mFileEntry = mEntry->FindFileEntry( gFileEntry->full_path_name);
+                m_log_start_adr = (log_start_adr - gFileEntry->top) + mFileEntry->top;
+                m_log_end_adr = (log_end_adr - gFileEntry->top) + mFileEntry->top;
+                // アクセスログが異なる場合はそれを明示
+                if( (log_start_adr != m_log_start_adr)||(log_end_adr != m_log_end_adr))
+                {
+                    printf( " -> (0x%lx - 0x%lx)", m_log_start_adr, m_log_end_adr);
+                }
+                // ファイル名とファイルとしての改竄有無を表示
+                if( gFileEntry->modified)
+                {
+                    printf( " %s(*)", gFileEntry->full_path_name);
+                }else{
+                    printf( " %s", gFileEntry->full_path_name);
+                }
+                // 当該アクセスログにおける改竄の有無を表示
                 if( Diff( log_start_adr, (log_end_adr - log_start_adr),
-                          log_start_adr, (log_end_adr - log_start_adr),
+                          m_log_start_adr, (m_log_end_adr - m_log_start_adr),
                           true, PRINT_LEVEL_0))
                 {
                     printf( "[data]");
                 }else{
                     printf( "[data(*)]");
                 }
-                
+
                 if( gHeaderBuf->platform_code & 0x03)
                 {
                     GetDigestResult( context, log_start_adr, log_end_adr, &d1, &d2);
@@ -1013,7 +1033,7 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp,
                     else
                     {
                         if( d2) { printf( "[d2(*):OK]");} else { printf( "[d2(*):NG]");};
-                    }                        
+                    }
                 }
                 // 領域名も表示
                 entry->FindAreaLocation( log_start_adr, log_end_adr);
@@ -1029,7 +1049,7 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp,
                     printf( "[data]");
                 }else{
                     printf( "[data(*)]");
-                }                
+                }
             }
             printf( "\n");
         }

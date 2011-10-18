@@ -27,8 +27,7 @@ char*  log_fname = NULL;
 void SA_Usage( void)
 {
     fprintf( stderr, "Analyzing Tool\n");
-    fprintf( stderr, "Usage: makelst [-o output-file] [--g genuine-srl-file] [--m magicon-srl-file]\n\n");
-    fprintf( stderr, "Usage: makelst [-o output-file] [--g genuine-srl-file] [--l access-log-file]\n\n");
+    fprintf( stderr, "Usage: tamperdetector [-o output-file] [--g genuine-srl-file] [--m magicon-srl-file] [--l access-log-file]\n\n");
     exit( 1);
 }
 
@@ -47,7 +46,7 @@ void SA_searchopt( int argc, char* argv[])
     if( argc <= 1) {
         SA_Usage();
     }
-  
+
     while( (n = getopt_long( argc, argv, "do:h", &optionInfo[0], NULL))
            != -1)
     {

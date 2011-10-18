@@ -207,9 +207,9 @@ MyFileEntry* Entry::FindFileLocation( u32 start_adr, u32 end_adr)
             retEntry = currentEntry;
             if( currentEntry->modified)
             {   // 改竄されているファイルの識別表示
-                printf( " %s(*),", currentEntry->full_path_name);
+//                printf( " %s(*),", currentEntry->full_path_name);
             }else{
-                printf( " %s,", currentEntry->full_path_name);
+//                printf( " %s,", currentEntry->full_path_name);
             }
         }
         currentEntry = (MyFileEntry*)(currentEntry->next);

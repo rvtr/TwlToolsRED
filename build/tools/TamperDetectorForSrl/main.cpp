@@ -139,7 +139,7 @@ int main (int argc, char *argv[])
         
             lfp = fopen( log_fname, "r");
             printf( "\n\n\nACCESS LOG\n");
-            checker.FindAccessLogFile( &gHeaderBuf, &gEntry, lfp, &context);
+            checker.FindAccessLogFile( &gHeaderBuf, &mEntry, &gEntry, lfp, &context);
             printf( "------------------\n");
         }
 

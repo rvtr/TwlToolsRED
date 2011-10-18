@@ -40,13 +40,13 @@ class Checker
 
   public:
     void Initialize( FILE* myGfp, FILE* myMfp, void* myGbuf, void* myMbuf, u32 size);
-    
+
     /* ヘッダを読むだけ */
     bool LoadHeader( void* gHeaderBuf, void* mHeaderBuf);
 
     /* ROMの特定領域に差がないかどうか調べる */
     bool Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isDataOnly, PrintLevel print_enable);
-    
+
     void Finalize( void);
 
     /* ROMヘッダの各領域を管理リストに登録する */
@@ -71,8 +71,8 @@ class Checker
 
 
     u32 GetOctValue( char* hex_char);
-    void FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, FILE* lfp, CARDRomHashContext *context);
-    
+    void FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* entry, FILE* lfp, CARDRomHashContext *context);
+
 };
 
 #endif

@@ -18,6 +18,15 @@ typedef struct
   u8	entry_type       :1;			// ファイルエントリの場合は 0
 } EntryInfo;
 
+typedef u32 DiffLevel;
+
+#define DIFF_NOT_TOUCHED       0
+#define DIFF_DATA_MODIFIED     1
+#define DIFF_DATA_FILLED       2
+#define DIFF_SIZE_MODIFIED     4
+#define DIFF_LOCATION_MODIFIED 8
+#define DIFF_OUT_OF_RANGE     16
+
 typedef enum
 {
     PRINT_LEVEL_0 = 0,
@@ -45,7 +54,7 @@ class Checker
     bool LoadHeader( void* gHeaderBuf, void* mHeaderBuf);
 
     /* ROMの特定領域に差がないかどうか調べる */
-    bool Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isDataOnly, PrintLevel print_enable);
+    bool Diff( DiffLevel* diffLevel, u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isDataOnly, PrintLevel print_enable);
 
     void Finalize( void);
 

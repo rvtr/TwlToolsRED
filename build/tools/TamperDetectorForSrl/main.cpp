@@ -141,6 +141,7 @@ int main (int argc, char *argv[])
             printf( "\n\n\nACCESS LOG\n");
             checker.FindAccessLogFile( &gHeaderBuf, &mEntry, &gEntry, lfp, &context);
             printf( "------------------\n");
+            fclose( lfp);
         }
 
         fclose( gfp);

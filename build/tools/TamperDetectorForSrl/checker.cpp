@@ -38,14 +38,14 @@ bool Checker::LoadHeader( void* gHeaderBuf, void* mHeaderBuf)
     return false;
 }
 
-bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isDataOnly, PrintLevel print_enable)
+bool Checker::Diff( DiffLevel* diffLevel, u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isDataOnly, PrintLevel print_enable)
 {
     long nowgfp, nowmfp;
     int result = 0;
     u32 check_size, rest_size;
     u32 i, loop_num;
-    bool function_result = true;
 
+    *diffLevel = DIFF_NOT_TOUCHED;
     check_size = (g_size < m_size)? g_size : m_size;
     rest_size = check_size;
 
@@ -61,7 +61,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         else
         {
-            function_result = false; // 改竄フラグ
+            *diffLevel |= DIFF_LOCATION_MODIFIED;
             if( print_enable) {
                 printf( "  offset:0x%lx ---> offset:0x%lx（改竄されている）\n", g_offset, m_offset);
             }
@@ -76,7 +76,7 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
         }
         else
         {
-            function_result = false; // 改竄フラグ
+            *diffLevel |= DIFF_SIZE_MODIFIED;
             if( print_enable) {
                 printf( "  size:0x%lx ---> size:0x%lx（改竄されている）\n", g_size, m_size);
             }
@@ -89,6 +89,16 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
 
     nowgfp = ftell( gfp);
     nowmfp = ftell( mfp);
+
+    /* OUT_OF_RANGE */
+    fseek( gfp, 0, SEEK_END);
+    fseek( mfp, 0, SEEK_END);
+    if( ((g_offset + g_size) > ftell(gfp)) || ((m_offset + m_size) > ftell(mfp)))
+    {
+        *diffLevel |= DIFF_OUT_OF_RANGE;
+        return false;
+    }
+    
     /* メモリ内容のチェック（サイズが異なる場合は小さいサイズで） */
     fseek( gfp, g_offset, SEEK_SET);
     fseek( mfp, m_offset, SEEK_SET);
@@ -154,13 +164,14 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     {
         if( filled)
         {
+            *diffLevel |= DIFF_DATA_FILLED;
             if( print_enable) {
                 printf( "  data:（0x%xでフィルされている）\n", *((u8*)mBuf));
             }
         }
         else
         {
-            function_result = false; // 改竄フラグ
+            *diffLevel |= DIFF_DATA_MODIFIED;
             if( print_enable) {
                 printf( "  data:（改竄されている）\n");
             }
@@ -170,71 +181,78 @@ bool Checker::Diff( u32 g_offset, u32 g_size, u32 m_offset, u32 m_size, bool isD
     // ファイルポインタを戻す
     fseek( gfp, nowgfp, SEEK_SET);
     fseek( mfp, nowmfp, SEEK_SET);
-    return function_result;
+    return true;
 }
 
 
 void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
 {
+    DiffLevel diffLevel;
     MyAreaEntry     *tmpAreaEntry;
 
         if( gHeaderBuf->platform_code & 0x03)
         {   // TWL-ROMヘッダの範囲をチェック
-            Diff( 0, sizeof(RomHeader), 0, sizeof(RomHeader), false, PRINT_LEVEL_1);
+            Diff( &diffLevel, 0, sizeof(RomHeader), 0, sizeof(RomHeader), false, PRINT_LEVEL_1);
             printf( "[support TWL]\n");
         }
         else
         {   // NITRO-ROMヘッダの範囲だけチェック
-            Diff( 0, 0x180, 0, 0x180, false, PRINT_LEVEL_1);
+            Diff( &diffLevel, 0, 0x180, 0, 0x180, false, PRINT_LEVEL_1);
         }
         printf( "------------------\n");
 
         printf( "ARM9 Static Module\n");
-        Diff( (u32)(gHeaderBuf->arm9.romAddr),
-                      (u32)(gHeaderBuf->arm9.romSize),
-                      (u32)(mHeaderBuf->arm9.romAddr),
-                      (u32)(mHeaderBuf->arm9.romSize),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->arm9.romAddr),
+              (u32)(gHeaderBuf->arm9.romSize),
+              (u32)(mHeaderBuf->arm9.romAddr),
+              (u32)(mHeaderBuf->arm9.romSize),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
         printf( "ARM7 Static Module\n");
-        Diff( (u32)(gHeaderBuf->arm7.romAddr),
-                      (u32)(gHeaderBuf->arm7.romSize),
-                      (u32)(mHeaderBuf->arm7.romAddr),
-                      (u32)(mHeaderBuf->arm7.romSize),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->arm7.romAddr),
+              (u32)(gHeaderBuf->arm7.romSize),
+              (u32)(mHeaderBuf->arm7.romAddr),
+              (u32)(mHeaderBuf->arm7.romSize),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
         printf( "File Name Table\n");
-        Diff( (u32)(gHeaderBuf->fnt_offset),
-                      (u32)(gHeaderBuf->fnt_size),
-                      (u32)(mHeaderBuf->fnt_offset),
-                      (u32)(mHeaderBuf->fnt_size),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->fnt_offset),
+              (u32)(gHeaderBuf->fnt_size),
+              (u32)(mHeaderBuf->fnt_offset),
+              (u32)(mHeaderBuf->fnt_size),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
         printf( "File Allocation Table\n");
-        Diff( (u32)(gHeaderBuf->fat_offset),
-                      (u32)(gHeaderBuf->fat_size),
-                      (u32)(mHeaderBuf->fat_offset),
-                      (u32)(mHeaderBuf->fat_size),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->fat_offset),
+              (u32)(gHeaderBuf->fat_size),
+              (u32)(mHeaderBuf->fat_offset),
+              (u32)(mHeaderBuf->fat_size),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
         printf( "ARM9 Overlay Table\n");
-        Diff( (u32)(gHeaderBuf->main_ovt_offset),
-                      (u32)(gHeaderBuf->main_ovt_size),
-                      (u32)(mHeaderBuf->main_ovt_offset),
-                      (u32)(mHeaderBuf->main_ovt_size),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->main_ovt_offset),
+              (u32)(gHeaderBuf->main_ovt_size),
+              (u32)(mHeaderBuf->main_ovt_offset),
+              (u32)(mHeaderBuf->main_ovt_size),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
         printf( "ARM7 Overlay Table\n");
-        Diff( (u32)(gHeaderBuf->sub_ovt_offset),
-                      (u32)(gHeaderBuf->sub_ovt_size),
-                      (u32)(mHeaderBuf->sub_ovt_offset),
-                      (u32)(mHeaderBuf->sub_ovt_size),
-                      false, PRINT_LEVEL_1);
+        Diff( &diffLevel,
+              (u32)(gHeaderBuf->sub_ovt_offset),
+              (u32)(gHeaderBuf->sub_ovt_size),
+              (u32)(mHeaderBuf->sub_ovt_offset),
+              (u32)(mHeaderBuf->sub_ovt_size),
+              false, PRINT_LEVEL_1);
         printf( "------------------\n");
 
 
@@ -244,7 +262,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
         {
             /* TWL専用部分 */
             printf( "ARM9 Ltd Static Module\n");
-            Diff( (u32)(gHeaderBuf->ltd_arm9.romAddr),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->ltd_arm9.romAddr),
                   (u32)(gHeaderBuf->ltd_arm9.romSize),
                   (u32)(mHeaderBuf->ltd_arm9.romAddr),
                   (u32)(mHeaderBuf->ltd_arm9.romSize),
@@ -252,7 +271,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "ARM7 Ltd Static Module\n");
-            Diff( (u32)(gHeaderBuf->ltd_arm7.romAddr),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->ltd_arm7.romAddr),
                   (u32)(gHeaderBuf->ltd_arm7.romSize),
                   (u32)(mHeaderBuf->ltd_arm7.romAddr),
                   (u32)(mHeaderBuf->ltd_arm7.romSize),
@@ -260,7 +280,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "(NITRO Digest Area)\n");
-            Diff( (u32)(gHeaderBuf->nitro_digest_area_rom_offset),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->nitro_digest_area_rom_offset),
                   (u32)(gHeaderBuf->nitro_digest_area_size),
                   (u32)(mHeaderBuf->nitro_digest_area_rom_offset),
                   (u32)(mHeaderBuf->nitro_digest_area_size),
@@ -268,7 +289,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "(TWL Digest Area)\n");
-            Diff( (u32)(gHeaderBuf->twl_digest_area_rom_offset),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->twl_digest_area_rom_offset),
                   (u32)(gHeaderBuf->twl_digest_area_size),
                   (u32)(mHeaderBuf->twl_digest_area_rom_offset),
                   (u32)(mHeaderBuf->twl_digest_area_size),
@@ -276,7 +298,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "Digest1 Table\n");
-            Diff( (u32)(gHeaderBuf->digest1_table_offset),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->digest1_table_offset),
                   (u32)(gHeaderBuf->digest1_table_size),
                   (u32)(mHeaderBuf->digest1_table_offset),
                   (u32)(mHeaderBuf->digest1_table_size),
@@ -284,7 +307,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "Digest2 Table\n");
-            Diff( (u32)(gHeaderBuf->digest2_table_offset),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->digest2_table_offset),
                   (u32)(gHeaderBuf->digest2_table_size),
                   (u32)(mHeaderBuf->digest2_table_offset),
                   (u32)(mHeaderBuf->digest2_table_size),
@@ -292,7 +316,8 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
             printf( "------------------\n");
 
             printf( "AES TARGET\n");
-            Diff( (u32)(gHeaderBuf->aes_target_rom_offset),
+            Diff( &diffLevel,
+                  (u32)(gHeaderBuf->aes_target_rom_offset),
                   (u32)(gHeaderBuf->aes_target_size),
                   (u32)(mHeaderBuf->aes_target_rom_offset),
                   (u32)(mHeaderBuf->aes_target_size),
@@ -481,6 +506,7 @@ void Checker::AnalyzeHeader( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
 
 void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mHeaderBuf, Entry* mEntry)
 {
+    DiffLevel diffLevel;
     MyAreaEntry  *tmpAreaEntry;
     BannerHeader gBannerHeader;
     BannerHeader mBannerHeader;
@@ -497,7 +523,8 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
     fread( &mBannerHeader, sizeof(BannerHeader), 1, mfp);
 
     printf( "------- Banner Header -------\n");
-    Diff( (u32)(gHeaderBuf->banner_offset), sizeof(BannerHeader),
+    Diff( &diffLevel,
+          (u32)(gHeaderBuf->banner_offset), sizeof(BannerHeader),
           (u32)(mHeaderBuf->banner_offset), sizeof(BannerHeader),
           false, PRINT_LEVEL_1);
     if( (((gBannerHeader.version) < 1) || ((gBannerHeader.version) > 3)) ||
@@ -507,7 +534,8 @@ void Checker::AnalyzeBanner( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* mH
         return;
     }
     printf( "------- Banner Body -------\n");
-    Diff( (u32)(gHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[gBannerHeader.version],
+    Diff( &diffLevel,
+          (u32)(gHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[gBannerHeader.version],
           (u32)(mHeaderBuf->banner_offset) + sizeof(BannerHeader), banner_size[mBannerHeader.version],
           false, PRINT_LEVEL_1);
 
@@ -546,6 +574,7 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
     int     i;
     int     g_ovt_entries, m_ovt_entries;
     long    nowgfp, nowmfp;
+    DiffLevel diffLevel;
     ROM_OVT g_ovtBuf, m_ovtBuf;
     ROM_FAT g_fatBuf, m_fatBuf;
     MyAreaEntry  *tmpAreaEntry;
@@ -574,7 +603,8 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
         fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
 
         printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
-        Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
+        Diff( &diffLevel,
+              (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
               false, PRINT_LEVEL_1);
 
@@ -617,7 +647,8 @@ void Checker::AnalyzeOverlay( RomHeader* gHeaderBuf, Entry* gEntry, RomHeader* m
         fread( &m_fatBuf, sizeof(ROM_FAT), 1, mfp);
 
         printf( "- overlay:%d, file_id:0x%lx\n", i, g_ovtBuf.file_id);
-        Diff( (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
+        Diff( &diffLevel,
+              (u32)(g_fatBuf.top), ((u32)(g_fatBuf.bottom) - (u32)(g_fatBuf.top)),
               (u32)(m_fatBuf.top), ((u32)(m_fatBuf.bottom) - (u32)(m_fatBuf.top)),
               false, PRINT_LEVEL_1);
 
@@ -770,6 +801,7 @@ bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
 
 void Checker::FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entry* entry, PrintLevel print_enable)
 {
+    DiffLevel diffLevel;
     ROM_FAT currentRomFat;
     long nowfp;
     nowfp = ftell( fp);
@@ -783,7 +815,8 @@ void Checker::FindAllocation( u16 entry_id, RomHeader* headerBuf, FILE* fp, Entr
                 (u32)(currentRomFat.top), (u32)(currentRomFat.bottom),
                 (u32)((u32)(currentRomFat.bottom) - (u32)(currentRomFat.top)));
     }
-    Diff( (u32)(currentRomFat.top), (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top),
+    Diff( &diffLevel,
+          (u32)(currentRomFat.top), (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top),
           (u32)(currentRomFat.top), (u32)(currentRomFat.bottom) - (u32)(currentRomFat.top),
           true, print_enable);
 
@@ -850,6 +883,7 @@ void Checker::ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable)
 /* ディレクトリとファイルをチェックする */
 void Checker::CheckAllEntries( RomHeader* mHeaderBuf, CARDRomHashContext *context, Entry* gEntry, Entry* mEntry)
 {
+    DiffLevel diffLevel;
     {
         MyDirEntry *currentEntry = gEntry->dirEntry;
         MyDirEntry *hisEntry;
@@ -894,9 +928,11 @@ void Checker::CheckAllEntries( RomHeader* mHeaderBuf, CARDRomHashContext *contex
         if( hisEntry)
         {
             printf( "\n");
-            if( Diff( currentEntry->top, (currentEntry->bottom - currentEntry->top),
-                      hisEntry->top, (hisEntry->bottom - hisEntry->top),
-                      false, PRINT_LEVEL_1) == false)
+            Diff( &diffLevel,
+                  currentEntry->top, (currentEntry->bottom - currentEntry->top),
+                  hisEntry->top, (hisEntry->bottom - hisEntry->top),
+                  false, PRINT_LEVEL_1);
+            if( diffLevel & DIFF_DATA_MODIFIED)
             {
                 currentEntry->modified = true; // 改竄フラグ
             }
@@ -956,6 +992,7 @@ char logBuf[0x46];
 void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* entry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
+    DiffLevel diffLevel;
     u8 d1, d2, dm1, dm2;
     u32 log_start_adr, log_end_adr;
     u32 m_log_start_adr, m_log_end_adr;
@@ -986,6 +1023,11 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
                            (GetOctValue(&logBuf[0x0D]) * 0x10000000));
             printf( "%d   0x%lx - 0x%lx", i, log_start_adr, log_end_adr);
 
+            if( (log_end_adr - log_start_adr)>= 1000000)
+            {
+                fread( logBuf, 1, 1, lfp);
+            }
+            
             gFileEntry = entry->FindFileLocation( log_start_adr, log_end_adr);
             if( gFileEntry)
             {   // 当該ファイルのアクセスログをマジコン側に変換（ファイルの位置が改竄されている場合のため）
@@ -1000,18 +1042,30 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
                 // ファイル名とファイルとしての改竄有無を表示
                 if( gFileEntry->modified)
                 {
-                    printf( " %s(*)", gFileEntry->full_path_name);
+                    printf( " %s(*),", gFileEntry->full_path_name);
                 }else{
-                    printf( " %s", gFileEntry->full_path_name);
+                    printf( " %s,", gFileEntry->full_path_name);
                 }
                 // 当該アクセスログにおける改竄の有無を表示
-                if( Diff( log_start_adr, (log_end_adr - log_start_adr),
-                          m_log_start_adr, (m_log_end_adr - m_log_start_adr),
-                          true, PRINT_LEVEL_0))
+                Diff( &diffLevel,
+                      log_start_adr, (log_end_adr - log_start_adr),
+                      m_log_start_adr, (m_log_end_adr - m_log_start_adr),
+                      true, PRINT_LEVEL_0);
+                if( diffLevel & DIFF_OUT_OF_RANGE)
+                {
+                    printf( "[out of range]");
+                }
+                else if( diffLevel & DIFF_DATA_MODIFIED)
+                {
+                    printf( "[data(*)]");
+                }
+                else if( diffLevel & DIFF_DATA_FILLED)
+                {
+                    printf( "[data(f)]");
+                }
+                else
                 {
                     printf( "[data]");
-                }else{
-                    printf( "[data(*)]");
                 }
 
                 if( gHeaderBuf->platform_code & 0x03)
@@ -1042,13 +1096,25 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
             {   // ファイルが該当しなかったら領域名の表示と内容比較
                 entry->FindAreaLocation( log_start_adr, log_end_adr);
                 // TODO:genuine側の対応アドレスはgenuineファイルエントリの先頭から計算し直す
-                if( Diff( log_start_adr, (log_end_adr - log_start_adr),
-                          log_start_adr, (log_end_adr - log_start_adr),
-                          true, PRINT_LEVEL_0))
+                Diff( &diffLevel,
+                      log_start_adr, (log_end_adr - log_start_adr),
+                      log_start_adr, (log_end_adr - log_start_adr),
+                      true, PRINT_LEVEL_0);
+                if( diffLevel & DIFF_OUT_OF_RANGE)
+                {
+                    printf( "[out of range]");
+                }
+                else if( diffLevel & DIFF_DATA_MODIFIED)
+                {
+                    printf( "[data(*)]");
+                }
+                else if( diffLevel & DIFF_DATA_FILLED)
+                {
+                    printf( "[data(f)]");
+                }
+                else
                 {
                     printf( "[data]");
-                }else{
-                    printf( "[data(*)]");
                 }
             }
             printf( "\n");

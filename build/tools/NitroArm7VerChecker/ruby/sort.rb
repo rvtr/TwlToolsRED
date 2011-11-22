@@ -6,7 +6,7 @@
 
 # true の場合は 通常版
 # false の場合は 特殊版
-normal_flg = false
+normal_flg = true
 
 
 # ---------------------------------------
@@ -35,6 +35,12 @@ dst.write(cont)
 
 src.close
 dst.close
+
+print("---------------------\n")
+print("Header File Generator\n")
+print("---------------------\n\n")
+
+print("step1 start\n\n")
 
 # 
 # 被りチェック処理開始
@@ -121,6 +127,7 @@ copy_in_file.close
 
 File.delete(backup_file_name)
 
+print("step2 start\n\n")
 
 # 成形作業(ヘッダファイル作成)
 src_file = open(temp_output_file_name,"r")
@@ -163,3 +170,6 @@ dst_file.write("};" + "\n")
 src_file.close
 dst_file.close
 
+File.delete(temp_output_file_name)
+
+print("finish\n")

@@ -1119,9 +1119,19 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
             }
             printf( "\n");
         }
+        else if( memcmp( logBuf, "<<BACK", 4) == 0)
+        {
+            printf( "<<backup access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
+        else if( memcmp( logBuf, "<<INVA", 4) == 0)
+        {
+            printf( "<<INVALID access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
         else
         {
-            printf( "<<other access>>\n");
+            printf( "<<unknown access>>\n");
             fread( logBuf, 12, 1, lfp);
         }
         i++;

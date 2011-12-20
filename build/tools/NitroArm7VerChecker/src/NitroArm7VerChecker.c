@@ -22,6 +22,7 @@
 // デバッグビルド
 //#define DEBUG_SHOW_SDK_INFO
 
+#define VERSION_STRING "ver 1.0"
 
 #include <twl.h>
 #include <nitro/os/ARM9/argument.h>
@@ -173,7 +174,8 @@ static void DrawMainScene( void )
 {
     static u8 count = 0;
     
-	myDp_Printf( 0, 7, TXT_COLOR_BLACK, SUB_SCREEN, "Component SDK Version Identifier");
+	myDp_Printf( 0, 6, TXT_COLOR_BLACK, SUB_SCREEN, "Component SDK Version Identifier");
+    myDp_Printf( 0, 7, TXT_COLOR_BLACK, SUB_SCREEN, VERSION_STRING);
 
     switch( s_mode )
     {

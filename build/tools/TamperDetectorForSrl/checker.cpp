@@ -754,6 +754,10 @@ bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
         {
             break;
         }
+        if( entryInfo.entry_name_length == 0)
+        {
+            continue;
+        }
         fread( entryNames, entryInfo.entry_name_length, 1, fp);
         entryNames[entryInfo.entry_name_length] = '\0';
         if( entryInfo.entry_type == 0) // ファイル
@@ -771,6 +775,7 @@ bool Checker::FindEntry( u32 fnt_offset, u16 entry_id, RomHeader* headerBuf, FIL
             entry->InitializeEntry( fileEntry);
             fileEntry->self_id = entry_id;
             fileEntry->parent_id = parent_id;
+            
             entry->SetName( fileEntry, entryNames, entryInfo.entry_name_length);
             entry->addFileEntry( fileEntry);
 
@@ -989,7 +994,7 @@ u32 Checker::GetOctValue( char* hex_char)
 }
 
 char logBuf[0x46];
-void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* entry, FILE* lfp, CARDRomHashContext *context)
+void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, Entry* mEntry, FILE* lfp, CARDRomHashContext *context)
 {
     int i = 0;
     DiffLevel diffLevel;
@@ -1027,24 +1032,41 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
             {
                 fread( logBuf, 1, 1, lfp);
             }
-            
+
             gFileEntry = entry->FindFileLocation( log_start_adr, log_end_adr);
             if( gFileEntry)
             {   // 当該ファイルのアクセスログをマジコン側に変換（ファイルの位置が改竄されている場合のため）
                 mFileEntry = mEntry->FindFileEntry( gFileEntry->full_path_name);
-                m_log_start_adr = (log_start_adr - gFileEntry->top) + mFileEntry->top;
-                m_log_end_adr = (log_end_adr - gFileEntry->top) + mFileEntry->top;
+                if( mFileEntry)
+                {   // マジコン側に存在している場合
+                    m_log_start_adr = (log_start_adr - gFileEntry->top) + mFileEntry->top;
+                    m_log_end_adr = (log_end_adr - gFileEntry->top) + mFileEntry->top;
+                }
+                else
+                {   // マジコン側に存在していない場合
+                    m_log_start_adr = log_start_adr;
+                    m_log_end_adr = log_end_adr;
+                }
+                
                 // アクセスログが異なる場合はそれを明示
                 if( (log_start_adr != m_log_start_adr)||(log_end_adr != m_log_end_adr))
                 {
                     printf( " -> (0x%lx - 0x%lx)", m_log_start_adr, m_log_end_adr);
                 }
-                // ファイル名とファイルとしての改竄有無を表示
+                // マジコン側に存在していなければその旨を表示
+                if( !mFileEntry)
+                {
+                    printf( " マジコン側には存在していない,");
+                }
+                else
+                {
+                // 存在していれば、ファイル名とファイルとしての改竄有無を表示
                 if( gFileEntry->modified)
                 {
                     printf( " %s(*),", gFileEntry->full_path_name);
                 }else{
                     printf( " %s,", gFileEntry->full_path_name);
+                }
                 }
                 // 当該アクセスログにおける改竄の有無を表示
                 Diff( &diffLevel,
@@ -1136,6 +1158,98 @@ void Checker::FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* en
         }
         i++;
     };
+}
+
+void Checker::AnalyzeAccessLog( RomHeader* gHeaderBuf, Entry* entry, Entry* mEntry, FILE* lfp)
+{
+    int i = 0;
+    DiffLevel diffLevel;
+    u32 log_start_adr, log_end_adr;
+    u32 total = 0;
+    MyFileEntry* gFileEntry;
+
+    while( fread( logBuf, 6, 1, lfp))
+    {
+        if( memcmp( logBuf, "Read: ", 4) == 0)
+        {
+            fread( logBuf, 0x25, 1, lfp);
+            log_start_adr = (GetOctValue(&logBuf[0x9]) +
+                             (GetOctValue(&logBuf[0x8]) * 0x10) +
+                             (GetOctValue(&logBuf[0x7]) * 0x100) +
+                             (GetOctValue(&logBuf[0x6]) * 0x1000) +
+                             (GetOctValue(&logBuf[0x5]) * 0x10000) +
+                             (GetOctValue(&logBuf[0x4]) * 0x100000) +
+                             (GetOctValue(&logBuf[0x3]) * 0x1000000) +
+                             (GetOctValue(&logBuf[0x2]) * 0x10000000));
+
+            log_end_adr = (GetOctValue(&logBuf[0x14]) +
+                           (GetOctValue(&logBuf[0x13]) * 0x10) +
+                           (GetOctValue(&logBuf[0x12]) * 0x100) +
+                           (GetOctValue(&logBuf[0x11]) * 0x1000) +
+                           (GetOctValue(&logBuf[0x10]) * 0x10000) +
+                           (GetOctValue(&logBuf[0x0F]) * 0x100000) +
+                           (GetOctValue(&logBuf[0x0E]) * 0x1000000) +
+                           (GetOctValue(&logBuf[0x0D]) * 0x10000000));
+
+            total += log_end_adr - log_start_adr;
+            printf( "%d,   0x%lx, 0x%lx, %ld", i, log_start_adr, log_end_adr, log_end_adr - log_start_adr);
+
+            if( (log_end_adr - log_start_adr)>= 1000000)
+            {
+                fread( logBuf, 1, 1, lfp);
+            }
+/*            
+            gFileEntry = entry->FindFileLocation( log_start_adr, log_end_adr);
+            if( gFileEntry)
+            {
+                // 領域名も表示
+                entry->FindAreaLocation( log_start_adr, log_end_adr);
+            }
+            else*/
+            {   // ファイルが該当しなかったら領域名の表示と内容比較
+//                entry->FindAreaLocation( log_start_adr, log_end_adr);
+                // TODO:genuine側の対応アドレスはgenuineファイルエントリの先頭から計算し直す
+/*                Diff( &diffLevel,
+                      log_start_adr, (log_end_adr - log_start_adr),
+                      log_start_adr, (log_end_adr - log_start_adr),
+                      true, PRINT_LEVEL_0);
+                if( diffLevel & DIFF_OUT_OF_RANGE)
+                {
+                    printf( "[out of range]");
+                }
+                else if( diffLevel & DIFF_DATA_MODIFIED)
+                {
+                    printf( "[data(*)]");
+                }
+                else if( diffLevel & DIFF_DATA_FILLED)
+                {
+                    printf( "[data(f)]");
+                }
+                else
+                {
+                    printf( "[data]");
+                }*/
+            }
+            printf( "\n");
+        }
+        else if( memcmp( logBuf, "<<BACK", 4) == 0)
+        {
+            printf( "<<backup access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
+        else if( memcmp( logBuf, "<<INVA", 4) == 0)
+        {
+            printf( "<<INVALID access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
+        else
+        {
+            printf( "<<unknown access>>\n");
+            fread( logBuf, 12, 1, lfp);
+        }
+        i++;
+    };
+    printf( "total, %ld\n", total);
 }
 
 void Checker::Finalize( void)

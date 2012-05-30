@@ -78,9 +78,12 @@ class Checker
     void ExportGenuineBmpFiles( Entry* gEntry, PrintLevel print_enable);
 
 
+    /* 起動時アクセスログを解析する */
+    void AnalyzeAccessLog( RomHeader* gHeaderBuf, Entry* entry, Entry* mEntry, FILE* lfp);
+
 
     u32 GetOctValue( char* hex_char);
-    void FindAccessLogFile( RomHeader* gHeaderBuf, Entry* mEntry, Entry* entry, FILE* lfp, CARDRomHashContext *context);
+    void FindAccessLogFile( RomHeader* gHeaderBuf, Entry* entry, Entry* mEntry, FILE* lfp, CARDRomHashContext *context);
 
 };
 

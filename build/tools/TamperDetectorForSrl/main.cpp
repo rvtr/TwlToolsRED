@@ -139,13 +139,36 @@ int main (int argc, char *argv[])
         
             lfp = fopen( log_fname, "r");
             printf( "\n\n\nACCESS LOG\n");
-            checker.FindAccessLogFile( &gHeaderBuf, &mEntry, &gEntry, lfp, &context);
+            checker.FindAccessLogFile( &gHeaderBuf, &gEntry, &mEntry, lfp, &context);
             printf( "------------------\n");
             fclose( lfp);
         }
 
+        checker.Finalize();
         fclose( gfp);
         fclose( mfp);
+    }
+
+    // マジコン名なし かつ Outputファイルあり
+    if( ((!magicon_fname) && output_fname) && log_fname)
+    {
+        FILE* gfp;
+        FILE* lfp;
+        Checker checker;
+
+        gfp = fopen( genuine_fname, "r");
+        lfp = fopen( log_fname, "r");
+
+        checker.Initialize( gfp, NULL, gBuf, NULL, BUFFER_SIZE);
+
+        checker.LoadHeader( &gHeaderBuf, NULL);
+
+        checker.AnalyzeAccessLog( &gHeaderBuf, &gEntry, (Entry*)NULL, lfp);
+        
+        checker.Finalize();
+
+        fclose( lfp);
+        fclose( gfp);
     }
 
     return 0;

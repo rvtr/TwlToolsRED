@@ -19,20 +19,24 @@
 
 
 // define data-----------------------------------------------------------------
-#define MY_DEBUG	0
+#define MY_DEBUG						0
 
 #define ROUND_UP(value, alignment) \
     (((u32)(value) + (alignment-1)) & ~(alignment-1))
 
-#define STREAMING_BUFFER_SIZE         (128 * 1024)
-#define TITLEID_HI_USER_NAND		  0x0003000400000000LL
-#define TARGET_INITIALCODE_SPEC_FILE  "SaveDataCleaner.spec"
+#define STREAMING_BUFFER_SIZE			(128 * 1024)
+#define TITLEID_HI_USER_NAND			0x0003000400000000LL
+#define TARGET_INITIALCODE_SPEC_FILE	"SaveDataCleaner.spec"
+
+#define V_NUM							5
+#define TARGET_TITLE_LIST_NUM			2
 
 // extern data-----------------------------------------------------------------
 
 // function's prototype--------------------------------------------------------
 static void INTR_VBlank( void );
 static void InitHeap( void );
+void ConstructUserTitleID( OSTitleId *pTitleID, const u8 *pInitialCode );
 BOOL SearchTitle( OSTitleId titleID, BOOL *pIsPrivSave, BOOL *pIsPubSave );
 BOOL CleanupSaveDataDrive( const char *pDriveName , OSTitleId titleID );
 BOOL CreateFileWithLength( char *path, u32 length );
@@ -42,7 +46,16 @@ BOOL DumpFile( const char* pPath );
 BOOL ReadTargetFileFromSD( const char *pFilename, char **ppDst, u32 *pFileSize );
 
 // global variables------------------------------------------------------------
-u8 targetGameCode[ 5 ] = { 'K', 'E', 'N', 'J', 0x00 };
+typedef struct TargetTitleList {
+	u8 initialCode[ 5 ];
+	u8 saveDataClearFlag;
+	u8 titleDeleteFlag;
+}TargetTitleList;
+
+TargetTitleList targetTitleList[ TARGET_TITLE_LIST_NUM ] = {
+	{ { 'K', 'E', 'N', 'J', 0x00 }, 1, 1, },
+	{ { 'K', 'C', 'V', 'J', 0x00 }, 0, 0, },
+};
 
 // static variables------------------------------------------------------------
 static u8 sStreamBuffer[ STREAMING_BUFFER_SIZE ] ATTRIBUTE_ALIGN(32);
@@ -61,6 +74,7 @@ void TwlMain(void)
 	BOOL isPubSave  = FALSE;
 	BOOL isFailed   = FALSE;
 	BOOL isAutoExe  = TRUE;
+	int i;
 	u16 pad_old = 0;
 	u16 pad = 0;
 	u16 trg = 0;
@@ -89,10 +103,11 @@ void TwlMain(void)
 	GX_DispOn();
 	GXS_DispOn();
 	
-	PrintStringS(  1, 0, YELLOW, "SaveData Clearner" );
+	PrintStringS(  1, 0, YELLOW, "Title Search & Clearner" );
 	
 	// SDカード上のSPECファイルから、ターゲットのGameCodeを読み込み
-#if USE_SDCARD
+//if USE_SDCARD
+#if 0
 	{
 		u32 size;
 		char *pSrc = TARGET_INITIALCODE_SPEC_FILE;
@@ -116,91 +131,94 @@ void TwlMain(void)
 	}
 #endif
 	
-	// targetGameCode から titleID を作成
-	{
-		int i;
-		u8 *pDst = (u8 *)&titleID;
-		titleID = TITLEID_HI_USER_NAND;
-		for( i = 0; i < 4; i++ ) {
-			*pDst++ = targetGameCode[ 3 -i ];
-		}
-	}
-	
-	// セーブデータサーチ
-	isFound = SearchTitle( titleID, &isPrivSave, &isPubSave );
-	PrintStringS(  1, 6, WHITE, "InitialCode : %s", targetGameCode );
-	if( isFound ) {
-		PrintStringS(  1,  8, GREEN, "application found.", targetGameCode );
-		PrintStringS(  1, 10, WHITE, "Press [A] to Cleanup START." );
-		PrintStringS(  1, 11, WHITE, "Press [B] to STOP." );
-	}else {
-		PrintStringS(  1,  8, YELLOW, "application not found.", targetGameCode );
-		*(u16 *)0x05000006 = myPalette[ YELLOW ][ 1 ];
-	}
-	SVC_WaitVBlankIntr();
 	
 	// メインループ----------------------------
-	trg = PAD_Read();   // パッドデータ読み取り
-	while( isFound ){
-		// パッドデータ読み取り
-		pad_old = pad;
-		pad = PAD_Read();
-		trg = (u16)( pad ^ pad_old );
+	for( i = 0; i < TARGET_TITLE_LIST_NUM; i++ ) {
+		// タイトルサーチ
+		ConstructUserTitleID( &titleID, targetTitleList[i].initialCode );
+		isFound = SearchTitle( titleID, &isPrivSave, &isPubSave );
+		PrintStringS(  1,  4 + i * V_NUM, WHITE, "InitialCode :%s", targetTitleList[i].initialCode );
+		if( isFound ) {
+			PrintStringS(  19,  4 + i * V_NUM, GREEN,  "found." );
+			FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xD020 );	// 緑色フィル
+		}else {
+			PrintStringS(  19,  4 + i * V_NUM, YELLOW, "not found." );
+			FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0x8020 );	// 黄色フィル
+		}
 		
-		if( ( trg & ( PAD_BUTTON_A | PAD_BUTTON_B ) ) || isAutoExe ) {
-			ClearRectangleS(  1, 10, 31, 1 );
-			ClearRectangleS(  1, 11, 31, 1 );
-		}
-		if( ( trg & PAD_BUTTON_A ) || isAutoExe ) {
-			// セーブデータクリア実行
-			// Privateセーブデータ
-			PrintStringS(  1, 10, WHITE, "Private Save:" );
-			if( isPrivSave ) {
-				PrintStringS( 14, 10, YELLOW, "cleanup executing..." );
-				if( CleanupSaveDataDrive( "otherPrv", titleID ) ) {
-					PrintStringS( 14, 10, GREEN, "cleanup succeedded. " );
-				}else {
-					PrintStringS( 14, 10, RED,   "cleanup failed.     " );
-					isFailed = TRUE;
-				}
-			}else {
-				PrintStringS( 14, 10, YELLOW, "not existed." );
+		SVC_WaitVBlankIntr();
+		
+		trg = PAD_Read();   // パッドデータ読み取り
+		while( isFound ){
+			isFailed = FALSE;
+			// パッドデータ読み取り
+			pad_old = pad;
+			pad = PAD_Read();
+			trg = (u16)( pad ^ pad_old );
+			
+			if( ( trg & ( PAD_BUTTON_A | PAD_BUTTON_B ) ) || isAutoExe ) {
+				ClearRectangleS(  1,  (u16)( 5 + i * V_NUM ), 31, 1 );
+				ClearRectangleS(  1,  (u16)( 5 + i * V_NUM ), 31, 1 );
 			}
 			
-			// Publicセーブデータ
-			PrintStringS(  1, 11, WHITE, "Public  Save:" );
-			if( isPubSave ) {
-				PrintStringS( 14, 11, YELLOW, "cleanup executing." );
-				if( CleanupSaveDataDrive( "otherPub",  titleID ) ) {
-					PrintStringS( 14, 11, GREEN, "cleanup succeedded. " );
-				}else {
-					PrintStringS( 14, 11, RED,   "cleanup failed.     " );
-					isFailed = TRUE;
+			if( ( trg & PAD_BUTTON_A ) || isAutoExe ) {
+				// セーブデータクリア実行
+				if( targetTitleList[ i ].saveDataClearFlag ) {
+					// Privateセーブデータ
+					PrintStringS(  5,  5 + i * V_NUM, WHITE, "PrvSave :" );
+					if( isPrivSave ) {
+						PrintStringS( 14,  5 + i * V_NUM, YELLOW, "cleanup executing..." );
+						if( CleanupSaveDataDrive( "otherPrv", titleID ) ) {
+							PrintStringS( 14, 5 + i * V_NUM, GREEN, "cleanup succeedded. " );
+						}else {
+							PrintStringS( 14, 5 + i * V_NUM, RED,   "cleanup failed.     " );
+							isFailed = TRUE;
+						}
+					}else {
+						PrintStringS( 14, 5 + i * V_NUM, YELLOW, "not existed." );
+					}
+					
+					// Publicセーブデータ
+					PrintStringS(  5,  6 + i * V_NUM, WHITE, "PubSave :" );
+					if( isPubSave ) {
+						PrintStringS( 14, 6 + i * V_NUM, YELLOW, "cleanup executing." );
+						if( CleanupSaveDataDrive( "otherPub",  titleID ) ) {
+							PrintStringS( 14, 6 + i * V_NUM, GREEN, "cleanup succeedded. " );
+						}else {
+							PrintStringS( 14, 6 + i * V_NUM, RED,   "cleanup failed.     " );
+							isFailed = TRUE;
+						}
+					}else {
+						PrintStringS( 14, 6 + i * V_NUM, YELLOW, "not existed." );
+					}
 				}
-			}else {
-				PrintStringS( 14, 11, YELLOW, "not existed." );
+				
+				// タイトル削除実行
+				if( targetTitleList[ i ].titleDeleteFlag ) {
+					PrintStringS(  5,  7 + i * V_NUM, WHITE, "Title   :" );
+					PrintStringS( 14,  7 + i * V_NUM, YELLOW, "cleanup executing." );
+					if( NAM_DeleteTitle( titleID ) == NAM_OK ) {
+						PrintStringS( 14,  7 + i * V_NUM, GREEN, "cleanup succeedded. " );
+					}else {
+						PrintStringS( 14,  7 + i * V_NUM, RED,   "cleanup failed.     " );
+						isFailed = TRUE;
+					}
+					if( isFailed ) {
+						FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xC020 );	// 赤色フィル
+						//*(u16 *)0x05000006 = myPalette[ RED ][ 1 ];
+					}else {
+						FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xD020 );	// 緑色フィル
+						//*(u16 *)0x05000006 = myPalette[ LIGHTGREEN ][ 1 ];
+					}
+				}
+				break;
+			}else if( trg & PAD_BUTTON_B ) {
+				// クリアキャンセル。
+				PrintStringS(  1,   5 + i * V_NUM, YELLOW, "Cancel Title cleanup." );
+				break;
 			}
-			
-			PrintStringS(  1, 12, WHITE, "Application :" );
-			PrintStringS( 14, 12, YELLOW, "cleanup executing." );
-			if( NAM_DeleteTitle( titleID ) == NAM_OK ) {
-				PrintStringS( 14, 12, GREEN, "cleanup succeedded. " );
-			}else {
-				PrintStringS( 14, 12, RED,   "cleanup failed.     " );
-				isFailed = TRUE;
-			}
-			if( isFailed ) {
-				*(u16 *)0x05000006 = myPalette[ RED ][ 1 ];
-			}else {
-				*(u16 *)0x05000006 = myPalette[ LIGHTGREEN ][ 1 ];
-			}
-			break;
-		}else if( trg & PAD_BUTTON_B ) {
-			// セーブデータクリアキャンセル。
-			PrintStringS(  1, 10, YELLOW, "Cancel SaveData cleanup." );
-			break;
+			SVC_WaitVBlankIntr();		// Vブランク割込終了待ち
 		}
-		SVC_WaitVBlankIntr();		// Vブランク割込終了待ち
 	}
 	
 	SVC_WaitVBlankIntr();
@@ -241,6 +259,18 @@ static void InitHeap( void )
 /*---------------------------------------------------------------------------*
     関数定義
  *---------------------------------------------------------------------------*/
+
+// InitialCode から titleID を作成
+void ConstructUserTitleID( OSTitleId *pTitleID, const u8 *pInitialCode )
+{
+	int i;
+	u8 *pDst = (u8 *)pTitleID;
+	*pTitleID = TITLEID_HI_USER_NAND;
+	for( i = 0; i < 4; i++ ) {
+		*pDst++ = pInitialCode[ 3 -i ];
+	}
+}
+
 
 // 指定タイトルが存在するか確認し、存在するなら、sameMakerFlag を強制セットし、Privateセーブデータ、Publicセーブデータの存在有無を返す。
 BOOL SearchTitle( OSTitleId titleID, BOOL *pIsPrivSave, BOOL *pIsPubSave )

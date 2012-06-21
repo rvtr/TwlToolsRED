@@ -161,3 +161,17 @@ void ClearRectangle( u16 *pScreen, u16 pos_x, u16 pos_y, u8 width, u8 height )
 		pScreen += 0x20 - width;
 	}
 }
+
+// 矩形スクリーンフィル
+void FillRectangle( u16 *pScreen, u16 pos_x, u16 pos_y, u8 width, u8 height, u16 code )
+{
+	u16 i,j;
+	
+	pScreen += pos_x + ( pos_y << 5 );
+	for(i=0;i<height;i++) {
+		for( j = 0; j < width; j++ ) {
+			*pScreen++ = code;
+		}
+		pScreen += 0x20 - width;
+	}
+}

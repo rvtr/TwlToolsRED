@@ -28,6 +28,8 @@ extern "C" {
 #define PrintStringS(...)		PrintString( 0, __VA_ARGS__ )
 #define ClearRectangleM(...)    ClearRectangle( bg0BakM, __VA_ARGS__ )
 #define ClearRectangleS(...)    ClearRectangle( bg0BakS, __VA_ARGS__ )
+#define FillRectangleM(...)     FillRectangle( bg0BakM, __VA_ARGS__ )
+#define FillRectangleS(...)     FillRectangle( bg0BakS, __VA_ARGS__ )
 
 // global variable---------------------------------------------------
 extern u16 bg0BakM[ SCREEN_X_CHAR * SCREEN_Y_CHAR ];					// メインBG0  バックアップ
@@ -40,6 +42,7 @@ void InitDispMain( void );
 void InitDispSub ( void );
 void PrintString( BOOL sel_lcd, s32 x, s32 y, u16 color, const char *fmt, ... ); // 64文字までの書式付き文字列を画面に出力
 void ClearRectangle( u16 *pScreen, u16 pos_x, u16 pos_y, u8 width, u8 height );  // 矩形スクリーンクリア
+void FillRectangle( u16 *pScreen, u16 pos_x, u16 pos_y, u8 width, u8 height, u16 code ); // 矩形スクリーンフィル
 
 
 #ifdef __cplusplus

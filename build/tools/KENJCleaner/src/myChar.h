@@ -28,13 +28,17 @@ extern "C" {
 #define	CYAN				5
 #define	PURPLE				6
 #define	LIGHTGREEN			7
-#define	HIGHLIGHT_Y			8
-#define	HIGHLIGHT_C			9
+#define	HIGHLIGHT_YELLOW	8
+#define	HIGHLIGHT_CYAN		9
+#define	HIGHLIGHT_WHITE		10
+#define	HIGHLIGHT_BLUE		11
+#define	HIGHLIGHT_RED		12
+#define	HIGHLIGHT_LIGHT_GREEN	13
 
 // global variable---------------------------------------------------
 
 // const data--------------------------------------------------------
-extern const u16 myPalette[ 13 ][ 16 ];					// パレットデータ
+extern const u16 myPalette[ 14 ][ 16 ];					// パレットデータ
 extern const u16 myChar[ 0x20 * 0x140 / sizeof(u16) ];	// キャラクターデータ
 
 // function----------------------------------------------------------

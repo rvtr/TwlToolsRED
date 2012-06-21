@@ -14,7 +14,7 @@
 #define RGB555( r, g, b )		( b << 10 | g << 5 | r )
 
 // ”wŒi•ƒx[ƒX
-const u16 myPalette[ 13 ][ 16 ]  = {
+const u16 myPalette[ 14 ][ 16 ]  = {
 	{RGB555( 0, 0, 0), RGB555(31, 31, 31), RGB555(15, 15, 15), RGB555( 0,  0,  0),}, // White
 	{RGB555( 0, 0, 0), RGB555(31,  0,  0), RGB555( 0,  0,  0), RGB555( 0,  0,  0),}, // Red
 	{RGB555( 0, 0, 0), RGB555( 0, 19,  0), RGB555( 0,  0,  0), RGB555( 0,  0,  0),}, // Green
@@ -28,6 +28,7 @@ const u16 myPalette[ 13 ][ 16 ]  = {
 	{RGB555( 0, 0, 0), RGB555( 0,  0,  0), RGB555(31, 31, 31), RGB555(31, 31, 31),}, // HighLight WHITE
 	{RGB555( 0, 0, 0), RGB555( 0,  0,  0), RGB555( 0, 11, 31), RGB555( 0, 11, 31),}, // HighLight BLUE
 	{RGB555( 0, 0, 0), RGB555( 0,  0,  0), RGB555(31,  0,  0), RGB555(31,  0,  0),}, // HighLight RED
+	{RGB555( 0, 0, 0), RGB555( 0,  0,  0), RGB555( 0, 31,  0), RGB555( 0, 31,  0),}, // HighLight Light Green
 };
 
 

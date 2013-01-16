@@ -88,9 +88,10 @@ implementation
 function TForm1.CheckSrlHeader: integer;
 var
   Rec: TSearchRec;
-  s,ss: String;
+  sf,s,ss: String;
   i,n,Count: integer;
   fsrl: file;
+  flog:TextFile;
   romh: TRomh;
   noc_size,noc_sectors,size,sectors,nums,max_sectors,total_sectors: integer;
   fat: TRom_Fat;
@@ -98,26 +99,38 @@ var
 
 begin
   {$I-}
-  Count :=0;
-  //指定ディレクトリからファイルを取り出す
-  // ** 内容で判別しないので違うファイル置かないよう注意 **
-  if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
-  try
+  //ログファイル作成
+  ListBox_log.Items.Add('Create Log file');
+  s := 'log.txt';
+  AssignFile (flog,s);
+  Rewrite(flog);
+  if IOResult <> 0 then begin
+    Count := -1;
+    ListBox_log.Items.Add('faild')
+  end else begin
+   Count := 0;
+   //指定ディレクトリからファイルを取り出す
+   // ** 内容で判別しないので違うファイル置かないよう注意 **
+   if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
+   try
     repeat
        //フォルダやカレントディレクトリや親ディレクトリは対象外
        if not((Rec.Attr and faDirectory > 0)) and
-             (Rec.Name <> '.') and (Rec.Name <> '..') then
+             (Rec.Name <> '.') and (Rec.Name <> '..') and (Rec.name<>'log.txt')then
          begin
            Inc(Count);
-           ListBox_log.Items.Add(' ********************************** ');
-           ListBox_log.Items.Add('file: '+Rec.Name);
+           //ListBox_log.Items.Add(' ********************************** ');
+           Writeln(flog,' ********************************** ');
+           sf := 'file: '+Rec.Name;
+           //ListBox_log.Items.Add(sf);
+           Writeln(flog,sf);
            AssignFile (fsrl,SrlDir+Rec.Name);
            FileMode := fmOpenRead;//リード専用指定
            Reset(fsrl,1);//ファイル開く
            if IOResult = 0 then begin
              BlockRead(fsrl,romh,SizeOf(TRomh),n);//ヘッダリード
              if SizeOf(TRomh) <> n then
-               s := ' file error'
+               s := ' header read error'
              else begin
                //SetLength(s,12);
                s := '[            ( )]';
@@ -126,12 +139,16 @@ begin
                    s[i+1] := romh.title[i];
                end;
                s[15] := romh.game_code[4];//idの４文字目(仕向地)
-               ListBox_log.Items.Add(s); //title
+               //ListBox_log.Items.Add(s); //title
+               Writeln(flog,s);
                s := 'game_code =     ';
                for i:=1 to 4 do s[12+i] := romh.game_code[i];
-               ListBox_log.Items.Add(s); //game code
-               ListBox_log.Items.Add('version = '+inttostr(romh.rom_version));
-               ListBox_log.Items.Add(' '); //間をあける
+               //ListBox_log.Items.Add(s); //game code
+               //ListBox_log.Items.Add('version = '+inttostr(romh.rom_version));
+               //ListBox_log.Items.Add(' ');
+               Writeln(flog,s);
+               Writeln(flog,'version = '+inttostr(romh.rom_version));
+               Writeln(flog);//改行
 
              //オーバレイチェック
               if  romh.main_ovt_size >31 then begin
@@ -177,19 +194,25 @@ begin
                     s := 'offset'+inttostr(i)+' = 0x'+ inttohex(top,8)
                          +' ; 0x'+ inttohex(top,8)
                          +'-0x' + inttohex(btm,8)+ss;
-                    ListBox_log.Items.Add(s);
+                    //ListBox_log.Items.Add(s);
+                    Writeln(flog,s);
                     s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
                         + ' ; '+ inttostr(size)+' bytes';
-                    ListBox_log.Items.Add(s);
+                    //ListBox_log.Items.Add(s);
+                    Writeln(flog,s);
                     inc(noc_size,size);
                     inc(noc_sectors,sectors);
                   end;
                 end;
                 if i = nums then begin //中断なし
-                  ListBox_log.Items.Add('total sectors = '+inttostr(all_sectors));
-                  ListBox_log.Items.Add('no check sectors = '+inttostr(noc_sectors));
-                  ListBox_log.Items.Add('no check size = '+inttostr(noc_size));
-                  ListBox_log.Items.Add(' '); //間をあける
+                  //ListBox_log.Items.Add('total sectors = '+inttostr(all_sectors));
+                  //ListBox_log.Items.Add('no check sectors = '+inttostr(noc_sectors));
+                  //ListBox_log.Items.Add('no check size = '+inttostr(noc_size));
+                  //ListBox_log.Items.Add(' '); //間をあける
+                  Writeln(flog); //開業
+                  Writeln(flog,'total sectors = '+inttostr(all_sectors));
+                  Writeln(flog,'no check sectors = '+inttostr(noc_sectors));
+                  Writeln(flog,'no check size = '+inttostr(noc_size));
                   if noc_size > 0 then s:= 'NG'
                   else s:= 'OK';
                 end;
@@ -197,12 +220,16 @@ begin
              end;
            end else s := ' Open Error';
            CloseFile(fsrl);
-           ListBox_log.Items.Add(s);
-
+           Writeln(flog,s);//結果
+           if (s='OK') or (s='NG') then s := 'done';
+           ss := sf + ' : ' + s;
+           ListBox_log.Items.Add(ss);
          end;
     until (FindNext(Rec) <> 0);
-  finally
+   finally
     FindClose(Rec);
+   end;
+   CloseFile(flog);
   end;
   {$I+}
   Result :=Count;
@@ -213,15 +240,16 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 var
   FileCount :integer;
+  s :string;
 begin
   ListBox_log.Clear;
   //指定ディレクトリのsrlファイルをチェック
   FileCount := CheckSrlHeader;
   if FileCount>0 then begin
     ListBox_log.Items.Add(' ------------------------------ ');
-    ListBox_log.Items.Add('total '+inttostr(FileCount)+' files');
-  end else
-    ListBox_log.Items.Add(' file not ditect');
+    s := 'total '+inttostr(FileCount)+' files';
+  end else if FileCount = 0 then s := ' file not ditect' ;
+  ListBox_log.Items.Add(s);
 
 end;
 

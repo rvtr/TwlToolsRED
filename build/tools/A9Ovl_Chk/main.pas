@@ -101,7 +101,7 @@ begin
   {$I-}
   //ログファイル作成
   ListBox_log.Items.Add('Create Log file');
-  s := 'log.txt';
+  s := ExtractFilePath(Application.Exename)+'log.txt';
   AssignFile (flog,s);
   Rewrite(flog);
   if IOResult <> 0 then begin
@@ -119,8 +119,8 @@ begin
              (Rec.Name <> '.') and (Rec.Name <> '..') and (Rec.name<>'log.txt')then
          begin
            Inc(Count);
-           //ListBox_log.Items.Add(' ********************************** ');
-           Writeln(flog,' ********************************** ');
+           //ListBox_log.Items.Add('**********************************');
+           Writeln(flog,'**********************************');
            sf := 'file: '+Rec.Name;
            //ListBox_log.Items.Add(sf);
            Writeln(flog,sf);
@@ -166,22 +166,39 @@ begin
                     s := s+'Cannot read fat id='+ inttostr(i);
                     break;
                   end;
-                  size := (fat.bottom - fat.top)+1;
-                  sectors := size shr 9;//div 512
-                  if (size and $1ff) <>0 then inc(sectors);
-                  size := sectors shl 9;
-                  inc(all_sectors,sectors);
                   //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
                   if (total_sectors < 1024)then max_sectors := (1024 - total_sectors) div (nums-i)
                   else max_sectors := 0;
-                  btm := fat.bottom;
+                  btm := fat.bottom and $fffffe00; //512単位
+                  if (fat.bottom and $1ff)<>0 then inc(btm,512);//上方向に丸める
                   if max_sectors = 0 then begin//残検証サイズなければ丸ごと検証外
                     top := fat.top;
                     ss := '(A9 Overlay の全部)';
                   end else begin
+                    top := fat.top and $fffffe00; //512単位
+                    size := fat.top and $01ff;
+                    if size<>0 then begin
+                      inc(top,512);////上方向に丸める
+                      //先頭の未検証部分 .. 不要？
+                      s := 'offset'+inttostr(i)+' = 0x'+ inttohex(fat.top,8)
+                         +' ; 0x'+ inttohex(fat.top,8)
+                         +'-0x' + inttohex(top-1,8)+ss;
+                      //ListBox_log.Items.Add(s);
+                      Writeln(flog,s);
+                      s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
+                        + ' ; '+ inttostr(size)+' bytes';
+                      //ListBox_log.Items.Add(s);
+                      Writeln(flog,s);
+                      inc(noc_size,512);
+                      inc(noc_sectors,1);
+                      inc(all_sectors,1);
+                    end;
+                    size := btm - top;
+                    sectors := size shr 9;//div 512
+                    inc(all_sectors,sectors);
                     if sectors > max_sectors then begin //最大割当サイズ超
-                      sectors := sectors - max_sectors;//検証されないセクタ数
-                      top := fat.top + max_sectors;
+                      sectors := sectors - max_sectors;//残りセクタ数
+                      inc(top,max_sectors*512);//残り先頭
                       inc(total_sectors,max_sectors);
                       ss := '(A9 Overlay の一部)';
                     end else begin //超過なし
@@ -189,11 +206,11 @@ begin
                       sectors := 0;
                     end;
                   end;
-                  if sectors > 0 then begin
+                  if sectors > 0 then begin//残りあり
                     size := sectors shl 9;
                     s := 'offset'+inttostr(i)+' = 0x'+ inttohex(top,8)
                          +' ; 0x'+ inttohex(top,8)
-                         +'-0x' + inttohex(btm,8)+ss;
+                         +'-0x' + inttohex(btm-1,8)+ss;
                     //ListBox_log.Items.Add(s);
                     Writeln(flog,s);
                     s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
@@ -205,12 +222,13 @@ begin
                   end;
                 end;
                 if i = nums then begin //中断なし
+                  //ListBox_log.Items.Add(' ');
                   //ListBox_log.Items.Add('total sectors = '+inttostr(all_sectors));
                   //ListBox_log.Items.Add('no check sectors = '+inttostr(noc_sectors));
                   //ListBox_log.Items.Add('no check size = '+inttostr(noc_size));
-                  //ListBox_log.Items.Add(' '); //間をあける
-                  Writeln(flog); //開業
+                  Writeln(flog); //改行
                   Writeln(flog,'total sectors = '+inttostr(all_sectors));
+                  Writeln(flog,'check sectors = '+inttostr(total_sectors));
                   Writeln(flog,'no check sectors = '+inttostr(noc_sectors));
                   Writeln(flog,'no check size = '+inttostr(noc_size));
                   if noc_size > 0 then s:= 'NG'
@@ -224,7 +242,7 @@ begin
            if (s='OK') or (s='NG') then s := 'done';
            ss := sf + ' : ' + s;
            ListBox_log.Items.Add(ss);
-         end;
+          end;
     until (FindNext(Rec) <> 0);
    finally
     FindClose(Rec);

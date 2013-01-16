@@ -1,9 +1,9 @@
 object Form1: TForm1
-  Left = 310
-  Top = 126
-  Width = 574
-  Height = 259
-  Caption = 'Form1'
+  Left = 301
+  Top = 145
+  Width = 555
+  Height = 278
+  Caption = 'find areas  not validated  in A9_overlay'
   Color = clBtnFace
   Font.Charset = SHIFTJIS_CHARSET
   Font.Color = clWindowText
@@ -23,8 +23,8 @@ object Form1: TForm1
     TabOrder = 0
   end
   object Button1: TButton
-    Left = 48
-    Top = 168
+    Left = 16
+    Top = 160
     Width = 75
     Height = 25
     Caption = #38283#22987
@@ -32,16 +32,16 @@ object Form1: TForm1
     OnClick = Button1Click
   end
   object DriveBox: TDriveComboBox
-    Left = 392
-    Top = 40
+    Left = 384
+    Top = 72
     Width = 145
     Height = 18
     TabOrder = 2
     OnChange = DriveBoxChange
   end
   object DirListBox: TDirectoryListBox
-    Left = 392
-    Top = 64
+    Left = 384
+    Top = 96
     Width = 145
     Height = 97
     ItemHeight = 16
@@ -51,36 +51,37 @@ object Form1: TForm1
   object StatusBar: TStatusBar
     Left = 0
     Top = 210
-    Width = 566
+    Width = 547
     Height = 19
     Panels = <>
     SimplePanel = True
   end
-  object StaticText1: TStaticText
-    Left = 184
-    Top = 176
-    Width = 283
+  object StaticText3: TStaticText
+    Left = 104
+    Top = 168
+    Width = 246
     Height = 16
-    Caption = #65288#27880#24847#65289#12525#12464#12399#23455#34892#12501#12449#12452#12523#12398#12354#12427#12487#12451#12524#12463#12488#12522#12395#20986#12375#12414#12377
+    Caption = #65288#27880#24847#65289#25351#23450#12487#12451#12524#12463#12488#12522#12395'srl'#20197#22806#12399#32622#12363#12394#12356#12371#12392
     TabOrder = 5
   end
-  object StaticText2: TStaticText
-    Left = 416
-    Top = 16
-    Width = 95
-    Height = 16
-    BevelInner = bvLowered
-    BevelOuter = bvRaised
-    BorderStyle = sbsSingle
-    Caption = 'srl'#12288#12398#22580#25152#12434#25351#23450
+  object RG_select: TRadioGroup
+    Left = 408
+    Top = 8
+    Width = 113
+    Height = 57
+    Caption = #12497#12473#25351#23450
+    ItemIndex = 1
+    Items.Strings = (
+      'srl '#26684#32013#22580#25152
+      #12525#12464#12288#20986#21147#20808)
     TabOrder = 6
   end
-  object StaticText3: TStaticText
-    Left = 184
-    Top = 192
-    Width = 254
-    Height = 16
-    Caption = #65288#27880#24847#65298#65289#25351#23450#12487#12451#12524#12463#12488#12522#12395'srl'#20197#22806#12399#32622#12363#12394#12356#12371#12392
-    TabOrder = 7
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 229
+    Width = 547
+    Height = 19
+    Panels = <>
+    SimplePanel = True
   end
 end

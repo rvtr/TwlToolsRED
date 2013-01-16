@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, FileCtrl, ComCtrls, ShellCtrls;
+  Dialogs, StdCtrls, FileCtrl, ComCtrls, ShellCtrls, ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -13,9 +13,9 @@ type
     DriveBox: TDriveComboBox;
     DirListBox: TDirectoryListBox;
     StatusBar: TStatusBar;
-    StaticText1: TStaticText;
-    StaticText2: TStaticText;
     StaticText3: TStaticText;
+    RG_select: TRadioGroup;
+    StatusBar1: TStatusBar;
     procedure Button1Click(Sender: TObject);
     procedure DriveBoxChange(Sender: TObject);
     procedure DirListBoxChange(Sender: TObject);
@@ -81,7 +81,8 @@ type
 
 var
   Form1: TForm1;
-  SrlDir: String;//srlファイルの存在するディレクトリ名
+  LogDir,SrlDir: String;//ディレクトリパス
+  ng_all: longword;//総NGエントリ数
 
 implementation
 
@@ -89,19 +90,21 @@ function TForm1.CheckSrlHeader: integer;
 var
   Rec: TSearchRec;
   sf,s,ss: String;
-  i,n,Count,err_count: integer;
+  i,n,Count,err_files,ng_entry: integer;
   fsrl: file;
   flog:TextFile;
   romh: TRomh;
   noc_size,noc_sectors,size,sectors,nums,max_sectors,total_sectors: integer;
   fat: TRom_Fat;
   top,btm,all_sectors: Longword;
+  ng_flg:boolean;
 
 begin
   {$I-}
   //ログファイル作成
   ListBox_log.Items.Add('Create Log file');
-  s := ExtractFilePath(Application.Exename)+'log.txt';
+  //s := ExtractFilePath(Application.Exename)+'log.txt';
+  s := LogDir+'log.txt';
   AssignFile (flog,s);
   Rewrite(flog);
   if IOResult <> 0 then begin
@@ -109,7 +112,8 @@ begin
     ListBox_log.Items.Add('faild')
   end else begin
    Count := 0;
-   err_count := 0;
+   err_files := 0;
+   ng_all := 0;
    //指定ディレクトリからファイルを取り出す
    // ** 内容で判別しないので違うファイル置かないよう注意 **
    if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
@@ -153,6 +157,7 @@ begin
              //オーバレイチェック
               if  romh.main_ovt_size >31 then begin
 //DHT_OVERLAY_MAX     (512*1024)
+                ng_entry := 0;
                 total_sectors := 0;
                 all_sectors := 0;
                 nums := romh.main_ovt_size div 32;//Ovl count
@@ -166,6 +171,8 @@ begin
                     s := 'file error';
                     break;
                   end;
+                  ng_flg:=false;
+                  ss := '(A9 Overlay'+inttostr(i);
                   //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
                   if (total_sectors < 1024)then max_sectors := (1024 - total_sectors) div (nums-i)
                   else max_sectors := 0;
@@ -175,8 +182,10 @@ begin
                     top := fat.top;
                     sectors := (btm-top) shr 9;//div 512
                     if (top and $1ff)<>0 then inc(sectors);
-                    ss := '(A9 Overlay の全部)';
+                    ss := ss+' の全部)';
+                    ng_flg:=true;
                   end else begin
+                    ss := ss+' の一部)';
                     top := fat.top and $fffffe00; //512単位
                     size := fat.top and $01ff;
                     if size<>0 then begin
@@ -194,6 +203,7 @@ begin
                       inc(noc_size,512);
                       inc(noc_sectors);
                       inc(all_sectors);
+                      ng_flg:=true;
                     end;
                     size := btm - top;
                     sectors := size shr 9;//div 512
@@ -202,7 +212,7 @@ begin
                       sectors := sectors - max_sectors;//残りセクタ数
                       inc(top,max_sectors*512);//残り先頭
                       inc(total_sectors,max_sectors);
-                      ss := '(A9 Overlay の一部)';
+                      ng_flg:=true;
                     end else begin //超過なし
                       inc(total_sectors,sectors);
                       sectors := 0;
@@ -222,6 +232,7 @@ begin
                     inc(noc_size,size);
                     inc(noc_sectors,sectors);
                   end;
+                  if ng_flg then inc(ng_entry);
                 end;
                 if i = nums then begin //中断なし
                   //ListBox_log.Items.Add(' ');
@@ -233,7 +244,7 @@ begin
                   Writeln(flog,'check sectors = '+inttostr(total_sectors));
                   Writeln(flog,'no check sectors = '+inttostr(noc_sectors));
                   Writeln(flog,'no check size = '+inttostr(noc_size));
-                  if noc_size > 0 then s:= 'NG'
+                  if noc_size <> 0 then s:= 'NG'
                   else s:= 'OK';
                 end;
               end else s := 'no OVL';
@@ -242,9 +253,12 @@ begin
            CloseFile(fsrl);
            Writeln(flog,s);//結果
            if (s='OK') or (s='NG') then begin
-             s := 'done';
+             if s = 'NG' then begin
+               s := 'done, '+ inttostr(ng_entry) + ' enties NG';
+               inc(ng_all,ng_entry);
+             end else s := 'done, OK';
              Inc(Count);
-           end else inc(err_count);
+           end else inc(err_files);
            ss := sf + ' : ' + s;
            ListBox_log.Items.Add(ss);
           end;
@@ -254,7 +268,7 @@ begin
    end;
    Writeln(flog,'********************************');
    Writeln(flog,'check files = '+ inttostr(Count));
-   Writeln(flog,'error = '+ inttostr(err_count));
+   Writeln(flog,'error files = '+ inttostr(err_files));
 
    CloseFile(flog);
   end;
@@ -274,7 +288,8 @@ begin
   FileCount := CheckSrlHeader;
   if FileCount>=0 then begin
     ListBox_log.Items.Add(' ------------------------------ ');
-    s := ' '+inttostr(FileCount)+' files done';
+    s := ' '+inttostr(FileCount)+' files done, '
+       + inttostr(ng_all)+' entries NG';
     ListBox_log.Items.Add(s);
   end;
 end;
@@ -288,15 +303,22 @@ end;
 
 procedure TForm1.DirListBoxChange(Sender: TObject);
 begin
-  SrlDir := IncludeTrailingPathDelimiter(DirListBox.Directory);
-  StatusBar.SimpleText := '[Target Dir] ' + DirListBox.Directory;
+  if RG_select.ItemIndex = 0 then begin
+    SrlDir := IncludeTrailingPathDelimiter(DirListBox.Directory);
+    StatusBar.SimpleText := '[srl dir] ' + DirListBox.Directory;
+  end else begin
+    LogDir := IncludeTrailingPathDelimiter(DirListBox.Directory);
+    StatusBar1.SimpleText := '[log dir] ' + DirListBox.Directory;
+  end;
 end;
-
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  //イベント利用してSrlDirNameとステータスバーの設定
-  DirListBox.Drive := DriveBox.Drive;
+  SrlDir := IncludeTrailingPathDelimiter(DirListBox.Directory);
+  StatusBar.SimpleText := '[srl dir] ' + DirListBox.Directory;
+  LogDir := IncludeTrailingPathDelimiter(DirListBox.Directory);
+  StatusBar1.SimpleText := '[log dir] ' + DirListBox.Directory;
 end;
+
 
 end.

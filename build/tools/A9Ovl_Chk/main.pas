@@ -32,11 +32,20 @@ type
     bottom:Longword;  //         end;
   end;
 
-  TRomh = record
+  TRomh = record //ROMヘッダ(nitro_romheader.hより)
     title: array[1..12] of Char;
-    game_code: array[1..4] of Byte;
+    game_code: array[1..4] of Char;
 //0x10
-    dumy:array[1..16]of Byte;//ツールで使用しない部分
+    maker_code: array[1..2] of Byte;
+    machine_code: Byte;
+    rom_type: Byte;
+    rom_size: Byte;
+    resv_A: array[1..8] of Byte;  //Reserve(All 0)
+    region: Byte;
+        // b0 = china,b1 = koria
+
+    rom_version: Byte;
+    comp_boot_area: Byte;//b7 =A9,b6=A7
 
     //
     // 0x020 for Static modules (Section:B)
@@ -79,82 +88,131 @@ implementation
 function TForm1.CheckSrlHeader: integer;
 var
   Rec: TSearchRec;
-  s: String;
+  sf,s,ss: String;
   i,n,Count: integer;
   fsrl: file;
+  flog:TextFile;
   romh: TRomh;
   noc_size,noc_sectors,size,sectors,nums,max_sectors,total_sectors: integer;
   fat: TRom_Fat;
+  top,btm,all_sectors: Longword;
 
 begin
   {$I-}
-  Count :=0;
-  //指定ディレクトリからファイルを取り出す
-  // ** 内容で判別しないので違うファイル置かないよう注意 **
-  if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
-  try
+  //ログファイル作成
+  ListBox_log.Items.Add('Create Log file');
+  s := 'log.txt';
+  AssignFile (flog,s);
+  Rewrite(flog);
+  if IOResult <> 0 then begin
+    Count := -1;
+    ListBox_log.Items.Add('faild')
+  end else begin
+   Count := 0;
+   //指定ディレクトリからファイルを取り出す
+   // ** 内容で判別しないので違うファイル置かないよう注意 **
+   if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
+   try
     repeat
-       //フォルダやカレントディレクトリや親ディレクトリは対象外で
+       //フォルダやカレントディレクトリや親ディレクトリは対象外
        if not((Rec.Attr and faDirectory > 0)) and
-             (Rec.Name <> '.') and (Rec.Name <> '..') then
+             (Rec.Name <> '.') and (Rec.Name <> '..') and (Rec.name<>'log.txt')then
          begin
            Inc(Count);
-           ListBox_log.Items.Add('file: '+Rec.Name);
+           //ListBox_log.Items.Add(' ********************************** ');
+           Writeln(flog,' ********************************** ');
+           sf := 'file: '+Rec.Name;
+           //ListBox_log.Items.Add(sf);
+           Writeln(flog,sf);
            AssignFile (fsrl,SrlDir+Rec.Name);
            FileMode := fmOpenRead;//リード専用指定
            Reset(fsrl,1);//ファイル開く
            if IOResult = 0 then begin
-             BlockRead(fsrl,romh,SizeOf(TRomh),n);
+             BlockRead(fsrl,romh,SizeOf(TRomh),n);//ヘッダリード
              if SizeOf(TRomh) <> n then
-               s := ' size too small'
+               s := ' header read error'
              else begin
-               SetLength(s,12);
+               //SetLength(s,12);
+               s := '[            ( )]';
                for i:=1 to 12 do begin
-                if romh.title[i] = char(0) then break;
-                s[i] := romh.title[i];
+                   if romh.title[i] = char(0) then break;
+                   s[i+1] := romh.title[i];
                end;
-               if i<12 then Setlength(s,i);
-               ListBox_log.Items.Add('title = '+s);
+               s[15] := romh.game_code[4];//idの４文字目(仕向地)
+               //ListBox_log.Items.Add(s); //title
+               Writeln(flog,s);
+               s := 'game_code =     ';
+               for i:=1 to 4 do s[12+i] := romh.game_code[i];
+               //ListBox_log.Items.Add(s); //game code
+               //ListBox_log.Items.Add('version = '+inttostr(romh.rom_version));
+               //ListBox_log.Items.Add(' ');
+               Writeln(flog,s);
+               Writeln(flog,'version = '+inttostr(romh.rom_version));
+               Writeln(flog);//改行
 
              //オーバレイチェック
-              if  romh.main_ovt_size >0 then begin
+              if  romh.main_ovt_size >31 then begin
 //DHT_OVERLAY_MAX     (512*1024)
                 total_sectors := 0;
-                nums := romh.main_ovt_size div 32;// 32 = Nitro用(Twlは33)
-                noc_size :=0;
-                noc_sectors := 0;
+                all_sectors := 0;
+                nums := romh.main_ovt_size div 32;//Ovl count
+                noc_size :=0;//範囲外トータルsize
+                noc_sectors := 0;// 同セクタ
                 for  i := 0 to nums-1 do begin
+                  top := 0;btm := 0;
                   seek( fsrl,romh.fat_offset+sizeof(TRom_Fat)*i);
-                  BlockRead( fsrl,fat,sizeof(fat),n);
-                  size := fat.bottom - fat.top;
-                  if total_sectors >= 1024 then begin//MAX超えたファイルは検証外に加算
-                    s := 'OL['+inttostr(i)+'] $'+ inttohex(fat.top,8)+' - $'+
-                      inttohex(fat.bottom,8)+' :size '+ inttostr(size);
-                    noc_size := noc_size + size;
-                    noc_sectors := noc_sectors + ((size+511) and $fffffe00) div 512;
-                    next;
-                  end;
-                 //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
-                  max_sectors := (1024 - total_sectors) div (nums-i);
+                  BlockRead( fsrl,fat,sizeof(fat),n);//top,bottom取得
                   if n <> sizeof(fat) then begin
                     s := s+'Cannot read fat id='+ inttostr(i);
                     break;
                   end;
-                  sectors := ( ((fat.bottom+511) and $fffffe00)- fat.top) div 512;
-                  if sectors > max_sectors then begin
-                    size := size - max_sectors*512;//検証されない残りサイズ
-                    s := 'OL['+inttostr(i)+'] $'+ inttohex(fat.top+max_sectors*512,8)+' - $'+
-                      inttohex(fat.bottom,8)+' :size '+ inttostr(size);
-                    ListBox_log.Items.Add(s);
-                    noc_size := noc_size+size;
-                    noc_sectors := noc_sectors + (max_sectors-sectors);
+                  size := (fat.bottom - fat.top)+1;
+                  sectors := size shr 9;//div 512
+                  if (size and $1ff) <>0 then inc(sectors);
+                  size := sectors shl 9;
+                  inc(all_sectors,sectors);
+                  //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
+                  if (total_sectors < 1024)then max_sectors := (1024 - total_sectors) div (nums-i)
+                  else max_sectors := 0;
+                  btm := fat.bottom;
+                  if max_sectors = 0 then begin//残検証サイズなければ丸ごと検証外
+                    top := fat.top;
+                    ss := '(A9 Overlay の全部)';
+                  end else begin
+                    if sectors > max_sectors then begin //最大割当サイズ超
+                      sectors := sectors - max_sectors;//検証されないセクタ数
+                      top := fat.top + max_sectors;
+                      inc(total_sectors,max_sectors);
+                      ss := '(A9 Overlay の一部)';
+                    end else begin //超過なし
+                      inc(total_sectors,sectors);
+                      sectors := 0;
+                    end;
                   end;
-                  total_sectors := total_sectors + sectors;
+                  if sectors > 0 then begin
+                    size := sectors shl 9;
+                    s := 'offset'+inttostr(i)+' = 0x'+ inttohex(top,8)
+                         +' ; 0x'+ inttohex(top,8)
+                         +'-0x' + inttohex(btm,8)+ss;
+                    //ListBox_log.Items.Add(s);
+                    Writeln(flog,s);
+                    s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
+                        + ' ; '+ inttostr(size)+' bytes';
+                    //ListBox_log.Items.Add(s);
+                    Writeln(flog,s);
+                    inc(noc_size,size);
+                    inc(noc_sectors,sectors);
+                  end;
                 end;
-                if i = nums then begin
-                  ListBox_log.Items.Add('total sectors = '+inttostr(total_sectors));
-                  ListBox_log.Items.Add('no check sectors = '+inttostr(noc_sectors));
-                  ListBox_log.Items.Add('no check size = '+inttostr(noc_size));
+                if i = nums then begin //中断なし
+                  //ListBox_log.Items.Add('total sectors = '+inttostr(all_sectors));
+                  //ListBox_log.Items.Add('no check sectors = '+inttostr(noc_sectors));
+                  //ListBox_log.Items.Add('no check size = '+inttostr(noc_size));
+                  //ListBox_log.Items.Add(' '); //間をあける
+                  Writeln(flog); //開業
+                  Writeln(flog,'total sectors = '+inttostr(all_sectors));
+                  Writeln(flog,'no check sectors = '+inttostr(noc_sectors));
+                  Writeln(flog,'no check size = '+inttostr(noc_size));
                   if noc_size > 0 then s:= 'NG'
                   else s:= 'OK';
                 end;
@@ -162,12 +220,16 @@ begin
              end;
            end else s := ' Open Error';
            CloseFile(fsrl);
-           ListBox_log.Items.Add(s);
-
+           Writeln(flog,s);//結果
+           if (s='OK') or (s='NG') then s := 'done';
+           ss := sf + ' : ' + s;
+           ListBox_log.Items.Add(ss);
          end;
     until (FindNext(Rec) <> 0);
-  finally
+   finally
     FindClose(Rec);
+   end;
+   CloseFile(flog);
   end;
   {$I+}
   Result :=Count;
@@ -178,15 +240,16 @@ end;
 procedure TForm1.Button1Click(Sender: TObject);
 var
   FileCount :integer;
+  s :string;
 begin
   ListBox_log.Clear;
   //指定ディレクトリのsrlファイルをチェック
   FileCount := CheckSrlHeader;
   if FileCount>0 then begin
-    ListBox_log.Items.Add(' ------------------------ ');
-    ListBox_log.Items.Add('total '+inttostr(FileCount)+' files');
-  end else
-    ListBox_log.Items.Add(' file not ditect');
+    ListBox_log.Items.Add(' ------------------------------ ');
+    s := 'total '+inttostr(FileCount)+' files';
+  end else if FileCount = 0 then s := ' file not ditect' ;
+  ListBox_log.Items.Add(s);
 
 end;
 

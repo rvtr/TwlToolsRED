@@ -89,7 +89,7 @@ function TForm1.CheckSrlHeader: integer;
 var
   Rec: TSearchRec;
   sf,s,ss: String;
-  i,n,Count: integer;
+  i,n,Count,err_count: integer;
   fsrl: file;
   flog:TextFile;
   romh: TRomh;
@@ -109,6 +109,7 @@ begin
     ListBox_log.Items.Add('faild')
   end else begin
    Count := 0;
+   err_count := 0;
    //指定ディレクトリからファイルを取り出す
    // ** 内容で判別しないので違うファイル置かないよう注意 **
    if FindFirst(SrlDir + '*.*', faAnyFile, Rec) = 0 then
@@ -118,7 +119,6 @@ begin
        if not((Rec.Attr and faDirectory > 0)) and
              (Rec.Name <> '.') and (Rec.Name <> '..') and (Rec.name<>'log.txt')then
          begin
-           Inc(Count);
            //ListBox_log.Items.Add('**********************************');
            Writeln(flog,'**********************************');
            sf := 'file: '+Rec.Name;
@@ -163,7 +163,7 @@ begin
                   seek( fsrl,romh.fat_offset+sizeof(TRom_Fat)*i);
                   BlockRead( fsrl,fat,sizeof(fat),n);//top,bottom取得
                   if n <> sizeof(fat) then begin
-                    s := s+'Cannot read fat id='+ inttostr(i);
+                    s := 'file error';
                     break;
                   end;
                   //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
@@ -171,8 +171,10 @@ begin
                   else max_sectors := 0;
                   btm := fat.bottom and $fffffe00; //512単位
                   if (fat.bottom and $1ff)<>0 then inc(btm,512);//上方向に丸める
-                  if max_sectors = 0 then begin//残検証サイズなければ丸ごと検証外
+                  if max_sectors = 0 then begin//最大達したら丸ごと検証外
                     top := fat.top;
+                    sectors := (btm-top) shr 9;//div 512
+                    if (top and $1ff)<>0 then inc(sectors);
                     ss := '(A9 Overlay の全部)';
                   end else begin
                     top := fat.top and $fffffe00; //512単位
@@ -190,8 +192,8 @@ begin
                       //ListBox_log.Items.Add(s);
                       Writeln(flog,s);
                       inc(noc_size,512);
-                      inc(noc_sectors,1);
-                      inc(all_sectors,1);
+                      inc(noc_sectors);
+                      inc(all_sectors);
                     end;
                     size := btm - top;
                     sectors := size shr 9;//div 512
@@ -239,7 +241,10 @@ begin
            end else s := ' Open Error';
            CloseFile(fsrl);
            Writeln(flog,s);//結果
-           if (s='OK') or (s='NG') then s := 'done';
+           if (s='OK') or (s='NG') then begin
+             s := 'done';
+             Inc(Count);
+           end else inc(err_count);
            ss := sf + ' : ' + s;
            ListBox_log.Items.Add(ss);
           end;
@@ -247,6 +252,10 @@ begin
    finally
     FindClose(Rec);
    end;
+   Writeln(flog,'********************************');
+   Writeln(flog,'check files = '+ inttostr(Count));
+   Writeln(flog,'error = '+ inttostr(err_count));
+
    CloseFile(flog);
   end;
   {$I+}
@@ -263,12 +272,11 @@ begin
   ListBox_log.Clear;
   //指定ディレクトリのsrlファイルをチェック
   FileCount := CheckSrlHeader;
-  if FileCount>0 then begin
+  if FileCount>=0 then begin
     ListBox_log.Items.Add(' ------------------------------ ');
-    s := 'total '+inttostr(FileCount)+' files';
-  end else if FileCount = 0 then s := ' file not ditect' ;
-  ListBox_log.Items.Add(s);
-
+    s := ' '+inttostr(FileCount)+' files done';
+    ListBox_log.Items.Add(s);
+  end;
 end;
 
 

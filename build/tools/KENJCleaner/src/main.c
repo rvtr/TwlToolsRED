@@ -140,10 +140,12 @@ void TwlMain(void)
 		PrintStringS(  1,  4 + i * V_NUM, WHITE, "InitialCode :%s", targetTitleList[i].initialCode );
 		if( isFound ) {
 			PrintStringS(  19,  4 + i * V_NUM, GREEN,  "found." );
-			FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xD020 );	// 緑色フィル
+			FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xC020 );	// 赤色フィル
+			PrintStringM(  0,  (u16)(12 * i), WHITE,  "%s Result", targetTitleList[i].initialCode );
 		}else {
 			PrintStringS(  19,  4 + i * V_NUM, YELLOW, "not found." );
 			FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0x8020 );	// 黄色フィル
+			PrintStringM(  0,  (u16)(12 * i), WHITE,  "%s Result", targetTitleList[i].initialCode );
 		}
 		
 		SVC_WaitVBlankIntr();
@@ -169,7 +171,7 @@ void TwlMain(void)
 					if( isPrivSave ) {
 						PrintStringS( 14,  5 + i * V_NUM, YELLOW, "cleanup executing..." );
 						if( CleanupSaveDataDrive( "otherPrv", titleID ) ) {
-							PrintStringS( 14, 5 + i * V_NUM, GREEN, "cleanup succeedded. " );
+							PrintStringS( 14, 5 + i * V_NUM, GREEN, "cleanup succeeded. " );
 						}else {
 							PrintStringS( 14, 5 + i * V_NUM, RED,   "cleanup failed.     " );
 							isFailed = TRUE;
@@ -183,7 +185,7 @@ void TwlMain(void)
 					if( isPubSave ) {
 						PrintStringS( 14, 6 + i * V_NUM, YELLOW, "cleanup executing." );
 						if( CleanupSaveDataDrive( "otherPub",  titleID ) ) {
-							PrintStringS( 14, 6 + i * V_NUM, GREEN, "cleanup succeedded. " );
+							PrintStringS( 14, 6 + i * V_NUM, GREEN, "cleanup succeeded. " );
 						}else {
 							PrintStringS( 14, 6 + i * V_NUM, RED,   "cleanup failed.     " );
 							isFailed = TRUE;
@@ -198,16 +200,18 @@ void TwlMain(void)
 					PrintStringS(  5,  7 + i * V_NUM, WHITE, "Title   :" );
 					PrintStringS( 14,  7 + i * V_NUM, YELLOW, "cleanup executing." );
 					if( NAM_DeleteTitle( titleID ) == NAM_OK ) {
-						PrintStringS( 14,  7 + i * V_NUM, GREEN, "cleanup succeedded. " );
+						PrintStringS( 14,  7 + i * V_NUM, GREEN, "cleanup succeeded. " );
 					}else {
 						PrintStringS( 14,  7 + i * V_NUM, RED,   "cleanup failed.     " );
 						isFailed = TRUE;
 					}
 					if( isFailed ) {
 						FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xC020 );	// 赤色フィル
+						PrintStringM(  0,  (u16)(12 * i), WHITE,  "%s Result", targetTitleList[i].initialCode );
 						//*(u16 *)0x05000006 = myPalette[ RED ][ 1 ];
 					}else {
 						FillRectangleM(  0,  (u16)(12 * i), 32, 12 , 0xD020 );	// 緑色フィル
+						PrintStringM(  0,  (u16)(12 * i), WHITE,  "%s Result", targetTitleList[i].initialCode );
 						//*(u16 *)0x05000006 = myPalette[ LIGHTGREEN ][ 1 ];
 					}
 				}

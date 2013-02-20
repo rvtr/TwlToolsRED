@@ -57,8 +57,8 @@ object Form1: TForm1
     SimplePanel = True
   end
   object StaticText3: TStaticText
-    Left = 104
-    Top = 168
+    Left = 8
+    Top = 192
     Width = 246
     Height = 16
     Caption = #65288#27880#24847#65289#25351#23450#12487#12451#12524#12463#12488#12522#12395'srl'#20197#22806#12399#32622#12363#12394#12356#12371#12392
@@ -83,5 +83,13 @@ object Form1: TForm1
     Height = 19
     Panels = <>
     SimplePanel = True
+  end
+  object CB_add_ovt: TCheckBox
+    Left = 256
+    Top = 160
+    Width = 97
+    Height = 17
+    Caption = 'Add OVT info'
+    TabOrder = 8
   end
 end

@@ -16,6 +16,7 @@ type
     StaticText3: TStaticText;
     RG_select: TRadioGroup;
     StatusBar1: TStatusBar;
+    CB_add_ovt: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure DriveBoxChange(Sender: TObject);
     procedure DirListBoxChange(Sender: TObject);
@@ -23,6 +24,7 @@ type
   private
     { Private 宣言 }
     function CheckSrlHeader:integer;
+    function fstring(s:string):string;
   public
     { Public 宣言 }
   end;
@@ -31,6 +33,18 @@ type
     top:Longword;  // file region start
     bottom:Longword;  //         end;
   end;
+
+  TRom_Ovl = record
+    id:Longword;                        // Overlay ID
+    ram_address:Longword;               // ram address
+    ram_size:Longword;                  // ram size
+    bss_size:Longword;                  // bss size
+    sinit_init:Longword;                // static initializer start
+    sinit_init_end:Longword;            // static initializer end
+    file_id:Longword;                   // file id in FAT
+    flag:Longword;                    // オーバーレイ情報フラ
+  end;
+
 
   TRomh = record //ROMヘッダ(nitro_romheader.hより)
     title: array[1..12] of Char;
@@ -86,16 +100,38 @@ var
 
 implementation
 
+function TForm1.fstring(s:string):string;
+var
+  s1,s2,s3:string;
+  n,nn:integer;
+begin
+  //'='まで切り出す
+  n := pos('=',s);
+  s1 := copy(s,0,n-1);
+  while length(s1) < 16 do s1 := s1+' ';
+  //';'まで切り出す
+  nn := pos(';',s);
+  s2 := copy(s,n,nn-n);
+  while length(s2) < 16 do s2 := s2+' ';
+  //残り
+  s3 := copy(s,nn,length(s));
+
+  Result := s1+s2+s3;
+
+end;
+
+
 function TForm1.CheckSrlHeader: integer;
 var
   Rec: TSearchRec;
   sf,s,ss: String;
-  i,n,Count,err_files,ng_entry: integer;
+  i,j,n,Count,err_files,ng_entry: integer;
   fsrl: file;
   flog:TextFile;
   romh: TRomh;
   noc_size,noc_sectors,size,sectors,nums,max_sectors,total_sectors: integer;
   fat: TRom_Fat;
+  ovl: TRom_Ovl;
   top,btm,all_sectors: Longword;
   ng_flg:boolean;
 
@@ -163,7 +199,18 @@ begin
                 nums := romh.main_ovt_size div 32;//Ovl count
                 noc_size :=0;//範囲外トータルsize
                 noc_sectors := 0;// 同セクタ
+                j := 0;//通し番号
                 for  i := 0 to nums-1 do begin
+                  if CB_add_ovt.Checked then begin
+                  //OVT
+                    seek( fsrl,romh.main_ovt_offset+sizeof(TRom_Ovl)*i);
+                    BlockRead( fsrl,ovl,sizeof(ovl),n);//top,bottom取得
+                    Writeln(flog,'ovt_id = '+inttostr(ovl.id));
+                    Writeln(flog,'  address = '+inttostr(ovl.ram_address));
+                    Writeln(flog,'  file_id = '+inttostr(ovl.file_id));
+                    Writeln(flog);//改行
+                  end;
+                  //FAT
                   top := 0;btm := 0;
                   seek( fsrl,romh.fat_offset+sizeof(TRom_Fat)*i);
                   BlockRead( fsrl,fat,sizeof(fat),n);//top,bottom取得
@@ -175,10 +222,10 @@ begin
                   ss := '(A9 Overlay'+inttostr(i);
                   //max_sectors = (DHT_OVERLAY_MAX/512 - total_sectors) / (nums-i);
                   if (total_sectors < 1024)then max_sectors := (1024 - total_sectors) div (nums-i)
-                  else max_sectors := 0;
+                  else max_sectors := 0; //CARDブート時、マイナスはエラー(FAT Broken)になる
                   btm := fat.bottom and $fffffe00; //512単位
                   if (fat.bottom and $1ff)<>0 then inc(btm,512);//上方向に丸める
-                  if max_sectors = 0 then begin//最大達したら丸ごと検証外
+                  if max_sectors = 0 then begin//丸ごと検証外
                     top := fat.top;
                     sectors := (btm-top) shr 9;//div 512
                     if (top and $1ff)<>0 then inc(sectors);
@@ -191,18 +238,21 @@ begin
                     if size<>0 then begin
                       inc(top,512);////上方向に丸める
                       //先頭の未検証部分 .. 不要？
-                      s := 'offset'+inttostr(i)+' = 0x'+ inttohex(fat.top,8)
+                      s := 'offset'+inttostr(j)+' = 0x'+ inttohex(fat.top,8)
                          +' ; 0x'+ inttohex(fat.top,8)
                          +'-0x' + inttohex(top-1,8)+ss;
                       //ListBox_log.Items.Add(s);
+                      s := fstring(s);//整形
                       Writeln(flog,s);
-                      s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
+                      s := 'length'+ inttostr(j) + ' = 0x' + inttohex(size,4)
                         + ' ; '+ inttostr(size)+' bytes';
                       //ListBox_log.Items.Add(s);
+                      s := fstring(s);//整形
                       Writeln(flog,s);
                       inc(noc_size,512);
                       inc(noc_sectors);
                       inc(all_sectors);
+                      inc(j);
                       ng_flg:=true;
                     end;
                     size := btm - top;
@@ -220,17 +270,20 @@ begin
                   end;
                   if sectors > 0 then begin//残りあり
                     size := sectors shl 9;
-                    s := 'offset'+inttostr(i)+' = 0x'+ inttohex(top,8)
+                    s := 'offset'+inttostr(j)+' = 0x'+ inttohex(top,8)
                          +' ; 0x'+ inttohex(top,8)
                          +'-0x' + inttohex(btm-1,8)+ss;
                     //ListBox_log.Items.Add(s);
+                    s :=fstring(s);//整形
                     Writeln(flog,s);
-                    s := 'length'+ inttostr(i) + ' = 0x' + inttohex(size,4)
+                    s := 'length'+ inttostr(j) + ' = 0x' + inttohex(size,4)
                         + ' ; '+ inttostr(size)+' bytes';
                     //ListBox_log.Items.Add(s);
+                    s := fstring(s);//整形
                     Writeln(flog,s);
                     inc(noc_size,size);
                     inc(noc_sectors,sectors);
+                    inc(j);
                   end;
                   if ng_flg then inc(ng_entry);
                 end;

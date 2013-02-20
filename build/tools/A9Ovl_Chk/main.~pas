@@ -16,6 +16,7 @@ type
     StaticText3: TStaticText;
     RG_select: TRadioGroup;
     StatusBar1: TStatusBar;
+    CB_add_ovt: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure DriveBoxChange(Sender: TObject);
     procedure DirListBoxChange(Sender: TObject);
@@ -31,6 +32,18 @@ type
     top:Longword;  // file region start
     bottom:Longword;  //         end;
   end;
+
+  TRom_Ovl = record
+    id:Longword;                        // Overlay ID
+    ram_address:Longword;               // ram address
+    ram_size:Longword;                  // ram size
+    bss_size:Longword;                  // bss size
+    sinit_init:Longword;                // static initializer start
+    sinit_init_end:Longword;            // static initializer end
+    file_id:Longword;                   // file id in FAT
+    flag:Longword;                    // オーバーレイ情報フラ
+  end;
+
 
   TRomh = record //ROMヘッダ(nitro_romheader.hより)
     title: array[1..12] of Char;
@@ -96,6 +109,7 @@ var
   romh: TRomh;
   noc_size,noc_sectors,size,sectors,nums,max_sectors,total_sectors: integer;
   fat: TRom_Fat;
+  ovl: TRom_Ovl;
   top,btm,all_sectors: Longword;
   ng_flg:boolean;
 
@@ -103,7 +117,8 @@ begin
   {$I-}
   //ログファイル作成
   ListBox_log.Items.Add('Create Log file');
-  s := ExtractFilePath(Application.Exename)+'log.txt';
+  //s := ExtractFilePath(Application.Exename)+'log.txt';
+  s := LogDir+'log.txt';
   AssignFile (flog,s);
   Rewrite(flog);
   if IOResult <> 0 then begin
@@ -163,6 +178,16 @@ begin
                 noc_size :=0;//範囲外トータルsize
                 noc_sectors := 0;// 同セクタ
                 for  i := 0 to nums-1 do begin
+                  if CB_add_ovt.Checked then begin
+                  //OVT
+                    seek( fsrl,romh.main_ovt_offset+sizeof(TRom_Ovl)*i);
+                    BlockRead( fsrl,ovl,sizeof(ovl),n);//top,bottom取得
+                    Writeln(flog,'ovt_id = '+inttostr(ovl.id));
+                    Writeln(flog,'  address = '+inttostr(ovl.ram_address));
+                    Writeln(flog,'  file_id = '+inttostr(ovl.file_id));
+                    Writeln(flog);//改行
+                  end;
+                  //FAT
                   top := 0;btm := 0;
                   seek( fsrl,romh.fat_offset+sizeof(TRom_Fat)*i);
                   BlockRead( fsrl,fat,sizeof(fat),n);//top,bottom取得

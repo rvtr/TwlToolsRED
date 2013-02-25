@@ -184,10 +184,10 @@ begin
                s := 'game_code =     ';
                for i:=1 to 4 do s[12+i] := romh.game_code[i];
                //ListBox_log.Items.Add(s); //game code
-               //ListBox_log.Items.Add('version = '+inttostr(romh.rom_version));
+               //ListBox_log.Items.Add('rom version = '+inttostr(romh.rom_version));
                //ListBox_log.Items.Add(' ');
                Writeln(flog,s);
-               Writeln(flog,'version = '+inttostr(romh.rom_version));
+               Writeln(flog,'rom_version = '+inttostr(romh.rom_version));
                Writeln(flog);//改行
 
              //オーバレイチェック

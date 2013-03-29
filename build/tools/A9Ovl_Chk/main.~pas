@@ -187,7 +187,7 @@ begin
                //ListBox_log.Items.Add('rom version = '+inttostr(romh.rom_version));
                //ListBox_log.Items.Add(' ');
                Writeln(flog,s);
-               Writeln(flog,'rom version = '+inttostr(romh.rom_version));
+               Writeln(flog,'rom_version = '+inttostr(romh.rom_version));
                Writeln(flog);//改行
 
              //オーバレイチェック

@@ -300,7 +300,11 @@ begin
                   if noc_size <> 0 then s:= 'NG'
                   else s:= 'OK';
                 end;
-              end else s := 'no OVL';
+              end else begin
+                Writeln(flog); //â¸çs
+                //s := 'no OVL';
+                s := 'OK';
+              end;
              end;
            end else s := ' Open Error';
            CloseFile(fsrl);

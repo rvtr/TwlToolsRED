@@ -14,7 +14,7 @@ TwlToolsRED from the gigaleaks. Converted from SVN to git in hopes of finding in
       * `spiMonkey_f.srl`
       * `syscall_card_f.srl`
       * `sdk_pr.srl`
-    - SD/NAND Aging Checker (seems to be [NandSweeper?](https://randommeaninglesscharacters.com/dsidev/nandsweeper.html) with more features?)
+    - SD/NAND Aging Checker (seems to be [NandSweeper](https://randommeaninglesscharacters.com/dsidev/nandsweeper.html) with more features?)
       * `clone_boot_card2_f.srl`
     - All other SRLs are CardRomHeaderChecker
     
